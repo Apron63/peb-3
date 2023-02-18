@@ -1,0 +1,67 @@
+{% extends 'admin/base_mobile.html.twig' %}
+
+{% block title %}Панель управления | Профили{% endblock %}
+
+{% block content %}
+
+    <h3>Профили</h3>
+
+    <div class="row g-2">
+        <div class="col">
+            <a class="btn btn-outline-success" href="{{ path('admin_profile_create') }}">
+                Добавить профиль
+            </a>
+        </div>
+
+        <div class="col">
+            <div class="input-group mb-3">
+                <input type="text" class="form-control" placeholder="Поиск" id="search-profile">
+                <span class="input-group-text" id="basic-addon1">
+                    <img src="{{ asset('svg/search.svg') }}">
+                </span>
+            </div>
+        </div>
+
+    </div>
+
+    <table class="table">
+        <thead>
+        <tr>
+            <th>Наименование</th>
+            <th></th>
+        </tr>
+        </thead>
+
+        <tbody>
+        {% for profile in profileQuery %}
+            <tr style="display: table-row;" class="search-table-row">
+                <td>
+                    <a href="{{ path('admin_profile_edit', {'id': profile.id}) }}">{{ profile.name }}</a>
+                </td>
+                <td>
+                    <a
+                            href="{{ path('admin_profile_delete', {'id': profile.id}) }}"
+                            class="btn btn-sm btn-outline-danger"
+                            onclick="return window.confirm('Подтвердите действие');"
+                    >
+                        <img src="{{ asset('svg/trash.svg') }}">
+                    </a>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+{% endblock %}
+
+{% block jsScripts %}
+    <script>
+        $(function () {
+            $("#search-profile").on("keyup", function () {
+                let val = $("#search-profile").val();
+                $(".search-table-row").each();
+                alert(val);
+            });
+        });
+    </script>
+{% endblock %}

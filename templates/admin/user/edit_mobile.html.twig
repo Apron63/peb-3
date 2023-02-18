@@ -1,0 +1,60 @@
+{% extends 'admin/base_mobile.html.twig' %}
+
+{% block title %}Панель управления{% endblock %}
+
+{% block content %}
+    <h3>
+        {% if user.id is null %}
+            Создание пользователя
+        {% else %}
+            Редактирование пользователя
+        {% endif %}
+    </h3>
+
+    <nav>
+        <div class="nav nav-tabs" id="nav-tab" role="tablist">
+
+            <button class="nav-link active" id="nav-prop-tab" data-bs-toggle="tab" data-bs-target="#nav-prop"
+                    type="button" role="tab" aria-controls="nav-prop" aria-selected="true">Сведения
+            </button>
+
+            {% if user.id is not null %}
+                <button class="nav-link" id="nav-permission-tab" data-bs-toggle="tab" data-bs-target="#nav-permission"
+                        type="button" role="tab" aria-controls="nav-permission" aria-selected="false">Доступы
+                </button>
+                <button class="nav-link" id="nav-result-tab" data-bs-toggle="tab" data-bs-target="#nav-result"
+                        type="button"
+                        role="tab" aria-controls="nav-result" aria-selected="false">Результаты
+                </button>
+                <button class="nav-link" id="nav-action-tab" data-bs-toggle="tab" data-bs-target="#nav-action"
+                        type="button"
+                        role="tab" aria-controls="nav-action" aria-selected="false">Действия
+                </button>
+            {% endif %}
+
+        </div>
+    </nav>
+
+    <p></p>
+
+    <div class="tab-content" id="nav-tabContent">
+
+        <div class="tab-pane fade show active" id="nav-prop" role="tabpanel" aria-labelledby="nav-prop-tab">
+            {% include 'admin/user/_form_mobile.html.twig' %}
+        </div>
+
+        {% if user.id is not null %}
+            <div class="tab-pane fade" id="nav-permission" role="tabpanel" aria-labelledby="nav-permission-tab">
+                {% include 'admin/user/_permission_mobile.html.twig' %}
+            </div>
+            <div class="tab-pane fade" id="nav-result" role="tabpanel" aria-labelledby="nav-result-tab">
+                {% include 'admin/user/_result_mobile.html.twig' %}
+            </div>
+            <div class="tab-pane fade" id="nav-action" role="tabpanel" aria-labelledby="nav-action-tab">
+                {% include 'admin/user/_action_mobile.html.twig' %}
+            </div>
+        {% endif %}
+
+    </div>
+
+{% endblock %}

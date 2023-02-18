@@ -1,0 +1,113 @@
+<div class="mb-3">
+    <label for="duration" class="form-label">Укажите число дней доступа</label>
+    <input class="form-control" name="duration" id="duration">
+</div>
+
+<div class="mb-3">
+    <label for="course-select" class="form-label">Выберите курсы</label>
+    <select class="form-select" id="course-select" name="course-select" multiple>
+        {% for item in course %}
+            <option class="course-select-item" data-profile="{{ item['profileId'] }}" value="{{ item['id'] }}">
+                {{ item['name'] }}
+            </option>
+        {% endfor %}
+    </select>
+</div>
+
+<div class="mb-3">
+    <label for="q-search" class="form-label">Быстрый поиск</label>
+    <input class="form-control" name="q-search" id="q-search">
+</div>
+
+<div class="mb-3">
+    <label for="profile-select" class="form-label">Профиль</label>
+    <select class="form-select" id="profile-select" name="course-select">
+        <option value="0">Все профили</option>
+        {% for profile in profiles %}
+            <option value="{{ profile['id'] }}">{{ profile['name'] }}</option>
+        {% endfor %}
+    </select>
+</div>
+
+<button class="btn btn-outline-primary" id="send-to-query">Продолжить</button>
+
+{# <script>
+    $("#q-search").on("keyup", function () {
+        applyFilter();
+    })
+
+    $("#profile-select").on("change", function () {
+        applyFilter();
+    })
+
+    function applyFilter() {
+        let filter = $("#q-search").val().toUpperCase();
+        let selectedProfile = Number($("#profile-select :selected").val());
+        $("#course-select").find("option").each(function (i, e) {
+            let isHidden = $(e).attr("style");
+            let txtValue = $(e).text();
+            let profile = Number($(e).data("profile"));
+            let nowHidden = true;
+            let mustHidden = true;
+
+            if (typeof isHidden === "undefined" || isHidden === "display: block;") {
+                nowHidden = false;
+            }
+
+            if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                mustHidden = false;
+            }
+
+            if (selectedProfile !== 0 && profile !== selectedProfile) {
+                mustHidden = true;
+            }
+
+            if (!nowHidden && mustHidden) {
+                $(e).hide();
+            }
+
+            if (nowHidden && !mustHidden) {
+                $(e).removeAttr("style").show();
+            }
+        })
+    }
+
+    $("#send-to-query").on("click", function () {
+        let duration = $("#duration").val();
+        if (duration === 0 || duration === '') {
+            alert('Не заполнена продолжительность доступа!')
+            return false;
+        }
+
+        let course = $("#course-select").val();
+        let userQuery = $(".user-list").find("input:checkbox:checked");
+        if (userQuery.length === 0) {
+            alert('Не отмечен ни один слушатель!!')
+            return false;
+        }
+        $("#myModal").modal('hide');
+        let data = [];
+        userQuery.each(function (i, e) {
+            let mainElement = $(e).parent().parent();
+            data.push([
+                $(mainElement).find(".user-list-order").text(),
+                $(mainElement).find(".user-list-lastname").text(),
+                $(mainElement).find(".user-list-firstname").text(),
+                $(mainElement).find(".user-list-patronymic").text(),
+                $(mainElement).find(".user-list-organization").text()
+            ]);
+        });
+
+        $.ajax({
+            url: "{{ path('admin_query_create') }}",
+            data: {duration: duration, course: course, data: JSON.stringify(data)},
+            method: "POST"
+        }).done(function (data) {
+            $("#toast-message").html(data);
+            let toast = new bootstrap.Toast(toastLiveExample);
+            toast.show();
+        }).fail(function (data) {
+            console.log(data);
+        });
+    })
+</script> #}

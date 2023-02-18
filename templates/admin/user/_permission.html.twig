@@ -1,0 +1,67 @@
+<a class="btn btn-outline-success" href="{{ path('admin_permission_create', {id: user.id}) }}">Новый доступ</a>
+
+<table class="table">
+    <thead>
+    <tr>
+        <th></th>
+        <th>Выдан</th>
+        <th>Длительность</th>
+        <th>Заказ</th>
+        <th>Активирован</th>
+        <th>Посл. доступ</th>
+        <th>Курс</th>
+        <th></th>
+    </tr>
+    </thead>
+
+    <tbody>
+    {% for permission in pagination %}
+        <tr>
+            <td>
+                {% if permission.isActive %}
+                    <span><img src="{{ asset('svg/check.svg') }}"></span>
+                {% else %}
+                    <span><img src="{{ asset('svg/lock.svg') }}"></span>
+                {% endif %}
+            </td>
+            <td style="text-align: right">
+                {{ permission.createdAt | date('d.m.Y H:i:s') }}
+            </td>
+            <td style="text-align: right">{{ permission.duration }}</td>
+            <td>{{ permission.orderNom }}</td>
+            <td style="text-align: right">
+                {% if permission.activatedAt is not null %}
+                    {{ permission.activatedAt | date('d.m.Y H:i:s') }}
+                {% else %}
+                    -
+                {% endif %}
+            </td>
+            <td style="text-align: right">
+                {% if permission.lastAccess is not null %}
+                    {{ permission.lastAccess | date('d.m.Y H:i:s') }}
+                {% else %}
+                    -
+                {% endif %}
+            </td>
+            <td>
+                <a href="{{ path('admin_permission_edit', {id: permission.id}) }}">
+                    {{ permission.name }}
+                </a>
+            </td>
+            <td>
+                <a
+                        href="{{ path('admin_permission_delete', {id: permission.id}) }}"
+                        class="btn btn-sm btn-outline-danger"
+                        onclick="return window.confirm('Подтвердите действие');"
+                >
+                    Удалить
+                </a>
+            </td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+
+<nav aria-label="navigator">
+    {{ knp_pagination_render(pagination) }}
+</nav>

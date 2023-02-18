@@ -1,0 +1,89 @@
+{% extends 'admin/base_mobile.html.twig' %}
+
+{% block title %}Панель управления{% endblock %}
+
+{% block content %}
+
+    <h3>Интерактивные учебные материалы</h3>
+
+    <a href="{{ path('admin_module_add', {id: course.id}) }}" class="btn btn-outline-success">
+        Добавить модуль
+    </a>
+
+    <p></p>
+
+    {% if form.vars['value'].id is not null %}
+
+        {{ form_start(form, {'attr':{'class': 'form-contact contact_form'}}) }}
+
+        <div class="row">
+            <div class="col-12 mb-3">
+                <div class="form-group">
+                    <span class="text-danger">{{ form_errors(form.shortName) }}</span>
+                    {{ form_widget(form.shortName) }}
+                </div>
+            </div>
+
+            <div class="col-12 mb-3">
+                <div class="form-group">
+                    <span class="text-danger">{{ form_errors(form.name) }}</span>
+                    {{ form_widget(form.name) }}
+                </div>
+            </div>
+
+            <div class="col-12 mb-3">
+                <div class="form-group">
+                    <span class="text-danger">{{ form_errors(form.profile) }}</span>
+                    {{ form_widget(form.profile) }}
+                </div>
+            </div>
+
+            <div class="col-12 mb-3">
+                <div class="form-group">
+                    <span class="text-danger">{{ form_errors(form.image) }}</span>
+                    {{ form_widget(form.image) }}
+                </div>
+            </div>
+
+        </div>
+    {% endif %}
+
+    <table class="table">
+        <thead>
+        <tr>
+            <th>Наименование</th>
+            <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for module in modules %}
+            <tr>
+                <td>
+                    <a
+                            href="{{ path('admin_module_edit', {id: module.id}) }}"
+                    >
+                        {{ module.name }}
+                    </a>
+                </td>
+                <td style="width: 30px">
+                    <a
+                            class="btn btn-outline-danger"
+                            href="{{ path('admin_module_delete', {id: module.id}) }}"
+                            onclick="return window.confirm('Подтвердите действие');"
+                    >
+                        <img src="{{ asset('svg/trash.svg') }}">
+                    </a>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    {% if form.vars['value'].id is not null %}
+        <div class="form-group mb-3">
+            {{ form_widget(form.submit) }}
+        </div>
+        {{ form_end(form) }}
+    {% endif %}
+
+{% endblock %}

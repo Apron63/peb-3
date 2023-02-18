@@ -1,0 +1,43 @@
+{% extends 'admin/base.html.twig' %}
+
+{% block title %}Панель управления | Профили{% endblock %}
+
+{% block content %}
+
+    <h3>Профили</h3>
+
+    <div>
+        <a class="btn btn-outline-success" href="{{ path('admin_profile_create') }}">
+            Добавить профиль
+        </a>
+    </div>
+
+    <table class="table">
+        <thead>
+        <tr>
+            <th>Наименование</th>
+            <th></th>
+        </tr>
+        </thead>
+
+        <tbody>
+        {% for profile in profileQuery %}
+            <tr>
+                <td>
+                    <a href="{{ path('admin_profile_edit', {'id': profile.id}) }}">{{ profile.name }}</a>
+                </td>
+                <td>
+                    <a
+                            href="{{ path('admin_profile_delete', {'id': profile.id}) }}"
+                            class="btn btn-sm btn-outline-danger"
+                            onclick="return window.confirm('Подтвердите действие');"
+                    >
+                        Удалить
+                    </a>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+{% endblock %}

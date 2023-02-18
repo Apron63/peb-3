@@ -1,0 +1,44 @@
+<a class="btn btn-outline-success" href="{{ path('admin_permission_create', {id: user.id}) }}">Новый доступ</a>
+
+<table class="table">
+    <thead>
+    <tr>
+        <th></th>
+        <th>Выдан</th>
+        <th>Курс</th>
+        <th></th>
+    </tr>
+    </thead>
+
+    <tbody>
+    {% for permission in pagination %}
+        <tr>
+            <td>
+                {% if permission.isActive %}
+                    <span><img src="{{ asset('svg/check.svg') }}"></span>
+                {% else %}
+                    <span><img src="{{ asset('svg/lock.svg') }}"></span>
+                {% endif %}
+            </td>
+            <td>
+                <a href="{{ path('admin_permission_edit', {id: permission.id}) }}">
+                    {{ permission.name }}
+                </a>
+            </td>
+            <td>
+                <a
+                        href="{{ path('admin_permission_delete', {id: permission.id}) }}"
+                        class="btn btn-sm btn-outline-danger"
+                        onclick="return window.confirm('Подтвердите действие');"
+                >
+                    <img src="{{ asset('svg/trash.svg') }}">
+                </a>
+            </td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+
+<nav aria-label="navigator">
+    {{ knp_pagination_render(pagination) }}
+</nav>

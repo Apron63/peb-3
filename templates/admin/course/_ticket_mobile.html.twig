@@ -1,0 +1,129 @@
+<p></p>
+<div class="row">
+    <div class="row">
+        {# <div class="col-3"> #}
+        <div class="col-12">
+                <span>
+                    {% if totalTicketCount > 0 %}
+                        {{ totalTicketCount }} билетов
+                    {% else %}
+                        Билеты не созданы
+                    {% endif %}
+                </span>
+            <button class="btn btn-outline-success" id="build-tickets">
+                Пересоздать билеты
+            </button>
+        </div>
+        {# </div> #}
+    </div>
+    <div class="row">
+        <div class="col-3">
+            <label for="ticket-cnt">Билетов</label>
+            <input id="ticket-cnt" class="form-inline">
+        </div>
+        <div class="col-3">
+            <label for="err-cnt">Ошибок</label>
+            <input id="err-cnt" class="form-inline">
+        </div>
+        <input type="hidden" id="course-id" value="{{ course.id }}">
+    </div>
+    <div class="row">
+        <table class="table">
+            <thead>
+            <tr>
+                <th>Тема</th>
+                <th>Доступно вопросов</th>
+                <th>Задать для билетов</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for theme in course.courseThemes %}
+                <tr>
+                    <td>{{ theme.description }}</td>
+                    <td
+                            data-max-cnt-id="{{ theme.id }}"
+                            data-max-cnt-value="{{ ticketCount[theme.id] }}"
+                            class="theme-max-cnt"
+                    >
+                        {{ ticketCount[theme.id] }}
+                    </td>
+                    <td>
+                        <input
+                                class="form-inline theme-cnt-input"
+                                type="number"
+                                id="cnt-{{ theme.id }}"
+                                style="width: 100px;"
+                        >
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script>
+    let elementWithPopover = {};
+    let popoverIsActive = false;
+    $("#build-tickets").click(function (e) {
+        e.stopImmediatePropagation();
+        if (popoverIsActive) {
+            $(elementWithPopover).popover("dispose");
+            popoverIsActive = false;
+        }
+        if ($("#ticket-cnt").val() <= 0) {
+            popoverIsActive = true;
+            elementWithPopover = $("#ticket-cnt");
+            $("#ticket-cnt").popover({
+                title: "Неправильное количество",
+                content: "Количество билетов должно быть больше 0",
+                container: 'body',
+                trigger: 'focus'
+            }).popover("show");
+            return false;
+        }
+        let theme = [];
+        let questionCompleted = true;
+        $.each($.find(".theme-cnt-input"), function (i, e) {
+            let element = $(e).closest("tr").find(".theme-max-cnt");
+            let id = Number($(element).data("max-cnt-id"));
+            let value = Number($(element).data("max-cnt-value"));
+            let inputValue = $(e).val();
+            if ((inputValue > value || inputValue <= 0) && !popoverIsActive) {
+                popoverIsActive = true;
+                elementWithPopover = e;
+                $(e).popover({
+                    title: "Неправильное количество",
+                    content: "Количество вопросов должно быть больше 0 и меньше " + value,
+                    container: 'body',
+                    trigger: 'focus'
+                }).popover("show");
+                questionCompleted = false;
+            }
+            theme.push({id: id, inputValue: inputValue});
+        });
+
+        if (questionCompleted === false) {
+            return false;
+        }
+
+        let data = {
+            course: Number($("#course-id").val()),
+            ticketCnt: Number($("#ticket-cnt").val()),
+            errCnt: Number($("#err-cnt").val()),
+            themes: theme
+        };
+
+        $.ajax({
+            url: "{{ path('admin_tickets_create') }}",
+            data: data
+        }).done(function (e) {
+            $("#toast-message").html("Билеты успешно созданы!");
+            let toast = new bootstrap.Toast(toastLiveExample);
+            toast.show();
+        }).fail(function (e) {
+            console.log(e);
+        });
+        return false;
+    });
+</script>

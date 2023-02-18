@@ -1,0 +1,126 @@
+{% extends 'admin/base.html.twig' %}
+
+{% block title %}Панель управления{% endblock %}
+
+{% block content %}
+
+    <h3>Учебные материалы</h3>
+
+    <div class="row">
+        {% if is_granted('ROLE_SUPER_ADMIN') %}
+            <div class="col-3">
+                <a class="btn btn-outline-success" href="{{ path('admin_course_create') }}">
+                    Добавить материал
+                </a>
+            </div>
+        {% endif %}
+
+        <div class="col-3">
+            <select id="course-type-select" class="form-select">
+                <option {% if app.request.get('type') == '' %}selected{% endif %} value="0">Все материалы</option>
+                <option {% if app.request.get('type') == '1' %}selected{% endif %} value="1">Классические</option>
+                <option {% if app.request.get('type') == '3' %}selected{% endif %} value="2">Интерактивные</option>
+                <option {% if app.request.get('type') == '2' %}selected{% endif %} value="3">Демо</option>
+            </select>
+        </div>
+
+        <div class="col-6">
+            <select id="profile-type-select" class="form-select">
+                <option {% if app.request.get('profile') == '' %}selected{% endif %} value="0">Все профили</option>
+                {% for profile in profiles %}
+                    <option
+                            {% if app.request.get('profile') == profile['id'] %}selected{% endif %}
+                            value="{{ profile['id'] }}"
+                    >
+                        {{ profile['name'] }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+    </div>
+
+    <table class="table">
+        <thead>
+        <tr>
+            <th>Id</th>
+            <th>Тип</th>
+            <th>Наименование</th>
+            <th>Описание</th>
+            <th>Профиль</th>
+            <th>Билетов</th>
+            <th></th>
+        </tr>
+        </thead>
+
+        <tbody>
+        {% for course in pagination %}
+            <tr>
+                <td>{{ course.id }}</td>
+                <td>
+                    {% if course.type == 1 %}
+                        <img src="{{ asset('svg/key.svg') }}">
+                    {% elseif course.type == 2 %}
+                        <img src="{{ asset('svg/game.svg') }}">
+                    {% else %}
+                        <img src="{{ asset('svg/eye.svg') }}">
+                    {% endif %}
+                </td>
+                <td>
+                    <a href="{{ path('admin_course_edit', {'id': course.id}) }}">{{ course.shortName }}</a>
+                </td>
+                <td>
+                    {{ course.name }}
+                </td>
+                <td>
+                    {{ course.profileName }}
+                </td>
+                <td>
+                    {{ course.ticketCnt }}
+                </td>
+                <td>
+                    {% if is_granted('ROLE_SUPER_ADMIN') %}
+                        <a
+                                href="{{ path('admin_course_delete', {'id': course.id}) }}"
+                                class="btn btn-sm btn-outline-danger"
+                                onclick="return window.confirm('Подтвердите действие');"
+                        >
+                            Удалить
+                        </a>
+                    {% endif %}
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <nav aria-label="navigator">
+        {{ knp_pagination_render(pagination) }}
+    </nav>
+
+{% endblock %}
+
+{% block jsScripts %}
+    <script>
+        const parsedUrl = new URL(window.location)
+
+        $('#course-type-select').on('change', function () {
+            const value = $('#course-type-select').val()
+            if (value === '0') {
+                parsedUrl.searchParams.delete('type')
+            } else {
+                parsedUrl.searchParams.set('type', value)
+            }
+            window.location = parsedUrl.href
+        })
+
+        $('#profile-type-select').on('change', function () {
+            const value = $('#profile-type-select').val()
+            if (value === '0') {
+                parsedUrl.searchParams.delete('profile')
+            } else {
+                parsedUrl.searchParams.set('profile', value)
+            }
+            window.location = parsedUrl.href
+        })
+    </script>
+{% endblock %}

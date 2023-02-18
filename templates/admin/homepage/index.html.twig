@@ -1,0 +1,179 @@
+{% extends 'admin/base.html.twig' %}
+
+{% block title %}Панель управления{% endblock %}
+
+{% block content %}
+    <h3>Поиск пользователей</h3>
+    {{ form_start(form, {'attr':{'class': 'form-contact contact_form', 'action': path('admin_user_list')}}) }}
+    <div class="row">
+
+        <div class="row mb-3">
+            {{ form_label(form.login) }}
+            <div class="col-sm-10">
+                <span class="text-danger">{{ form_errors(form.login) }}</span>
+                {{ form_widget(form.login) }}
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            {{ form_label(form.name) }}
+            <div class="col-sm-10">
+                <span class="text-danger">{{ form_errors(form.name) }}</span>
+                {{ form_widget(form.name) }}
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            {{ form_label(form.organization) }}
+            <div class="col-sm-10">
+                <span class="text-danger">{{ form_errors(form.organization) }}</span>
+                {{ form_widget(form.organization) }}
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            {{ form_label(form.position) }}
+            <div class="col-sm-10">
+                <span class="text-danger">{{ form_errors(form.position) }}</span>
+                {{ form_widget(form.position) }}
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            {{ form_label(form.orderNumber) }}
+            <div class="col-sm-10">
+                <span class="text-danger">{{ form_errors(form.orderNumber) }}</span>
+                {{ form_widget(form.orderNumber) }}
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            {{ form_label(form.startPeriod) }}
+            <div class="col-sm-10">
+                <span class="text-danger">{{ form_errors(form.startPeriod) }}</span>
+                {{ form_widget(form.startPeriod) }}
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            {{ form_label(form.endPeriod) }}
+            <div class="col-sm-10">
+                <span class="text-danger">{{ form_errors(form.endPeriod) }}</span>
+                {{ form_widget(form.endPeriod) }}
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            {{ form_label(form.course) }}
+            <div class="col-sm-10">
+                <span class="text-danger">{{ form_errors(form.course) }}</span>
+                {{ form_widget(form.course) }}
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            {{ form_label(form.lifeSearch) }}
+            <div class="col-sm-10">
+                <span class="text-danger">{{ form_errors(form.lifeSearch) }}</span>
+                {{ form_widget(form.lifeSearch) }}
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            {{ form_label(form.profile) }}
+            <div class="col-sm-10">
+                <span class="text-danger">{{ form_errors(form.profile) }}</span>
+                {{ form_widget(form.profile) }}
+            </div>
+        </div>
+
+        <div class="form-group mb-3 offset-2">
+            {{ form_widget(form.search) }}
+        </div>
+
+    </div>
+    {{ form_end(form) }}
+{% endblock %}
+
+{% block jsScripts %}
+    {# <script type="module"> #}
+        {# $("#user_search_lifeSearch").on("keyup", function () {
+            applyFilter();
+        })
+
+        $("#user_search_profile").on("change", function () {
+            applyFilter();
+        })
+
+        function applyFilter() {
+            let filter = $("#user_search_lifeSearch").val().toUpperCase();
+            let selectedProfile = Number($("#user_search_profile :selected").val());
+            $("#user_search_course").find("option").each(function (i, e) {
+                let isHidden = $(e).attr("style");
+                let txtValue = $(e).text();
+                let profile = Number($(e).data("profile"));
+                let nowHidden = true;
+                let mustHidden = true;
+
+                if (typeof isHidden === "undefined" || isHidden === "display: block;") {
+                    nowHidden = false;
+                }
+
+                if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                    mustHidden = false;
+                }
+
+                if (selectedProfile !== 0 && profile !== selectedProfile) {
+                    mustHidden = true;
+                }
+
+                if (!nowHidden && mustHidden) {
+                    $(e).hide();
+                }
+
+                if (nowHidden && !mustHidden) {
+                    $(e).removeAttr("style").show();
+                }
+            })
+        } #}
+    {# </script> #}
+
+    <script>
+        {# const startDatepickerElem = document.getElementById('user_search_startPeriod')
+        const startDatepicker = new Datepicker(startDatepickerElem, {
+            format: 'dd.mm.yyyy',
+            language: 'ru',
+            autohide: true
+        })
+
+        const endDatepickerElem = document.getElementById('user_search_endPeriod');
+        const endDatepicker = new Datepicker(endDatepickerElem, {
+            format: 'dd.mm.yyyy',
+            language: 'ru',
+            autohide: true
+        }) #}
+
+        //import AirDatepicker from './../node_modules/air-datepicker';
+        //import '../node_modules//air-datepicker/air-datepicker.css';
+        //let options = {
+        //    locale: en
+        //};
+        //import {createPopper} from '@popperjs/core';
+
+        //import AirDatepicker from 'air-datepicker';
+        //console.log(AirDatepicker.version);
+        //import 'air-datepicker/air-datepicker.css';
+
+        //const AirDatepicker = require('.air-datepicker')
+
+        //dataPickerStart = new AirDatepicker('#user_search_startPeriod')
+        //dataPickerEnd = new AirDatepicker('#user_search_endPeriod')
+
+        {# window.addEventListener('load', (event) => {
+            console.log('page is fully loaded');
+            //console.log(AirDatepicker.version);
+            console.log(qqq.version);
+        }); #}
+    </script>
+
+{% endblock %}

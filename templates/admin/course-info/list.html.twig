@@ -1,0 +1,57 @@
+{% extends 'admin/base.html.twig' %}
+
+{% block title %}Панель управления{% endblock %}
+
+{% block content %}
+
+    <h3>Курсы</h3>
+
+    <div>
+        <a class="btn btn-outline-success" href="{{ path('admin_course_create') }}">
+            Создать
+        </a>
+    </div>
+
+    <table class="table">
+        <thead>
+        <tr>
+            <th>Id</th>
+            <th>Наименование</th>
+            <th>Описание</th>
+            <th>Профиль</th>
+            <th></th>
+        </tr>
+        </thead>
+
+        <tbody>
+        {% for course in pagination %}
+            <tr>
+                <td>{{ course.id }}</td>
+                <td>
+                    <a href="{{ path('admin_course_edit', {'id': course.id}) }}">{{ course.shortName }}</a>
+                </td>
+                <td>
+                    {{ course.name }}
+                </td>
+                <td>
+                    {{ course.profileName }}
+                </td>
+                <td>
+                    <a
+                            href="{{ path('admin_course_delete', {'id': course.id}) }}"
+                            class="btn btn-sm btn-outline-danger"
+                            onclick="return window.confirm('Подтвердите действие');"
+                    >
+                        Удалить
+                    </a>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <div class="navigation">
+        {{ knp_pagination_render(pagination) }}
+    </div>
+
+{% endblock %}

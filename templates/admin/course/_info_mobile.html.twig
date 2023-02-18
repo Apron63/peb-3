@@ -1,0 +1,54 @@
+<p></p>
+<div class="row">
+    {% if is_granted('ROLE_SUPER_ADMIN') %}
+        <div>
+            <a class="btn btn-outline-success" href="{{ path('admin_course_info_create', {id: course.id}) }}">
+                Создать новый документ
+            </a>
+        </div>
+    {% endif %}
+    <div class="row">
+        <table class="table">
+            <thead>
+            <tr>
+                <th>Наименование</th>
+                <th></th>
+                <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for info in course.courseInfos %}
+                <tr>
+                    <td>
+                        <a href="{{ path('admin_course_info_edit', {id: info.id}) }}">{{ info.name }}</a>
+                    </td>
+                    <td>
+                        {% if info.fileName is not empty %}
+                            <a
+                                    href="{{ path('view', {filename: info.fileName, courseId: info.course.id}) }}"
+                                    target="_blank"
+                                    class="btn btn-sm btn-outline-info"
+                            >
+                                <img src="{{ asset('svg/eye.svg') }}">
+                            </a>
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if is_granted('ROLE_SUPER_ADMIN') %}
+                            <a
+                                    href="{{ path('admin_course_info_delete', {'id': info.id}) }}"
+                                    class="btn btn-sm btn-outline-danger"
+                                    onclick="return window.confirm('Подтвердите действие');"
+                            >
+                                <img src="{{ asset('svg/trash.svg') }}">
+                            </a>
+                        {% endif %}
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+
+        </table>
+
+    </div>
+</div>

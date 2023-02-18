@@ -1,0 +1,35 @@
+{% extends 'admin/base.html.twig' %}
+
+{% block title %}Просмотр очереди заданий{% endblock %}
+
+{% block content %}
+
+    <h3>Очередь заданий</h3>
+
+    <table class="table">
+        <thead>
+        <tr>
+            <th>Создано</th>
+            <th>Заказ</th>
+            <th>Фамилия</th>
+            <th>Имя</th>
+            <th>Отчество</th>
+            <th>Организация</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        {% for query in pagination %}
+            <tr>
+                <td>{{ query.createdAt | date('d.m.y H:i:s') }}</td>
+                <td>{{ query.orderNom }}</td>
+                <td>{{ query.lastName }}</td>
+                <td>{{ query.firstName }}</td>
+                <td>{{ query.patronymic }}</td>
+                <td>{{ query.organization }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+{% endblock %}

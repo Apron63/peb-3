@@ -1,0 +1,49 @@
+{% extends 'admin/base.html.twig' %}
+
+{% block title %}Панель управления | Задачи{% endblock %}
+
+{% block content %}
+
+    <h3>Задачи</h3>
+
+    <table class="table">
+        <thead>
+        <tr>
+            <th>Создано</th>
+            <th>Завершено</th>
+            <th>Содержание</th>
+            <th>Автор</th>
+            <th>Вложение</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        {% for job in pagination %}
+            <tr>
+                <td>{{ job.startAt | date('d.m.Y H:i:s') }}</td>
+                <td>
+                    {% if job.endAt is defined and job.endAt is not null %}
+                        {{ job.endAt | date('d.m.Y H:i:s') }}
+                    {% else %}
+                        -
+                    {% endif %}
+                </td>
+                <td>{{ job.description }}</td>
+                <td>{{ job.user.name }}</td>
+                <td>
+                    {% if job.documentLink is defined and job.documentLink is not empty %}
+                        <a href="{{ path('admin_load1C_report', {fileName: job.documentLink }) }}" title="Открыть вложение">
+                            <img src="{{ asset('svg/files.svg') }}"  data-path="{{ job.documentLink }}">
+                        </a>
+                    {% endif %}
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <div class="navigation">
+        {{ knp_pagination_render(pagination) }}
+    </div>
+
+{% endblock %}

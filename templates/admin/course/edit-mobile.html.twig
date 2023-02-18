@@ -1,0 +1,103 @@
+{% extends 'admin/base_mobile.html.twig' %}
+
+{% block title %}Панель управления | Учебные материалы{% endblock %}
+
+{% block breadcrumbs %}
+    <a href="{{ path('admin_homepage') }}">Панель управления</a>
+    <span>/</span>
+    <a href="{{ path('admin_course_list') }}">Учебные материалы</a>
+    <span>/</span>
+    <span>Редактирование</span>
+{% endblock %}
+
+{% block content %}
+
+    <h3>
+        {% if form.vars['value'].id is null %}
+            Создание курса
+        {% else %}
+            Редактирование курса
+        {% endif %}
+    </h3>
+
+    {{ form_start(form, {'attr':{'class': 'form-contact contact_form'}}) }}
+
+    <div class="row">
+
+        <div class="col-10 mb-3">
+            <div class="form-group">
+                <span class="text-danger">{{ form_errors(form.shortName) }}</span>
+                {{ form_widget(form.shortName) }}
+            </div>
+        </div>
+
+        <div class="col-10 mb-3">
+            <div class="form-group">
+                <span class="text-danger">{{ form_errors(form.name) }}</span>
+                {{ form_widget(form.name) }}
+            </div>
+        </div>
+
+        <div class="col-10 mb-3">
+            <div class="form-group">
+                <span class="text-danger">{{ form_errors(form.profile) }}</span>
+                {{ form_widget(form.profile) }}
+            </div>
+        </div>
+        
+        <div class="col-10 mb-3">
+            <div class="form-group">
+                <span class="text-danger">{{ form_errors(form.image) }}</span>
+                {{ form_widget(form.image) }}
+            </div>
+        </div>
+
+        <div class="col-10 mb-3">
+            <div class="form-check form-switch">
+                <span class="text-danger">{{ form_errors(form.forDemo) }}</span>
+                {{ form_widget(form.forDemo) }}
+                {{ form_label(form.forDemo) }}
+            </div>
+        </div>
+        
+        {% if form.vars['value'].id is not null %}
+            <nav>
+                <div class="nav nav-tabs" id="nav-themes-tab" role="tablist">
+                    <button class="nav-link active" id="nav-themes-tab" data-bs-toggle="tab"
+                            data-bs-target="#nav-themes"
+                            type="button" role="tab" aria-controls="nav-themes" aria-selected="true">Темы
+                    </button>
+                    <button class="nav-link" id="nav-info-tab" data-bs-toggle="tab" data-bs-target="#nav-info"
+                            type="button" role="tab" aria-controls="nav-info" aria-selected="false">Материалы
+                    </button>
+                    <button class="nav-link" id="nav-ticket-tab" data-bs-toggle="tab" data-bs-target="#nav-ticket"
+                            type="button" role="tab" aria-controls="nav-ticket" aria-selected="false">Билеты
+                    </button>
+                </div>
+            </nav>
+
+            <div class="tab-content" id="nav-tabContent">
+                <div class="tab-pane fade show active" id="nav-themes" role="tabpanel" aria-labelledby="nav-themes-tab">
+                    {% include 'admin/course/_themes_mobile.html.twig' %}
+
+                    {% if is_granted('ROLE_SUPER_ADMIN') %}
+                        <div class="form-group mb-3">
+                            {{ form_widget(form.submit) }}
+                        </div>
+                    {% endif %}
+
+                </div>
+                <div class="tab-pane fade" id="nav-info" role="tabpanel" aria-labelledby="nav-info-tab">
+                    {% include 'admin/course/_info_mobile.html.twig' %}
+                </div>
+                <div class="tab-pane fade" id="nav-ticket" role="tabpanel" aria-labelledby="nav-ticket-tab">
+                    {% include 'admin/course/_ticket_mobile.html.twig' %}
+                </div>
+            </div>
+        {% endif %}
+
+    </div>
+
+    {{ form_end(form) }}
+
+{% endblock %}

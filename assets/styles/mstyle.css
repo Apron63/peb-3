@@ -1,0 +1,280 @@
+@media screen and (max-width: 1400px) {
+
+    .left-menu {
+        flex: 0 0 20%;
+    }
+
+    .content {
+        flex: 0 0 75%;
+    }
+
+}
+
+@media screen and (max-width: 1200px) {
+    .left-menu {
+        flex: 0 0 25%;
+    }
+
+    .content {
+        flex: 0 0 70%;
+    }
+
+    .header_logo {
+        flex: 0 0 30%;
+    }
+
+    .module_text {
+        width: 100%;
+    }
+
+    .express-test_description {
+        width: 100%;
+    }
+
+    .express-test_form {
+        width: 100%;
+    }
+
+    .control-questions_wrapper {
+        width: 100%;
+    }
+
+    .history_table_header .status,
+    .history_table_header .start_at,
+    .history_table_header .finish_at,
+    .history_table_header .results,
+    .history_table_header .duration {
+        display: none;
+    }
+
+    .history_table_content .history_table_row {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .history_table_content .history_table_row .course {
+        font-weight: bold;
+        padding-right: 0;
+    }
+
+    .history_table_content .history_table_row .status,
+    .history_table_content .history_table_row .start_at,
+    .history_table_content .history_table_row .finish_at,
+    .history_table_content .history_table_row .results,
+    .history_table_content .history_table_row .duration {
+        padding-right: 0;
+        padding-left: 0;
+    }
+}
+
+@media screen and (max-width: 992px) {
+    .header_logo {
+        flex: 0 0 45%;
+    }
+
+    .programs_item {
+        flex: 0 0 45%;
+    }
+
+    .express-test_header {
+        padding-bottom: 50px;
+        margin-bottom: 20px;
+    }
+
+    .express-test_header h1 {
+        margin-bottom: 10px;
+    }
+
+    .express-test_header_timer {
+        top: auto;
+        right: auto;
+        left: 0;
+        bottom: 0;
+    }
+}
+
+@media screen and (max-width: 768px) {
+
+    h1 {
+        font-size: 30px;
+        margin-bottom: 30px;
+    }
+    
+    h2 {
+        font-size: 20px;
+        margin-bottom: 20px;
+    }
+
+    .wrapper {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .header_logo {
+        flex-basis: calc(100% - 80px);
+    }
+
+    .header_profile_fullname {
+        display: none;
+    }
+
+    .left-menu {
+        margin-bottom: 20px;
+    }
+
+    .main-menu_mobile_button {
+        display: block;
+    }
+
+    .main-menu {
+        max-height: 0;
+        overflow: hidden;
+    }
+
+    .express-test_form_button_next {
+        width: 100%;
+    }
+
+    .express-test_form_button_end {
+        width: 100%;
+        margin-top: 20px;
+        margin-left: 0;
+    }
+
+    .control-questions_display {
+        display: none;
+    }
+
+    .profile {
+        flex-direction: column;
+    }
+
+    .photo_block {
+        width: 75%;
+    }
+
+    .data_block {
+        margin-top: 20px;
+    }
+
+    .footer-content {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .copyright {
+        margin-bottom: 10px;
+    }
+}
+
+@media screen and (max-width: 576px) {
+
+    body {
+        font-size: 14px;
+    }
+
+    h1 {
+        font-size: 22px;
+        margin-bottom: 20px;
+    }
+    
+    h2 {
+        font-size: 16px;
+        margin-bottom: 15px;
+    }
+
+    .demo-link_wrapper {
+        text-align: center;
+        right: 0;
+        width: 100%;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .programs_item {
+        flex: 0 0 100%;
+    }
+
+    .programs_item_header {
+        font-size: 14px;
+    }
+
+    .modules_item_name {
+        font-size: 15px;
+    }
+
+    .modules_item_parts_item {
+        font-size: 14px;
+    }
+
+    .express-test_header {
+        padding-bottom: 20px;
+    }
+
+    .express-test_header_timer_minutes {
+        font-size: 14px;
+    }
+
+    .express-test_header_timer_seconds {
+        font-size: 14px;
+        padding-left: 4px;
+    }
+
+    .express-test_description {
+        font-size: 14px;
+    }
+
+    .test_form_question_wrapper {
+        font-size: 14px;
+    }
+
+    .test_form_answer {
+        font-size: 14px;
+    }
+
+    .control-questions_item_buttons_wrapper {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .control-questions_item_button {
+        order: 2;
+        width: 100%;
+        margin-right: 0;
+    }
+
+    .control-questions_item_result {
+        order: 1;
+        text-align: center;
+        margin-bottom: 20px;
+    }
+
+    .support_description {
+        font-size: 14px;
+    }
+
+    .support_contacts_row {
+        font-size: 14px;
+    }
+
+    .support_form {
+        padding: 10px 15px;
+    }
+
+    .support_submit {
+        padding-left: 30px;
+        padding-right: 30px;
+    }
+
+    .photo_block {
+        width: 100%;
+    }
+
+    .data_block {
+        font-size: 14px;
+    }
+
+    .popup {
+        padding: 20px;
+    }
+}

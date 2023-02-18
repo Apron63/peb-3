@@ -1,0 +1,46 @@
+{% extends 'admin/base.html.twig' %}
+
+{% block title %}Панель управления{% endblock %}
+
+{% block content %}
+    <h3>Список пользователей</h3>
+    <div class="count">
+        Всего записей: {{ pagination.getTotalItemCount }}
+    </div>
+
+    <table class="table">
+        <thead>
+        <tr>
+            <th>Создан</th>
+            <th>Логин</th>
+            <th>ФИО</th>
+            <th>Организация</th>
+            <th>Активный</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        {% for user in pagination %}
+            <tr>
+                <td>{{ user.createdAt | date('d.m.Y H:i:s') }}</td>
+                <td>
+                    <a href="{{ path('admin_user_edit', {'id': user.id}) }}">{{ user.login }}</a>
+                </td>
+                <td>{{ user.fullName }}</td>
+                <td>{{ user.organization }}</td>
+                <td>
+                    <span>
+                        <input class="form-check-input" type="checkbox" id="checkboxNoLabel" value=""
+                               {% if user.active == 1 %}checked{% endif %} disabled>
+                    </span>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <div class="navigation">
+        {{ knp_pagination_render(pagination) }}
+    </div>
+
+{% endblock %}

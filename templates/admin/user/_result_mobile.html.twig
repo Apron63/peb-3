@@ -1,0 +1,39 @@
+Результаты
+
+<div class="row">
+    <table class="table">
+        <thead>
+        <tr>
+            <th>Начат</th>
+            <th>Завершен</th>
+            <th>Наименование курса</th>
+            <th>Результат</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        {% for logger in loggerPagination %}
+            <tr>
+                <td>{{ logger.beginAt | date("d.m.Y h:i:s") }}</td>
+                <td>{{ logger.endAt | date("d.m.Y h:i:s") }}</td>
+                <td>
+                    <a href="{{ path('user_show_logger', {id: logger.id}) }}">
+                        {{ logger.course.name }}
+                    </a>
+                </td>
+                <td>
+                    {% if logger.result == true %}
+                        Зачет
+                    {% else %}
+                        Незачет
+                    {% endif %}
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<nav aria-label="navigator">
+    {{ knp_pagination_render(loggerPagination) }}
+</nav>

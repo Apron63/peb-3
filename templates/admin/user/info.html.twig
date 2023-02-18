@@ -1,0 +1,17 @@
+{% extends 'admin/base.html.twig' %}
+
+{% block title %}Панель управления | Информация о пользователе{% endblock %}
+
+{% block content %}
+    <h3>Информация о пользователе</h3>
+
+    <div class="row">
+        <p><b>ФИО:</b> {{ user.name }}</p>
+        <p><b>Организация:</b> {{ user.organization }}</p>
+        <p><b>Логин:</b> {{ user.login }}</p>
+        <p><b>Пароль:</b> {{ user.plainPassword }}</p>
+    </div>
+
+{#    <a href="{{ path('admin_user_send_info', {id: user.id}) }}" class="btn btn btn-outline-primary">Отправить E-Mail</a>#}
+
+{% endblock %}

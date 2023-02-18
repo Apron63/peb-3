@@ -1,0 +1,44 @@
+<p></p>
+<div class="row">
+    {% if is_granted('ROLE_SUPER_ADMIN') %}
+        <div>
+            <a class="btn btn-outline-success" href="{{ path('admin_course_theme_create', {id: course.id}) }}">
+                Добавить новую тему
+            </a>
+        </div>
+    {% endif %}
+    <div class="row">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Наименование</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for theme in courseThemes %}
+                    <tr>
+                        <td>
+                            <a href="{{ path('admin_course_theme_edit', {id: theme.id}) }}">
+                                {{ theme.description }}
+                            </a>
+                        </td>
+                        <td>
+                            {% if is_granted('ROLE_SUPER_ADMIN') %}
+                                <a
+                                        href="{{ path('admin_course_theme_delete', {'id': theme.id}) }}"
+                                        class="btn btn-sm btn-outline-danger"
+                                        onclick="return window.confirm('Подтвердите действие');"
+                                >
+                                    Удалить
+                                </a>
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+
+        </table>
+
+    </div>
+</div>

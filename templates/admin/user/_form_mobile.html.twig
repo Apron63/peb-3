@@ -1,0 +1,95 @@
+{{ form_start(form, {'attr':{'class': 'form-contact contact_form'}}) }}
+
+<div class="row">
+
+    <div class="mb-3 row">
+        <div class="col-sm-10">
+            <span class="text-danger">{{ form_errors(form.login) }}</span>
+            {{ form_widget(form.login) }}
+        </div>
+    </div>
+
+    {% if is_granted('ROLE_SUPER_ADMIN') %}
+        <div class="mb-3 row">
+            <div class="col-sm-10">
+                <span class="text-danger">{{ form_errors(form.plainPassword) }}</span>
+                {{ form_widget(form.plainPassword) }}
+            </div>
+        </div>
+    {% endif %}
+
+    <div class="mb-3 row">
+        <div class="col-sm-10">
+            <span class="text-danger">{{ form_errors(form.lastName) }}</span>
+            {{ form_widget(form.lastName) }}
+        </div>
+    </div>
+
+    <div class="mb-3 row">
+        <div class="col-sm-10">
+            <span class="text-danger">{{ form_errors(form.firstName) }}</span>
+            {{ form_widget(form.firstName) }}
+        </div>
+    </div>
+
+    <div class="mb-3 row">
+        <div class="col-sm-10">
+            <span class="text-danger">{{ form_errors(form.patronymic) }}</span>
+            {{ form_widget(form.patronymic) }}
+        </div>
+    </div>
+
+    <div class="mb-3 row">
+        <div class="col-sm-10">
+            <span class="text-danger">{{ form_errors(form.organization) }}</span>
+            {{ form_widget(form.organization) }}
+        </div>
+    </div>
+
+    <div class="mb-3 row">
+        <div class="col-sm-10">
+            <span class="text-danger">{{ form_errors(form.position) }}</span>
+            {{ form_widget(form.position) }}
+        </div>
+    </div>
+
+    <div class="mb-3 row">
+        <div class="col-sm-10">
+            <span class="text-danger">{{ form_errors(form.email) }}</span>
+            {{ form_widget(form.email) }}
+        </div>
+    </div>
+
+    <div class="mb-3 row">
+        <div class="col-sm-10">
+            <span class="text-danger">{{ form_errors(form.contact) }}</span>
+            {{ form_widget(form.contact) }}
+        </div>
+    </div>
+
+    {% if is_granted('ROLE_SUPER_ADMIN') %}
+        <div class="mb-3 row">
+            <div class="col-sm-10">
+                <span class="text-danger">{{ form_errors(form.roles) }}</span>
+                {{ form_widget(form.roles) }}
+            </div>
+        </div>
+        <div class="mb-3 row">
+            <div class="col-sm-10"></div>
+            <div class="form-check offset-1">
+                <span class="text-danger">{{ form_errors(form.active) }}</span>
+                {{ form_widget(form.active) }}
+                {{ form_label(form.active) }}
+            </div>
+        </div>
+    {% endif %}
+
+    <div class="form-group mb-3 offset-2">
+        {{ form_widget(form.submit) }}
+        {% if user.id is not null %}
+            <a href="{{ path('admin_user_info', {id: user.id}) }}" target="_blank" class="btn btn-outline-primary">Сведения</a>
+        {% endif %}
+    </div>
+
+</div>
+{{ form_end(form) }}

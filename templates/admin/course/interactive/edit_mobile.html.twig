@@ -1,0 +1,133 @@
+{% extends 'admin/base_mobile.html.twig' %}
+
+{% block title %}Панель управления | Интерактивные материалы{% endblock %}
+
+{% block breadcrumbs %}
+    <a href="{{ path('admin_homepage') }}">Панель управления</a>
+    <span>/</span>
+    <a href="{{ path('admin_course_list') }}">Учебные материалы</a>
+    <span>/</span>
+    <a href="{{ path('admin_course_edit', {id: course.id}) }}">{{ course.shortName }}</a>
+{% endblock %}
+
+{% block content %}
+
+    <h3>
+        {% if form.vars['value'].id is null %}
+            Создание модуля
+        {% else %}
+            Редактирование модуля
+        {% endif %}
+    </h3>
+
+    {{ form_start(form, {'attr':{'class': 'form-contact contact_form'}}) }}
+
+    <div class="row">
+
+        <div class="col-12 mb-3">
+            <div class="form-group">
+                <span class="text-danger">{{ form_errors(form.name) }}</span>
+                {{ form_widget(form.name) }}
+            </div>
+        </div>
+
+        {% if form.vars['value'].id is not null %}
+            <div class="col-12 mb-3">
+                <div class="card">
+                    <div class="card-header">
+                        Теоретическая часть
+                    </div>
+
+                    <div class="card-body">
+                        <table class="table">
+                            <tbody>
+                            {% for info in moduleInfo %}
+                                {% if info.part == 1 %}
+                                    <tr>
+                                        <td>
+                                            <a href="{{ path('admin_module_info_edit', {id: info.id}) }}" class="">
+                                                {{ info.name }}
+                                            </a>
+                                        </td>
+                                        <td style="width: 30px">
+                                            {% if is_granted('ROLE_SUPER_ADMIN') %}
+                                                <a
+                                                        href="{{ path('admin_module_info_delete', {'id': info.id}) }}"
+                                                        class="btn btn-sm btn-outline-danger"
+                                                        onclick="return window.confirm('Подтвердите действие');"
+                                                >
+                                                    <img src="{{ asset('svg/trash.svg') }}">
+                                                </a>
+                                            {% endif %}
+                                        </td>
+                                    </tr>
+                                {% endif %}
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="card-footer">
+                        <a
+                                href="{{ path('admin_module_info_add', {id: form.vars['value'].id, part: 1}) }}"
+                                class="btn btn-outline-success"
+                        >
+                            Добавить материал
+                        </a>
+                    </div>
+                </div>
+                <p></p>
+                <div class="card">
+                    <div class="card-header">
+                        Практическая часть
+                    </div>
+                    <div class="card-body">
+                        <table class="table">
+                            <tbody>
+                            {% for info in moduleInfo %}
+                                {% if info.part == 2 %}
+                                    <tr>
+                                        <td>
+                                            <a href="{{ path('admin_module_info_edit', {id: info.id}) }}" class="">
+                                                {{ info.name }}
+                                            </a>
+                                        </td>
+                                        <td style="width: 30px">
+                                            {% if is_granted('ROLE_SUPER_ADMIN') %}
+                                                <a
+                                                        href="{{ path('admin_module_info_delete', {'id': info.id}) }}"
+                                                        class="btn btn-sm btn-outline-danger"
+                                                        onclick="return window.confirm('Подтвердите действие');"
+                                                >
+                                                    <img src="{{ asset('svg/trash.svg') }}">
+                                                </a>
+                                            {% endif %}
+                                        </td>
+                                    </tr>
+                                {% endif %}
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="card-footer">
+                        <a
+                                href="{{ path('admin_module_info_add', {id: form.vars['value'].id, part: 2}) }}"
+                                class="btn btn-outline-success"
+                        >
+                            Добавить материал
+                        </a>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+
+        <p></p>
+        <div class="form-group mb-3">
+            {{ form_widget(form.submit) }}
+        </div>
+
+    </div>
+
+    {{ form_end(form) }}
+
+{% endblock %}

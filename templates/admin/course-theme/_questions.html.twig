@@ -1,0 +1,45 @@
+<div>
+    {% if is_granted('ROLE_SUPER_ADMIN') %}
+        <a class="btn btn-outline-success" href="{{ path('admin_question_create', {id: form.vars['value'].id}) }}">
+            Новый вопрос
+        </a>
+    {% endif %}
+</div>
+
+<table class="table">
+    <thead>
+    <tr>
+        <th>Ном.</th>
+        <th>Текст</th>
+        <th></th>
+    </tr>
+    </thead>
+
+    <tbody>
+    {# {% for question in pagination %}
+        <tr>
+            <td>{{ question.nom }}</td>
+            <td>
+                <a href="{{ path('admin_question_edit', {'id': question.id}) }}">
+                    {{ questionShortDescription(question.description, question.nom) }}
+                </a>
+            </td>
+            <td>
+                {% if is_granted('ROLE_SUPER_ADMIN') %}
+                    <a
+                            href="{{ path('admin_question_delete', {'id': question.id}) }}"
+                            class="btn btn-sm btn-outline-danger"
+                            onclick="return window.confirm('Подтвердите действие');"
+                    >
+                        Удалить
+                    </a>
+                {% endif %}
+            </td>
+        </tr>
+    {% endfor %} #}
+    </tbody>
+</table>
+
+{# <div class="navigation">
+    {{ knp_pagination_render(pagination) }}
+</div> #}

@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}{% endblock %}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="icon" href="{{ asset('favicon.ico') }}" type="image/x-icon">
+
+    {% block stylesheets %}
+        {{ encore_entry_link_tags('admin') }}
+    {% endblock %}
+
+    {# {% block stylesheets %}
+        <link rel="stylesheet" href="{{ asset('css/bootstrap.min.css') }}">
+        <link rel="stylesheet" href="{{ asset('css/datepicker-foundation.min.css') }}">
+        <link rel="stylesheet" href="{{ asset('css/app.css') }}">
+    {% endblock %} #}
+
+    {# {% block javascripts %} #}
+        {# <script src="{{ asset('js/jquery.min.js') }}"></script>
+        <script src="{{ asset('js/bootstrap.bundle.min.js') }}"></script>
+        <script src="{{ asset('js/datepicker-full.min.js') }}"></script>
+        <script src="{{ asset('js/locales/ru.js') }}"></script> #}
+        {# <script src="{{ asset('js/popper.min.js') }}"></script> #}
+        {# <script src="{{ asset('js/select2.full.min.js') }}"></script> #}
+        {# <script src="{{ asset('js/select2entity.js') }}"></script> #}
+        {# {{ encore_entry_script_tags('app') }} #}
+    {# {% endblock %} #}
+</head>
+<body>
+<div class="container">
+
+    <div
+        class="row border border-dark shadow p-3 mb-5 bg-body rounded text-center sticky-top"
+        style="margin-bottom:5px!important;"
+    >
+        <div class="col-3">
+            {{ app.user.fullName }}
+        </div>
+        <div class="col-8">
+            Панель управления
+        </div>
+        <div class="col-1">
+            <a href="{{ path('app_logout') }}" class="btn btn-outline-dark">Выход</a>
+        </div>
+    </div>
+
+    <div class="row" id="app">
+        <div class="col-2">
+            <ul class="list-group">
+                <a href="{{ path('admin_homepage') }}"
+                   class="list-group-item list-group-item-action list-group-item-light">
+                    Поиск
+                </a>
+                <a href="{{ path('admin_user_create') }}"
+                   class="list-group-item list-group-item-action list-group-item-light">
+                    Создать
+                </a>
+                <a href="{{ path('admin_load_1c_file') }}"
+                   class="list-group-item list-group-item-action list-group-item-light">
+                    Загрузка из 1C
+                </a>
+                <a href="{{ path('admin_course_list') }}"
+                   class="list-group-item list-group-item-action list-group-item-light">
+                    Учебные материалы
+                </a>
+                {% if is_granted('ROLE_SUPER_ADMIN') %}
+                    <a href="{{ path('admin_profile_list') }}"
+                       class="list-group-item list-group-item-action list-group-item-light">
+                        Профили
+                    </a>
+                    <a href="{{ path('admin_load_course') }}"
+                       class="list-group-item list-group-item-action list-group-item-light">
+                        Загрузка курсов
+                    </a>
+                {% endif %}
+                <a href="{{ path('admin_query_job') }}"
+                   class="list-group-item list-group-item-action list-group-item-light">
+                    Задачи
+                </a>
+                <a href="{{ path('admin_query_1cload') }}"
+                   class="list-group-item list-group-item-action list-group-item-light">
+                    Очередь
+                </a>
+            </ul>
+        </div>
+        <div class="col-10">
+            <div>
+                {% block breadcrumbs %}{% endblock %}
+            </div>
+            {% block content %}{% endblock %}
+        </div>
+    </div>
+
+    {# Toast message #}
+    <div class="toast-container position-absolute top-0 end-0 p-3" style="z-index: 1050">
+        <div id="liveToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="toast-header">
+                <img src="{{ asset('svg/slice.svg') }}" class="rounded me-2" alt="...">
+                <strong class="me-auto">Сообщение</strong>
+                {# <small>11 mins ago</small> #}
+                <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+            <div class="toast-body" id="toast-message">
+                Hello, world! This is a toast message.
+            </div>
+        </div>
+    </div>
+
+    {% include 'admin/components/modal.html.twig' %}
+
+</div>
+
+{# Init toasts #}
+<script>
+    var toastLiveExample = document.getElementById('liveToast')
+</script>
+
+{# read and display just one flash message type #}
+{% for message in app.flashes('error') %}
+    <script>
+        $("#toast-message").html("{{ message }}");
+        $(".toast-header").css("background-color", "#ff0000");
+        $(".me-auto").css("color", "#ffffff");
+        let toast = new bootstrap.Toast(toastLiveExample);
+        toast.show();
+    </script>
+{% endfor %}
+
+{% block javascripts %}
+     {{ encore_entry_script_tags('admin') }}
+{% endblock%}
+
+{% block jsScripts %}{% endblock %}
+
+</body>
+</html>
