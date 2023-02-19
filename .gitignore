@@ -6,6 +6,7 @@
 /public/storage/
 /var/
 /vendor/
+/docker/mysql/
 
 .phpunit.result.cache
 /phpunit.xml
