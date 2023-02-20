@@ -2,12 +2,12 @@
 
 namespace App\Entity;
 
-use App\Repository\QuestionsRepository;
+use App\Repository\AnswerRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Entity(repositoryClass: QuestionsRepository::class)]
-class Questions
+#[ORM\Entity(repositoryClass: AnswerRepository::class)]
+class Answer
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -16,16 +16,13 @@ class Questions
 
     #[ORM\ManyToOne]
     #[ORM\JoinColumn(nullable: false)]
-    private ?Course $course = null;
-
-    #[ORM\Column]
-    private ?int $parentId = null;
+    private ?Questions $question = null;
 
     #[ORM\Column(type: Types::TEXT)]
     private ?string $description = null;
 
-    #[ORM\Column(type: Types::TEXT, nullable: true)]
-    private ?string $help = null;
+    #[ORM\Column]
+    private ?bool $isCorrect = null;
 
     #[ORM\Column]
     private ?int $nom = null;
@@ -35,26 +32,14 @@ class Questions
         return $this->id;
     }
 
-    public function getCourse(): ?Course
+    public function getQuestion(): ?Questions
     {
-        return $this->course;
+        return $this->question;
     }
 
-    public function setCourse(?Course $course): self
+    public function setQuestion(?Questions $question): self
     {
-        $this->course = $course;
-
-        return $this;
-    }
-
-    public function getParentId(): ?int
-    {
-        return $this->parentId;
-    }
-
-    public function setParentId(int $parentId): self
-    {
-        $this->parentId = $parentId;
+        $this->question = $question;
 
         return $this;
     }
@@ -71,14 +56,14 @@ class Questions
         return $this;
     }
 
-    public function getHelp(): ?string
+    public function isIsCorrect(): ?bool
     {
-        return $this->help;
+        return $this->isCorrect;
     }
 
-    public function setHelp(?string $help): self
+    public function setIsCorrect(bool $isCorrect): self
     {
-        $this->help = $help;
+        $this->isCorrect = $isCorrect;
 
         return $this;
     }

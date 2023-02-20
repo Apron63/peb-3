@@ -1,7 +1,7 @@
 <div>
     {% if is_granted('ROLE_SUPER_ADMIN') %}
-        <a class="btn btn-outline-success" href="{{ path('admin_question_create', {id: form.vars['value'].id}) }}">
-            Новый вопрос
+        <a class="btn btn-outline-success" href="{{ path('admin_answer_create', {id: form.vars['value'].id}) }}">
+            Новый ответ
         </a>
     {% endif %}
 </div>
@@ -10,24 +10,30 @@
     <thead>
     <tr>
         <th>Ном.</th>
+        <th>Прав.</th>
         <th>Текст</th>
         <th></th>
     </tr>
     </thead>
 
     <tbody>
-    {% for question in pagination %}
+    {% for answer in answers %}
         <tr>
-            <td>{{ question.nom }}</td>
+            <td>{{ answer.nom }}</td>
             <td>
-                <a href="{{ path('admin_question_edit', {'id': question.id}) }}">
-                    {{ shortDescription(question.description, question.nom) }}
-                </a>
+                {% if answer.isCorrect %}
+                    Да
+                {% else %}
+                    Нет
+                {% endif %}
+            </td>
+            <td>
+                <a href="{{ path('admin_answer_edit', {'id': answer.id}) }}">{{ answer.shortDescription }}</a>
             </td>
             <td>
                 {% if is_granted('ROLE_SUPER_ADMIN') %}
                     <a
-                            href="{{ path('admin_question_delete', {'id': question.id}) }}"
+                            href="{{ path('admin_answer_delete', {'id': answer.id}) }}"
                             class="btn btn-sm btn-outline-danger"
                             onclick="return window.confirm('Подтвердите действие');"
                     >
@@ -39,7 +45,3 @@
     {% endfor %}
     </tbody>
 </table>
-
-<div class="navigation">
-    {{ knp_pagination_render(pagination) }}
-</div>

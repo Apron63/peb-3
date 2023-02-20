@@ -1,0 +1,59 @@
+{% extends 'admin/base.html.twig' %}
+
+{% block title %}Панель управления | Вопросы{% endblock %}
+
+{% block breadcrumbs %}
+    <a href="{{ path('admin_homepage') }}">Панель управления</a>
+    <span>/</span>
+    <a href="{{ path('admin_course_list') }}">Учебные материалы</a>
+    <span>/</span>
+    <a href="{{ path('admin_course_edit', {id: courseId}) }}">Редактирование курса</a>
+    <span>/</span>
+    {# <a href="{{ path('admin_course_theme_edit', {id: form.vars['value'].theme.id}) }}">Редактирование темы</a>
+    <span>/</span> #}
+    <span>Вопросы</span>
+{% endblock %}
+
+{% block content %}
+
+    <h3>
+        {% if form.vars['value'].id is null %}
+            Новый вопрос
+        {% else %}
+            Редактирование вопроса
+        {% endif %}
+    </h3>
+
+    <nav>
+        <div class="nav nav-tabs" id="nav-tab" role="tablist">
+            <button class="nav-link active" id="nav-prop-tab" data-bs-toggle="tab" data-bs-target="#nav-prop"
+                    type="button" role="tab" aria-controls="nav-prop" aria-selected="true">Сведения
+            </button>
+            <button class="nav-link" id="nav-answer-tab" data-bs-toggle="tab" data-bs-target="#nav-answer"
+                    type="button" role="tab" aria-controls="nav-answer" aria-selected="false">Ответы
+            </button>
+            <button class="nav-link" id="nav-help-tab" data-bs-toggle="tab" data-bs-target="#nav-help"
+                    type="button" role="tab" aria-controls="nav-help" aria-selected="true">Подсказка
+            </button>
+        </div>
+    </nav>
+
+    <p></p>
+
+    {{ form_start(form, {'attr':{'class': 'form-contact contact_form'}}) }}
+    <div class="tab-content" id="nav-tabContent">
+        <div class="tab-pane fade show active" id="nav-prop" role="tabpanel" aria-labelledby="nav-prop-tab">
+            {% include 'admin/question/_form.html.twig' %}
+        </div>
+        {% if form.vars['value'].id is not null %}
+            <div class="tab-pane fade" id="nav-answer" role="tabpanel" aria-labelledby="nav-answer-tab">
+                {% include 'admin/question/_answer.html.twig' %}
+            </div>
+        {% endif %}
+        <div class="tab-pane fade" id="nav-help" role="tabpanel" aria-labelledby="nav-help-tab">
+            {% include 'admin/question/_help.html.twig' %}
+        </div>
+    </div>
+    {{ form_end(form) }}
+
+{% endblock %}

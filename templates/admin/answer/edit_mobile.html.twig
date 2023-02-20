@@ -1,0 +1,49 @@
+{% extends 'admin/base_mobile.html.twig' %}
+
+{% block title %}Панель управления{% endblock %}
+
+{% block content %}
+
+    <h3>
+        {% if form.vars['value'].id is null %}
+            Новый ответ
+        {% else %}
+            Редактирование ответа
+        {% endif %}
+    </h3>
+
+    {{ form_start(form, {'attr':{'class': 'form-contact contact_form'}}) }}
+
+    <div class="row">
+
+        <div class="col-12">
+            <div class="form-group">
+                <span class="text-danger">{{ form_errors(form.nom) }}</span>
+                {{ form_widget(form.nom) }}
+            </div>
+        </div>
+
+        <div class="col-12">
+            <div class="form-group">
+                <span class="text-danger">{{ form_errors(form.description) }}</span>
+                {{ form_widget(form.description) }}
+            </div>
+        </div>
+
+        <div class="col-12">
+            <div class="form-check form-switch">
+                <span class="text-danger">{{ form_errors(form.isCorrect) }}</span>
+                {{ form_widget(form.isCorrect) }}
+                {{ form_label(form.isCorrect) }}
+            </div>
+        </div>
+
+        <div class="form-group">
+            {{ form_widget(form.submit) }}
+        </div>
+
+    </div>
+
+    {{ form_end(form) }}
+
+{% endblock %}

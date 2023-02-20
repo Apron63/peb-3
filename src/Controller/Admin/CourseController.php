@@ -67,10 +67,6 @@ class CourseController extends MobileController
     #[Route('/admin/course/{id<\d+>}/', name: 'admin_course_edit')]
     public function adminCourseEdit(Request $request, Course $course): Response
     {
-        // if (!$course) {
-        //     throw new NotFoundHttpException();
-        // }
-
         $form = $this->createForm(CourseEditType::class, $course);
         $form->handleRequest($request);
 

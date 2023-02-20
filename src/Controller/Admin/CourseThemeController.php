@@ -7,15 +7,18 @@ use App\Entity\Course;
 use App\Entity\CourseTheme;
 use App\Form\Admin\CourseThemeEditType;
 use App\Repository\CourseThemeRepository;
-use Doctrine\ORM\Tools\Pagination\Paginator;
+use App\Repository\QuestionsRepository;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 class CourseThemeController extends MobileController
 {
-    public function __construct(readonly CourseThemeRepository $courseThemeRepository) 
-    {}
+    public function __construct(
+        readonly CourseThemeRepository $courseThemeRepository,
+        readonly QuestionsRepository $questionsRepository
+    ) {}
 
     #[Route('/admin/course_theme/create/{id<\d+>}/', name: 'admin_course_theme_create')]
     public function adminCourseThemeCreate(Request $request, Course $course): Response
@@ -41,21 +44,14 @@ class CourseThemeController extends MobileController
     #[Route('/admin/course_theme/{id<\d+>}/', name: 'admin_course_theme_edit')]
     public function adminCourseThemeEdit(
         Request $request, 
-        //Paginator $paginator, 
+        PaginatorInterface $paginator, 
         CourseTheme $courseTheme
     ): Response {
-        // $dql = "SELECT q.id, q.description, q.nom
-        //         FROM App\Entity\Questions q
-        //         WHERE q.theme = :themeId 
-        //         ORDER BY q.nom
-        // ";
-        // $query = $this->em->createQuery($dql)->setParameter('themeId', $courseTheme->getId());
-
-        // $pagination = $paginator->paginate(
-        //     $query,
-        //     $request->query->getInt('page', 1),
-        //     10
-        // );
+        $pagination = $paginator->paginate(
+            $this->questionsRepository->getQuestionQuery($courseTheme->getCourse()),
+            $request->query->getInt('page', 1),
+            10
+        );
 
         $form = $this->createForm(CourseThemeEditType::class, $courseTheme);
         $form->handleRequest($request);
@@ -70,7 +66,7 @@ class CourseThemeController extends MobileController
 
         return $this->mobileRender('admin/course-theme/edit.html.twig', [
             'form' => $form->createView(),
-            //'pagination' => $pagination,
+            'pagination' => $pagination,
         ]);
     }
 
