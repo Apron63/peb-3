@@ -2,12 +2,11 @@
 
 namespace App\Entity;
 
-use App\Repository\CourseInfoRepository;
+use App\Repository\ModuleRepository;
 use Doctrine\ORM\Mapping as ORM;
-use Exception;
 
-#[ORM\Entity(repositoryClass: CourseInfoRepository::class)]
-class CourseInfo
+#[ORM\Entity(repositoryClass: ModuleRepository::class)]
+class Module
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -20,9 +19,6 @@ class CourseInfo
 
     #[ORM\Column(length: 255)]
     private ?string $name = null;
-
-    #[ORM\Column(length: 255, nullable: true)]
-    private ?string $fileName = null;
 
     public function getId(): ?int
     {
@@ -51,30 +47,5 @@ class CourseInfo
         $this->name = $name;
 
         return $this;
-    }
-
-    public function getFileName(): ?string
-    {
-        return $this->fileName;
-    }
-
-    public function setFileName(?string $fileName): self
-    {
-        $this->fileName = $fileName;
-
-        return $this;
-    }
-
-    #[ORM\PreRemove()]
-    public function removeAttachedFile(): void
-    {
-        try {
-            unlink(
-                getcwd() . '/storage/course/'
-                . $this->getCourse()->getShortNameCleared()
-                . '/' . $this->fileName
-            );
-        } catch (Exception $e) {
-        }
     }
 }

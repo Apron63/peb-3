@@ -1,0 +1,61 @@
+{% extends 'admin/base_mobile.html.twig' %}
+
+{% block title %}Панель управления | Учебные материалы{% endblock %}
+
+{% block breadcrumbs %}
+    <a href="{{ path('admin_homepage') }}">Панель управления</a>
+    <span>/</span>
+    <a href="{{ path('admin_course_list') }}">Учебные материалы</a>
+    <span>/</span>
+    <a href="{{ path('admin_module_edit', {id: module.id}) }}">{{ module.name }}</a>
+    <span>/</span>
+    <span>Редактирование</span>
+{% endblock %}
+
+{% block content %}
+
+    <h3>
+        Редактирование модуля
+    </h3>
+
+    {{ form_start(form, {'attr':{'class': 'form-contact contact_form'}}) }}
+
+    <div class="row">
+
+        <div class="col-12 mb-3">
+            <div class="form-group">
+                <span class="text-danger">{{ form_errors(form.name) }}</span>
+                {{ form_widget(form.name) }}
+            </div>
+        </div>
+
+        <div class="col-12 mb-3">
+            <div class="form-group">
+                <span class="text-danger">{{ form_errors(form.url) }}</span>
+                {{ form_widget(form.url) }}
+            </div>
+        </div>
+
+        <div class="col-12 mb-3">
+            <div class="form-group">
+                <span class="text-danger">{{ form_errors(form.filename) }}</span>
+                {{ form_widget(form.filename) }}
+            </div>
+        </div>
+
+        <div class="col-12 mb-3">
+            <div class="form-group">
+                <span class="text-danger">{{ form_errors(form.urlType) }}</span>
+                {{ form_widget(form.urlType) }}
+            </div>
+        </div>
+
+        <div class="form-group mb-3">
+            {{ form_widget(form.submit) }}
+        </div>
+
+    </div>
+
+    {{ form_end(form) }}
+
+{% endblock %}

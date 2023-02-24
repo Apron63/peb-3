@@ -1,6 +1,6 @@
 <div>
     {% if is_granted('ROLE_SUPER_ADMIN') %}
-        <a class="btn btn-outline-success" href="{{ path('admin_question_create', {id: form.vars['value'].id}) }}">
+        <a class="btn btn-outline-success" href="{{ path('admin_question_create', {id: form.vars['value'].course.id, parentId: parentId}) }}">
             Добавить вопрос
         </a>
     {% endif %}

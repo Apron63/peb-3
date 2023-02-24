@@ -1,14 +1,18 @@
 {% extends 'admin/base.html.twig' %}
 
-{% block title %}Панель управления{% endblock %}
+{% block title %}Панель управления | Учебные материалы{% endblock %}
+
+{% block breadcrumbs %}
+    <a href="{{ path('admin_homepage') }}">Панель управления</a>
+    <span>/</span>
+    <a href="{{ path('admin_course_list') }}">Учебные материалы</a>
+    <span>/</span>
+    <span>Редактирование</span>
+{% endblock %}
 
 {% block content %}
 
     <h3>Интерактивные учебные материалы</h3>
-
-    <a href="{{ path('admin_module_add', {id: course.id}) }}" class="btn btn-outline-success">
-        Добавить модуль
-    </a>
 
     <p></p>
 
@@ -48,37 +52,28 @@
         </div>
     {% endif %}
 
-    <table class="table">
-        <thead>
-        <tr>
-            <th>Наименование</th>
-            <th></th>
-        </tr>
-        </thead>
-        <tbody>
-            {% for module in modules %}
-                <tr>
-                    <td>
-                        <a
-                            href="{{ path('admin_module_edit', {id: module.id}) }}"
-                        >
-                            {{ module.name }}
-                        </a>
-                    </td>
-                    <td>
-                        <a
-                            class="btn btn-outline-danger"
-                            href="{{ path('admin_module_delete', {id: module.id}) }}"
-                            onclick="return window.confirm('Подтвердите действие');"
-                        >
-                            Удалить
-                        </a>
-                    </td>
-                </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+    
+    <nav>
+        <div class="nav nav-tabs" id="nav-modules-tab" role="tablist">
+            <button class="nav-link active" id="nav-modules-tab" data-bs-toggle="tab"
+                    data-bs-target="#nav-modules"
+                    type="button" role="tab" aria-controls="nav-themes" aria-selected="true">Модули
+            </button>
+            <button class="nav-link" id="nav-info-tab" data-bs-toggle="tab" data-bs-target="#nav-info"
+                    type="button" role="tab" aria-controls="nav-info" aria-selected="false">Материалы
+            </button>
+        </div>
+    </nav>
 
+    <div class="tab-content" id="nav-tabContent">
+        <div class="tab-pane fade show active" id="nav-modules" role="tabpanel" aria-labelledby="nav-modules-tab">
+            {% include 'admin/course/interactive/_modules.html.twig' %}
+        </div>
+        <div class="tab-pane fade" id="nav-info" role="tabpanel" aria-labelledby="nav-info-tab">
+            {% include 'admin/course/interactive/_infos.html.twig' %}
+        </div>
+    </div>
+    
     {% if form.vars['value'].id is not null %}
         <div class="form-group mb-3">
             {{ form_widget(form.submit) }}

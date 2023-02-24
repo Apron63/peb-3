@@ -1,0 +1,36 @@
+<p></p>
+
+<a href="{{ path('admin_module_create', {id: course.id}) }}" class="btn btn-outline-success">
+    Добавить модуль
+</a>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Наименование</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for module in modules %}
+            <tr>
+                <td>
+                    <a
+                        href="{{ path('admin_module_edit', {id: module.id}) }}"
+                    >
+                        {{ module.name }}
+                    </a>
+                </td>
+                <td>
+                    <a
+                        class="btn btn-outline-danger"
+                        href="{{ path('admin_module_delete', {id: module.id}) }}"
+                        onclick="return window.confirm('Подтвердите действие');"
+                    >
+                        Удалить
+                    </a>
+                </td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>

@@ -12,6 +12,8 @@ use Symfony\Component\Routing\Annotation\Route;
 use Knp\Component\Pager\PaginatorInterface;
 use App\Repository\CourseRepository;
 use App\Repository\CourseThemeRepository;
+use App\Repository\ModuleInfoRepository;
+use App\Repository\ModuleRepository;
 use App\Repository\ProfileRepository;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\String\Slugger\SluggerInterface;
@@ -23,6 +25,8 @@ class CourseController extends MobileController
         readonly ProfileRepository $profileRepository,
         readonly CourseInfoRepository $courseInfoRepository,
         readonly CourseThemeRepository $courseThemeRepository,
+        readonly ModuleRepository $moduleRepository,
+        readonly ModuleInfoRepository $moduleInfoRepository,
         readonly SluggerInterface $slugger,
     ) {}
 
@@ -110,7 +114,9 @@ class CourseController extends MobileController
             return $this->mobileRender('admin/course/interactive/list.html.twig', [
                 'form' => $form->createView(),
                 'course' => $course,
-                //'modules' => $this->moduleRepository->getModules($course),
+                'modules' => $this->moduleRepository->getModules($course),
+                'courseInfos' => $this->courseInfoRepository->getCourseInfos($course),
+                'moduleInfos' => $this->moduleInfoRepository->getModuleInfos($course),
             ]);
         } else {
             // $ticketCount = $this->em->getRepository(Ticket::class)

@@ -1,0 +1,48 @@
+<p></p>
+
+<a href="{{ path('admin_course_info_create', {id: course.id}) }}" class="btn btn-outline-success">
+    Добавить материалы
+</a>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Наименование</th>
+            <th></th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for courseInfo in courseInfos %}
+            <tr>
+                <td>
+                    <a
+                        href="{{ path('admin_course_info_edit', {id:courseInfo.id}) }}"
+                    >
+                        {{courseInfo.name }}
+                    </a>
+                </td>
+                <td>
+                    {% if courseInfo.fileName is not empty %}
+                        <a
+                                href="{{ path('view', {filename: courseInfo.fileName, courseId: courseInfo.course.id}) }}"
+                                target="_blank"
+                                class="btn btn-sm btn-outline-info"
+                        >
+                            Просмотр
+                        </a>
+                    {% endif %}
+                </td>
+                <td>
+                    <a
+                        class="btn btn-outline-danger"
+                        href="{{ path('admin_course_info_delete', {id: courseInfo.id}) }}"
+                        onclick="return window.confirm('Подтвердите действие');"
+                    >
+                        Удалить
+                    </a>
+                </td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>

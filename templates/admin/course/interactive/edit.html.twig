@@ -32,93 +32,29 @@
             </div>
 
             {% if form.vars['value'].id is not null %}
-                <div class="col-12 mb-3">
-                    <div class="card">
-                        <div class="card-header">
-                            Теоретическая часть
-                        </div>
 
-                        <div class="card-body">
-                            <table class="table">
-                                <tbody>
-                                    {% for info in moduleInfo %}
-                                        {% if info.part == 1 %}
-                                            <tr>
-                                                <td>
-                                                    <a href="{{ path('admin_module_info_edit', {id: info.id}) }}" class="">
-                                                        {{ info.name }}
-                                                    </a>
-                                                </td>
-                                                <td style="width: 30px">
-                                                    {% if is_granted('ROLE_SUPER_ADMIN') %}
-                                                        <a
-                                                            href="{{ path('admin_module_info_delete', {'id': info.id}) }}"
-                                                            class="btn btn-sm btn-outline-danger"
-                                                            onclick="return window.confirm('Подтвердите действие');"
-                                                        >
-                                                            Удалить
-                                                        </a>
-                                                    {% endif %}
-                                                </td>
-                                            </tr>
-                                        {% endif %}
-                                    {% endfor %}
-                                </tbody>
-                            </table>
-                        </div>
-
-                        <div class="card-footer">
-                            <a
-                                href="{{ path('admin_module_info_add', {id: form.vars['value'].id, part: 1}) }}"
-                                class="btn btn-outline-success"
-                            >
-                                Добавить материал
-                            </a>
-                        </div>
+                <nav>
+                    <div class="nav nav-tabs" id="nav-modules-tab" role="tablist">
+                        <button class="nav-link active" id="nav-modules-tab" data-bs-toggle="tab"
+                                data-bs-target="#nav-modules"
+                                type="button" role="tab" aria-controls="nav-modules" aria-selected="true">Разделы
+                        </button>
+                        <button class="nav-link" id="nav-question-tab" data-bs-toggle="tab" data-bs-target="#nav-question"
+                                type="button" role="tab" aria-controls="nav-question" aria-selected="false">Вопросы
+                        </button>
                     </div>
-                    <p></p>
-                    <div class="card">
-                        <div class="card-header">
-                            Практическая часть
-                        </div>
-                        <div class="card-body">
-                            <table class="table">
-                                <tbody>
-                                {% for info in moduleInfo %}
-                                    {% if info.part == 2 %}
-                                        <tr>
-                                            <td>
-                                                <a href="{{ path('admin_module_info_edit', {id: info.id}) }}" class="">
-                                                    {{ info.name }}
-                                                </a>
-                                            </td>
-                                            <td style="width: 30px">
-                                                {% if is_granted('ROLE_SUPER_ADMIN') %}
-                                                    <a
-                                                            href="{{ path('admin_module_info_delete', {'id': info.id}) }}"
-                                                            class="btn btn-sm btn-outline-danger"
-                                                            onclick="return window.confirm('Подтвердите действие');"
-                                                    >
-                                                        Удалить
-                                                    </a>
-                                                {% endif %}
-                                            </td>
-                                        </tr>
-                                    {% endif %}
-                                {% endfor %}
-                                </tbody>
-                            </table>
-                        </div>
-                        <div class="card-footer">
-                            <a
-                                href="{{ path('admin_module_info_add', {id: form.vars['value'].id, part: 2}) }}"
-                                class="btn btn-outline-success"
-                            >
-                                Добавить материал
-                            </a>
-                        </div>
+                </nav>
+
+                <div class="tab-content" id="nav-tabContent">
+                    <div class="tab-pane fade show active" id="nav-modules" role="tabpanel" aria-labelledby="nav-modules-tab">
+                        {% include 'admin/course/interactive/_section.html.twig' %}
+                    </div>
+                    <div class="tab-pane fade" id="nav-question" role="tabpanel" aria-labelledby="nav-question-tab">
+                        {% include 'admin/course-theme/_questions.html.twig' %}
                     </div>
                 </div>
+
+
             {% endif %}
 
             <p></p>

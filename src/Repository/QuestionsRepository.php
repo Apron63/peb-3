@@ -51,6 +51,7 @@ class QuestionsRepository extends ServiceEntityRepository
                 'parentId' => $parentId,
             ])
             ->orderBy('q.nom', 'desc')
+            ->setMaxResults(1)
             ->getQuery()
             ->getOneOrNullResult();
 
@@ -63,12 +64,14 @@ class QuestionsRepository extends ServiceEntityRepository
         return $result;
     }
 
-    public function getQuestionQuery(Course $course): AbstractQuery
+    public function getQuestionQuery(Course $course, int $parentId): AbstractQuery
     {
         return $this->createQueryBuilder('q')
             ->where('q.course = :course')
+            ->andWhere('q.parentId = :parentId')
             ->setParameters([
                 'course' => $course->getId(),
+                'parentId' => $parentId,
             ])
             ->orderBy('q.nom')
             ->getQuery();

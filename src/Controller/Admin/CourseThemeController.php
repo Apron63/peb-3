@@ -48,7 +48,7 @@ class CourseThemeController extends MobileController
         CourseTheme $courseTheme
     ): Response {
         $pagination = $paginator->paginate(
-            $this->questionsRepository->getQuestionQuery($courseTheme->getCourse()),
+            $this->questionsRepository->getQuestionQuery($courseTheme->getCourse(), $courseTheme->getId()),
             $request->query->getInt('page', 1),
             10
         );
@@ -67,6 +67,7 @@ class CourseThemeController extends MobileController
         return $this->mobileRender('admin/course-theme/edit.html.twig', [
             'form' => $form->createView(),
             'pagination' => $pagination,
+            'parentId' => $courseTheme->getId(),
         ]);
     }
 

@@ -3,7 +3,7 @@
 namespace App\Controller\Admin;
 
 use App\Decorator\MobileController;
-use App\Entity\CourseTheme;
+use App\Entity\Course;
 use App\Entity\Questions;
 use App\Form\Admin\QuestionsEditType;
 use App\Repository\AnswerRepository;
@@ -20,14 +20,14 @@ class QuestionController extends MobileController
         readonly AnswerRepository $answerRepository
     ) {}
 
-    #[Route('/admin/question/create/{id<\d+>}/', name: 'admin_question_create')]
-    public function adminQuestionCreate(Request $request, CourseTheme $courseTheme): Response
+    #[Route('/admin/question/create/{id<\d+>}/{parentId}/', name: 'admin_question_create')]
+    public function adminQuestionCreate(Request $request, Course $course, int $parentId): Response
     {
         $question = new Questions();
-        $question->setCourse($courseTheme->getCourse());
-        $question->setParentId($courseTheme->getId());
+        $question->setCourse($course);
+        $question->setParentId($parentId);
         $question->setNom(
-            $this->questionsRepository->getNextNumber($courseTheme->getCourse(), $courseTheme->getId())
+            $this->questionsRepository->getNextNumber($course, $parentId)
         );
         $form = $this->createForm(QuestionsEditType::class, $question);
         $form->handleRequest($request);
@@ -37,7 +37,13 @@ class QuestionController extends MobileController
                 $this->questionsRepository->save($question, true);
             }
 
-            return $this->redirect('/admin/course_theme/' . $question->getParentId() . '/');
+            $redirectUrl = $this->generateUrl('admin_course_theme_edit', ['id' => $question->getParentId()]);
+
+            if ($question->getCourse()->getType() === Course::INTERACTIVE) {
+                $redirectUrl = $this->generateUrl('admin_module_edit', ['id' => $question->getParentId()]);
+            }
+
+            return $this->redirect($redirectUrl);
         }
 
         return $this->render('admin/question/edit.html.twig', [
