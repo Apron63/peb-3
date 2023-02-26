@@ -82,10 +82,6 @@ class UserController extends MobileController
     #[Route('/admin/user/{id<\d+>}/', name: 'admin_user_edit')]
     public function adminUserEditAction(Request $request, PaginatorInterface $paginator, User $user): Response
     {
-        // if (!$user) {
-        //     throw new NotFoundHttpException();
-        // }
-
         $form = $this->createForm(UserEditType::class, $user);
         $form->handleRequest($request);
 
@@ -131,10 +127,6 @@ class UserController extends MobileController
     #[Route('/admin/user/info/{id<\d+>}', name: 'admin_user_info')]
     public function adminUserInfo(Request $request, User $user): Response
     {
-        // if (!$user) {
-        //     throw new NotFoundHttpException();
-        // }
-
         return $this->mobileRender('admin/user/info.html.twig', [
             'user' => $user,
         ]);

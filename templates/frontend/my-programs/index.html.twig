@@ -1,0 +1,110 @@
+{% extends 'frontend/base.html.twig' %}
+
+{% block mainContent %}
+
+    {% include('components/header.html.twig') %}
+
+    <div class="global-content">
+
+        {% include('components/background.html.twig') %}
+
+        <div class="wrapper container">
+            {% include 'components/left_menu.html.twig' with {'activeItem': 'my-programs'} %}
+
+            <div class="content">
+                <div class="programs" content-elem="programs">
+
+                    {% include('frontend/my-programs/item.html.twig') %}
+
+                    {% include('frontend/my-programs/item.html.twig') %}
+
+                    {% include('frontend/my-programs/item.html.twig') %}
+
+                    {% include('frontend/my-programs/item.html.twig') %}
+                    
+                    {% include('frontend/my-programs/item.html.twig') %}
+
+                    {# <div class="programs_item" content-elem="programs-item">
+                        <div class="programs_item_image_wrapper">
+                            <div class="programs_item_image_inner">
+                                <img src="images/occupational_Safety_and_Health.jpg" alt="">
+                            </div>
+                        </div>
+                        <div class="programs_item_header">
+                            Общие вопросы охраны труда и функционирования СУОТ
+                        </div>
+                        <div class="programs_item_status_wrapper">
+                            <div class="programs_item_status"></div>
+                            <a href="javascript:void(0)" class="programs_item_status_link red_button">Продолжить обучение</a>
+                        </div>
+                    </div> #}
+
+                    {# <div class="programs_item" content-elem="programs-item">
+                        <div class="programs_item_image_wrapper">
+                            <div class="programs_item_image_inner">
+                                <img src="images/oil_and_gas_industry.jpg" alt="">
+                            </div>
+                        </div>
+                        <div class="programs_item_header">
+                            Б2. Нефтяная и газовая промышленность
+                        </div>
+                        <div class="programs_item_status_wrapper">
+                            <div class="programs_item_status"></div>
+                            <a href="javascript:void(0)" class="programs_item_status_link red_button">Начать обучение</a>
+                        </div>
+                    </div> #}
+
+                    {# <div class="programs_item" content-elem="programs-item">
+                        <div class="programs_item_image_wrapper">
+                            <div class="programs_item_image_inner">
+                                <img src="images/occupational_Safety_and_Health.jpg" alt="">
+                            </div>
+                        </div>
+                        <div class="programs_item_header">
+                            Общие вопросы охраны труда и функционирования СУОТ
+                        </div>
+                        <div class="programs_item_status_wrapper">
+                            <div class="programs_item_status">Курс не активен</div>
+                            <a href="javascript:void(0)" class="programs_item_status_link red_button">Продлить курс</a>
+                        </div>
+                    </div> #}
+
+                    {# <div class="programs_item" content-elem="programs-item">
+                        <div class="programs_item_image_wrapper">
+                            <div class="programs_item_image_inner">
+                                <img src="images/oil_and_gas_industry.jpg" alt="">
+                            </div>
+                        </div>
+                        <div class="programs_item_header">
+                            Б2. Нефтяная и газовая промышленность
+                        </div>
+                        <div class="programs_item_status_wrapper">
+                            <div class="programs_item_status"></div>
+                            <a href="javascript:void(0)" class="programs_item_status_link red_button">Начать обучение</a>
+                        </div>
+                    </div> #}
+
+                    {# <div class="programs_item" content-elem="programs-item">
+                        <div class="programs_item_image_wrapper">
+                            <div class="programs_item_image_inner">
+                                <img src="images/first_aid.jpg" alt="">
+                            </div>
+                        </div>
+                        <div class="programs_item_header">
+                            Оказание первой помощи пострадавшим
+                        </div>
+                        <div class="programs_item_status_wrapper">
+                            <div class="programs_item_status">Обучение завершено</div>
+                        </div>
+                    </div> #}
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {% include('components/footer.html.twig') %}
+
+    <div class="overlay" popup-element="overlay"></div>
+
+{% endblock %}

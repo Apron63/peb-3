@@ -76,8 +76,8 @@ class UserService
             $user->setCreatedBy($this->token->getToken()->getUser());
         }
 
-        if (null === $user->getName() || '' === $user->getName()) {
-            $user->setName(
+        if (null === $user->getFullName() || '' === $user->getFullName()) {
+            $user->setFullName(
                 implode(' ', [
                         $user->getLastName(),
                         $user->getFirstName(),
@@ -103,10 +103,10 @@ class UserService
 
         if (null === $patronymic) {
             $login = substr($lastName, 0, 9) . $firstName[0];
-            $user->setName($user->getLastName() . ' ' . $user->getFirstName());
+            $user->setFullName($user->getLastName() . ' ' . $user->getFirstName());
         } else {
             $login = substr($lastName, 0, 8) . $firstName[0] . $patronymic[0];
-            $user->setName($user->getLastName() . ' ' . $user->getFirstName() . ' ' . $user->getPatronymic());
+            $user->setFullName($user->getLastName() . ' ' . $user->getFirstName() . ' ' . $user->getPatronymic());
         }
 
         $attempt = 1;

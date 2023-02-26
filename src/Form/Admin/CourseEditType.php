@@ -44,8 +44,7 @@ class CourseEditType extends AbstractType
             ])
             ->add('profile', EntityType::class, [
                 'class' => Profile::class,
-                //'choices' => $this->profileRepository->getAllProfiles(),
-                'choices' => $this->profileRepository->findAll(),
+                'choices' => $this->profileRepository->getAllProfilesAsCollection(),
                 'attr' => [
                     'label' => false,
                     'class' => 'form-select',

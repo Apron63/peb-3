@@ -3,7 +3,6 @@
 namespace App\Controller\Admin;
 
 use App\Decorator\MobileController;
-use App\Entity\Course;
 use App\Entity\Module;
 use App\Entity\ModuleSection;
 use App\Form\Admin\ModuleSectionEditType;

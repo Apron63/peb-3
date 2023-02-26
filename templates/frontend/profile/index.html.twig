@@ -1,0 +1,62 @@
+{% extends 'frontend/base.html.twig' %}
+
+{% block title %}Профиль{% endblock %}
+
+{% block body %}
+
+    {% include('frontend/components/header.html.twig') %}
+
+    <div class="global-content">
+
+        {% include('frontend/components/background.html.twig') %}
+
+        <div class="wrapper container">
+            {% include 'frontend/components/left_menu.html.twig' with {'activeItem': 'support'} %}
+
+            <div class="content">
+                <div class="profile">
+                    <div class="photo_block">
+                        <div class="photo_wrapper">
+                            <div class="photo_inner">
+                                <img class="photo" src="{{ asset('img/photo.jpg') }}" alt="">
+                            </div>
+                        </div>
+                        <div class="photo_change_button_wrapper">
+                            <a class="photo_change_button" href="javascript:void(0)" id="btnFileUpload">сменить фото</a>
+                            <input type="file" id="FileUpload1" style="display: none"/>
+                        </div>
+                    </div>
+                    <div class="data_block">
+                        <div class="profile_row"><strong>{{ user.lastName }}</strong></div>
+                        <div class="profile_row">{{ user.firstName }} {{ user.patronymic }}</div>
+                        <div class="profile_row"><strong>Огранизация:</strong>{{ user.organization }}</div>
+                        <div class="profile_row"><strong>Должность:</strong>{{ user.position }}</div>
+                        <div class="profile_row"><strong>Логин:</strong>{{ user.position }}</div>
+                        <div class="profile_row"><strong>Пароль:</strong>{{ user.plainPassword }}</div>
+                        <div class="profile_row"><a class="profile_exit_link" href="{{ path('app_logout')}}">Выйти из аккаунта</a></div>
+                    </div>
+                </div> 
+            </div>
+        </div>
+    </div>
+
+    {% include('frontend/components/footer.html.twig') %}
+
+    <div class="overlay" popup-element="overlay"></div>
+
+    {% block customJs %}
+        <script type="text/javascript">
+            var fileupload = $('#FileUpload1')
+            //var filePath = $("#spnFilePath");
+            var button = $('#btnFileUpload')
+            button.click(function () {
+                fileupload.click()
+            });
+            fileupload.change(function () {
+                var fileName = $(this).val().split('\\')[$(this).val().split('\\').length - 1]
+                console.log(fileName)
+            });
+        </script>
+    {% endblock %}
+
+{% endblock %}

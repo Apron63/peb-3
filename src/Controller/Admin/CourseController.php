@@ -15,6 +15,7 @@ use App\Repository\CourseThemeRepository;
 use App\Repository\ModuleInfoRepository;
 use App\Repository\ModuleRepository;
 use App\Repository\ProfileRepository;
+use App\Repository\TicketRepository;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\String\Slugger\SluggerInterface;
 
@@ -27,6 +28,7 @@ class CourseController extends MobileController
         readonly CourseThemeRepository $courseThemeRepository,
         readonly ModuleRepository $moduleRepository,
         readonly ModuleInfoRepository $moduleInfoRepository,
+        readonly TicketRepository $ticketRepository,
         readonly SluggerInterface $slugger,
     ) {}
 
@@ -119,20 +121,20 @@ class CourseController extends MobileController
                 'moduleInfos' => $this->moduleInfoRepository->getModuleInfos($course),
             ]);
         } else {
-            // $ticketCount = $this->em->getRepository(Ticket::class)
-            //     ->getTicketCount($course);
+            $courseThemes = $this->courseThemeRepository->getCourseThemes($course);
+            $ticketCount = $this->ticketRepository->getTicketCount($course, $courseThemes);
 
             // $totalTicketCount = $this->em->getRepository(Ticket::class)
             //     ->getTotalTicketCount($course);
 
             /** @var Ticket $ticket */
-            $ticket = $course->getTickets()->first();
+            //$ticket = $course->getTickets()->first();
             return $this->mobileRender('admin/course/edit.html.twig', [
                 'form' => $form->createView(),
                 'course' => $course,
                 'courseInfos' => $this->courseInfoRepository->getCourseInfos($course),
-                'courseThemes' => $this->courseThemeRepository->getCourseThemes($course),
-                // 'ticketCount' => $ticketCount,
+                'courseThemes' => $courseThemes,
+                'ticketCount' => $ticketCount,
                 // 'totalTicketCount' => $totalTicketCount,
                 // 'ticket' => $ticket,
             ]);

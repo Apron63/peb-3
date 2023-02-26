@@ -55,6 +55,7 @@ class AnswerRepository extends ServiceEntityRepository
             ->where('a.question = :question')
             ->setParameter('question', $question->getId())
             ->orderBy('a.nom', 'desc')
+            ->setMaxResults(1)
             ->getQuery()
             ->getOneOrNullResult();
 

@@ -45,11 +45,19 @@
             </div>
         </div>
         
-        <div class="col-12 mb-3">
-            <div class="form-group">
-                <span class="text-danger">{{ form_errors(form.image) }}</span>
-                {{ form_widget(form.image) }}
+        <div class=row>
+            {% if form.vars['value'].image is not empty %}
+                <div class=col-3>
+                    <img src="/storage/course/{{ course.id }}/{{ form.vars['value'].image }}" height="100px">
+                </div>
+            {% endif %}
+            <div class="col-9 mb-3">
+                <div class="form-group">
+                    <span class="text-danger">{{ form_errors(form.image) }}</span>
+                    {{ form_widget(form.image) }}
+                </div>
             </div>
+            <p></p>
         </div>
 
         {% if form.vars['value'].id is not null %}

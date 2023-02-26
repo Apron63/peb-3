@@ -39,8 +39,6 @@ function openMenuAfterLoad(menu) {
                         if(modulesMenu) {
                             modulesMenu.style.maxHeight = modulesMenu.scrollHeight + 'px';
                             programsMenu.style.maxHeight = modulesMenu.scrollHeight + programsMenu.scrollHeight + 'px';
-                            console.log(mainMenu)
-                            // mainMenu.style.maxHeight = mainMenu.scrollHeight + programsMenu.scrollHeight + modulesMenu.scrollHeight + 'px';
                         }
                     }
                 })
@@ -192,14 +190,6 @@ let mainMenu = document.querySelector('[menu-elem="main-menu"]')
 
 if(mainMenu) {
     openMenuAfterLoad(mainMenu)
-    mainMenu.addEventListener('click', function(event){
-        if(event.target.getAttribute('menu-elem') == 'main-header') {
-            openMenuPrograms(event)
-        }
-        if(event.target.getAttribute('menu-elem') == 'program-header') {
-            openMenuModules(event)
-        }
-    })
 }
 
 

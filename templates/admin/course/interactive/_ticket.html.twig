@@ -1,0 +1,36 @@
+<p></p>
+
+<div class="row">
+    {% if tickets | length > 0%}
+        Найдено {{ tickets | length }}
+    {% else %}
+        Билеты не созданы
+    {% endif %}
+</div>
+
+<p></p>
+
+<div class="row g-3">
+    <label for="ticketCount" class="col-1 form-label">Билетов</label>
+    <div class="col-2">
+        <input type="text" class="form-control" id="ticketCount" title="Количество билетов">
+    </div>
+     <label for="questionCount" class="col-1 form-label">Вопросов</label>
+    <div class="col-2">
+        <input type="text" class="form-control" id="questionCount" title="Количество вопросов в билете">
+    </div>
+    <label for="errorsCount" class="col-1 form-label">Ошибок</label>
+    <div class="col-2">
+        <input type="text" class="form-control" id="errorsCount" title="Количество допустимых ошибок в билете">
+    </div>
+    <div class="col-auto">
+        <button 
+            type="button" 
+            class="btn btn-outline-success" 
+            id="createTickets" 
+            data-url="{{ path('admin_module_create_tickets', {id: parentId}) }}"
+        >
+            Создать билеты
+        </button>
+    </div>
+</div>

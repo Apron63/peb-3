@@ -1,5 +1,5 @@
 import $ from 'jquery'
-import bootstrap from 'bootstrap'
+import * as bootstrap from 'bootstrap'
 
 $('#select-all').on('click', function () {
     $('body input:checkbox').prop('checked', true)

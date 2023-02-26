@@ -27,17 +27,17 @@ class QuestionsEditType extends AbstractType
                 ],
             ])
             ->add('description', TypeCkeditorType::class, [])
-            // ->add('type', ChoiceType::class, [
-            //     'choices' => Questions::getAnswerType(),
-            //     'attr' => [
-            //         'label' => false,
-            //         'class' => 'form-select',
-            //         'placeholder' => 'Количество правильных ответов',
-            //         'onfocus' => 'this.placeholder = ""',
-            //         'onblur' => 'this.placeholder = "Количество правильных вопросов"',
-            //         'rows' => 6,
-            //     ],
-            // ])
+            ->add('type', ChoiceType::class, [
+                'choices' => Questions::getAnswerType(),
+                'attr' => [
+                    'label' => false,
+                    'class' => 'form-select',
+                    'placeholder' => 'Количество правильных ответов',
+                    'onfocus' => 'this.placeholder = ""',
+                    'onblur' => 'this.placeholder = "Количество правильных вопросов"',
+                    'rows' => 6,
+                ],
+            ])
             ->add('help', TypeCkeditorType::class, [])
             ->add('submit', SubmitType::class, [
                 'label' => 'Сохранить',

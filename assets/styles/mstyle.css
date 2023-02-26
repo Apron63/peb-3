@@ -39,6 +39,34 @@
         width: 100%;
     }
 
+    .results_data_row {
+        width: 100%;
+    }
+
+    .results_table_header .number,
+    .results_table_header .question,
+    .results_table_header .answer,
+    .results_table_header .result {
+        display: none;
+    }
+
+    .results_table_content .results_table_row {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .results_table_content .results_table_row .number {
+        display: none;
+    }
+
+    .results_table_content .results_table_row .question,
+    .results_table_content .results_table_row .answer,
+    .results_table_content .results_table_row .result {
+        padding-right: 0;
+        padding-left: 0;
+        padding-bottom: 5px;
+    }
+
     .history_table_header .status,
     .history_table_header .start_at,
     .history_table_header .finish_at,
@@ -72,8 +100,30 @@
         flex: 0 0 45%;
     }
 
+    .demo-programs_item {
+        flex: 0 0 45%;
+    }
+
+    .demo-programs_item:nth-child(3n-1) {
+        margin-left: 0;
+        margin-right: 0;
+    }
+
+    .demo-programs_item:nth-child(2n) {
+        margin-left: 10%;
+    }
+
     .programs_item {
         flex: 0 0 45%;
+    }
+
+    .programs_item:nth-child(3n-1) {
+        margin-left: 0;
+        margin-right: 0;
+    }
+
+    .programs_item:nth-child(2n) {
+        margin-left: 10%;
     }
 
     .express-test_header {
@@ -191,8 +241,24 @@
         margin-right: auto;
     }
 
+    .demo-programs_item {
+        flex: 0 0 100%;
+    }
+
+    .demo-programs_item:nth-child(2n) {
+        margin-left: 0;
+    }
+
+    .demo-programs_item_header {
+        font-size: 14px;
+    }
+
     .programs_item {
         flex: 0 0 100%;
+    }
+
+    .programs_item:nth-child(2n) {
+        margin-left: 0;
     }
 
     .programs_item_header {

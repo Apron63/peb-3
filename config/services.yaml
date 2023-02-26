@@ -29,3 +29,11 @@ services:
     App\TwigExtension\TwigExtension:
         tags:
         - { name: twig.extension }
+
+    # Gedmo Timestampable services
+    gedmo.listener.timestampable:
+        class: Gedmo\Timestampable\TimestampableListener
+        tags:
+        - { name: doctrine.event_subscriber, connection: default }
+        calls:
+        - [ setAnnotationReader, [ "@annotation_reader" ] ]

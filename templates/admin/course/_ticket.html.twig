@@ -10,7 +10,7 @@
                         Билеты не созданы
                     {% endif %} #}
                 </span>
-                <button class="btn btn-outline-success" id="build-tickets">
+                <button type="button" class="btn btn-outline-success" id="build-tickets" data-url="{{ path('admin_tickets_create') }}">
                     Пересоздать билеты
                 </button>
             </div>
@@ -45,26 +45,26 @@
             </tr>
             </thead>
             <tbody>
-            {# {% for theme in course.courseThemes %}
-                <tr>
-                    <td>{{ theme.name }}</td>
-                    <td
+                {% for theme in courseThemes %}
+                    <tr>
+                        <td>{{ theme.name }}</td>
+                        <td
                             data-max-cnt-id="{{ theme.id }}"
                             data-max-cnt-value="{{ ticketCount[theme.id] }}"
                             class="theme-max-cnt"
-                    >
-                        {{ ticketCount[theme.id] }}
-                    </td>
-                    <td>
-                        <input
+                        >
+                            {{ ticketCount[theme.id] }}
+                        </td>
+                        <td>
+                            <input
                                 class="form-inline theme-cnt-input"
                                 type="number"
                                 id="cnt-{{ theme.id }}"
                                 style="width: 100px;"
-                        >
-                    </td>
-                </tr>
-            {% endfor %} #}
+                            >
+                        </td>
+                    </tr>
+                {% endfor %}
             </tbody>
         </table>
     </div>

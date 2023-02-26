@@ -8,15 +8,15 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class SiteController extends AbstractController
 {
-    #[Route('/', name: 'homepage')]
-    public function index(): Response
-    {
-        if ($this->isGranted('ROLE_ADMIN')) {
-            return $this->redirectToRoute('admin_homepage');
-        }
+    // #[Route('/', name: 'homepage')]
+    // public function index(): Response
+    // {
+    //     if ($this->isGranted('ROLE_ADMIN')) {
+    //         return $this->redirectToRoute('admin_homepage');
+    //     }
 
-        return $this->render('site/index.html.twig', [
-            'controller_name' => 'SiteController',
-        ]);
-    }
+    //     return $this->render('site/index.html.twig', [
+    //         'controller_name' => 'SiteController',
+    //     ]);
+    // }
 }

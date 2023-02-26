@@ -8,8 +8,11 @@ use App\Entity\Module;
 use App\Form\Admin\ModuleEditType;
 use App\Repository\ModuleRepository;
 use App\Repository\ModuleSectionRepository;
+use App\Repository\ModuleTicketRepository;
 use App\Repository\QuestionsRepository;
+use App\Service\TicketService;
 use Knp\Component\Pager\PaginatorInterface;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -19,7 +22,9 @@ class ModuleController extends MobileController
     public function __construct(
         readonly ModuleRepository $moduleRepository,
         readonly ModuleSectionRepository $moduleSectionRepository,
-        readonly QuestionsRepository $questionsRepository
+        readonly QuestionsRepository $questionsRepository,
+        readonly ModuleTicketRepository $moduleTicketRepository,
+        readonly TicketService $ticketService
     ) {}
 
     #[Route('/admin/module/add/{id<\d+>}/', name: 'admin_module_create')]
@@ -70,6 +75,7 @@ class ModuleController extends MobileController
             'moduleSection' => $this->moduleSectionRepository->findBy(['module' => $module]),
             'pagination' => $pagination,
             'parentId' => $module->getId(),
+            'tickets' => $this->moduleTicketRepository->getTickets($module),
         ]);
     }
 
@@ -79,5 +85,19 @@ class ModuleController extends MobileController
         $courseId = $module->getCourse()->getId();
         $this->moduleRepository->remove($module, true);
         return $this->redirectToRoute('admin_course_edit', ['id' => $courseId]);
+    }
+    
+    #[Route('/admin/module/create-tickets/{id<\d+>}/', name: 'admin_module_create_tickets', condition: 'request.isXmlHttpRequest()')]
+    public function adminCreateTickets(Request $request, Module $module): JsonResponse
+    {
+        $ticketCount = $request->get('ticketCount');
+        $questionCount = $request->get('questionCount');
+        $errorsCount = $request->get('errorsCount');
+
+        $this->ticketService->createModuleTickets($module, $ticketCount, $questionCount, $errorsCount);
+        
+        return new JsonResponse([
+            'result' => true,
+        ]);
     }
 }

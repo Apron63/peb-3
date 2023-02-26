@@ -48,6 +48,14 @@ class ProfileRepository extends ServiceEntityRepository
             ->enableResultCache()
             ->getArrayResult();
     }
-
-
+    
+    public function getAllProfilesAsCollection(): array
+    {
+        return $this->createQueryBuilder('p')
+            ->orderBy('p.name')
+            ->setCacheable(true)
+            ->getQuery()
+            ->enableResultCache()
+            ->getResult();
+    }
 }

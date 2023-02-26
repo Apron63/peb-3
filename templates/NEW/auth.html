@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/mstyle.css">
+    <title>Авторизация</title>
+</head>
+<body>
+    <div class="global-wrapper">
+        <div class="global-content">
+            <div class="global-background">
+                <div class="global_background_overlay"></div>
+                <div class="global-background_image">
+                    <img src="images/global-background-image.svg" alt="">
+                </div>
+            </div>
+            <div class="auth-form_wrapper">
+                <div class="auth-form_logo">
+                    <img src="images/peb_logo_auth.png" alt="logo">
+                </div>
+                <form class="auth-form" form-elem="form">
+                    <label class="auth-form_label" form-elem="label">
+                        <input class="auth-form_input" name="login" type="text" autocomplete="off" form-elem="input-text">
+                        <div class="auth-form_name">Логин</div>
+                    </label>
+                    <label class="auth-form_label" form-elem="label">
+                        <input class="auth-form_input" name="password" type="password" form-elem="input-text">
+                        <div class="auth-form_name">Пароль</div>
+                    </label>
+                    <div class="auth-form_error"><!--Тут выводить ошибки авторизации--></div>
+                    <div class="auth-form_submit_wrapper">
+                        <button class="auth-form_submit red_button" type="button">Войти в систему</button>
+                    </div>
+                    <div class="auth-form_difficulties_wrapper">
+                        <a href="javascript:void(0)" class="auth-form_difficulties" element-action="open-popup">Возникли трудности?</a>
+                    </div>
+                </form>
+            </div>
+            <div class="demo-link_wrapper">
+                <a href="demo.html" class="demo-link">Демо-версия</a>
+            </div>
+            <div class="overlay" popup-element="overlay">
+                <div class="popup" popup-element="popup">
+                    <p>Если не получается войти в систему:</p>
+                    <ol>
+                        <li>Попробуйте обновить страницу и ввести данные снова</li>
+                        <li>Проверьте правильность ввода данных</li>
+                        <li>Обратитесь в техподдержку</li>
+                    </ol>
+                    <p>Телефон: <a href="tel:+79370771165">+7-937-077-11-65</a>, <a href="tel:+78462691526">+7 (846) 26-915-26</a></p>
+                    <p>Email: <a href="mailto:support@safety63.ru">support@safety63.ru</a></p>
+                    <p>График работы: с 8:00 до 22:00 без перерывов и выходных</p>
+                    <div class="popup_close_wrapper">
+                        <a class="popup_close" popup-element="popup-close">закрыть</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="js/scripts.js"></script>
+</body>
+</html>

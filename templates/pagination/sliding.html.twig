@@ -1,0 +1,40 @@
+{% if pageCount > 1 %}
+    <ul class="pagination">
+        {% if first is defined and current != first %}
+            <li class="page-item">
+                <a href="{{ path(route, query|merge({(pageParameterName): first})) }}" class="page-link">В начало</a>
+            </li>
+        {% endif %}
+
+        {#        {% if previous is defined %}#}
+        {#            <a aria-label="Previous"#}
+        {#               href="{{ path(route, query|merge({(pageParameterName): previous})) }}">Назад#}
+        {#            </a>#}
+        {#        {% endif %}#}
+
+        {% for page in pagesInRange %}
+            {% if page != current %}
+                <li class="page-item">
+                    <a href="{{ path(route, query|merge({(pageParameterName): page})) }}"
+                       class="page-link">{{ page }}</a>
+                </li>
+            {% else %}
+                <li class="page-item active">
+                    <a class="page-link" href="javascript:void(0);">{{ page }}</a>
+                </li>
+            {% endif %}
+        {% endfor %}
+
+        {#        {% if next is defined %}#}
+        {#                <a aria-label="Next"#}
+        {#                   href="{{ path(route, query|merge({(pageParameterName): next})) }}">Вперед</a>#}
+        {#        {% endif %}#}
+
+        {% if last is defined and current != last %}
+            <li class="page-item">
+                <a href="{{ path(route, query|merge({(pageParameterName): last})) }}" class="page-link">В конец</a>
+            </li>
+        {% endif %}
+        <div class="clear"></div>
+    </ul>
+{% endif %}

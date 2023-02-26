@@ -9,6 +9,12 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Entity(repositoryClass: QuestionsRepository::class)]
 class Questions
 {
+    public const QUESTION_TYPE_ONCE = 1;
+    public const QUESTION_TYPE_MULTIPLE = 2;
+
+    public const QUESTION_ONCE_TEXT = 'Один ответ';
+    public const QUESTION_MULTIPLE_TEXT = 'Несколько ответов';
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
@@ -29,6 +35,9 @@ class Questions
 
     #[ORM\Column]
     private ?int $nom = null;
+
+    #[ORM\Column(type: Types::SMALLINT)]
+    private ?int $type = null;
 
     public function getId(): ?int
     {
@@ -93,5 +102,25 @@ class Questions
         $this->nom = $nom;
 
         return $this;
+    }
+
+    public function getType(): ?int
+    {
+        return $this->type;
+    }
+
+    public function setType(int $type): self
+    {
+        $this->type = $type;
+
+        return $this;
+    }
+
+    public static function getAnswerType(): array
+    {
+        return [
+            self::QUESTION_ONCE_TEXT => self::QUESTION_TYPE_ONCE,
+            self::QUESTION_MULTIPLE_TEXT => self::QUESTION_TYPE_MULTIPLE,
+        ];
     }
 }

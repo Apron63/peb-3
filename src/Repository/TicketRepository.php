@@ -2,8 +2,10 @@
 
 namespace App\Repository;
 
+use App\Entity\Course;
 use App\Entity\Ticket;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\AbstractQuery;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -39,28 +41,23 @@ class TicketRepository extends ServiceEntityRepository
         }
     }
 
-//    /**
-//     * @return Ticket[] Returns an array of Ticket objects
-//     */
-//    public function findByExampleField($value): array
-//    {
-//        return $this->createQueryBuilder('t')
-//            ->andWhere('t.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->orderBy('t.id', 'ASC')
-//            ->setMaxResults(10)
-//            ->getQuery()
-//            ->getResult()
-//        ;
-//    }
+    public function getTicketCount(Course $course, array $courseThemes): array
+    {
+        $array = [];
+        foreach ($courseThemes as $theme) {
+            $query = $this->getEntityManager()
+                ->createQuery(
+                    "SELECT count(q.id) 
+                    FROM App\Entity\Questions q
+                    WHERE q.course = :course
+                    AND q.parentId = :parentId
+                ")
+                ->setParameter('course', $course->getId())
+                ->setParameter('parentId', $theme->getId());
 
-//    public function findOneBySomeField($value): ?Ticket
-//    {
-//        return $this->createQueryBuilder('t')
-//            ->andWhere('t.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->getQuery()
-//            ->getOneOrNullResult()
-//        ;
-//    }
+            $result = $query->execute(null, AbstractQuery::HYDRATE_SINGLE_SCALAR);
+            $array[$theme->getId()] = $result;
+        }
+        return $array;
+    }
 }
