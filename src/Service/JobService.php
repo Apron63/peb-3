@@ -2,7 +2,6 @@
 
 namespace App\Service;
 
-use App\Entity\Job;
 use App\Entity\QueryJob;
 use App\Entity\User;
 use App\Repository\QueryJobRepository;
@@ -34,18 +33,19 @@ class JobService
             ->setDescription($description)
             ->setStartAt(new DateTime())
             ->setUser($user);
-        $this->queryJobRepository->add($job, true);
+
+        $this->queryJobRepository->save($job, true);
 
         return $job;
     }
 
     /**
-     * @param Job $job
+     * @param QueryJob $job
      * @param string|null $documentLink
      */
     public function finishJob(QueryJob $job, ?string $documentLink = null): void
     {
         $job->setEndAt(new DateTime())->setDocumentLink($documentLink);
-        $this->queryJobRepository->add($job, true);
+        $this->queryJobRepository->save($job, true);
     }
 }

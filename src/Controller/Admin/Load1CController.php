@@ -3,6 +3,7 @@
 namespace App\Controller\Admin;
 
 use App\Decorator\MobileController;
+use App\Entity\User;
 use App\Form\Admin\Load1CType;
 use App\Repository\CourseRepository;
 use App\Repository\ProfileRepository;
@@ -55,5 +56,19 @@ class Load1CController extends MobileController
                 'profiles' => $profiles,
             ])
         );
+    }
+
+    #[Route('/admin/query/create/', name: 'admin_query_create', condition: 'request.isXmlHttpRequest()')]
+    public function createUserQueryAction(Request $request): Response
+    {
+        $courseIds = $request->get('course');
+        $duration = $request->get('duration');
+        $data = json_decode($request->get('data'));
+
+        /** @var User $user */
+        $user = $this->getUser();
+        $result = $this->uploadService->sendUserDataToQuery($user, $courseIds, $duration, $data);
+
+        return new Response($result['message']);
     }
 }

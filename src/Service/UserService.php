@@ -3,7 +3,7 @@
 namespace App\Service;
 
 use App\Entity\User;
-use Doctrine\ORM\EntityManagerInterface;
+use App\Repository\UserRepository;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\String\ByteString;
@@ -11,30 +11,12 @@ use Symfony\Component\String\Slugger\SluggerInterface;
 
 class UserService
 {
-    private EntityManagerInterface $em;
-    private SluggerInterface $slugger;
-    private UserPasswordHasherInterface $passwordEncoder;
-    private TokenStorageInterface $token;
-
-    /**
-     * UserService constructor.
-     * @param EntityManagerInterface $em
-     * @param SluggerInterface $slugger
-     * @param UserPasswordHasherInterface $passwordEncoder
-     * @param TokenStorageInterface $token
-     */
     public function __construct(
-        EntityManagerInterface $em,
-        SluggerInterface $slugger,
-        UserPasswordHasherInterface $passwordEncoder,
-        TokenStorageInterface $token
-    )
-    {
-        $this->em = $em;
-        $this->slugger = $slugger;
-        $this->passwordEncoder = $passwordEncoder;
-        $this->token = $token;
-    }
+        readonly SluggerInterface $slugger,
+        readonly UserPasswordHasherInterface $passwordEncoder,
+        readonly TokenStorageInterface $token,
+        readonly UserRepository $userRepository
+    ) { }
 
     /**
      * @param array $criteria
@@ -52,10 +34,12 @@ class UserService
             $login = substr($lastName, 0, 8) . $firstName[0] . $patronymic[0];
         }
 
-        return $this->em->getRepository(User::class)->findOneBy([
-            'login' => $login,
-            'organization' => $criteria['organization'],
-        ]);
+        return $this->userRepository
+            ->findOneBy([
+                'login' => $login,
+                'organization' => $criteria['organization'],
+            ]
+        );
     }
 
     /**
@@ -111,13 +95,15 @@ class UserService
 
         $attempt = 1;
         while ($attempt < 1000) {
-            $ue = $this->em->getRepository(User::class)
+            $ue = $this->userRepository
                 ->getUserExistsByLoginAndOrganization($login, $user->getOrganization());
+
             if ($ue) {
                 $login = substr($login, 0, 7) . sprintf('%03s', $attempt);
             } else {
                 break;
             }
+
             $attempt++;
         }
 

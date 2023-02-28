@@ -15,6 +15,12 @@ doctrine:
                 dir: '%kernel.project_dir%/src/Entity'
                 prefix: 'App\Entity'
                 alias: App
+        dql:
+            datetime_functions:
+                DateDiff: DoctrineExtensions\Query\Mysql\DateDiff
+                Now: DoctrineExtensions\Query\Mysql\Now
+            string_functions:
+                ConcatWs: DoctrineExtensions\Query\Mysql\ConcatWs
 
 when@test:
     doctrine:

@@ -6,73 +6,36 @@ use App\Entity\Course;
 use App\Entity\Permission;
 use App\Entity\QueryUser;
 use App\Entity\User;
-use App\Entity\UserQuery;
 use App\Message\Query1CUploadMessage;
 use App\Repository\CourseRepository;
 use App\Repository\PermissionRepository;
 use App\Repository\QueryUserRepository;
-use App\Repository\UserQueryRepository;
 use App\Repository\UserRepository;
 use DateTime;
-use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\NonUniqueResultException;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
 use RuntimeException;
-use Symfony\Component\DependencyInjection\ParameterBag\ContainerBagInterface;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Messenger\MessageBusInterface;
 
 class Query1CUploadService
 {
-    // private EntityManagerInterface $em;
-    // private ContainerBagInterface $params;
-    // private MessageBusInterface $bus;
-    // private UserQueryRepository $userQueryRepository;
-    // private UserRepository $userRepository;
-    // private UserService $userService;
-    // private CourseRepository $courseRepository;
-    // private PermissionRepository $permissionRepository;
-
     private string $originalFilename;
-
     private string $reportUploadPath;
     private string $exchange1cUploadDirectory;
 
-    /**
-     * CourseUploadService constructor.
-     * @param EntityManagerInterface $em
-     * @param ContainerBagInterface $params
-     * @param MessageBusInterface $bus
-     * @param UserQueryRepository $userQueryRepository ,
-     * @param UserRepository $userRepository
-     * @param UserService $userService
-     * @param CourseRepository $courseRepository
-     * @param PermissionRepository $permissionRepository
-     */
     public function __construct(
+        readonly MessageBusInterface $bus,
         readonly QueryUserRepository $queryUserRepository,
-        EntityManagerInterface $em,
-        ContainerBagInterface $params,
-        MessageBusInterface $bus,
-        //UserQueryRepository $userQueryRepository,
-        UserRepository $userRepository,
-        //UserService $userService,
-        CourseRepository $courseRepository,
-        //PermissionRepository $permissionRepository,
+        readonly UserRepository $userRepository,
+        readonly UserService $userService,
+        readonly CourseRepository $courseRepository,
+        readonly PermissionRepository $permissionRepository,
         string $reportUploadPath,
         string $exchange1cUploadDirectory
     ) {
-        // $this->em = $em;
-        // $this->em->getConnection()->getConfiguration()->setSQLLogger(null);
-        // $this->params = $params;
-        // $this->bus = $bus;
-        // $this->userQueryRepository = $userQueryRepository;
-        // $this->userRepository = $userRepository;
-        // $this->userService = $userService;
-        // $this->courseRepository = $courseRepository;
-        // $this->permissionRepository = $permissionRepository;
         $this->reportUploadPath = $reportUploadPath;
         $this->exchange1cUploadDirectory = $exchange1cUploadDirectory;
     }
@@ -138,7 +101,7 @@ class Query1CUploadService
         $courseName = '';
         foreach ($data as $row) {
             $queryUser = new QueryUser();
-            $$queryUser
+            $queryUser
                 ->setCreatedBy($user)
                 ->setOrderNom($row[0])
                 ->setCourseIds(
@@ -179,7 +142,7 @@ class Query1CUploadService
      */
     public function createUsersAndPermissions(): ?string
     {
-        $userData = $this->userQueryRepository->getUserQueryNew();
+        $userData = $this->queryUserRepository->getUserQueryNew();
 
         $fileName = $this->reportUploadPath . '/' . (new DateTime())->format('d-m-Y_H_i_s') . '_' . uniqid() . '.csv';
         $file = fopen($fileName, 'w');
@@ -197,39 +160,38 @@ class Query1CUploadService
         fputs($file, $fileData);
 
         foreach ($userData as $row) {
-            $createdByUser = $this->userRepository->find($row['createdBy']);
+            $createdByUser = $this->userRepository->find($row->getCreatedBy()->getId());
 
             // Ищем пользователя по логину и организации.
             $user = $this->userRepository
                 ->findOneBy([
-                    'name' => implode(
+                    'fullName' => implode(
                         ' ',
                         [
-                            $row[0]->getLastName(),
-                            $row[0]->getFirstName(),
-                            $row[0]->getPatronymic()
+                            $row->getLastName(),
+                            $row->getFirstName(),
+                            $row->getPatronymic()
                         ]
                     ),
-                    'organization' => $row[0]->getOrganization()
+                    'organization' => $row->getOrganization()
                 ]);
 
             // Создадим нового если не нашлось.
             if (!$user instanceof User) {
                 $user = (new User())
-                    ->setOrganization($row[0]->getOrganization())
-                    ->setLastName($row[0]->getLastName())
-                    ->setFirstName($row[0]->getFirstName())
-                    ->setPatronymic($row[0]->getPatronymic())
-                    ->setCreatedAt($row[0]->getCreatedAt())
+                    ->setOrganization($row->getOrganization())
+                    ->setLastName($row->getLastName())
+                    ->setFirstName($row->getFirstName())
+                    ->setPatronymic($row->getPatronymic())
+                    ->setCreatedAt($row->getCreatedAt())
                     ->setCreatedBy($createdByUser)
                     ->setPosition('');
                 $user = $this->userService->setNewUser($user);
-                $this->em->persist($user);
-                $this->em->flush();
+                $this->userRepository->save($user, true);
             }
 
             // Проверяем доступы.
-            foreach (explode(',', $row[0]->getCourseIds()) as $courseId) {
+            foreach (explode(',', $row->getCourseIds()) as $courseId) {
                 $course = $this->courseRepository->find($courseId);
                 if ($course instanceof Course) {
                     $permission = $this->permissionRepository
@@ -239,17 +201,16 @@ class Query1CUploadService
                     if (!$permission instanceof Permission) {
                         $permission = (new Permission())
                             ->setCreatedAt(new DateTime())
-                            ->setOrderNom($row[0]->getOrderNom())
-                            ->setDuration($row[0]->getDuration())
+                            ->setOrderNom($row->getOrderNom())
+                            ->setDuration($row->getDuration())
                             ->setCourse($course)
                             ->setUser($user);
 
-                        $this->em->persist($permission);
-                        $this->em->flush();
+                        $this->permissionRepository->save($permission, true);
                     }
 
-                    $fileData = $row[0]->getOrderNom() . ';'
-                        . $user->getName() . ';'
+                    $fileData = $row->getOrderNom() . ';'
+                        . $user->getFullName() . ';'
                         . $user->getOrganization() . ';'
                         . $user->getLogin() . ';'
                         . $user->getPlainPassword() . ';'
@@ -261,9 +222,8 @@ class Query1CUploadService
             }
 
             // Очередь.
-            $row[0]->setResult('success');
-            $this->em->persist($row[0]);
-            $this->em->flush();
+            $row->setResult('success');
+            $this->queryUserRepository->save($row, true);
         }
 
         fclose($file);

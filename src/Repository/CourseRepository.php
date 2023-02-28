@@ -91,7 +91,8 @@ class CourseRepository extends ServiceEntityRepository
     public function getAllCourses(): array
     {
         return $this->createQueryBuilder('c')
-            ->select('c')
+            ->select('c.id', 'c.name', 'IDENTITY (c.profile) AS profileId')
+            ->where('c.forDemo = 0')
             ->orderBy('c.name')
             ->setCacheable(true)
             ->getQuery()

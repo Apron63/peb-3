@@ -28,7 +28,7 @@ class QueryJob
     private ?User $user = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    private ?string $documantLink = null;
+    private ?string $documentLink = null;
 
     public function getId(): ?int
     {
@@ -83,14 +83,14 @@ class QueryJob
         return $this;
     }
 
-    public function getDocumantLink(): ?string
+    public function getDocumentLink(): ?string
     {
-        return $this->documantLink;
+        return $this->documentLink;
     }
 
-    public function setDocumantLink(?string $documantLink): self
+    public function setDocumentLink(?string $documentLink): self
     {
-        $this->documantLink = $documantLink;
+        $this->documentLink = $documentLink;
 
         return $this;
     }

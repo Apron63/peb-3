@@ -48,4 +48,14 @@ class QueryUserRepository extends ServiceEntityRepository
             ->orderBy('q.createdAt', 'DESC')
             ->getQuery();
     }
+
+    public function getUserQueryNew(): array
+    {
+        $qb = $this->createQueryBuilder('uq')
+            ->select('uq')
+            //->select('uq, IDENTITY(uq.createdBy) AS createdBy')
+            ->where('uq.result = \'new\'');
+
+        return $qb->getQuery()->getResult();
+    }
 }

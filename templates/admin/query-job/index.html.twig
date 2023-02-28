@@ -29,7 +29,7 @@
                     {% endif %}
                 </td>
                 <td>{{ job.description }}</td>
-                <td>{{ job.user.name }}</td>
+                <td>{{ job.user.fullName }}</td>
                 <td>
                     {% if job.documentLink is defined and job.documentLink is not empty %}
                         <a href="{{ path('admin_load1C_report', {fileName: job.documentLink }) }}" title="Открыть вложение">

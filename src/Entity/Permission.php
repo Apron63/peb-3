@@ -3,12 +3,17 @@
 namespace App\Entity;
 
 use App\Repository\PermissionRepository;
+use DateInterval;
+use DateTime;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Timestampable\Traits\TimestampableEntity;
 
 #[ORM\Entity(repositoryClass: PermissionRepository::class)]
 class Permission
 {
+    use TimestampableEntity;
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
@@ -28,11 +33,11 @@ class Permission
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
     private ?\DateTimeInterface $activatedAt = null;
 
-    #[ORM\Column(type: Types::DATETIME_MUTABLE)]
-    private ?\DateTimeInterface $createdAt = null;
+    #[ORM\Column(type: Types::SMALLINT)]
+    private ?int $duration = null;
 
-    #[ORM\Column(type: Types::DATETIME_MUTABLE)]
-    private ?\DateTimeInterface $updatedAt = null;
+    #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
+    private ?\DateTimeInterface $lastAccess = null;
 
     public function getId(): ?int
     {
@@ -87,26 +92,32 @@ class Permission
         return $this;
     }
 
-    public function getCreatedAt(): ?\DateTimeInterface
+    public function getDuration(): ?int
     {
-        return $this->createdAt;
+        return $this->duration;
     }
 
-    public function setCreatedAt(\DateTimeInterface $createdAt): self
+    public function setDuration(int $duration): self
     {
-        $this->createdAt = $createdAt;
+        $this->duration = $duration;
 
         return $this;
     }
 
-    public function getUpdatedAt(): ?\DateTimeInterface
+    public function getIsActive(): bool
     {
-        return $this->updatedAt;
+        $interval = new DateInterval("P{$this->duration}D");
+        return $this->createdAt->add($interval) > new DateTime();
     }
 
-    public function setUpdatedAt(\DateTimeInterface $updatedAt): self
+    public function getLastAccess(): ?\DateTimeInterface
     {
-        $this->updatedAt = $updatedAt;
+        return $this->lastAccess;
+    }
+
+    public function setLastAccess(?\DateTimeInterface $lastAccess): self
+    {
+        $this->lastAccess = $lastAccess;
 
         return $this;
     }

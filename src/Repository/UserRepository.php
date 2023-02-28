@@ -144,4 +144,19 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
 
         return $queryBuilder->getQuery();
     }
+
+    public function getUserExistsByLoginAndOrganization(string $login, string $organization): bool
+    {
+        $result = $this->getEntityManager()->createQuery('
+                SELECT u.id FROM App\Entity\User u
+                WHERE u.login = :login
+                OR (u.login = :login AND u.organization = :organization)
+            ')
+            ->setParameter('login', $login)
+            ->setParameter('organization', $organization)
+            ->setMaxResults(1)
+            ->getOneOrNullResult();
+            
+        return $result !== null;
+    }
 }
