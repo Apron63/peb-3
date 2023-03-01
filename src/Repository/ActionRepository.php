@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Action;
+use App\Entity\Course;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -39,28 +40,15 @@ class ActionRepository extends ServiceEntityRepository
         }
     }
 
-//    /**
-//     * @return Action[] Returns an array of Action objects
-//     */
-//    public function findByExampleField($value): array
-//    {
-//        return $this->createQueryBuilder('a')
-//            ->andWhere('a.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->orderBy('a.id', 'ASC')
-//            ->setMaxResults(10)
-//            ->getQuery()
-//            ->getResult()
-//        ;
-//    }
+    /**
+     * @param Course $course
+     */
+    public function removeActionForCourse(Course $course): void
+    {
+        $query = $this->getEntityManager()
+            ->createQuery("DELETE FROM App\Entity\Action a WHERE a.course = :courseId")
+            ->setParameter('courseId', $course->getId());
 
-//    public function findOneBySomeField($value): ?Action
-//    {
-//        return $this->createQueryBuilder('a')
-//            ->andWhere('a.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->getQuery()
-//            ->getOneOrNullResult()
-//        ;
-//    }
+        $query->execute();
+    }
 }

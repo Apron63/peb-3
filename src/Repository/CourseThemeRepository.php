@@ -48,4 +48,16 @@ class CourseThemeRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult();
     }
+
+    /**
+     * @param Course $course
+     */
+    public function removeCourseThemeForCourse(Course $course)
+    {
+        $query = $this->getEntityManager()
+            ->createQuery("DELETE FROM App\Entity\CourseTheme t WHERE t.course = :courseId")
+            ->setParameter('courseId', $course->getId());
+
+        $query->execute();
+    }
 }

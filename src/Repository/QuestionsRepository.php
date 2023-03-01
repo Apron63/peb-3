@@ -83,4 +83,31 @@ class QuestionsRepository extends ServiceEntityRepository
 
         return $this->getEntityManager()->getConnection()->fetchFirstColumn($sql);
     }
+
+        /**
+     * @param Course $course
+     */
+    public function removeQuestionsForCourse(Course $course)
+    {
+        $query = $this->getEntityManager()
+            ->createQuery("SELECT q.id FROM App\Entity\Questions q WHERE q.course = :courseId")
+            ->setParameter('courseId', $course->getId());
+
+        $qIds = $query->execute();
+        $qIds = array_map(function($e) {
+                return $e['id'];
+            }, $qIds);
+        
+        $query = $this->getEntityManager()
+            ->createQuery('DELETE FROM App\Entity\Answer a WHERE a.question IN (:qIds)')
+            ->setParameter('qIds', $qIds);
+
+        $qIds = $query->execute();
+        
+        $query = $this->getEntityManager()
+            ->createQuery("DELETE FROM App\Entity\Questions q WHERE q.course = :courseId")
+            ->setParameter('courseId', $course->getId());
+
+        $query->execute();
+    }
 }

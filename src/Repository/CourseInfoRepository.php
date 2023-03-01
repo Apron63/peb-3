@@ -48,4 +48,16 @@ class CourseInfoRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult();
     }
+
+    /**
+     * @param Course $course
+     */
+    public function removeCourseInfoForCourse(Course $course)
+    {
+        $query = $this->getEntityManager()
+            ->createQuery("DELETE FROM App\Entity\CourseInfo i WHERE i.course = :courseId")
+            ->setParameter('courseId', $course->getId());
+
+        $query->execute();
+    }
 }

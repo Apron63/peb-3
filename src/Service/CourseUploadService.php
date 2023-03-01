@@ -205,19 +205,22 @@ class CourseUploadService
      */
     private function saveDataToDb(): void
     {
+        $themeNom = 1;
+
         foreach ($this->data as $theme) {
             $this->em->getConnection()->executeQuery("
                 INSERT INTO course_theme (id, course_id, name, description)
-                VALUES (NULL, '{$this->course->getId()}', ' ', '{$theme['theme']['name']}')
+                VALUES (NULL, '{$this->course->getId()}', '{$themeNom}', '{$theme['theme']['name']}')
             ");
             $themeId = $this->em->getConnection()->lastInsertId();
+            $themeNom++;
 
             // Вопросы
             $cnt = 1;
             foreach ($theme['questions'] as $item) {
                 $this->em->getConnection()->executeQuery("
-                    INSERT INTO questions (id, theme_id , description, type, help, nom)
-                    VALUES (NULL, {$themeId}, '{$item['qText']}', {$item['type']}, '{$item['hText']}', {$cnt})
+                    INSERT INTO questions (id, course_id, parent_id , description, type, help, nom)
+                    VALUES (NULL, {$this->course->getId()}, {$themeId}, '{$item['qText']}', {$item['type']}, '{$item['hText']}', {$cnt})
                 ");
                 $questionId = $this->em->getConnection()->lastInsertId();
 

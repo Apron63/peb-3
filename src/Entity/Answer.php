@@ -56,7 +56,7 @@ class Answer
         return $this;
     }
 
-    public function isIsCorrect(): ?bool
+    public function isCorrect(): ?bool
     {
         return $this->isCorrect;
     }

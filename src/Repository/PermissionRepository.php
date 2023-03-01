@@ -66,4 +66,16 @@ class PermissionRepository extends ServiceEntityRepository
 
         return $query->getOneOrNullResult();
     }
+
+    /**
+     * @param Course $course
+     */
+    public function removePermissionForCourse(Course $course)
+    {
+        $query = $this->getEntityManager()
+            ->createQuery("DELETE FROM App\Entity\Permission p WHERE p.course = :courseId")
+            ->setParameter('courseId', $course->getId());
+
+        $query->execute();
+    }
 }
