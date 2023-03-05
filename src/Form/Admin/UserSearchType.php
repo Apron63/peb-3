@@ -85,7 +85,7 @@ class UserSearchType extends AbstractType
             ->add('startPeriod', DateTimeType::class, [
                 'required' => false,
                 'widget' => 'single_text',
-                'format' => 'dd.mm.yyyy',
+                'format' => 'dd.MM.yyyy',
                 'html5' => false,
                 'label' => 'Начало',
                 'mapped' => false,
@@ -103,7 +103,7 @@ class UserSearchType extends AbstractType
             ->add('endPeriod', DateTimeType::class, [
                 'required' => false,
                 'widget' => 'single_text',
-                'format' => 'dd.mm.yyyy',
+                'format' => 'dd.MM.yyyy',
                 'html5' => false,
                 'label' => 'Окончание',
                 'mapped' => false,

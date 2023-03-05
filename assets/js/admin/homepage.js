@@ -4,14 +4,14 @@ import 'air-datepicker/air-datepicker.css'
 
 const startDatepickerElem = document.getElementById('user_search_startPeriod')
 const startDatepicker = new AirDatepicker(startDatepickerElem, {
-    format: 'dd.mm.yyyy',
+    format: 'dd.MM.yyyy',
     language: 'ru',
     autohide: true
 })
 
 const endDatepickerElem = document.getElementById('user_search_endPeriod')
 const endDatepicker = new AirDatepicker(endDatepickerElem, {
-    format: 'dd.mm.yyyy',
+    format: 'dd.MM.yyyy',
     language: 'ru',
     autohide: true
 })

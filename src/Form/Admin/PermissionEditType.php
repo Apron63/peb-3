@@ -21,7 +21,7 @@ class PermissionEditType extends AbstractType
             ->add('createdAt', DateTimeType::class, [
                 'widget' => 'single_text',
                 'label' => 'Создано',
-                'format' => 'dd.mm.yyyy',
+                'format' => 'dd.MM.yyyy',
                 'html5' => false,
                 'attr' => [
                     'class' => 'form-control',
@@ -75,7 +75,7 @@ class PermissionEditType extends AbstractType
                 'widget' => 'single_text',
                 'required' => false,
                 'label' => 'Активировано',
-                'format' => 'dd.mm.yyyy',
+                'format' => 'dd.MM.yyyy',
                 'html5' => false,
                 'attr' => [
                     'class' => 'form-control',

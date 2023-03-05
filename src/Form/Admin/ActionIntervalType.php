@@ -16,7 +16,7 @@ class ActionIntervalType extends AbstractType
         $builder
             ->add('startAt', DateTimeType::class, [
                 'widget' => 'single_text',
-                'format' => 'dd.mm.yyyy',
+                'format' => 'dd.MM.yyyy',
                 'html5' => false,
                 'label' => 'Начало',
                 'mapped' => false,
@@ -33,7 +33,7 @@ class ActionIntervalType extends AbstractType
             ])
             ->add('endAt', DateTimeType::class, [
                 'widget' => 'single_text',
-                'format' => 'dd.mm.yyyy',
+                'format' => 'dd.MM.yyyy',
                 'html5' => false,
                 'label' => 'Окончание',
                 'mapped' => false,

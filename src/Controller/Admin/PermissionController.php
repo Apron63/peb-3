@@ -22,7 +22,9 @@ class PermissionController extends MobileController
     public function adminPermissionCreate(Request $request, User $user): Response
     {
         $permission = new Permission();
-        $permission->setCreatedAt(new DateTime());
+        if (null === $permission->getCreatedAt()) {
+            $permission->setCreatedAt(new DateTime());
+        }
         $permission->setUser($user);
         $form = $this->createForm(PermissionEditType::class, $permission);
         $form->handleRequest($request);
