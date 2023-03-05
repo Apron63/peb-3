@@ -55,6 +55,7 @@ class ProfileController extends MobileController
 
         return $this->mobileRender('admin/profile/edit.html.twig', [
             'form' => $form->createView(),
+            'profile' => $profile,
         ]);
     }
     

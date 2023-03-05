@@ -45,10 +45,25 @@ class PermissionRepository extends ServiceEntityRepository
 
     public function getPermissionQuery(User $user): AbstractQuery
     {
-        return $this->createQueryBuilder('p')
-            ->where('p.user = :user')
-            ->setParameter('user', $user->getId())
-            ->getQuery();
+        return $this->getEntityManager()->createQuery(
+            "SELECT 
+                p.id, 
+                p.createdAt, 
+                p.activatedAt, 
+                p.lastAccess, 
+                IDENTITY(p.user), 
+                p.duration, 
+                p.orderNom, 
+                c.shortName AS shortName,
+                CASE WHEN p.activatedAt IS NULL OR (DateDiff(Now(), p.activatedAt) <= p.duration) 
+                    THEN 1 
+                    ELSE 0 
+                    END AS isActive
+                FROM App\Entity\Permission p
+                JOIN App\Entity\Course c WITH c.id = p.course
+                WHERE p.user = :user 
+                ORDER BY isActive DESC, p.createdAt DESC")
+            ->setParameter('user', $user->getId());
     }
 
     public function getLastActivePermission(Course $course, UserInterface $user): ?Permission
@@ -65,6 +80,17 @@ class PermissionRepository extends ServiceEntityRepository
             ->setParameter('course', $course);
 
         return $query->getOneOrNullResult();
+    }
+
+    public function getPermissionLeftMenu(User $user): array
+    {
+        $qb = $this->createQueryBuilder('p')
+            ->where('p.user = :user')
+            ->setParameter('user', $user->getId())
+            ->getQuery()
+            ->getResult();
+
+        return $qb;
     }
 
     /**

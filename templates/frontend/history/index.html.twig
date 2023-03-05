@@ -1,0 +1,59 @@
+{% extends 'frontend/base.html.twig' %}
+
+{% block title %}История обучения{% endblock %}
+
+{% block body %}
+    {% include('frontend/components/header.html.twig') %}
+
+    <div class="global-content">
+        {% include('frontend/components/background.html.twig') %}
+        <div class="wrapper container">
+            {{ render(path('app_frontend_left_menu', {'activeItem': 'history'})) }}
+            <div class="content">
+                <div class="history">
+                    <h1>История обучения</h1>
+                    <div class="history_table">
+                        <div class="history_table_header">
+                            <div class="history_table_row">
+                                <div class="course">Курс</div>
+                                <div class="status">Статус</div>
+                                <div class="start_at">Начало<br>обучения</div>
+                                <div class="finish_at">Завершение<br>обучения</div>
+                                <div class="results">Результаты итогового<br>тестирования</div>
+                                <div class="duration">Длительность<br>обучения</div>
+                            </div>
+                        </div>
+                        <div class="history_table_content">
+                            <div class="history_table_row">
+                                <div class="course">Оказание помощи пострадавшим</div>
+                                <div class="status">обучение завершено</div>
+                                <div class="start_at">20.09.2022</div>
+                                <div class="finish_at">28.09.2022</div>
+                                <div class="results">сдано</div>
+                                <div class="duration">10 ч. 28 м.</div>
+                            </div>
+                            <div class="history_table_row">
+                                <div class="course">Общие вопросы охраны труда и функционирования СУОТ</div>
+                                <div class="status">обучение идет</div>
+                                <div class="start_at">05.10.2022</div>
+                                <div class="finish_at"></div>
+                                <div class="results"></div>
+                                <div class="duration">3 ч. 18 м.</div>
+                            </div>
+                            <div class="history_table_row">
+                                <div class="course">Б2. Нефтяная и газовая промышленность</div>
+                                <div class="status">обучение начато</div>
+                                <div class="start_at"></div>
+                                <div class="finish_at"></div>
+                                <div class="results"></div>
+                                <div class="duration"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% include('frontend/components/footer.html.twig') %}
+    <div class="overlay" popup-element="overlay"></div>
+{% endblock %}

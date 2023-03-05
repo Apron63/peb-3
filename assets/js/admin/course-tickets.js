@@ -1,14 +1,15 @@
 import $ from 'jquery'
 import * as bootstrap from 'bootstrap'
 
-let elementWithPopover = {}
 let popoverIsActive = false
+let elementWithPopover = {}
+let popover = {}
 
 $('#build-tickets').on('click', function (e) {
     e.stopImmediatePropagation()
 
-    if (typeof(popover) !== 'undefined') {
-        popover.dispose()
+    if (Object.keys(popover).length !== 0) {
+        popover.hide()
         popoverIsActive = false
     }
 
@@ -16,14 +17,14 @@ $('#build-tickets').on('click', function (e) {
         popoverIsActive = true
         elementWithPopover = $('#ticket-cnt')
 
-        var popover = bootstrap.Popover.getOrCreateInstance(document.querySelector('#ticket-cnt'), {
+        popover = new bootstrap.Popover(document.querySelector('#ticket-cnt'), {
             title: 'Неправильное количество',
             content: 'Количество билетов должно быть больше 0',
             container: 'body',
-            trigger: 'focus'
+            trigger: 'manual'
         })
-        popover.show()
 
+        popover.show()
         return false
     }
 
@@ -44,11 +45,11 @@ $('#build-tickets').on('click', function (e) {
                 popoverIsActive = true
                 elementWithPopover = e
 
-                var popover = bootstrap.Popover.getOrCreateInstance(e, {
+                popover =  new bootstrap.Popover(e, {
                     title: 'Неправильное количество',
                     content: 'Количество вопросов должно быть больше 0 и меньше ' + value,
                     container: 'body',
-                    trigger: 'focus'
+                    trigger: 'manual'
                 })
 
                 popover.show()

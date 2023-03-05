@@ -59,7 +59,7 @@ class CourseEditType extends AbstractType
                 'required' => false,
                 'constraints' => [
                     new File([
-                        'maxSize' => '1024k',
+                        'maxSize' => '300k',
                         'mimeTypes' => [
                             'image/jpg',
                             'image/jpeg',

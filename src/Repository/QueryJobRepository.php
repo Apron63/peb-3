@@ -43,32 +43,7 @@ class QueryJobRepository extends ServiceEntityRepository
     public function getPaginatedQuery(): Query
     {
         return $this->createQueryBuilder('q')
-            ->orderBy('q.startAt')
+            ->orderBy('q.startAt', 'desc')
             ->getQuery();
     }
-
-//    /**
-//     * @return QueryJob[] Returns an array of QueryJob objects
-//     */
-//    public function findByExampleField($value): array
-//    {
-//        return $this->createQueryBuilder('q')
-//            ->andWhere('q.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->orderBy('q.id', 'ASC')
-//            ->setMaxResults(10)
-//            ->getQuery()
-//            ->getResult()
-//        ;
-//    }
-
-//    public function findOneBySomeField($value): ?QueryJob
-//    {
-//        return $this->createQueryBuilder('q')
-//            ->andWhere('q.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->getQuery()
-//            ->getOneOrNullResult()
-//        ;
-//    }
 }

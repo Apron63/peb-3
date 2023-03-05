@@ -14,6 +14,10 @@ class Permission
 {
     use TimestampableEntity;
 
+    public const STAGE_NOT_STARTED = 1;
+    public const STAGE_IN_PROGRESS = 2;
+    public const STAGE_FINISHED = 3;
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
@@ -27,7 +31,7 @@ class Permission
     #[ORM\JoinColumn(nullable: false)]
     private ?Course $course = null;
 
-    #[ORM\Column(length: 50)]
+    #[ORM\Column(length: 50, nullable: true)]
     private ?string $orderNom = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
@@ -38,6 +42,12 @@ class Permission
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
     private ?\DateTimeInterface $lastAccess = null;
+
+    #[ORM\Column(type: Types::SMALLINT)]
+    private ?int $stage = self::STAGE_NOT_STARTED;
+
+    #[ORM\Column(nullable: true)]
+    private array $history = [];
 
     public function getId(): ?int
     {
@@ -120,5 +130,41 @@ class Permission
         $this->lastAccess = $lastAccess;
 
         return $this;
+    }
+
+    public function getStage(): ?int
+    {
+        return $this->stage;
+    }
+
+    public function setStage(int $stage): self
+    {
+        $this->stage = $stage;
+
+        return $this;
+    }
+
+    public function getHistory(): array
+    {
+        return $this->history;
+    }
+
+    public function setHistory(?array $history): self
+    {
+        $this->history = $history;
+
+        return $this;
+    }
+
+    public function getStageDescription(): string
+    {
+        switch($this->stage) {
+            case self::STAGE_NOT_STARTED:
+                return 'Неактивно';
+            case self::STAGE_IN_PROGRESS:
+                return 'В процессе';
+            case self::STAGE_FINISHED:
+                return 'Окончено';
+        }
     }
 }

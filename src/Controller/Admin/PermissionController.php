@@ -21,10 +21,6 @@ class PermissionController extends MobileController
     #[Route('/admin/permission/create/{id<\d+>}', name: 'admin_permission_create')]
     public function adminPermissionCreate(Request $request, User $user): Response
     {
-        // if (!$user) {
-        //     throw new NotFoundHttpException('User Not Found');
-        // }
-
         $permission = new Permission();
         $permission->setCreatedAt(new DateTime());
         $permission->setUser($user);

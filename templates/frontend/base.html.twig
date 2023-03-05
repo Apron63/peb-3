@@ -11,12 +11,12 @@
 </head>
 <body>
     <div class="global-wrapper">
-        {% include 'frontend/components/background.html.twig' %}
+        {# {% include 'frontend/components/background.html.twig' %} #}
         {% block body %}{% endblock %}
     </div>
 
     {% block javascripts %}
-            {{ encore_entry_script_tags('frontend') }}
+        {{ encore_entry_script_tags('frontend') }}
     {% endblock %}
 </body>
 </html>

@@ -1,18 +1,21 @@
 <div class="header_profile">
     <div class="header_profile_fullname">
-        <div class="header_profile_lastname">Константинопольский</div>
+        <div class="header_profile_lastname">{{ app.user.lastName }}</div>
         <div class="header_profile_name">
-            <div class="header_profile_firstname">Константин</div>
-            <div class="header_profile_middlename">Константинович</div>
+            <div class="header_profile_firstname">{{ app.user.firstName }}</div>
+            <div class="header_profile_middlename">{{ app.user.patronymic }}</div>
         </div>
     </div>
-    <!--Если у пользователя есть аватарка-->
-    <div class="header_profile_avatar">
-        <img src="{{ asset('img/avatar.png') }}" alt="">
-    </div>
-    <!--Если у пользователя нет аватарки, выводим первые буквы
-    фамилии и имени-->
-    <!--<div class="header_profile_noavatar">
-        <div class="header_profile_noavatar_abbreviation">КК</div>
-    </div>-->
+    {% if app.user.image is not null%}
+        <div class="header_profile_avatar">
+            <img src="{{ asset('img/avatar.png') }}" alt="">
+        </div>
+    {% else %}
+        <div class="header_profile_noavatar">
+            <div class="header_profile_noavatar_abbreviation">
+                {{ app.user.firstName | first }}
+                {{ app.user.lastName | first }}
+            </div>
+        </div>
+     {% endif %}
 </div>

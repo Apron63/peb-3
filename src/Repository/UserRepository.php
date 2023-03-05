@@ -90,7 +90,7 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
     {
     }
 
-        /**
+    /**
      * @param array|null $criteria
      * @return Query
      * @throws Exception
@@ -100,7 +100,7 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         $queryBuilder = $this->getEntityManager()->createQueryBuilder();
         $queryBuilder->select('u')
             ->from(User::class, 'u')
-            //->leftJoin('u.permissions', 'p', Join::WITH, 'p.user = u.id')
+            ->leftJoin('App\Entity\Permission', 'p', Join::WITH, 'p.user = u.id')
             ->orderBy('u.login');
 
         if (isset($criteria['login']) && $criteria['login']) {
@@ -108,7 +108,7 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
                 ->setParameter('login', "{$criteria['login']}%");
         }
         if (isset($criteria['name']) && $criteria['name']) {
-            $queryBuilder->andWhere('u.name LIKE :name')
+            $queryBuilder->andWhere('u.fullName LIKE :name')
                 ->setParameter('name', "{$criteria['name']}%");
         }
         if (isset($criteria['organization']) && $criteria['organization']) {

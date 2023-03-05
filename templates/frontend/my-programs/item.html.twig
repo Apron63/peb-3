@@ -1,14 +1,25 @@
 <div class="programs_item" content-elem="programs-item">
     <div class="programs_item_image_wrapper">
         <div class="programs_item_image_inner">
-            <img src="images/first_aid.jpg" alt="">
+            <img src="/storage/course/{{ permission.course.id }}{{ asset(permission.course.image) }}" alt="">
         </div>
     </div>
     <div class="programs_item_header">
-        Оказание первой помощи пострадавшим
+        {{ permission.course.name }}
     </div>
     <div class="programs_item_status_wrapper">
         <div class="programs_item_status"></div>
-        <a href="javascript:void(0)" class="programs_item_status_link red_button">Начать обучение</a>
+        <a 
+            href="javascript:void(0)" 
+            class="programs_item_status_link red_button"
+        >
+            {% if permission.stage == 1 %}
+                Начать обучение
+            {% elseif permission.rtage ==2 %}
+                Продолжить обучение
+            {% else %}
+                Обучение завершено
+            {% endif %}
+        </a>
     </div>
 </div>

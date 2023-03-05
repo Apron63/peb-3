@@ -1,0 +1,23 @@
+<div class="left-menu">
+    <div class="main-menu_mobile_button" menu-elem="mobile-open">Меню</div>
+    <nav class="main-menu" menu-elem="main-menu">
+        <li class="main-menu_item {% if activeItem == 'my-programs' %}active{% endif %}" menu-elem="main-menu-item">
+            <a href="{{ path('homepage') }}" class="main-menu_item_header" menu-elem="main-header">Мои программы</a>
+            <ul class="programs-menu" menu-elem="programs-menu">
+            {% for permission in permissions %}
+                {% if permission['type'] == 1%}
+                    {% include 'frontend/left-menu/_item_classic.html.twig' with {'permission' : permission} %}
+                {% else %}
+                    {% include 'frontend/left-menu/_item_interactive.html.twig' with {'permission' : permission} %}
+                {% endif %}
+            {% endfor%}
+            </ul>
+        </li>
+        <li class="main-menu_item {% if activeItem == 'history' %}active{% endif %}" menu-elem="main-menu-item">
+            <a class="main-menu_item_header" href="{{ path('app_frontend_history') }}">История обучения</a>
+        </li>
+        <li class="main-menu_item {% if activeItem == 'support' %}active{% endif %}" menu-elem="main-menu-item">
+            <a class="main-menu_item_header" href="{{ path('app_frontend_support') }}">Поддержка</a>
+        </li>
+    </nav>
+</div>

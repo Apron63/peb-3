@@ -21,6 +21,8 @@ class PermissionEditType extends AbstractType
             ->add('createdAt', DateTimeType::class, [
                 'widget' => 'single_text',
                 'label' => 'Создано',
+                'format' => 'dd.mm.yyyy',
+                'html5' => false,
                 'attr' => [
                     'class' => 'form-control',
                     'placeholder' => 'Создано',
@@ -56,28 +58,30 @@ class PermissionEditType extends AbstractType
                     'class' => 'col-sm-2 col-form-label'
                 ],
             ])
-            // ->add('course', EntityType::class, [
-            //     'class' => Course::class,
-            //     'label' => 'Курс',
-            //     'attr' => [
-            //         'class' => 'form-select',
-            //         'placeholder' => 'Курс',
-            //         'onfocus' => 'this.placeholder = ""',
-            //         'onblur' => 'this.placeholder = "Курс"',
-            //     ],
-            //     'label_attr' => [
-            //         'class' => 'col-sm-2 col-form-label'
-            //     ],
-            // ])
+            ->add('course', EntityType::class, [
+                'class' => Course::class,
+                'label' => 'Курс',
+                'attr' => [
+                    'class' => 'form-select',
+                    'placeholder' => 'Курс',
+                    'onfocus' => 'this.placeholder = ""',
+                    'onblur' => 'this.placeholder = "Курс"',
+                ],
+                'label_attr' => [
+                    'class' => 'col-sm-2 col-form-label'
+                ],
+            ])
             ->add('activatedAt', DateTimeType::class, [
                 'widget' => 'single_text',
                 'required' => false,
                 'label' => 'Активировано',
+                'format' => 'dd.mm.yyyy',
+                'html5' => false,
                 'attr' => [
                     'class' => 'form-control',
-                    'placeholder' => 'Активировано',
+                    'placeholder' => 'Не указано',
                     'onfocus' => 'this.placeholder = ""',
-                    'onblur' => 'this.placeholder = "Активировано"',
+                    'onblur' => 'this.placeholder = "Не указано"',
                 ],
                 'label_attr' => [
                     'class' => 'col-sm-2 col-form-label'

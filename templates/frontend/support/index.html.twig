@@ -1,0 +1,68 @@
+{% extends 'frontend/base.html.twig' %}
+
+{% block title %}Поддержка{% endblock %}
+
+{% block body %}
+    {% include('frontend/components/header.html.twig') %}
+    <div class="global-content">
+        {% include('frontend/components/background.html.twig') %}
+        <div class="wrapper container">
+            {{ render(path('app_frontend_left_menu', {'activeItem': 'support'})) }}
+            <div class="content">
+                <div class="support">
+                    <h1>У вас возникли вопросы?</h1>
+                    <div class="support_description">В случае  возникновения вопросов обращайтесь по телефону или через форму обратной связи</div>
+                    <h2>Служба технической поддержки:</h2>
+                    <div class="support_contacts">
+                        <div class="support_contacts_row">
+                            Телефон: <a href="tel:+79370771165">8-937-077-11-65</a>, <a href="tel:+78462691526">+7 (846) 26-915-26</a>
+                        </div>
+                        <div class="support_contacts_row">
+                            Email: <a href="mailto:support@safety63.ru">support@safety63.ru</a>
+                        </div>
+                        <div class="support_contacts_row">
+                            График работы: с 8:00 до 22:00 без перерывов и выходных
+                        </div>
+                    </div>
+                    <form class="support_form" form-elem="form">
+                        <!--В каждом поле если есть ошибка, в support_form_label добавляем класс error-->
+                        <label class="support_form_label" form-elem="label">
+                            <div class="support_form_name">Ваше имя</div>
+                            <input type="text" name="name" class="support_form_input" form-elem="input-text">
+                            <!--Здесь выводим ошибку поля-->
+                            <div class="support_form_error"></div>
+                        </label>
+                        <label class="support_form_label" form-elem="label">
+                            <div class="support_form_name">Email</div>
+                            <input type="email" name="email" class="support_form_input" form-elem="input-text">
+                            <div class="support_form_error"></div>
+                        </label>
+                        <label class="support_form_label" form-elem="label">
+                            <div class="support_form_name">Телефон</div>
+                            <input type="text" name="phone" class="support_form_input" form-elem="input-text">
+                            <div class="support_form_error"></div>
+                        </label>
+                        <label class="support_form_label" form-elem="label">
+                            <div class="support_form_name">Ваш курс</div>
+                            <input type="text" name="course" class="support_form_input" form-elem="input-text">
+                            <div class="support_form_error"></div>
+                        </label>
+                        <label class="support_form_label" form-elem="label">
+                            <div class="support_form_name">Ваш вопрос</div>
+                            <input type="text" name="question" class="support_form_input" form-elem="input-text">
+                            <div class="support_form_error"></div>
+                        </label>
+                        <div class="support_agree">
+                            Нажимая кнопку "Отправить сообщение" вы соглашаетесь с условиями <a href="javascript:void(0)">политики конфиденциальности</a>
+                        </div>
+                        <div class="support_submit_wrapper">
+                            <button class="support_submit red_button" type="button">Отправить сообщение</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% include('frontend/components/footer.html.twig') %}
+    <div class="overlay" popup-element="overlay"></div>
+{% endblock %}

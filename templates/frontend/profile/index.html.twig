@@ -11,14 +11,17 @@
         {% include('frontend/components/background.html.twig') %}
 
         <div class="wrapper container">
-            {% include 'frontend/components/left_menu.html.twig' with {'activeItem': 'support'} %}
-
+            {{ render(path('app_frontend_left_menu', {'activeItem': 'my-programs'})) }}            
             <div class="content">
                 <div class="profile">
                     <div class="photo_block">
                         <div class="photo_wrapper">
                             <div class="photo_inner">
-                                <img class="photo" src="{{ asset('img/photo.jpg') }}" alt="">
+                                {% if user.image is not null %}
+                                    <img src="/storage/user_photo/{{ user.id }}/{{ user.image }}" alt="">
+                                {% else %}
+                                    <img class="photo" src="{{ asset('img/photo.jpg') }}" alt="">    
+                                {% endif %}
                             </div>
                         </div>
                         <div class="photo_change_button_wrapper">
@@ -45,18 +48,18 @@
     <div class="overlay" popup-element="overlay"></div>
 
     {% block customJs %}
-        <script type="text/javascript">
-            var fileupload = $('#FileUpload1')
-            //var filePath = $("#spnFilePath");
-            var button = $('#btnFileUpload')
-            button.click(function () {
-                fileupload.click()
-            });
-            fileupload.change(function () {
-                var fileName = $(this).val().split('\\')[$(this).val().split('\\').length - 1]
-                console.log(fileName)
-            });
-        </script>
+         // <script type="text/javascript">
+        //     var fileupload = $('#FileUpload1')
+        //     //var filePath = $("#spnFilePath");
+        //     var button = $('#btnFileUpload')
+        //     button.click(function () {
+        //         fileupload.click()
+        //     });
+        //     fileupload.change(function () {
+        //         var fileName = $(this).val().split('\\')[$(this).val().split('\\').length - 1]
+        //         console.log(fileName)
+        //     });
+        // </script>
     {% endblock %}
 
 {% endblock %}

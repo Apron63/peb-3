@@ -1,6 +1,6 @@
 {% extends 'admin/base.html.twig' %}
 
-{% block title %}Панель управления{% endblock %}
+{% block title %}Панель управления | Профили{% endblock %}
 
 {% block content %}
 
@@ -16,7 +16,7 @@
 
     <div class="row">
 
-        <div class="col-10 mb-3">
+        <div class="col-12 mb-3">
             <div class="form-group">
                 <span class="text-danger">{{ form_errors(form.name) }}</span>
                 {{ form_widget(form.name) }}
@@ -28,6 +28,20 @@
         </div>
 
     </div>
+
+    {% if form.vars['value'].id is not null %}
+         <table class="table">
+            <tbody>
+                {% for course in profile.course %}
+                    <tr>
+                        <td>
+                            {{ course.name }}
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% endif %}
 
     {{ form_end(form) }}
 
