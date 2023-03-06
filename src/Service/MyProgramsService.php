@@ -29,7 +29,7 @@ class MyProgramsService
             }
 
             $result[] = [
-                'name' => $permission->getCourse()->getShortName(),
+                'name' => $permission->getCourse()->getName(),
                 'type' => $permission->getCourse()->getType(),
                 'courseInfoUrl' => $courseInfoUrl,
             ];

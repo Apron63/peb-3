@@ -60,23 +60,23 @@ class Query1CUploadService
 
         $firstLine = true;
         $userFile = fopen($path . '/' . $this->originalFilename, 'rb');
-        while ($str = fgetcsv($userFile)) {
+        while ($str = fgetcsv($userFile, null, ';')) {
             // Удалим BOM символ на первой строке.
             if ($firstLine) {
                 $bom = pack('H*', 'EFBBBF');
                 $str[0] = preg_replace("/^$bom/", '', $str[0]);
                 $firstLine = false;
             }
-            $loadData = explode(';', $str[0]);
-            $tmp['orderNo'] = $loadData[0];
-            $tmp['lastName'] = $loadData[1];
-            $tmp['firstName'] = $loadData[2];
-            $tmp['patronymic'] = $loadData[3];
-            $tmp['x3'] = $loadData[4];
-            $tmp['x3_2'] = $loadData[5];
-            $tmp['organization'] = $loadData[6];
-            $tmp['x3_3'] = $loadData[7];
-            $tmp['courseName'] = $loadData[8];
+
+            $tmp['orderNo'] =  $str[0];
+            $tmp['lastName'] =  $str[1];
+            $tmp['firstName'] =  $str[2];
+            $tmp['patronymic'] =  $str[3];
+            $tmp['x3'] =  $str[4];
+            $tmp['x3_2'] =  $str[5];
+            $tmp['organization'] =  $str[6];
+            $tmp['x3_3'] =  $str[7];
+            $tmp['courseName'] =  $str[8];
 
             $userData[] = $tmp;
         }

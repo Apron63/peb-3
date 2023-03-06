@@ -35,7 +35,9 @@
                 {% for course in profile.course %}
                     <tr>
                         <td>
-                            {{ course.name }}
+                            <a href="{{ path('admin_course_edit', {id: course.id}) }}">
+                                {{ course.name }}
+                            </a>
                         </td>
                     </tr>
                 {% endfor %}

@@ -1,7 +1,11 @@
 <div class="programs_item" content-elem="programs-item">
     <div class="programs_item_image_wrapper">
         <div class="programs_item_image_inner">
-            <img src="/storage/course/{{ permission.course.id }}{{ asset(permission.course.image) }}" alt="">
+            {% if permission.course.image is null%}
+                <img src="{{ asset('img/no_course_image.jpg') }}" alt="">
+            {% else %}
+                <img src="/storage/course/{{ permission.course.id }}{{ asset(permission.course.image) }}" alt="">
+            {% endif %}
         </div>
     </div>
     <div class="programs_item_header">

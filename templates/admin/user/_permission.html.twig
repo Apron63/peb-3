@@ -29,19 +29,19 @@
                     {{ permission.shortName }}
                 </a>
             </td>
-            <td style="text-align: right">
+            <td>
                 {{ permission.createdAt | date('d.m.Y H:i:s') }}
             </td>
-            <td style="text-align: right">{{ permission.duration }}</td>
+            <td>{{ permission.duration }}</td>
             <td>{{ permission.orderNom }}</td>
-            <td style="text-align: right">
+            <td>
                 {% if permission.activatedAt is not null %}
                     {{ permission.activatedAt | date('d.m.Y H:i:s') }}
                 {% else %}
                     -
                 {% endif %}
             </td>
-            <td style="text-align: right">
+            <td>
                 {% if permission.lastAccess is not null %}
                     {{ permission.lastAccess | date('d.m.Y H:i:s') }}
                 {% else %}

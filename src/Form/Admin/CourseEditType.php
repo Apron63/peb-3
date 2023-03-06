@@ -28,18 +28,18 @@ class CourseEditType extends AbstractType
                 'attr' => [
                     'label' => false,
                     'class' => 'form-control',
-                    'placeholder' => 'Наименование',
+                    'placeholder' => 'Наименование (для админки)',
                     'onfocus' => 'this.placeholder = ""',
-                    'onblur' => 'this.placeholder = "Наименование"',
+                    'onblur' => 'this.placeholder = "Наименование (для админки)"',
                 ],
             ])
             ->add('name', TextType::class, [
                 'required' => false,
                 'attr' => [
                     'class' => 'form-control',
-                    'placeholder' => 'Обозначение',
+                    'placeholder' => 'Обозначение (для слушателя)',
                     'onfocus' => 'this.placeholder = ""',
-                    'onblur' => 'this.placeholder = "Обозначение"',
+                    'onblur' => 'this.placeholder = "Обозначение (для слушателя)"',
                 ],
             ])
             ->add('profile', EntityType::class, [
