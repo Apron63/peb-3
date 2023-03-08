@@ -60,4 +60,14 @@ class TicketRepository extends ServiceEntityRepository
         }
         return $array;
     }
+
+    public function getCourseTickets(Course $course): array
+    {
+        return $this->createQueryBuilder('t')
+            ->where('t.course = :course')
+            ->orderBy('t.nom')
+            ->setParameter('course', $course)
+            ->getQuery()
+            ->getArrayResult();
+    }
 }

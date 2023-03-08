@@ -1,0 +1,50 @@
+<p></p>
+
+<table class="table">
+    <tbody>
+        {% for ticket in tickets %}
+            <tr>
+                <td>
+                    <a 
+                        class="link-dark" 
+                        data-bs-toggle="collapse" 
+                        href="#collapse_{{ loop.index0 }}" 
+                        role="button" 
+                        aria-expanded="false" 
+                        aria-controls="myCollapse"
+                    >
+                        Билет № {{ ticket.ticketNom }}
+                    </a>
+
+                    <div class="collapse" id="collapse_{{ loop.index0 }}">
+                        <div class="card card-body">
+                            {% for data in ticket.data %}
+                                <div><strong>Тема:</strong></div>
+                                <div>{{ data.theme }}</div>
+                                {% if data.questions is defined %}
+                                    <div>
+                                        {% for question in data.questions %}
+                                            <div>
+                                                <div><strong>Вопрос {{ question.nom }}</strong></div>
+                                                <div>{{ question.description | raw }}</div>
+                                                {% if question.answers is defined %}
+                                                    {% for answer in question.answers %}
+                                                        <div><strong>Правильный ответ:</strong></div>
+                                                        <div>{{ answer | raw }}</div>
+                                                    {% endfor %}    
+                                                {% endif %}
+                                            </div>
+                                            <div><strong>Подсказка:</strong></div>
+                                            <div>{{ question.help | raw }}</div>
+                                            <br>
+                                        {% endfor %}
+                                    </div> 
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                    </div>
+                </td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>

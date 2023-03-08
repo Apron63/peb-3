@@ -2,10 +2,15 @@
 
 namespace App\Service;
 
+use App\Entity\Course;
+use App\Entity\CourseTheme;
 use App\Entity\Module;
 use App\Entity\ModuleTicket;
+use App\Entity\Questions;
 use App\Entity\Ticket;
+use App\Repository\AnswerRepository;
 use App\Repository\CourseRepository;
+use App\Repository\CourseThemeRepository;
 use App\Repository\ModuleTicketRepository;
 use App\Repository\QuestionsRepository;
 use App\Repository\TicketRepository;
@@ -16,7 +21,9 @@ class TicketService
         readonly TicketRepository $ticketRepository,
         readonly ModuleTicketRepository $moduleTicketRepository,
         readonly QuestionsRepository $questionsRepository,
-        readonly CourseRepository $courseRepository
+        readonly AnswerRepository $answerRepository,
+        readonly CourseRepository $courseRepository,
+        readonly CourseThemeRepository $courseThemeRepository
     ) {}
 
     public function createTickets(int $courseId, int $ticketsCnt, int $errorsCnt, array $themes): void
@@ -77,5 +84,63 @@ class TicketService
 
             $this->moduleTicketRepository->save($moduleTicket, true);
         }
+    }
+
+    public function renderTickets(Course $course): array
+    {
+        $result = [];
+
+        $tickets = $this->ticketRepository->getCourseTickets($course);
+
+        foreach ($tickets as $ticket) {
+            $items = json_decode($ticket['text'][0], JSON_FORCE_OBJECT);
+            $data = [];
+
+            foreach ($items as $key => $questions) {
+                $theme = $this->courseThemeRepository->find($key);
+
+                if ($theme instanceof CourseTheme) {
+                   $questionsArray = [];
+
+                    foreach ($questions as $questionNom => $questionId) {
+                        $question = $this->questionsRepository->find($questionId);
+
+                        if ($question instanceof Questions) {
+                            $answers = [];
+
+                            $trueAnswers = $this->answerRepository->findBy([
+                                'question' => $question,
+                                'isCorrect' => true,
+                            ]);
+
+                            if (!empty($trueAnswers)) {
+                                foreach($trueAnswers as $answer) {
+                                    $answers[] = $answer->getDescription();
+                                }
+                            }
+
+                            $questionsArray[] = [
+                                'nom' => $questionNom + 1,
+                                'description' => $question->getDescription(),
+                                'answers' => $answers,
+                                'help' => $question->getHelp(),
+                            ];
+                        }
+                    }
+
+                    $data[$theme->getName()] = [
+                        'theme' =>  $theme->getDescription(),
+                        'questions' => $questionsArray,
+                    ];
+                }
+            }
+
+            $result[] = [
+                'ticketNom' => $ticket['nom'],
+                'data' => $data,
+            ];
+        }
+
+        return $result;
     }
 }

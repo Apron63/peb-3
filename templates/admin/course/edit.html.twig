@@ -70,8 +70,11 @@
                     <button class="nav-link" id="nav-info-tab" data-bs-toggle="tab" data-bs-target="#nav-info"
                             type="button" role="tab" aria-controls="nav-info" aria-selected="false">Материалы
                     </button>
+                    <button class="nav-link" id="nav-ticket-view-tab" data-bs-toggle="tab" data-bs-target="#nav-ticket-view"
+                            type="button" role="tab" aria-controls="nav-ticket-view" aria-selected="false">Просмотреть билеты
+                    </button>
                     <button class="nav-link" id="nav-ticket-tab" data-bs-toggle="tab" data-bs-target="#nav-ticket"
-                            type="button" role="tab" aria-controls="nav-ticket" aria-selected="false">Билеты
+                            type="button" role="tab" aria-controls="nav-ticket" aria-selected="false">Пересоздать билеты
                     </button>
                 </div>
             </nav>
@@ -89,6 +92,9 @@
                 </div>
                 <div class="tab-pane fade" id="nav-info" role="tabpanel" aria-labelledby="nav-info-tab">
                     {% include 'admin/course/_info.html.twig' %}
+                </div>
+                <div class="tab-pane fade" id="nav-ticket-view" role="tabpanel" aria-labelledby="nav-ticket-view-tab">
+                    {% include 'admin/course/_ticket-view.html.twig' %}
                 </div>
                 <div class="tab-pane fade" id="nav-ticket" role="tabpanel" aria-labelledby="nav-ticket-tab">
                     {% include 'admin/course/_ticket.html.twig' %}

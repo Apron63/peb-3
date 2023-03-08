@@ -14,7 +14,7 @@
     <div class="programs_item_status_wrapper">
         <div class="programs_item_status"></div>
         <a 
-            href="javascript:void(0)" 
+            href="{{ path('app_frontend_course', {id: permission.course.id}) }}" 
             class="programs_item_status_link red_button"
         >
             {% if permission.stage == 1 %}

@@ -16,6 +16,7 @@ use App\Repository\ModuleInfoRepository;
 use App\Repository\ModuleRepository;
 use App\Repository\ProfileRepository;
 use App\Repository\TicketRepository;
+use App\Service\TicketService;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\String\Slugger\SluggerInterface;
 
@@ -29,6 +30,7 @@ class CourseController extends MobileController
         readonly ModuleRepository $moduleRepository,
         readonly ModuleInfoRepository $moduleInfoRepository,
         readonly TicketRepository $ticketRepository,
+        readonly TicketService $ticketService,
         readonly SluggerInterface $slugger,
     ) {}
 
@@ -126,9 +128,6 @@ class CourseController extends MobileController
 
             // $totalTicketCount = $this->em->getRepository(Ticket::class)
             //     ->getTotalTicketCount($course);
-
-            /** @var Ticket $ticket */
-            //$ticket = $course->getTickets()->first();
             return $this->mobileRender('admin/course/edit.html.twig', [
                 'form' => $form->createView(),
                 'course' => $course,
@@ -136,7 +135,7 @@ class CourseController extends MobileController
                 'courseThemes' => $courseThemes,
                 'ticketCount' => $ticketCount,
                 // 'totalTicketCount' => $totalTicketCount,
-                // 'ticket' => $ticket,
+                'tickets' => $this->ticketService->renderTickets($course),
             ]);
         }
     }
@@ -144,10 +143,6 @@ class CourseController extends MobileController
     #[Route('/admin/course/delete/{id<\d+>}/', name: 'admin_course_delete')]
     public function adminCourseDelete(Request $request, Course $course): Response
     {
-        // if (!$course) {
-        //     throw new NotFoundHttpException();
-        // }
-
         if ($this->isGranted('ROLE_SUPER_ADMIN')) {
             $this->couseRepository->remove($course, true);
         }

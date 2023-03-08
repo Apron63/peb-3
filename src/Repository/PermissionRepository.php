@@ -55,6 +55,7 @@ class PermissionRepository extends ServiceEntityRepository
                 p.duration, 
                 p.orderNom, 
                 c.shortName AS shortName,
+                c.id as courseId,
                 CASE WHEN p.activatedAt IS NULL OR (DateDiff(Now(), p.activatedAt) <= p.duration) 
                     THEN 1 
                     ELSE 0 
@@ -84,13 +85,11 @@ class PermissionRepository extends ServiceEntityRepository
 
     public function getPermissionLeftMenu(User $user): array
     {
-        $qb = $this->createQueryBuilder('p')
+        return $this->createQueryBuilder('p')
             ->where('p.user = :user')
             ->setParameter('user', $user->getId())
             ->getQuery()
             ->getResult();
-
-        return $qb;
     }
 
     /**

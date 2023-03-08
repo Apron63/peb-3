@@ -26,9 +26,9 @@
                         <td>
                             {% if is_granted('ROLE_SUPER_ADMIN') %}
                                 <a
-                                        href="{{ path('admin_course_theme_delete', {'id': theme.id}) }}"
-                                        class="btn btn-sm btn-outline-danger"
-                                        onclick="return window.confirm('Подтвердите действие');"
+                                    href="{{ path('admin_course_theme_delete', {'id': theme.id}) }}"
+                                    class="btn btn-sm btn-outline-danger"
+                                    onclick="return window.confirm('Подтвердите действие');"
                                 >
                                     Удалить
                                 </a>

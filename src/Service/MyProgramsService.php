@@ -32,6 +32,7 @@ class MyProgramsService
                 'name' => $permission->getCourse()->getName(),
                 'type' => $permission->getCourse()->getType(),
                 'courseInfoUrl' => $courseInfoUrl,
+                'courseId' => $permission->getCourse()->getId(),
             ];
         }
 
