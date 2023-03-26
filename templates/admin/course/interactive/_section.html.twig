@@ -63,9 +63,9 @@
                             <td style="width: 30px">
                                 {% if is_granted('ROLE_SUPER_ADMIN') %}
                                     <a
-                                            href="{{ path('admin_module_section_delete', {'id': section.id}) }}"
-                                            class="btn btn-sm btn-outline-danger"
-                                            onclick="return window.confirm('Подтвердите действие');"
+                                        href="{{ path('admin_module_section_delete', {'id': section.id}) }}"
+                                        class="btn btn-sm btn-outline-danger"
+                                        onclick="return window.confirm('Подтвердите действие');"
                                     >
                                         Удалить
                                     </a>

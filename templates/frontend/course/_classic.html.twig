@@ -2,14 +2,14 @@
     <div class="modules_item">
         <div class="modules_item_check"></div>
         <div class="modules_item_composition">
-            <a href="control_questions.html" class="modules_item_name" status="not-passed">Подготовка к аттестации</a>
+            <a href="{{ path('app_frontend_preparation', {id: permission.id}) }}" class="modules_item_name" status="not-passed">Подготовка к аттестации</a>
         </div>
     </div>
     <div class="modules_item">
         <div class="modules_item_check"></div>
         <div class="modules_item_composition">
             <!--Если промежуточные тесты не пройдены, то при клике открываем попап-->
-            <a href="express_test.html" class="modules_item_name" content-elem="final-testing" status="not-passed">Итоговое тестирование</a>
+            <a href="{{ path('app_frontend_testing', {id: permission.id}) }}" class="modules_item_name" content-elem="final-testing" status="not-passed">Итоговое тестирование</a>
         </div>
     </div>
 </div>

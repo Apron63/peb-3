@@ -7,6 +7,7 @@ use App\Entity\Module;
 use App\Entity\ModuleSection;
 use App\Form\Admin\ModuleSectionEditType;
 use App\Repository\ModuleSectionRepository;
+use App\Service\InteractiveUploadService;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -14,7 +15,8 @@ use Symfony\Component\Routing\Annotation\Route;
 class ModuleSectionController extends MobileController
 {
     public function __construct(
-        readonly ModuleSectionRepository $moduleSectionRepository
+        readonly ModuleSectionRepository $moduleSectionRepository,
+        readonly InteractiveUploadService $interactiveUploadService
     ) {}
 
     #[Route('/admin/module_section/add/{id<\d+>}/', name: 'admin_module_section_add')]
@@ -63,23 +65,23 @@ class ModuleSectionController extends MobileController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            // if (null !== $form->get('filename')->getData()) {
-            //     $this->interactiveUploadService->fileInteractiveUpload(
-            //         $form->get('filename')->getData(),
-            //         $moduleInfo
-            //     );
+            if (null !== $form->get('filename')->getData()) {
+                $this->interactiveUploadService->fileInteractiveUpload(
+                    $form->get('filename')->getData(),
+                    $moduleSection
+                );
 
-            //     $moduleInfo->setUrl(
-            //         $form->get('filename')->getData()->getClientOriginalName()
-            //     );
-            // }
+                $moduleSection->setUrl(
+                    $form->get('filename')->getData()->getClientOriginalName()
+                );
+            }
 
             $this->moduleSectionRepository->save($moduleSection, true);
 
             return $this->redirectToRoute('admin_module_edit', ['id' => $moduleSection->getModule()->getId()]);
         }
 
-        return $this->mobileRender('admin/module-info/edit.html.twig', [
+        return $this->mobileRender('admin/module-section/edit.html.twig', [
             'form' => $form->createView(),
             'module' => $moduleSection->getModule(),
         ]);

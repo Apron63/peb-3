@@ -49,6 +49,13 @@
                 {{ form_widget(form.urlType) }}
             </div>
         </div>
+        
+        <div class="col-12 mb-3">
+            <div class="form-group">
+                <span class="text-danger">{{ form_errors(form.textData) }}</span>
+                {{ form_widget(form.textData) }}
+            </div>
+        </div>
 
         <div class="form-group mb-3">
             {{ form_widget(form.submit) }}

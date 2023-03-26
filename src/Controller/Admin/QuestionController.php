@@ -20,8 +20,8 @@ class QuestionController extends MobileController
         readonly AnswerRepository $answerRepository
     ) {}
 
-    #[Route('/admin/question/create/{id<\d+>}/{parentId}/', name: 'admin_question_create')]
-    public function adminQuestionCreate(Request $request, Course $course, int $parentId): Response
+    #[Route('/admin/question/create/{id<\d+>}/{parentId}', name: 'admin_question_create')]
+    public function adminQuestionCreate(Request $request, Course $course, ?int $parentId = null): Response
     {
         $question = new Questions();
         $question->setCourse($course);
@@ -37,10 +37,10 @@ class QuestionController extends MobileController
                 $this->questionsRepository->save($question, true);
             }
 
-            $redirectUrl = $this->generateUrl('admin_course_theme_edit', ['id' => $question->getParentId()]);
-
-            if ($question->getCourse()->getType() === Course::INTERACTIVE) {
-                $redirectUrl = $this->generateUrl('admin_module_edit', ['id' => $question->getParentId()]);
+            if ($question->getCourse()->gettype() === Course::INTERACTIVE) {
+                $redirectUrl = $this->generateUrl('admin_course_edit', ['id' => $question->getCourse()->getId()]);
+            } else {
+                $redirectUrl = $this->generateUrl('admin_course_theme_edit', ['id' => $question->getParentId()]);
             }
 
             return $this->redirect($redirectUrl);
@@ -64,7 +64,13 @@ class QuestionController extends MobileController
                 $this->questionsRepository->save($question, true);
             }
 
-            //return $this->redirect('/admin/course_theme/' . $question->getTheme()->getId() . '/');
+            if ($question->getCourse()->gettype() === Course::INTERACTIVE) {
+                $redirectUrl = $this->generateUrl('admin_course_edit', ['id' => $question->getCourse()->getId()]);
+            } else {
+                $redirectUrl = $this->generateUrl('admin_course_theme_edit', ['id' => $question->getParentId()]);
+            }
+
+            return $this->redirect($redirectUrl);
         }
 
         return $this->mobileRender('admin/question/edit.html.twig', [
@@ -77,11 +83,16 @@ class QuestionController extends MobileController
     #[Route('/admin/question/delete/{id<\d+>}/', name: 'admin_question_delete')]
     public function adminQuestionDelete(Request $request, Questions $question): Response
     {
-        $themeId = $question->getCourse()->getId();
+        if ($question->getCourse()->gettype() === Course::INTERACTIVE) {
+            $redirectUrl = $this->generateUrl('admin_course_edit', ['id' => $question->getCourse()->getId()]);
+        } else {
+            $redirectUrl = $this->generateUrl('admin_course_theme_edit', ['id' => $question->getParentId()]);
+        }
+
         if ($this->isGranted('ROLE_SUPER_ADMIN')) {
             $this->questionsRepository->remove($question, true);
         }
 
-        return $this->redirect('/admin/course_theme/' . $themeId . '/');
+        return $this->redirect($redirectUrl);
     }
 }

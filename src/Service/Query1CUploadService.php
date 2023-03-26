@@ -73,7 +73,7 @@ class Query1CUploadService
             $tmp['firstName'] =  $str[2];
             $tmp['patronymic'] =  $str[3];
             $tmp['x3'] =  $str[4];
-            $tmp['x3_2'] =  $str[5];
+            $tmp['position'] =  $str[5];
             $tmp['organization'] =  $str[6];
             $tmp['x3_3'] =  $str[7];
             $tmp['courseName'] =  $str[8];
@@ -113,7 +113,8 @@ class Query1CUploadService
                 ->setLastName($row[1])
                 ->setFirstName($row[2])
                 ->setPatronymic($row[3])
-                ->setOrganization($row[4])
+                ->setPosition($row[4])
+                ->setOrganization($row[5])
                 ->setResult('new');
 
             if (' ' === $courseName) {
@@ -126,14 +127,6 @@ class Query1CUploadService
         $this->bus->dispatch(new Query1CUploadMessage($row[0], $user->getId()));
 
         return ['success' => true, 'message' => 'Пользователи успешно добавлены в очередь'];
-    }
-
-    /**
-     * @return Permission|null
-     */
-    public function checkPermissionForUser(): ?Permission
-    {
-        return null;
     }
 
     /**
@@ -151,6 +144,7 @@ class Query1CUploadService
 
         $fileData = 'Номер заказа;'
             . 'ФИО;'
+            . 'Должность;'
             . 'Организация;'
             . 'Логин;'
             . 'Пароль;'
@@ -183,9 +177,11 @@ class Query1CUploadService
                     ->setLastName($row->getLastName())
                     ->setFirstName($row->getFirstName())
                     ->setPatronymic($row->getPatronymic())
+                    ->setPosition($row->getPosition())
+                    ->setPatronymic($row->getPatronymic())
                     ->setCreatedAt($row->getCreatedAt())
-                    ->setCreatedBy($createdByUser)
-                    ->setPosition('');
+                    ->setCreatedBy($createdByUser);
+                    
                 $user = $this->userService->setNewUser($user);
                 $this->userRepository->save($user, true);
             }
@@ -211,6 +207,7 @@ class Query1CUploadService
 
                     $fileData = $row->getOrderNom() . ';'
                         . $user->getFullName() . ';'
+                        . $user->getPosition() . ';'
                         . $user->getOrganization() . ';'
                         . $user->getLogin() . ';'
                         . $user->getPlainPassword() . ';'

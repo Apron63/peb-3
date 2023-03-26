@@ -37,8 +37,15 @@ services:
         - { name: doctrine.event_subscriber, connection: default }
         calls:
         - [ setAnnotationReader, [ "@annotation_reader" ] ]
+    
     # Course auto-remove child records
     App\EventListener\CourseRemoveEventListener:
+        tags:
+            - name: 'doctrine.event_listener'
+              event: 'preRemove'
+    
+    # Answer auto-remove child records
+    App\EventListener\QuestionRemoveEventListener:
         tags:
             - name: 'doctrine.event_listener'
               event: 'preRemove'

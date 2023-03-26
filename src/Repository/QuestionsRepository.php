@@ -41,16 +41,17 @@ class QuestionsRepository extends ServiceEntityRepository
         }
     }
 
-    public function getNextNumber(Course $course, int $parentId): int
+    public function getNextNumber(Course $course, ?int $parentId): int
     {
-        $question = $this->createQueryBuilder('q')
+        $queryBuilder = $this->createQueryBuilder('q')
             ->where('q.course = :course')
-            ->andWhere('q.parentId = :parentId')
-            ->setParameters([
-                'course' => $course->getId(),
-                'parentId' => $parentId,
-            ])
-            ->orderBy('q.nom', 'desc')
+            ->setParameter('course', $course);
+
+        if (null !== $parentId) {
+            $queryBuilder->andWhere('q.parentId = :parentId')
+                ->setParameter('parentId', $parentId);
+        }
+        $question = $queryBuilder->orderBy('q.nom', 'desc')
             ->setMaxResults(1)
             ->getQuery()
             ->getOneOrNullResult();
@@ -64,15 +65,18 @@ class QuestionsRepository extends ServiceEntityRepository
         return $result;
     }
 
-    public function getQuestionQuery(Course $course, int $parentId): AbstractQuery
+    public function getQuestionQuery(Course $course, ?int $parentId = null): AbstractQuery
     {
-        return $this->createQueryBuilder('q')
+        $queryBuilder = $this->createQueryBuilder('q')
             ->where('q.course = :course')
-            ->andWhere('q.parentId = :parentId')
-            ->setParameters([
-                'course' => $course->getId(),
-                'parentId' => $parentId,
-            ])
+            ->setParameter('course', $course);
+        
+        if (null !== $parentId) {
+            $queryBuilder->andWhere('q.parentId = :parentId')
+                ->setParameter('parentId', $parentId);
+        }
+
+        return $queryBuilder
             ->orderBy('q.nom')
             ->getQuery();
     }
@@ -84,9 +88,6 @@ class QuestionsRepository extends ServiceEntityRepository
         return $this->getEntityManager()->getConnection()->fetchFirstColumn($sql);
     }
 
-        /**
-     * @param Course $course
-     */
     public function removeQuestionsForCourse(Course $course)
     {
         $query = $this->getEntityManager()

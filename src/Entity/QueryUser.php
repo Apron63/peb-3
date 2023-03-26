@@ -35,6 +35,9 @@ class QueryUser
 
     #[ORM\Column(length: 50, nullable: true)]
     private ?string $patronymic = null;
+    
+    #[ORM\Column(length: 500, nullable: true)]
+    private ?string $position = null;
 
     #[ORM\Column(length: 500)]
     private ?string $organization = null;
@@ -118,6 +121,18 @@ class QueryUser
     public function setPatronymic(?string $patronymic): self
     {
         $this->patronymic = $patronymic;
+
+        return $this;
+    }
+    
+    public function getPosition(): ?string
+    {
+        return $this->position;
+    }
+
+    public function setPosition(?string $position): self
+    {
+        $this->position = $position;
 
         return $this;
     }

@@ -42,7 +42,7 @@ class CourseInfoController extends MobileController
                     $newFilename = $safeFilename . '-' . uniqid('', true) . '.' . $file->guessExtension();
                     try {
                         $file->move(
-                            $this->getParameter('course_upload_directory') . '/' . $course->getShortName(),
+                            $this->getParameter('course_upload_directory') . '/' . $course->getShortNameCleared(),
                             $newFilename
                         );
                     } catch (FileException $e) {

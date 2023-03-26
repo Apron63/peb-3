@@ -40,12 +40,18 @@ class AnswerRepository extends ServiceEntityRepository
         }
     }
 
-    public function getAnswers(Questions $question): array
+    public function getAnswers(Questions $question, bool $allAnswers = true): array
     {
-        return $this->createQueryBuilder('a')
+        $queryBuilder = $this->createQueryBuilder('a')
             ->where('a.question = :question')
-            ->setParameter('question', $question->getId())
-            ->getQuery()
+            ->setParameter('question', $question->getId());
+
+        if (!$allAnswers) {
+            $queryBuilder->andWhere('a.isCorrect = :trueValue')
+                ->setParameter('trueValue', true);
+        }
+        
+        return $queryBuilder->getQuery()
             ->getArrayResult();
     }
 
@@ -66,5 +72,14 @@ class AnswerRepository extends ServiceEntityRepository
         }
 
         return $result;
+    }
+
+    public function removeAnswersForQuestion(Questions $question)
+    {
+        $query = $this->getEntityManager()
+            ->createQuery('DELETE FROM App\Entity\Answer a WHERE a.question = :questionId')
+            ->setParameter('questionId', $question->getId());
+
+        $qIds = $query->execute();
     }
 }

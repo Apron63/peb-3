@@ -10,7 +10,8 @@ class MyProgramsService
 {
     public function __construct(
         readonly PermissionRepository $permissionRepository,
-        readonly CourseInfoRepository $courseInfoRepository
+        readonly CourseInfoRepository $courseInfoRepository,
+        readonly CourseService $courseService
     ) {}
 
     public function createSideMenuForUser(User $user): array
@@ -29,10 +30,13 @@ class MyProgramsService
             }
 
             $result[] = [
+                'id' => $permission->getId(),
                 'name' => $permission->getCourse()->getName(),
+                'shortName' =>  $permission->getCourse()->getShortName(),
                 'type' => $permission->getCourse()->getType(),
-                'courseInfoUrl' => $courseInfoUrl,
+                'courseInfo' => $courseInfo,
                 'courseId' => $permission->getCourse()->getId(),
+                'courseMenu' => $this->courseService->checkForCourseStage($permission),
             ];
         }
 

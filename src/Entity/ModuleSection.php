@@ -11,10 +11,12 @@ class ModuleSection
 {
     public const URL_TYPE_INTERACTIVE = 1;
     public const URL_TYPE_LINK = 2;
+    public const URL_TYPE_TEXT = 3;
 
     public const URL_TYPES = [
         'Интерактивные материалы' => self::URL_TYPE_INTERACTIVE,
         'Внешняя ссылка' => self::URL_TYPE_LINK,
+        'Текст' => self::URL_TYPE_TEXT,
     ];
     
     #[ORM\Id]
@@ -37,6 +39,9 @@ class ModuleSection
 
     #[ORM\Column(type: Types::SMALLINT)]
     private ?int $urlType = null;
+    
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    private ?string $textData = null;
 
     public function getId(): ?int
     {
@@ -99,6 +104,18 @@ class ModuleSection
     public function setUrlType(int $urlType): self
     {
         $this->urlType = $urlType;
+
+        return $this;
+    }
+    
+    public function getTextData(): ?string
+    {
+        return $this->textData;
+    }
+
+    public function setTextData(?string $textData): self
+    {
+        $this->textData = $textData;
 
         return $this;
     }

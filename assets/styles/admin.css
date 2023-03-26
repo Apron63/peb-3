@@ -1,3 +1,11 @@
 body {
     background: rgb(200, 200, 200);
 }
+.ticket-font {
+    font-size: 12px;
+}
+
+.ticket-hr {
+    margin-top: 0.5rem;
+    margin-bottom: 0.5rem;
+}

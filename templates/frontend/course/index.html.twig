@@ -1,6 +1,6 @@
 {% extends 'frontend/base.html.twig' %}
 
-{% block title %}{{ course.name }}{% endblock %}
+{% block title %}{{ permission.course.name }}{% endblock %}
 
 {% block body %}
 
@@ -9,30 +9,28 @@
     <div class="global-content">
         {% include('frontend/components/background.html.twig') %}
         <div class="wrapper container">
-            {{ render(path('app_frontend_left_menu', {'activeItem': 'my-programs'})) }}
+            {{ render(path('app_frontend_left_menu', {'activeItem': 'my-programs', 'activeCourse': permission.course.id})) }}
             <div class="content">
                 <div class="program">
-                    <h1>{{ course.name }}</h1>
+                    <h1>{{ permission.course.name }}</h1>
 
                     {% if courseInfo is not empty %}
-                        {% for info in courseInfo %}
-                            <div class="program_files">
-                                <a 
-                                    class="program_files_item" 
-                                    href="/storage/course/{{ course.shortName}}/{{ info.fileName }}"
-                                >
-                                    <div class="program_files_item_image">
-                                        <img src=" {{ asset('img/file.svg') }}" alt="">
-                                    </div>
-                                    <div class="program_files_item_name">
-                                        {{ info.name}}
-                                    </div>
-                                </a>
-                            </div>
-                        {% endfor %}
+                         <div class="program_files">
+                            <a 
+                                class="program_files_item" 
+                                href="{{ path('app_frontend_course_view_list', {id: permission.course.id }) }}"
+                            >
+                                <div class="program_files_item_image">
+                                    <img src="{{ asset('img/file.svg') }}" alt="">
+                                </div>
+                                <div class="program_files_item_name">
+                                    Нормативные материалы
+                                </div>
+                            </a>
+                        </div>
                     {% endif %}
 
-                    {% if course.type == 1 %}
+                    {% if permission.course.type == 1 %}
                         {% include('frontend/course/_classic.html.twig') %}
                     {% else %}
                         {% include('frontend/course/_interactive.html.twig') %}
@@ -45,6 +43,14 @@
 
     {% include('frontend/components/footer.html.twig') %}
 
-    <div class="overlay" popup-element="overlay"></div>
+    <div class="overlay" popup-element="overlay">
+        <div class="popup" popup-element="popup">
+            <p>Для прохождения итогового тестирования необходимо пройти все промежуточные тестирования каждого модуля.</p>
+            <p>Успешного обучения!</p>
+            <div class="popup_close_wrapper">
+                <a class="popup_close" popup-element="popup-close">закрыть</a>
+            </div>
+        </div>
+    </div>
 
 {% endblock %}

@@ -2,7 +2,7 @@
 
 namespace App\Service;
 
-use App\Entity\ModuleInfo;
+use App\Entity\ModuleSection;
 use RuntimeException;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
@@ -22,19 +22,15 @@ class InteractiveUploadService
         $this->interactiveUploadPath = $interactiveUploadPath;
     }
 
-    /**
-     * @param UploadedFile $data
-     * @param ModuleInfo $moduleInfo
-     */
-    public function fileInteractiveUpload(UploadedFile $data, ModuleInfo $moduleInfo): void
+    public function fileInteractiveUpload(UploadedFile $data, ModuleSection $moduleSection): void
     {
         $this->originalFilename = pathinfo($data->getClientOriginalName(), PATHINFO_FILENAME);
         $path =
             $this->interactiveUploadPath
             . DIRECTORY_SEPARATOR
-            . $moduleInfo->getModule()->getCourse()->getId()
+            . $moduleSection->getModule()->getCourse()->getId()
             . DIRECTORY_SEPARATOR
-            . $moduleInfo->getId()
+            . $moduleSection->getId()
             . DIRECTORY_SEPARATOR;
 
         // Проверить что каталог существует, при необходимости создать.

@@ -74,7 +74,7 @@ class TicketService
         for ($i = 1; $i <= $ticketCount; $i++) {
             $tmp = $questionArray;
             shuffle($tmp);
-            $arr = array_slice($tmp, 0, $i);
+            $arr = array_slice($tmp, 0, count($questionArray));
 
             $moduleTicket = new ModuleTicket();
             $moduleTicket->setModule($module)
@@ -89,58 +89,60 @@ class TicketService
     public function renderTickets(Course $course): array
     {
         $result = [];
-
         $tickets = $this->ticketRepository->getCourseTickets($course);
 
         foreach ($tickets as $ticket) {
-            $items = json_decode($ticket['text'][0], JSON_FORCE_OBJECT);
-            $data = [];
-
-            foreach ($items as $key => $questions) {
-                $theme = $this->courseThemeRepository->find($key);
-
-                if ($theme instanceof CourseTheme) {
-                   $questionsArray = [];
-
-                    foreach ($questions as $questionNom => $questionId) {
-                        $question = $this->questionsRepository->find($questionId);
-
-                        if ($question instanceof Questions) {
-                            $answers = [];
-
-                            $trueAnswers = $this->answerRepository->findBy([
-                                'question' => $question,
-                                'isCorrect' => true,
-                            ]);
-
-                            if (!empty($trueAnswers)) {
-                                foreach($trueAnswers as $answer) {
-                                    $answers[] = $answer->getDescription();
-                                }
-                            }
-
-                            $questionsArray[] = [
-                                'nom' => $questionNom + 1,
-                                'description' => $question->getDescription(),
-                                'answers' => $answers,
-                                'help' => $question->getHelp(),
-                            ];
-                        }
-                    }
-
-                    $data[$theme->getName()] = [
-                        'theme' =>  $theme->getDescription(),
-                        'questions' => $questionsArray,
-                    ];
-                }
-            }
-
-            $result[] = [
-                'ticketNom' => $ticket['nom'],
-                'data' => $data,
-            ];
+            $result[] = $this->renderTicket($ticket, false);
         }
 
         return $result;
+    }
+
+    public function renderTicket(array $ticket, bool $allAnswers = false): array
+    {
+        $items = json_decode($ticket['text'][0], JSON_FORCE_OBJECT);
+        $data = [];
+
+        foreach ($items as $key => $questions) {
+            $theme = $this->courseThemeRepository->find($key);
+
+            if ($theme instanceof CourseTheme) {
+                $questionsArray = [];
+
+                foreach ($questions as $questionNom => $questionId) {
+                    $question = $this->questionsRepository->find($questionId);
+
+                    if ($question instanceof Questions) {
+                        $answers = [];
+
+                        $trueAnswers = $this->answerRepository->getAnswers($question, $allAnswers);
+
+                        if (!empty($trueAnswers)) {
+                            foreach($trueAnswers as $answer) {
+                                $answers[] = $answer['description'];
+                            }
+                        }
+
+                        $questionsArray[] = [
+                            'nom' => $questionNom + 1,
+                            'description' => $question->getDescription(),
+                            'answers' => $answers,
+                            'help' => $question->getHelp(),
+                        ];
+                    }
+                }
+
+                $data[$theme->getName()] = [
+                    'theme' =>  $theme->getDescription(),
+                    'questions' => $questionsArray,
+                ];
+            }
+        }
+
+        return [
+            'ticketNom' => $ticket['nom'],
+            'data' => $data,
+            'id' => $ticket['id'],
+        ];
     }
 }

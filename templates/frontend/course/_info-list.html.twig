@@ -1,0 +1,8 @@
+
+{% for info in courseInfo %}
+    <a href="{{ path('app_frontend_course_view_file', {id: info.course.id, fileName: info.fileName}) }}">
+        <div>
+            {{ info.name }}
+        </div>
+    </a>
+{% endfor %}

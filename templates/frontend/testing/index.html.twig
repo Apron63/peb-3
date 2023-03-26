@@ -1,0 +1,83 @@
+{% extends 'frontend/base.html.twig' %}
+
+{% block title %}Экспресс-тест{% endblock %}
+
+{% block body %}
+
+    {% include('frontend/components/header.html.twig') %}
+
+    <div class="global-content">
+        {% include('frontend/components/background.html.twig') %}
+        <div class="wrapper container">
+            {{ render(path('app_frontend_left_menu', {'activeItem': 'my-programs', 'activeCourse': permission.course.id})) }}
+            <div class="content">
+                <div class="express-test">
+                    <div class="express-test_header">
+                        <h1>Итоговое тестирование</h1>
+                        <!--в end-time передаём timestamp в формате php (в секундах)-->
+                        <div class="express-test_header_timer" test-elem="timer" end-time="1672297200">
+                            <div class="express-test_header_timer_minutes" test-elem="minutes">00</div>
+                            <div class="express-test_header_timer_seconds" test-elem="seconds">00</div>
+                        </div>
+                    </div>
+                    <div class="express-test_description">
+                        <strong>Тема:</strong> Эксплуатация опасных производственных объектов, на которых используются трубопроводы пара и горячей воды.
+                    </div>
+                    <form class="test_form express-test_form" test-form-elem="form">
+                        <div class="test_form_question_wrapper">
+                            <div class="test_form_question_number">
+                                1.
+                            </div>
+                            <div class="test_form_question">
+                                Какое из приведенных испытаний не является обязательным видом механических испытаний котлов (трубопроводов)?
+                            </div>
+                        </div>
+                        <!--Заполнить name и value-->
+                        <!--Радиокнопки-->
+                        <label class="test_form_label test_form_radio_wrapper">
+                            <input class="test_form_radio" type="radio" name="answer1" value="1">
+                            <div class="test_form_custom_radio"></div>
+                            <div class="test_form_answer">Испытание на статическое растяжение</div>
+                        </label>
+                        <label class="test_form_label test_form_radio_wrapper">
+                            <input class="test_form_radio" type="radio" name="answer1" value="2">
+                            <div class="test_form_custom_radio"></div>
+                            <div class="test_form_answer">Испытание на статический изгиб</div>
+                        </label>
+                        <label class="test_form_label test_form_radio_wrapper">
+                            <input class="test_form_radio" type="radio" name="answer1" value="3">
+                            <div class="test_form_custom_radio"></div>
+                            <div class="test_form_answer">Испытание на ударный изгиб</div>
+                        </label>
+                        <!--Чекбоксы-->
+                    <!--<label class="test_form_label test_form_checkbox_wrapper">
+                            <input class="test_form_checkbox" type="checkbox" name="answer1" value="1">
+                            <div class="test_form_custom_checkbox"></div>
+                            <div class="test_form_answer">Испытание на статическое растяжение</div>
+                        </label>
+                        <label class="test_form_label test_form_checkbox_wrapper">
+                            <input class="test_form_checkbox" type="checkbox" name="answer1" value="1">
+                            <div class="test_form_custom_checkbox"></div>
+                            <div class="test_form_answer">Испытание на статическое растяжение</div>
+                        </label>
+                        <label class="test_form_label test_form_checkbox_wrapper">
+                            <input class="test_form_checkbox" type="checkbox" name="answer1" value="1">
+                            <div class="test_form_custom_checkbox"></div>
+                            <div class="test_form_answer">Испытание на статическое растяжение</div>
+                        </label>-->
+                        <div class="express-test_form_error"><!--тут выводим ошибки--></div>
+                        <div class="express-test_form_buttons_wrapper">
+                            <button type="button" class="blue_button express-test_form_button_next">Следующий вопрос</button>
+                            <a href="{{ path('app_frontend_testing_end', {id: permission.id}) }}" class="white-blue_button express-test_form_button_end">Завершить</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {% include('frontend/components/footer.html.twig') %}
+
+    <div class="overlay" popup-element="overlay"></div>
+
+{% endblock %}

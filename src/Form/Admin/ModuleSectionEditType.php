@@ -2,12 +2,12 @@
 
 namespace App\Form\Admin;
 
-use App\Entity\ModuleInfo;
 use App\Entity\ModuleSection;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -59,12 +59,26 @@ class ModuleSectionEditType extends AbstractType
             ])
             ->add('urlType', ChoiceType::class, [
                 'label' => 'Тип материалов',
-                'choices' => ModuleInfo::URL_TYPES,
+                'choices' => ModuleSection::URL_TYPES,
                 'attr' => [
                     'class' => 'form-select',
                     'placeholder' => 'Тип материалов',
                     'onfocus' => 'this.placeholder = ""',
                     'onblur' => 'this.placeholder = "Ссылка"',
+                ],
+                'label_attr' => [
+                    'class' => 'col-sm-2 col-form-label'
+                ],
+            ])
+            ->add('textData', TextareaType::class, [
+                'required' => false,
+                'label' => 'Текст',
+                'attr' => [
+                    'class' => 'form-control',
+                    'placeholder' => 'Текст',
+                    'onfocus' => 'this.placeholder = ""',
+                    'onblur' => 'this.placeholder = "Текст"',
+                    'rows' => '6',
                 ],
                 'label_attr' => [
                     'class' => 'col-sm-2 col-form-label'

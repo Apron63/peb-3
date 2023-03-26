@@ -21,10 +21,10 @@ class Questions
     private ?int $id = null;
 
     #[ORM\ManyToOne]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\JoinColumn]
     private ?Course $course = null;
 
-    #[ORM\Column]
+    #[ORM\Column(nullable: true)]
     private ?int $parentId = null;
 
     #[ORM\Column(type: Types::TEXT)]
@@ -61,7 +61,7 @@ class Questions
         return $this->parentId;
     }
 
-    public function setParentId(int $parentId): self
+    public function setParentId(?int $parentId): self
     {
         $this->parentId = $parentId;
 

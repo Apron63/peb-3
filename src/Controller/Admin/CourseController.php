@@ -15,6 +15,7 @@ use App\Repository\CourseThemeRepository;
 use App\Repository\ModuleInfoRepository;
 use App\Repository\ModuleRepository;
 use App\Repository\ProfileRepository;
+use App\Repository\QuestionsRepository;
 use App\Repository\TicketRepository;
 use App\Service\TicketService;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
@@ -29,9 +30,11 @@ class CourseController extends MobileController
         readonly CourseThemeRepository $courseThemeRepository,
         readonly ModuleRepository $moduleRepository,
         readonly ModuleInfoRepository $moduleInfoRepository,
+        readonly QuestionsRepository $questionsRepository,
         readonly TicketRepository $ticketRepository,
         readonly TicketService $ticketService,
         readonly SluggerInterface $slugger,
+        readonly PaginatorInterface $paginator ,
     ) {}
 
     #[Route('/admin/course/', name: 'admin_course_list')]
@@ -86,7 +89,7 @@ class CourseController extends MobileController
                 if ($image) {
                     $originalFilename = pathinfo($image->getClientOriginalName(), PATHINFO_FILENAME);
                     
-                    $imgPath = $this->getParameter('course_upload_directory') . '/' . $course->getId();
+                    $imgPath = $this->getParameter('course_upload_directory') . '/' . $course->getShortNameCleared();
 
                     if (!file_exists($imgPath)) { 
                         mkdir($imgPath, 0777, true);
@@ -115,12 +118,19 @@ class CourseController extends MobileController
         }
 
         if ($course->getType() === Course::INTERACTIVE) {
+            $pagination = $this->paginator->paginate(
+                $this->questionsRepository->getQuestionQuery($course),
+                $request->query->getInt('page', 1),
+                10
+            );
+
             return $this->mobileRender('admin/course/interactive/list.html.twig', [
                 'form' => $form->createView(),
                 'course' => $course,
                 'modules' => $this->moduleRepository->getModules($course),
                 'courseInfos' => $this->courseInfoRepository->getCourseInfos($course),
                 'moduleInfos' => $this->moduleInfoRepository->getModuleInfos($course),
+                'questions' => $pagination,
             ]);
         } else {
             $courseThemes = $this->courseThemeRepository->getCourseThemes($course);

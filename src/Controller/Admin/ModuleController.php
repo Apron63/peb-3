@@ -10,6 +10,7 @@ use App\Repository\ModuleRepository;
 use App\Repository\ModuleSectionRepository;
 use App\Repository\ModuleTicketRepository;
 use App\Repository\QuestionsRepository;
+use App\Service\ModuleTicketService;
 use App\Service\TicketService;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -24,7 +25,8 @@ class ModuleController extends MobileController
         readonly ModuleSectionRepository $moduleSectionRepository,
         readonly QuestionsRepository $questionsRepository,
         readonly ModuleTicketRepository $moduleTicketRepository,
-        readonly TicketService $ticketService
+        readonly TicketService $ticketService,
+        readonly ModuleTicketService $moduleTicketservice
     ) {}
 
     #[Route('/admin/module/add/{id<\d+>}/', name: 'admin_module_create')]
@@ -69,13 +71,15 @@ class ModuleController extends MobileController
             return $this->redirectToRoute('admin_course_edit', ['id' => $module->getCourse()->getId()]);
         }
 
+        $tickets = $this->moduleTicketservice->renderTickets($module);
+
         return $this->mobileRender('admin/course/interactive/edit.html.twig', [
             'form' => $form->createView(),
             'course' => $module->getCourse(),
             'moduleSection' => $this->moduleSectionRepository->findBy(['module' => $module]),
             'pagination' => $pagination,
             'parentId' => $module->getId(),
-            'tickets' => $this->moduleTicketRepository->getTickets($module),
+            'tickets' => $tickets,
         ]);
     }
 

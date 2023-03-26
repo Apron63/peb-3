@@ -1,31 +1,30 @@
-<li class="programs-menu_item" menu-elem="programs-menu-item">
+<li class="programs-menu_item {% if permission.courseId == activeCourse %}active{% endif %}" menu-elem="programs-menu-item">
     <a 
-        href="{{ path('app_frontend_course', {id: permission.courseId}) }}" 
+        href="{{ path('app_frontend_course', {id: permission.id}) }}" 
         class="programs-menu_item_header" 
         menu-elem="program-header"
     >
         {{ permission['name'] }}
     </a>
     <ul class="modules-menu" menu-elem="modules-menu">
-        {% if permission['courseInfoUrl'] is not null %}
-            <li class="modules-menu_item">
-                <div class="modules-menu_item_header">
-                    <a href="#">Нормативная документация</a>
-                    <a href="permission['courseInfoUrl']">Нормативная документация</a>
-                </div>
-            </li> 
-        {% else %}
-            AssHole
+        {% if permission.courseInfo is not empty %}
+            {% for info in permission.courseInfo %}
+                <li class="modules-menu_item">
+                    <div class="modules-menu_item_header">
+                        <a href="{{ path('app_frontend_course_view_file', {id: info.course.id, fileName:  info.fileName}) }}">{{ info.name }}</a>
+                    </div>
+                </li> 
+            {% endfor %}
         {% endif %}
         
         <li class="modules-menu_item">
             <div class="modules-menu_item_header">
-                <a href="control_questions.html">Подготовка к аттестации</a>
+                <a href="{{ path('app_frontend_preparation', {id: permission.id}) }}">Подготовка к аттестации</a>
             </div>
         </li>
         <li class="modules-menu_item">
             <div class="modules-menu_item_header">
-                <a href="express_test.html">Итоговое тестирование</a>
+                <a href="{{ path('app_frontend_testing', {id: permission.id}) }}">Итоговое тестирование</a>
             </div>
         </li>
     </ul>

@@ -45,7 +45,7 @@
             <div class="row">
                 {% if form.vars['value'].image is not empty %}
                 <div class=col-3>
-                    <img src="/storage/course/{{ course.id }}/{{ form.vars['value'].image }}" height="100px">
+                    <img src="/storage/course/{{ course.shortNameCleared }}/{{ form.vars['value'].image }}" height="100px">
                 </div>
             {% endif %}
                 <div class="col-9 mb-3">
@@ -70,6 +70,9 @@
             <button class="nav-link" id="nav-info-tab" data-bs-toggle="tab" data-bs-target="#nav-info"
                     type="button" role="tab" aria-controls="nav-info" aria-selected="false">Материалы
             </button>
+             <button class="nav-link" id="nav-question-tab" data-bs-toggle="tab" data-bs-target="#nav-question"
+                    type="button" role="tab" aria-controls="nav-question" aria-selected="false">Вопросы
+            </button>
         </div>
     </nav>
 
@@ -79,6 +82,10 @@
         </div>
         <div class="tab-pane fade" id="nav-info" role="tabpanel" aria-labelledby="nav-info-tab">
             {% include 'admin/course/interactive/_infos.html.twig' %}
+        </div>
+        <div class="tab-pane fade" id="nav-question" role="tabpanel" aria-labelledby="nav-question-tab">
+            <p></p>
+            {% include 'admin/course/interactive/_questions.html.twig' %}
         </div>
     </div>
     

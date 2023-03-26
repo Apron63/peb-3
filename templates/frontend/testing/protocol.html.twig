@@ -1,0 +1,103 @@
+{% extends 'frontend/base.html.twig' %}
+
+{% block title %}Результат{% endblock %}
+
+{% block body %}
+
+    {% include('frontend/components/header.html.twig') %}
+
+    <div class="global-content">
+        {% include('frontend/components/background.html.twig') %}
+        <div class="wrapper container">
+            {{ render(path('app_frontend_left_menu', {'activeItem': 'my-programs', 'activeCourse': permission.course.id})) }}
+            <div class="content">
+                <div class="results">
+                    <h1>Протокол экзамена</h1>
+                    <div class="results_data">
+                        <div class="results_data_row">
+                            <div class="results_data_row_name">Тестируемый:</div>
+                            <div class="results_data_row_value">Константинопольский Константин Константинович</div>
+                        </div>
+                        <div class="results_data_row">
+                            <div class="results_data_row_name">Организация:</div>
+                            <div class="results_data_row_value">ООО «Альфа»</div>
+                        </div>
+                        <div class="results_data_row">
+                            <div class="results_data_row_name">Результат:</div>
+                            <div class="results_data_row_value">Экзамен сдан</div>
+                        </div>
+                        <div class="results_data_row">
+                            <div class="results_data_row_name">Допустимое количество ошибок:</div>
+                            <div class="results_data_row_value">2</div>
+                        </div>
+                        <div class="results_data_row">
+                            <div class="results_data_row_name">Допущено ошибок:</div>
+                            <!--Если ошибок больше 0, то добавляем класс errors-->
+                            <div class="results_data_row_value errors">1</div>
+                        </div>
+                        <div class="results_data_row">
+                            <div class="results_data_row_name">Пропушено вопросов:</div>
+                            <!--Если пропущено вопросов больше 0, то добавляем класс skip-->
+                            <div class="results_data_row_value">0</div>
+                        </div>
+                        <div class="results_data_row">
+                            <div class="results_data_row_name">Предмет тестирования:</div>
+                            <div class="results_data_row_value">ЦДО-ПБ-Б.7.1 Эксплуатация сетей газораспределения и газопотребления (2022)</div>
+                        </div>
+                        <div class="results_data_row">
+                            <div class="results_data_row_name">Номер билета:</div>
+                            <div class="results_data_row_value">16</div>
+                        </div>
+                        <div class="results_data_row">
+                            <div class="results_data_row_name">Дата проведения тестирования:</div>
+                            <div class="results_data_row_value">10-01-2023 16:13</div>
+                        </div>
+                    </div>
+                    <div class="results_table">
+                        <div class="results_table_header">
+                            <div class="results_table_row">
+                                <div class="number">№</div>
+                                <div class="question">Вопрос</div>
+                                <div class="answer">Ответ</div>
+                                <div class="result">Результат</div>
+                            </div>
+                        </div>
+                        <div class="results_table_content">
+                            <!--Если ответ правильный - добавляем в аттрибут answer-result значение right-->
+                            <div class="results_table_row" answer-result="right">
+                                <div class="number">1</div>
+                                <div class="question">Lorem ipsum dolor sit amet consectetur adipisicing elit. Ab harum facere sapiente, velit aliquam ut. Sed iusto nihil eius quam fugiat, aut adipisci voluptate, recusandae illum libero explicabo placeat voluptatibus.</div>
+                                <div class="answer">Lorem ipsum dolor sit amet consectetur adipisicing elit. Ab harum facere sapiente, velit aliquam ut. Sed iusto nihil eius quam fugiat, aut adipisci voluptate, recusandae illum libero explicabo placeat voluptatibus</div>
+                                <div class="result">Правильно</div>
+                            </div>
+                            <div class="results_table_row" answer-result="right">
+                                <div class="number">2</div>
+                                <div class="question">Lorem ipsum dolor sit amet consectetur adipisicing elit. Ab harum facere sapiente, velit aliquam ut. Sed iusto nihil eius quam fugiat, aut adipisci voluptate, recusandae illum libero explicabo placeat voluptatibus.</div>
+                                <div class="answer">Lorem ipsum dolor sit amet consectetur adipisicing elit. Ab harum facere sapiente, velit aliquam ut. Sed iusto nihil eius quam fugiat, aut adipisci voluptate, recusandae illum libero explicabo placeat voluptatibus</div>
+                                <div class="result">Правильно</div>
+                            </div>
+                            <!--Если ответ не правильный - добавляем в аттрибут answer-result значение wrong-->
+                            <div class="results_table_row" answer-result="wrong">
+                                <div class="number">3</div>
+                                <div class="question">Lorem ipsum dolor sit amet consectetur adipisicing elit. Ab harum facere sapiente, velit aliquam ut. Sed iusto nihil eius quam fugiat, aut adipisci voluptate, recusandae illum libero explicabo placeat voluptatibus.</div>
+                                <div class="answer">Lorem ipsum dolor sit amet consectetur adipisicing elit. Ab harum facere sapiente, velit aliquam ut. Sed iusto nihil eius quam fugiat, aut adipisci voluptate, recusandae illum libero explicabo placeat voluptatibus</div>
+                                <div class="result">Не правильно</div>
+                            </div>
+                            <div class="results_table_row" answer-result="right">
+                                <div class="number">4</div>
+                                <div class="question">Lorem ipsum dolor sit amet consectetur adipisicing elit. Ab harum facere sapiente, velit aliquam ut. Sed iusto nihil eius quam fugiat, aut adipisci voluptate, recusandae illum libero explicabo placeat voluptatibus.</div>
+                                <div class="answer">Lorem ipsum dolor sit amet consectetur adipisicing elit. Ab harum facere sapiente, velit aliquam ut. Sed iusto nihil eius quam fugiat, aut adipisci voluptate, recusandae illum libero explicabo placeat voluptatibus</div>
+                                <div class="result">Правильно</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {% include('frontend/components/footer.html.twig') %}
+
+    <div class="overlay" popup-element="overlay"></div>
+
+{% endblock %}

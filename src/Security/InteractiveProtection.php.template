@@ -1,0 +1,12 @@
+<?php
+if (
+    !isset($_COOKIE['init'])
+    || !isset($_COOKIE['PHPSESSID'])
+    || $_COOKIE['init'] !== md5($_COOKIE['PHPSESSID'])
+) {
+    header('HTTP/1.1 404 Not Found');
+    die();
+} else {
+    setcookie('init', '', -1, '/');
+}
+?>

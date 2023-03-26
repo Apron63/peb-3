@@ -1,6 +1,6 @@
 <div>
     {% if is_granted('ROLE_SUPER_ADMIN') %}
-        <a class="btn btn-outline-success" href="{{ path('admin_question_create', {id: form.vars['value'].course.id, parentId: parentId}) }}">
+        <a class="btn btn-outline-success" href="{{ path('admin_question_create', {id: course.id, parentId: null}) }}">
             Добавить вопрос
         </a>
     {% endif %}
@@ -16,7 +16,7 @@
     </thead>
 
     <tbody>
-        {% for question in pagination %}
+        {% for question in questions %}
             <tr>
                 <td>{{ question.nom }}</td>
                 <td>
@@ -41,5 +41,5 @@
 </table>
 
 <div class="navigation">
-    {{ knp_pagination_render(pagination) }}
+    {{ knp_pagination_render(questions) }}
 </div>

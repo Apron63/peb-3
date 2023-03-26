@@ -4,7 +4,7 @@
             {% if permission.course.image is null%}
                 <img src="{{ asset('img/no_course_image.jpg') }}" alt="">
             {% else %}
-                <img src="/storage/course/{{ permission.course.id }}{{ asset(permission.course.image) }}" alt="">
+                <img src="/storage/course/{{ permission.course.shortNameCleared }}{{ asset(permission.course.image) }}" alt="">
             {% endif %}
         </div>
     </div>
@@ -14,12 +14,12 @@
     <div class="programs_item_status_wrapper">
         <div class="programs_item_status"></div>
         <a 
-            href="{{ path('app_frontend_course', {id: permission.course.id}) }}" 
+            href="{{ path('app_frontend_course', {id: permission.id}) }}" 
             class="programs_item_status_link red_button"
         >
             {% if permission.stage == 1 %}
                 Начать обучение
-            {% elseif permission.rtage ==2 %}
+            {% elseif permission.stage == 2 %}
                 Продолжить обучение
             {% else %}
                 Обучение завершено

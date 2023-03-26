@@ -55,6 +55,7 @@ $('#load-query').on('click', function () {
                     $(mainElement).find('.user-list-lastname').text(),
                     $(mainElement).find('.user-list-firstname').text(),
                     $(mainElement).find('.user-list-patronymic').text(),
+                    $(mainElement).find('.user-list-position').text(),
                     $(mainElement).find('.user-list-organization').text()
                 ])
             })

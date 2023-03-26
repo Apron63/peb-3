@@ -15,6 +15,7 @@ class UserPermissionService
     public function checkPermissionForUser(Course $course, User $user): bool
     {
         $permissions = $this->permissionRepository->getPermissionQuery($user)->getResult();
+        
         $courseIds = array_map(function($row){
             return $row['courseId'];
         }, $permissions);

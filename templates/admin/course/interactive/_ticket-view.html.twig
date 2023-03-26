@@ -1,0 +1,51 @@
+<p></p>
+
+<table class="table">
+    <tbody>
+        {% for ticket in tickets %}
+            <tr>
+                <td>
+                    <div class="row">
+                        <div class="col-11">
+                            <a 
+                                class="link-dark" 
+                                data-bs-toggle="collapse" 
+                                href="#collapse_{{ loop.index0 }}" 
+                                role="button" 
+                                aria-expanded="false" 
+                                aria-controls="myCollapse"
+                            >
+                                Билет № {{ ticket.nom }}
+                            </a>
+                        </div>
+                        {# <div class="col-1">
+                            <a href="{{ path('admin_tickets_print', {id: ticket.id}) }}" target="_blank">Печать</a>
+                        </div> #}
+                    </div>
+
+                    <div class="collapse" id="collapse_{{ loop.index0 }}">
+                        <div class="card card-body">
+                            {% if ticket.questions is not empty %}
+                                {% for question in ticket.questions %}
+                                    <strong>Вопрос {{ question.nom }}</strong>
+                                    <div>{{ question.description | raw }}</div>
+                                    {% if question.answers is not empty %}
+                                        {% for answer in question.answers %}
+                                            <strong>Правильный ответ</strong>
+                                            <div>{{ answer | raw }}</div>
+                                        {% endfor %}
+                                    {% endif %}
+                                    <div>
+                                        <strong>Подсказка</strong>
+                                        <div>{{ question.help | raw }}</div>
+                                    </div>
+                                {% endfor %}
+                                
+                            {% endif %}
+                        </div>
+                    </div>
+                </td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>

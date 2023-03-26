@@ -5,16 +5,23 @@
         {% for ticket in tickets %}
             <tr>
                 <td>
-                    <a 
-                        class="link-dark" 
-                        data-bs-toggle="collapse" 
-                        href="#collapse_{{ loop.index0 }}" 
-                        role="button" 
-                        aria-expanded="false" 
-                        aria-controls="myCollapse"
-                    >
-                        Билет № {{ ticket.ticketNom }}
-                    </a>
+                    <div class="row">
+                        <div class="col-11">
+                            <a 
+                                class="link-dark" 
+                                data-bs-toggle="collapse" 
+                                href="#collapse_{{ loop.index0 }}" 
+                                role="button" 
+                                aria-expanded="false" 
+                                aria-controls="myCollapse"
+                            >
+                                Билет № {{ ticket.ticketNom }}
+                            </a>
+                        </div>
+                        <div class="col-1">
+                            <a href="{{ path('admin_tickets_print', {id: ticket.id}) }}" target="_blank">Печать</a>
+                        </div>
+                    </div>
 
                     <div class="collapse" id="collapse_{{ loop.index0 }}">
                         <div class="card card-body">
