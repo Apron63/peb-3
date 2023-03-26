@@ -38,11 +38,10 @@ class ModuleTicketService
 
     public function renderTicket(ModuleTicket $ticket, bool $allAnswers = false): array
     {
+        $questionsArray = [];
         $items = json_decode($ticket->getData()[0], JSON_FORCE_OBJECT);
 
         if (!empty($items)) {
-            $questionsArray = [];
-
             foreach ($items as $questionNom => $questionId) {
                 $question = $this->questionsRepository->find($questionId);
 
