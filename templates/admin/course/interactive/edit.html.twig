@@ -39,9 +39,6 @@
                                 data-bs-target="#nav-modules"
                                 type="button" role="tab" aria-controls="nav-modules" aria-selected="true">Разделы
                         </button>
-                        <button class="nav-link" id="nav-question-tab" data-bs-toggle="tab" data-bs-target="#nav-question"
-                                type="button" role="tab" aria-controls="nav-question" aria-selected="false">Вопросы
-                        </button>
                     </div>
                 </nav>
 
@@ -49,12 +46,7 @@
                     <div class="tab-pane fade show active" id="nav-modules" role="tabpanel" aria-labelledby="nav-modules-tab">
                         {% include 'admin/course/interactive/_section.html.twig' %}
                     </div>
-                    <div class="tab-pane fade" id="nav-question" role="tabpanel" aria-labelledby="nav-question-tab">
-                        <p></p>
-                        {% include 'admin/course-theme/_questions.html.twig' %}
-                    </div>
                 </div>
-
 
             {% endif %}
 

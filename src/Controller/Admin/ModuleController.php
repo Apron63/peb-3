@@ -12,7 +12,6 @@ use App\Repository\ModuleTicketRepository;
 use App\Repository\QuestionsRepository;
 use App\Service\ModuleTicketService;
 use App\Service\TicketService;
-use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -54,14 +53,7 @@ class ModuleController extends MobileController
     public function adminEditModule(
         Module $module, 
         Request $request, 
-        PaginatorInterface $paginator 
     ): Response {
-        $pagination = $paginator->paginate(
-            $this->questionsRepository->getQuestionQuery($module->getCourse(), $module->getId()),
-            $request->query->getInt('page', 1),
-            10
-        );
-
         $form = $this->createForm(ModuleEditType::class, $module);
         $form->handleRequest($request);
 
@@ -75,7 +67,6 @@ class ModuleController extends MobileController
             'form' => $form->createView(),
             'course' => $module->getCourse(),
             'moduleSection' => $this->moduleSectionRepository->findBy(['module' => $module]),
-            'pagination' => $pagination,
             'parentId' => $module->getId(),
         ]);
     }
