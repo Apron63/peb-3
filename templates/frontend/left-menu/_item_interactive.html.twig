@@ -8,16 +8,22 @@
     </a>
     <ul class="modules-menu" menu-elem="modules-menu">
         {% if permission.courseInfo is not empty %}
-            {% for info in permission.courseInfo %}
+             <li class="modules-menu_item">
+                <div class="modules-menu_item_header">
+                    <a href="{{ path('app_frontend_course_view_list', {id: permission.courseId}) }}">Нормативные материалы</a>
+                </div>
+            </li> 
+            {# TODO
+                {% for info in permission.courseInfo %}
                 <li class="modules-menu_item">
                     <div class="modules-menu_item_header">
                         <a href="{{ path('app_frontend_course_view_file', {id: info.course.id, fileName:  info.fileName}) }}">{{ info.name }}</a>
                     </div>
                 </li> 
-            {% endfor %}
+            {% endfor %} #}
         {% endif %}
 
-        {{ dump(permission) }}
+        {# {{ dump(permission) }} #}
 
         {% set finalTestingEnabled = true %}
 
@@ -34,15 +40,16 @@
 
                         <li class="parts-menu_item">
                             {% if section.active %}
-                                <a href="module_theory.html">{{ section.name }}</a>
+                                {% if section.urlType == 1 %}
+                                    <a href="{{ path('user_get_info_module', {id: permission.courseId, moduleId: section.id}) }}">{{ section.name }}</a>
+                                {% else %}
+                                    <a href="{{ path('user_get_info_module_external', {id: permission.courseId, moduleId: section.id}) }}">{{ section.name }}</a>
+                                {% endif %}
                             {% else %}
                                 <a href="javascript:void(0)">{{ section.name }}</a>
                             {% endif %}
                             
                         </li>
-                        {# <li class="parts-menu_item">
-                            <a href="javascript:void(0)">Практическая часть</a>
-                        </li> #}    
                     {% endfor %}
                 </ul>
             </li>    

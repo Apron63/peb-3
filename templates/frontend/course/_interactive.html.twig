@@ -9,7 +9,6 @@
                 <div class="modules_item_name" status="{% if module.active %}passed{% else %}not-passed{% endif %}">{{ module.name }}</div>
                 <div class="modules_item_parts">
                     {% for section in module.sections %}
-                        {# {{ dump(section) }} #}
                         {% if section.urlType == 1 %}
                             <a href="{{ path('user_get_info_module', {id: module.courseId, moduleId: section.id}) }}" class="modules_item_parts_item">{{ section.name }}</a>
                         {% else %}

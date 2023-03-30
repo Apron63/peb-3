@@ -8,18 +8,29 @@
     </a>
     <ul class="modules-menu" menu-elem="modules-menu">
         {% if permission.courseInfo is not empty %}
+             <li class="modules-menu_item">
+                <div class="modules-menu_item_header">
+                    <a href="{{ path('app_frontend_course_view_list', {id: permission.courseId}) }}">Нормативные материалы</a>
+                </div>
+            </li> 
+
+            {# TODO
             {% for info in permission.courseInfo %}
                 <li class="modules-menu_item">
                     <div class="modules-menu_item_header">
                         <a href="{{ path('app_frontend_course_view_file', {id: info.course.id, fileName:  info.fileName}) }}">{{ info.name }}</a>
                     </div>
                 </li> 
-            {% endfor %}
+            {% endfor %} #}
         {% endif %}
         
         <li class="modules-menu_item">
             <div class="modules-menu_item_header">
-                <a href="{{ path('app_frontend_preparation', {id: permission.id}) }}">Подготовка к аттестации</a>
+                {% if permission.hasMultipleThemes %}
+                    <a href="{{ path('app_frontend_preparation_many', {id: permission.id}) }}">Подготовка к аттестации</a>
+                {% else %}
+                    <a href="{{ path('app_frontend_preparation_one', {id: permission.id}) }}">Подготовка к аттестации</a>
+                {% endif %}
             </div>
         </li>
         <li class="modules-menu_item">

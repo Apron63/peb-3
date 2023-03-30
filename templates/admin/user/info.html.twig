@@ -7,6 +7,16 @@
 
     <div class="row">
         <p><b>ФИО:</b> {{ user.fullName }}</p>
+        <p>
+            <b>Создано:</b> 
+            {% if user.createdAt is not null %}
+                {{ user.createdAt | date('d.m.Y H:i:s') }}    
+            {% endif %}
+            , 
+            {% if user.createdBy is not null %}
+                {{ user.createdBy.fullName }}    
+            {% endif %}
+        </p>
         <p><b>Организация:</b> {{ user.organization }}</p>
         <p><b>Логин:</b> {{ user.login }}</p>
         <p><b>Пароль:</b> {{ user.plainPassword }}</p>

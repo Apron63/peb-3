@@ -12,9 +12,9 @@
             {{ render(path('app_frontend_left_menu', {'activeItem': 'my-programs', 'activeCourse': course.id})) }}
             <div class="content">
                 <div class="module">
-                    <h1>{{ course.name }}</h1>
-                    <div class="program">
-                        {{ content | raw }}
+                    <h1>{{ moduleTitle }}</h1>
+                    <div class="module_text">
+                        {{ moduleText }}        
                     </div>
                 </div>
             </div>

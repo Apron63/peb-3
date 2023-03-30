@@ -59,7 +59,6 @@
 
         </div>
     {% endif %}
-
     
     <nav>
         <div class="nav nav-tabs" id="nav-modules-tab" role="tablist">
@@ -72,6 +71,12 @@
             </button>
              <button class="nav-link" id="nav-question-tab" data-bs-toggle="tab" data-bs-target="#nav-question"
                     type="button" role="tab" aria-controls="nav-question" aria-selected="false">Вопросы
+            </button>
+            <button class="nav-link" id="nav-show-ticket-tab" data-bs-toggle="tab" data-bs-target="#nav-show-ticket"
+                    type="button" role="tab" aria-controls="nav-show-ticket" aria-selected="false">Просмотреть билеты
+            </button>
+            <button class="nav-link" id="nav-create-ticket-tab" data-bs-toggle="tab" data-bs-target="#nav-create-ticket"
+                    type="button" role="tab" aria-controls="nav-create-ticket" aria-selected="false">Создать билеты
             </button>
         </div>
     </nav>
@@ -86,6 +91,13 @@
         <div class="tab-pane fade" id="nav-question" role="tabpanel" aria-labelledby="nav-question-tab">
             <p></p>
             {% include 'admin/course/interactive/_questions.html.twig' %}
+        </div>
+        <div class="tab-pane fade" id="nav-show-ticket" role="tabpanel" aria-labelledby="nav-show-ticket-tab">
+            <p></p>
+            посмотреть
+        </div><div class="tab-pane fade" id="nav-create-ticket" role="tabpanel" aria-labelledby="nav-create-ticket-tab">
+            <p></p>
+            создать
         </div>
     </div>
     

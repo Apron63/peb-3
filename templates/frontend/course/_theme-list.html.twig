@@ -1,0 +1,8 @@
+
+{% for info in themeInfo %}
+    <a href="{{ path('app_frontend_preparation_one', {id: info.id}) }}">
+        <div>
+            {{ info.name }}
+        </div>
+    </a>
+{% endfor %}

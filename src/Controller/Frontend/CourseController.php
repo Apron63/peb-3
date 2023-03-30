@@ -39,6 +39,7 @@ class CourseController extends AbstractController
             'permission' => $permission,
             'courseInfo' => $this->courseInfoRepository->findBy(['course' => $permission->getCourse()]),
             'courseProgress' => $this->courseService->checkForCourseStage($permission),
+            'hasMultipleThemes' => true,
         ]);
     }
     
@@ -109,10 +110,19 @@ class CourseController extends AbstractController
             throw new NotFoundHttpException();
         }
 
-        return $this->render('frontend/course/_file.html.twig', [
-            'course' => $course,
-            'fileName' => $moduleSection->getUrl(),
-            // 'module' => $moduleInfo->getModule(),
-        ]);
+        if ($moduleSection->getUrlType() === ModuleSection::URL_TYPE_TEXT) {
+            return $this->render('frontend/course/_text.html.twig', [
+                'course' => $course,
+                'moduleText' => $moduleSection->getTextData(),
+                'moduleTitle' => $moduleSection->getName(),
+            ]);
+
+        } else {
+            return $this->render('frontend/course/_file.html.twig', [
+                'course' => $course,
+                'fileName' => $moduleSection->getUrl(),
+                // 'module' => $moduleInfo->getModule(),
+            ]);
+        }
     }
 }

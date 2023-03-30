@@ -2,8 +2,10 @@
 
 namespace App\Service;
 
+use App\Entity\Course;
 use App\Entity\User;
 use App\Repository\CourseInfoRepository;
+use App\Repository\CourseThemeRepository;
 use App\Repository\PermissionRepository;
 
 class MyProgramsService
@@ -11,6 +13,7 @@ class MyProgramsService
     public function __construct(
         readonly PermissionRepository $permissionRepository,
         readonly CourseInfoRepository $courseInfoRepository,
+        readonly CourseThemeRepository $courseThemeRepository,
         readonly CourseService $courseService
     ) {}
 
@@ -21,13 +24,7 @@ class MyProgramsService
         $permissions = $this->permissionRepository->getPermissionLeftMenu($user);
 
         foreach ($permissions as $permission) {
-            $courseInfoUrl = null;
-
             $courseInfo = $this->courseInfoRepository->findBy(['course' => $permission->getCourse()]);
-
-            if (null !== $courseInfo) {
-                $courseInfoUrl = 'url';
-            }
 
             $result[] = [
                 'id' => $permission->getId(),
@@ -36,8 +33,22 @@ class MyProgramsService
                 'type' => $permission->getCourse()->getType(),
                 'courseInfo' => $courseInfo,
                 'courseId' => $permission->getCourse()->getId(),
+                'hasMultipleThemes' => $this->hasMultipleThemes($permission->getCourse()),
                 'courseMenu' => $this->courseService->checkForCourseStage($permission),
             ];
+        }
+
+        return $result;
+    }
+
+    private function hasMultipleThemes(Course $course): bool
+    {
+        $result = false;
+
+        if ($course->getType() === Course::CLASSC) {
+            if (count($this->courseThemeRepository->getCourseThemes($course)) > 1) {
+                $result = true;
+            }
         }
 
         return $result;

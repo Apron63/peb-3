@@ -2,14 +2,18 @@
     <div class="modules_item">
         <div class="modules_item_check"></div>
         <div class="modules_item_composition">
-            <a href="{{ path('app_frontend_preparation', {id: permission.id}) }}" class="modules_item_name" status="not-passed">Подготовка к аттестации</a>
+            {% if hasMultipleThemes %}
+                <a href="{{ path('app_frontend_preparation_many', {id: permission.id}) }}" class="modules_item_name" status="not-passed">Подготовка к аттестации</a>
+            {% else %}
+                <a href="{{ path('app_frontend_preparation_one', {id: permission.id}) }}" class="modules_item_name" status="not-passed">Подготовка к аттестации</a>
+            {% endif %}
         </div>
     </div>
     <div class="modules_item">
         <div class="modules_item_check"></div>
         <div class="modules_item_composition">
             <!--Если промежуточные тесты не пройдены, то при клике открываем попап-->
-            <a href="{{ path('app_frontend_testing', {id: permission.id}) }}" class="modules_item_name" content-elem="final-testing" status="not-passed">Итоговое тестирование</a>
+            <a href="{{ path('app_frontend_testing', {id: permission.id, permissionId: permission.id}) }}" class="modules_item_name" content-elem="final-testing" status="not-passed">Итоговое тестирование</a>
         </div>
     </div>
 </div>
