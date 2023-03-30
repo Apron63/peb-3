@@ -81,9 +81,13 @@ class QuestionsRepository extends ServiceEntityRepository
             ->getQuery();
     }
 
-    public function getQuestionIds(Course $course, int $parentId): array
+    public function getQuestionIds(Course $course, ?int $parentId): array
     {
-        $sql = "SELECT id FROM questions WHERE course_id = {$course->getId()} AND parent_id = {$parentId} ORDER BY nom";
+        if (null === $parentId) {
+            $sql = "SELECT id FROM questions WHERE course_id = {$course->getId()} AND parent_id IS NULL ORDER BY nom";
+        } else {
+            $sql = "SELECT id FROM questions WHERE course_id = {$course->getId()} AND parent_id = {$parentId} ORDER BY nom";
+        }
 
         return $this->getEntityManager()->getConnection()->fetchFirstColumn($sql);
     }

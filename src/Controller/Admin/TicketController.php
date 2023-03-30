@@ -2,10 +2,9 @@
 
 namespace App\Controller\Admin;
 
+use App\Entity\ModuleTicket;
 use App\Entity\Ticket;
 use App\Service\TicketService;
-use Doctrine\DBAL\Exception;
-use JsonException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -43,6 +42,22 @@ class TicketController extends AbstractController
         $data = $this->ticketService->renderTicket($arTicket, true);
 
         return $this->render('admin/ticket/print.html.twig', [
+            'data' => $data,
+        ]);
+    }
+    
+    #[Route('/admin/module-tickets/print/{id<\d+>}/', name: 'admin_module_tickets_print')]
+    public function printModuleTicket(ModuleTicket $moduleTicket)
+    {
+        $arTicket = [
+            'id' => $moduleTicket->getId(),
+            'nom' => $moduleTicket->getTicketNom(),
+            'text' => $moduleTicket->getData(),
+        ];
+
+        $data = $this->ticketService->renderModuleTicket($arTicket, true);
+
+        return $this->render('admin/ticket/print-module.html.twig', [
             'data' => $data,
         ]);
     }

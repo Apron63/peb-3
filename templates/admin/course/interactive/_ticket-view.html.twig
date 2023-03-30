@@ -18,9 +18,9 @@
                                 Билет № {{ ticket.nom }}
                             </a>
                         </div>
-                        {# <div class="col-1">
-                            <a href="{{ path('admin_tickets_print', {id: ticket.id}) }}" target="_blank">Печать</a>
-                        </div> #}
+                        <div class="col-1">
+                            <a href="{{ path('admin_module_tickets_print', {id: ticket.id}) }}" target="_blank">Печать</a>
+                        </div>
                     </div>
 
                     <div class="collapse" id="collapse_{{ loop.index0 }}">

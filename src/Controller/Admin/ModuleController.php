@@ -71,15 +71,12 @@ class ModuleController extends MobileController
             return $this->redirectToRoute('admin_course_edit', ['id' => $module->getCourse()->getId()]);
         }
 
-        $tickets = $this->moduleTicketservice->renderTickets($module);
-
         return $this->mobileRender('admin/course/interactive/edit.html.twig', [
             'form' => $form->createView(),
             'course' => $module->getCourse(),
             'moduleSection' => $this->moduleSectionRepository->findBy(['module' => $module]),
             'pagination' => $pagination,
             'parentId' => $module->getId(),
-            'tickets' => $tickets,
         ]);
     }
 
@@ -92,13 +89,13 @@ class ModuleController extends MobileController
     }
     
     #[Route('/admin/module/create-tickets/{id<\d+>}/', name: 'admin_module_create_tickets', condition: 'request.isXmlHttpRequest()')]
-    public function adminCreateTickets(Request $request, Module $module): JsonResponse
+    public function adminCreateTickets(Request $request, Course $course): JsonResponse
     {
-        $ticketCount = $request->get('ticketCount');
-        $questionCount = $request->get('questionCount');
-        $errorsCount = $request->get('errorsCount');
+        $ticketCount = (int)$request->get('ticketCount');
+        $questionCount = (int)$request->get('questionCount');
+        $errorsCount = (int)$request->get('errorsCount');
 
-        $this->ticketService->createModuleTickets($module, $ticketCount, $questionCount, $errorsCount);
+        $this->ticketService->createModuleTickets($course, $ticketCount, $questionCount, $errorsCount);
         
         return new JsonResponse([
             'result' => true,

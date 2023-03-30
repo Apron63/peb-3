@@ -1,0 +1,50 @@
+{% extends 'admin/base-blank.html.twig' %}
+{% block title %}Печать билетов{% endblock %}
+
+{% block content %}
+
+    <div class="row ticket-font">
+        <span class="text-center">Экзаменационный билет № {{ data.ticketNom }} для проверки знаний</span>
+        <p></p>
+        <span class="text-center">____________________________________________________________</span>
+        <p></p>
+        <p></p>
+    </div>
+
+    <div class="row ticket-font">
+        <div class="col-6">
+            <table class="table table-borderless">
+                <tr>
+                    <td>ФИО ____________________________________________________</td>
+                </tr>
+                <tr>
+                    <td>Должность ______________________________________________</td>
+                </tr>
+                <tr>
+                    <td>Место работы ___________________________________________</td>
+                </tr>
+                <tr>
+                    <td>Дата ___________________________________________________</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+
+    <div class="row ticket-font">
+        {% for question in data.data %}
+            <div>
+                <hr class="ticket-hr">
+                Вопрос {{ question.nom }}.
+                {{ question.description | raw }}
+                <hr class="ticket-hr">
+                {% if question.answers is defined %}
+                    {% for answer in question.answers %}
+                        <div>
+                            {{ answer | raw}}
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            </div>
+        {% endfor %}
+    </div>
+{% endblock %}

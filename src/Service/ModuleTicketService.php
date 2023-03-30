@@ -2,6 +2,7 @@
 
 namespace App\Service;
 
+use App\Entity\Course;
 use App\Entity\Module;
 use App\Entity\ModuleTicket;
 use App\Entity\Questions;
@@ -23,11 +24,11 @@ class ModuleTicketService
         readonly CourseThemeRepository $courseThemeRepository
     ) {}
 
-    public function renderTickets(Module $module): array
+    public function renderTickets(Course $course): array
     {
         $result = [];
 
-        $tickets = $this->moduleTicketRepository->getTickets($module);
+        $tickets = $this->moduleTicketRepository->getTickets($course);
 
         foreach ($tickets as $ticket) {
             $result[] = $this->renderTicket($ticket);

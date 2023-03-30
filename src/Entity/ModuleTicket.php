@@ -16,7 +16,7 @@ class ModuleTicket
 
     #[ORM\ManyToOne]
     #[ORM\JoinColumn(nullable: false)]
-    private ?Module $module = null;
+    private ?Course $course = null;
 
     #[ORM\Column(type: Types::SMALLINT, nullable: true)]
     private ?int $errorCount = null;
@@ -32,14 +32,14 @@ class ModuleTicket
         return $this->id;
     }
 
-    public function getModule(): ?Module
+    public function getCourse(): ?Course
     {
-        return $this->module;
+        return $this->course;
     }
 
-    public function setModule(?Module $module): self
+    public function setCourse(?Course $course): self
     {
-        $this->module = $module;
+        $this->course = $course;
 
         return $this;
     }

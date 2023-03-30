@@ -2,6 +2,7 @@
 
 namespace App\Repository;
 
+use App\Entity\Course;
 use App\Entity\Module;
 use App\Entity\ModuleTicket;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
@@ -59,19 +60,19 @@ class ModuleTicketRepository extends ServiceEntityRepository
         return $result;
     }
 
-    public function getTickets(Module $module): array
+    public function getTickets(Course $course): array
     {
         return $this->createQueryBuilder('t')
-        ->where('t.module = :module')
-        ->setParameter('module', $module->getId())
+        ->where('t.course = :course')
+        ->setParameter('course', $course)
         ->orderBy('t.ticketNom')
         ->getQuery()
         ->getResult();
     }
 
-    public function deleteOldTickets(Module $module): void
+    public function deleteOldTickets(Course $course): void
     {
-        $sql = "DELETE from module_ticket WHERE module_id = {$module->getId()}";
+        $sql = "DELETE from module_ticket WHERE course_id = {$course->getId()}";
         $this->getEntityManager()->getConnection()->executeQuery($sql);        
     }
 }

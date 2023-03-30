@@ -4,7 +4,6 @@ namespace App\Service;
 
 use App\Entity\Course;
 use App\Entity\CourseTheme;
-use App\Entity\Module;
 use App\Entity\ModuleTicket;
 use App\Entity\Questions;
 use App\Entity\Ticket;
@@ -61,23 +60,23 @@ class TicketService
     }
 
     public function createModuleTickets(
-        Module $module, 
+        Course $course, 
         int $ticketCount, 
         int $questionCount, 
         int $errorsCount
     ): void {
-        $this->moduleTicketRepository->deleteOldTickets($module);
+        $this->moduleTicketRepository->deleteOldTickets($course);
 
-        $questionArray = $this->questionsRepository->getQuestionIds($module->getCourse(), $module->getId());
+        $questionArray = $this->questionsRepository->getQuestionIds($course, null);
 
         $arr = [];
         for ($i = 1; $i <= $ticketCount; $i++) {
             $tmp = $questionArray;
             shuffle($tmp);
-            $arr = array_slice($tmp, 0, count($questionArray));
+            $arr = array_slice($tmp, 0, $questionCount);
 
             $moduleTicket = new ModuleTicket();
-            $moduleTicket->setModule($module)
+            $moduleTicket->setCourse($course)
                 ->setErrorCount($errorsCount)
                 ->setData((array)json_encode($arr, JSON_NUMERIC_CHECK))
                 ->setTicketNom($i);
@@ -142,6 +141,54 @@ class TicketService
         return [
             'ticketNom' => $ticket['nom'],
             'data' => $data,
+            'id' => $ticket['id'],
+        ];
+    }
+    
+    public function renderModuleTicket(array $ticket, bool $allAnswers = false): array
+    {
+        $items = json_decode($ticket['text'][0], JSON_FORCE_OBJECT);
+        // $data = [];
+
+        //foreach ($items as $key => $questions) {
+        //    $theme = $this->courseThemeRepository->find($key);
+
+            //if ($theme instanceof CourseTheme) {
+                $questionsArray = [];
+
+                foreach ($items as $questionNom => $questionId) {
+                    $question = $this->questionsRepository->find($questionId);
+
+                    if ($question instanceof Questions) {
+                        $answers = [];
+
+                        $trueAnswers = $this->answerRepository->getAnswers($question, $allAnswers);
+
+                        if (!empty($trueAnswers)) {
+                            foreach($trueAnswers as $answer) {
+                                $answers[] = $answer['description'];
+                            }
+                        }
+
+                        $questionsArray[] = [
+                            'nom' => $questionNom + 1,
+                            'description' => $question->getDescription(),
+                            'answers' => $answers,
+                            'help' => $question->getHelp(),
+                        ];
+                    }
+                }
+
+                // $data[$theme->getName()] = [
+                //     'theme' =>  $theme->getDescription(),
+                //     'questions' => $questionsArray,
+                // ];
+            //}
+       // }
+
+        return [
+            'ticketNom' => $ticket['nom'],
+            'data' => $questionsArray,
             'id' => $ticket['id'],
         ];
     }

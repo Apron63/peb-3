@@ -17,6 +17,7 @@ use App\Repository\ModuleRepository;
 use App\Repository\ProfileRepository;
 use App\Repository\QuestionsRepository;
 use App\Repository\TicketRepository;
+use App\Service\ModuleTicketService;
 use App\Service\TicketService;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\String\Slugger\SluggerInterface;
@@ -34,7 +35,8 @@ class CourseController extends MobileController
         readonly TicketRepository $ticketRepository,
         readonly TicketService $ticketService,
         readonly SluggerInterface $slugger,
-        readonly PaginatorInterface $paginator ,
+        readonly PaginatorInterface $paginator,
+        readonly ModuleTicketService $moduleTicketService,
     ) {}
 
     #[Route('/admin/course/', name: 'admin_course_list')]
@@ -131,6 +133,7 @@ class CourseController extends MobileController
                 'courseInfos' => $this->courseInfoRepository->getCourseInfos($course),
                 'moduleInfos' => $this->moduleInfoRepository->getModuleInfos($course),
                 'questions' => $pagination,
+                'tickets' => $this->moduleTicketService->renderTickets($course),
             ]);
         } else {
             $courseThemes = $this->courseThemeRepository->getCourseThemes($course);
