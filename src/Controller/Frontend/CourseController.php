@@ -38,7 +38,7 @@ class CourseController extends AbstractController
         return $this->render('frontend/course/index.html.twig', [
             'permission' => $permission,
             'courseInfo' => $this->courseInfoRepository->findBy(['course' => $permission->getCourse()]),
-            'courseProgress' => $this->courseService->checkForCourseStage($permission),
+            'courseProgress' => $this->courseService->checkForCourseStage($permission, true),
             'hasMultipleThemes' => true,
         ]);
     }

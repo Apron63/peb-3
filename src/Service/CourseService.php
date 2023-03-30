@@ -17,17 +17,17 @@ class CourseService
         readonly ModuleRepository $moduleRepository
     ) {}
 
-    public function checkForCourseStage(Permission $permission): array
+    public function checkForCourseStage(Permission $permission, bool $enableChangeStage = false): array
     {
         $courseProgress = [];
 
-        if (null === $permission->getActivatedAt()) {
-            $permission
-                ->setActivatedAt(new DateTime())
-                ->setStage(Permission::STAGE_IN_PROGRESS);
+        // if ($enableChangeStage && null === $permission->getActivatedAt()) {
+        //     $permission
+        //         ->setActivatedAt(new DateTime())
+        //         ->setStage(Permission::STAGE_IN_PROGRESS);
 
-            // DEBUG !!!! $this->permissionRepository->save($permission, true);
-        }
+        //     $this->permissionRepository->save($permission, true);
+        // }
 
         if (Course::INTERACTIVE === $permission->getCourse()->getType()) {
             $courseProgress = $this->synchronizeWithPermission(

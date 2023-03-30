@@ -34,7 +34,7 @@ class MyProgramsService
                 'courseInfo' => $courseInfo,
                 'courseId' => $permission->getCourse()->getId(),
                 'hasMultipleThemes' => $this->hasMultipleThemes($permission->getCourse()),
-                'courseMenu' => $this->courseService->checkForCourseStage($permission),
+                'courseMenu' => $this->courseService->checkForCourseStage($permission, false),
             ];
         }
 

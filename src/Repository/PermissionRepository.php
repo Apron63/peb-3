@@ -87,7 +87,7 @@ class PermissionRepository extends ServiceEntityRepository
     {
         return $this->createQueryBuilder('p')
             ->where('p.user = :user')
-            ->setParameter('user', $user->getId())
+            ->setParameter('user', $user)
             ->getQuery()
             ->getResult();
     }

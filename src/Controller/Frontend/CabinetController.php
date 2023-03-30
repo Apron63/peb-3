@@ -21,8 +21,7 @@ class CabinetController extends AbstractController
             return $this->redirectToRoute('admin_homepage');
         }
 
-        $user = $this->getUser();
-        $permissions = $this->permissionRepository->getPermissionLeftMenu($user);
+        $permissions = $this->permissionRepository->getPermissionLeftMenu($this->getUser());
 
         return $this->render('frontend/my-programs/index.html.twig', [
             'permissions' => $permissions,
