@@ -15,7 +15,7 @@
                                 aria-expanded="false" 
                                 aria-controls="myCollapse"
                             >
-                                Билет № {{ ticket.nom }}
+                                Билет № {{ ticket.ticketNom }}
                             </a>
                         </div>
                         <div class="col-1">
@@ -25,8 +25,8 @@
 
                     <div class="collapse" id="collapse_{{ loop.index0 }}">
                         <div class="card card-body">
-                            {% if ticket.questions is not empty %}
-                                {% for question in ticket.questions %}
+                            {% if ticket.data is not empty %}
+                                {% for question in ticket.data %}
                                     <strong>Вопрос {{ question.nom }}</strong>
                                     <div>{{ question.description | raw }}</div>
                                     {% if question.answers is not empty %}

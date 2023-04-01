@@ -70,4 +70,10 @@ class TicketRepository extends ServiceEntityRepository
             ->getQuery()
             ->getArrayResult();
     }
+
+    public function deleteOldTickets(Course $course): void
+    {
+        $sql = "DELETE from ticket WHERE course_id = {$course->getId()}";
+        $this->getEntityManager()->getConnection()->executeQuery($sql);        
+    }
 }

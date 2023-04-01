@@ -4,13 +4,11 @@ namespace App\Service;
 
 use App\Entity\Course;
 use App\Entity\CourseTheme;
-use App\Entity\ModuleTicket;
 use App\Entity\Questions;
 use App\Entity\Ticket;
 use App\Repository\AnswerRepository;
 use App\Repository\CourseRepository;
 use App\Repository\CourseThemeRepository;
-use App\Repository\ModuleTicketRepository;
 use App\Repository\QuestionsRepository;
 use App\Repository\TicketRepository;
 
@@ -18,7 +16,6 @@ class TicketService
 {
     public function __construct(
         readonly TicketRepository $ticketRepository,
-        readonly ModuleTicketRepository $moduleTicketRepository,
         readonly QuestionsRepository $questionsRepository,
         readonly AnswerRepository $answerRepository,
         readonly CourseRepository $courseRepository,
@@ -65,7 +62,7 @@ class TicketService
         int $questionCount, 
         int $errorsCount
     ): void {
-        $this->moduleTicketRepository->deleteOldTickets($course);
+        $this->ticketRepository->deleteOldTickets($course);
 
         $questionArray = $this->questionsRepository->getQuestionIds($course, null);
 
@@ -75,13 +72,13 @@ class TicketService
             shuffle($tmp);
             $arr = array_slice($tmp, 0, $questionCount);
 
-            $moduleTicket = new ModuleTicket();
-            $moduleTicket->setCourse($course)
-                ->setErrorCount($errorsCount)
-                ->setData((array)json_encode($arr, JSON_NUMERIC_CHECK))
-                ->setTicketNom($i);
+            $ticket = new Ticket;
+            $ticket->setCourse($course)
+                ->setErrCnt($errorsCount)
+                ->setText((array)json_encode($arr, JSON_NUMERIC_CHECK))
+                ->setNom($i);
 
-            $this->moduleTicketRepository->save($moduleTicket, true);
+            $this->ticketRepository->save($ticket, true);
         }
     }
 

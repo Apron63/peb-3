@@ -2,7 +2,6 @@
 
 namespace App\Controller\Admin;
 
-use App\Entity\ModuleTicket;
 use App\Entity\Ticket;
 use App\Service\TicketService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -47,12 +46,12 @@ class TicketController extends AbstractController
     }
     
     #[Route('/admin/module-tickets/print/{id<\d+>}/', name: 'admin_module_tickets_print')]
-    public function printModuleTicket(ModuleTicket $moduleTicket)
+    public function printModuleTicket(Ticket $ticket)
     {
         $arTicket = [
-            'id' => $moduleTicket->getId(),
-            'nom' => $moduleTicket->getTicketNom(),
-            'text' => $moduleTicket->getData(),
+            'id' => $ticket->getId(),
+            'nom' => $ticket->getNom(),
+            'text' => $ticket->getText(),
         ];
 
         $data = $this->ticketService->renderModuleTicket($arTicket, true);

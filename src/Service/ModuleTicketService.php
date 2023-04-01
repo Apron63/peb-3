@@ -3,8 +3,6 @@
 namespace App\Service;
 
 use App\Entity\Course;
-use App\Entity\Module;
-use App\Entity\ModuleTicket;
 use App\Entity\Questions;
 use App\Repository\AnswerRepository;
 use App\Repository\CourseRepository;
@@ -17,18 +15,17 @@ class ModuleTicketService
 {
     public function __construct(
         readonly TicketRepository $ticketRepository,
-        readonly ModuleTicketRepository $moduleTicketRepository,
         readonly QuestionsRepository $questionsRepository,
         readonly AnswerRepository $answerRepository,
         readonly CourseRepository $courseRepository,
-        readonly CourseThemeRepository $courseThemeRepository
+        readonly CourseThemeRepository $courseThemeRepository,
     ) {}
 
     public function renderTickets(Course $course): array
     {
         $result = [];
 
-        $tickets = $this->moduleTicketRepository->getTickets($course);
+        $tickets = $this->ticketRepository->getCourseTickets($course);
 
         foreach ($tickets as $ticket) {
             $result[] = $this->renderTicket($ticket);
@@ -37,10 +34,10 @@ class ModuleTicketService
         return $result;
     }
 
-    public function renderTicket(ModuleTicket $ticket, bool $allAnswers = false): array
+    public function renderTicket(array $ticket, bool $allAnswers = false): array
     {
         $questionsArray = [];
-        $items = json_decode($ticket->getData()[0], JSON_FORCE_OBJECT);
+        $items = json_decode($ticket['text'][0], JSON_FORCE_OBJECT);
 
         if (!empty($items)) {
             foreach ($items as $questionNom => $questionId) {
@@ -68,9 +65,9 @@ class ModuleTicketService
         }
 
         $result = [
-            'id' => $ticket->getId(),
-            'nom' => $ticket->getTicketNom(),
-            'questions' => $questionsArray,
+            'ticketNom' => $ticket['nom'],
+            'data' => $questionsArray,
+            'id' => $ticket['id'],
         ];
 
         return $result;

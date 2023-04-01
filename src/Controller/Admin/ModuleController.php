@@ -8,7 +8,6 @@ use App\Entity\Module;
 use App\Form\Admin\ModuleEditType;
 use App\Repository\ModuleRepository;
 use App\Repository\ModuleSectionRepository;
-use App\Repository\ModuleTicketRepository;
 use App\Repository\QuestionsRepository;
 use App\Service\ModuleTicketService;
 use App\Service\TicketService;
@@ -23,7 +22,6 @@ class ModuleController extends MobileController
         readonly ModuleRepository $moduleRepository,
         readonly ModuleSectionRepository $moduleSectionRepository,
         readonly QuestionsRepository $questionsRepository,
-        readonly ModuleTicketRepository $moduleTicketRepository,
         readonly TicketService $ticketService,
         readonly ModuleTicketService $moduleTicketservice
     ) {}
