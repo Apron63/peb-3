@@ -2,7 +2,6 @@
 
 namespace App\Controller\Frontend;
 
-use App\Entity\Course;
 use App\Entity\ModuleSection;
 use App\Entity\Permission;
 use App\Repository\CourseInfoRepository;
@@ -31,7 +30,7 @@ class CourseController extends AbstractController
     #[Route('/course/{id<\d+>}/', name: 'app_frontend_course')]
     public function index(Permission $permission): Response
     {
-        if (!$this->userPermissionService->checkPermissionForUser($permission->getCourse(), $this->getUser())) {
+        if (!$this->userPermissionService->checkPermissionForUser($permission, $this->getUser(), false)) {
             throw new ExceptionAccessDeniedException();
         }
 
@@ -44,49 +43,56 @@ class CourseController extends AbstractController
     }
     
     #[Route('/course/view-list/{id<\d+>}/', name: 'app_frontend_course_view_list')]
-    public function viewList(Course $course): Response
+    public function viewList(Permission $permission): Response
     {
-        if (!$this->userPermissionService->checkPermissionForUser($course, $this->getUser())) {
+        if (!$this->userPermissionService->checkPermissionForUser($permission, $this->getUser(), false)) {
             throw new ExceptionAccessDeniedException();
         }
 
         return $this->render('frontend/course/_detail.html.twig', [
-            'course' => $course,
+            'permission' => $permission,
             'content' => $this->renderView('frontend/course/_info-list.html.twig', [
-                'courseInfo' => $this->courseInfoRepository->findBy(['course' => $course]),
+                'courseInfo' => $this->courseInfoRepository->findBy(['course' => $permission->getCourse()]),
+                'permission' => $permission,
             ]),
         ]);
     }
     
     #[Route('/course/view-file/{id<\d+>}/{fileName}/', name: 'app_frontend_course_view_file')]
-    public function viewFile(Course $course, string $fileName): Response
+    public function viewFile(Permission $permission, Request $request, string $fileName): Response
     {
-        if (!$this->userPermissionService->checkPermissionForUser($course, $this->getUser())) {
+        if (!$this->userPermissionService->checkPermissionForUser($permission, $this->getUser(), false)) {
             throw new ExceptionAccessDeniedException();
         }
 
-        $url = '/view/' . $fileName . '/?courseId=' . $course->getId();
+        $url = '/view/' . $fileName . '/?courseId=' . $permission->getCourse()->getId();
 
-        $infoName = $this->getParameter('course_upload_directory') . '/' . $course->getShortNameCleared() . '/' . $fileName;
+        $infoName = $this->getParameter('course_upload_directory') . '/' . $permission->getCourse()->getShortNameCleared() . '/' . $fileName;
 
         if(!file_exists($infoName)) {
             throw new NotFoundHttpException();
         }
 
         return $this->render('frontend/course/_file.html.twig', [
-            'course' => $course,
+            'course' => $permission->getCourse(),
             'fileName' => $url,
+            'moduleTitle' => $request->get('moduleTitle'),
         ]);
     }
 
     #[Route('/course/interactive/{id<\d+>}/{moduleId<\d+>}/', name: 'user_get_info_module')]
-    public function getInfoModule(Course $course, int $moduleId, Request $request): Response
+    public function getInfoModule(Permission $permission, int $moduleId, Request $request): Response
     {
-        if (!$this->userPermissionService->checkPermissionForUser($course, $this->getUser())) {
+        if (!$this->userPermissionService->checkPermissionForUser($permission, $this->getUser(), true)) {
             throw new ExceptionAccessDeniedException();
         }
 
         $sessionId = $request->cookies->get('PHPSESSID');
+
+        $moduleSection = $this->moduleSectionRepository->find($moduleId);
+        if (!$moduleSection instanceof ModuleSection) {
+            throw new NotFoundHttpException('Section not found');
+        }
 
         $response = new Response();
         $response->headers->setCookie(new Cookie('init', md5($sessionId), time() + 3600));
@@ -94,16 +100,21 @@ class CourseController extends AbstractController
         return $this->render(
             'frontend/course/_file.html.twig', 
             [
-                'course' => $course,
-                'fileName' => "/storage/interactive/{$course->getId()}/{$moduleId}/res/index.php",
+                'course' => $permission->getCourse(),
+                'fileName' => "/storage/interactive/{$permission->getCourse()->getId()}/{$moduleId}/res/index.php",
+                'moduleTitle' => $moduleSection->getName(),
             ],
             $response
         );
     }
 
     #[Route('/course/external/{id<\d+>}/{moduleId<\d+>}/', name: 'user_get_info_module_external')]
-    public function getInfoModuleExternal(Course $course, int $moduleId): Response
+    public function getInfoModuleExternal(Permission $permission, int $moduleId): Response
     {
+        if (!$this->userPermissionService->checkPermissionForUser($permission, $this->getUser(), true)) {
+            throw new ExceptionAccessDeniedException();
+        }
+
         $moduleSection = $this->moduleSectionRepository->find($moduleId);
 
         if (!$moduleSection instanceof ModuleSection) {
@@ -112,16 +123,16 @@ class CourseController extends AbstractController
 
         if ($moduleSection->getUrlType() === ModuleSection::URL_TYPE_TEXT) {
             return $this->render('frontend/course/_text.html.twig', [
-                'course' => $course,
+                'course' => $permission->getCourse(),
                 'moduleText' => $moduleSection->getTextData(),
                 'moduleTitle' => $moduleSection->getName(),
             ]);
 
         } else {
             return $this->render('frontend/course/_file.html.twig', [
-                'course' => $course,
+                'course' => $permission->getCourse(),
                 'fileName' => $moduleSection->getUrl(),
-                // 'module' => $moduleInfo->getModule(),
+                'moduleTitle' => $moduleSection->getName(),
             ]);
         }
     }

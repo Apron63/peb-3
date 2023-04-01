@@ -10,14 +10,14 @@
         {% if permission.courseInfo is not empty %}
              <li class="modules-menu_item">
                 <div class="modules-menu_item_header">
-                    <a href="{{ path('app_frontend_course_view_list', {id: permission.courseId}) }}">Нормативные материалы</a>
+                    <a href="{{ path('app_frontend_course_view_list', {id: permission.id}) }}">Нормативные материалы</a>
                 </div>
             </li> 
             {# TODO
                 {% for info in permission.courseInfo %}
                 <li class="modules-menu_item">
                     <div class="modules-menu_item_header">
-                        <a href="{{ path('app_frontend_course_view_file', {id: info.course.id, fileName:  info.fileName}) }}">{{ info.name }}</a>
+                        <a href="{{ path('app_frontend_course_view_file', {id: info.course.id, fileName:  info.fileName, moduleTitle: info.name}) }}">{{ info.name }}</a>
                     </div>
                 </li> 
             {% endfor %} #}
@@ -41,14 +41,13 @@
                         <li class="parts-menu_item">
                             {% if section.active %}
                                 {% if section.urlType == 1 %}
-                                    <a href="{{ path('user_get_info_module', {id: permission.courseId, moduleId: section.id}) }}">{{ section.name }}</a>
+                                    <a href="{{ path('user_get_info_module', {id: permission.id, moduleId: section.id}) }}">{{ section.name }}</a>
                                 {% else %}
-                                    <a href="{{ path('user_get_info_module_external', {id: permission.courseId, moduleId: section.id}) }}">{{ section.name }}</a>
+                                    <a href="{{ path('user_get_info_module_external', {id: permission.id, moduleId: section.id}) }}">{{ section.name }}</a>
                                 {% endif %}
                             {% else %}
                                 <a href="javascript:void(0)">{{ section.name }}</a>
                             {% endif %}
-                            
                         </li>
                     {% endfor %}
                 </ul>

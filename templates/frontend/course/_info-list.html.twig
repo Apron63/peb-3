@@ -1,6 +1,6 @@
 
 {% for info in courseInfo %}
-    <a href="{{ path('app_frontend_course_view_file', {id: info.course.id, fileName: info.fileName}) }}">
+    <a href="{{ path('app_frontend_course_view_file', {id: permission.id, fileName: info.fileName, moduleTitle: info.name}) }}">
         <div>
             {{ info.name }}
         </div>

@@ -3,17 +3,20 @@
         <div class="modules_item_check"></div>
         <div class="modules_item_composition">
             {% if hasMultipleThemes %}
-                <a href="{{ path('app_frontend_preparation_many', {id: permission.id}) }}" class="modules_item_name" status="not-passed">Подготовка к аттестации</a>
+                <a href="{{ path('app_frontend_preparation_many', {id: permission.id}) }}" class="modules_item_name" status="passed">Подготовка к аттестации</a>
             {% else %}
-                <a href="{{ path('app_frontend_preparation_one', {id: permission.id}) }}" class="modules_item_name" status="not-passed">Подготовка к аттестации</a>
+                <a href="{{ path('app_frontend_preparation_one', {id: permission.id}) }}" class="modules_item_name" status="passed">Подготовка к аттестации</a>
             {% endif %}
         </div>
     </div>
     <div class="modules_item">
         <div class="modules_item_check"></div>
         <div class="modules_item_composition">
-            <!--Если промежуточные тесты не пройдены, то при клике открываем попап-->
-            <a href="{{ path('app_frontend_testing', {id: permission.id, permissionId: permission.id}) }}" class="modules_item_name" content-elem="final-testing" status="not-passed">Итоговое тестирование</a>
+            {% if permission.stage == 1 %}
+                <a href="javascript:void(0);" class="modules_item_name" content-elem="final-testing" status="not-passed">Итоговое тестирование</a>
+            {% else %}
+                <a href="{{ path('app_frontend_testing', {id: permission.id, permissionId: permission.id}) }}" class="modules_item_name" content-elem="final-testing" status="passed">Итоговое тестирование</a>
+            {% endif %}
         </div>
     </div>
 </div>

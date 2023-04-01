@@ -11,8 +11,11 @@
         <div class="wrapper container">
             {{ render(path('app_frontend_left_menu', {'activeItem': 'my-programs', 'activeCourse': course.id})) }}
             <div class="content">
-                <div class="module_slider">
-                    <iframe src="{{ fileName }}" style="width:100%; height: 100vh" frameborder="0" allowfullscreen></iframe>
+                <div class="module">
+                    <h1>{{ moduleTitle }}</h1>
+                    <div class="module_slider">
+                        <iframe src="{{ fileName }}" style="width:100%; height: 100vh" frameborder="0" allowfullscreen></iframe>
+                    </div>
                 </div>
             </div>
         </div>

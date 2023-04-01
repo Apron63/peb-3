@@ -3,7 +3,10 @@
 namespace App\Repository;
 
 use App\Entity\Course;
+use App\Entity\CourseInfo;
+use App\Entity\CourseTheme;
 use App\Entity\Profile;
+use App\Entity\Ticket;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\AbstractQuery;
 use Doctrine\ORM\Query\Expr\Join;
@@ -104,5 +107,34 @@ class CourseRepository extends ServiceEntityRepository
     {
         $sql = "DELETE FROM ticket WHERE course_id = {$course->getId()}";
         $this->getEntityManager()->getConnection()->executeQuery($sql);        
+    }
+
+    /**
+     * @param Course $course
+     */
+    public function prepareCourseClear(Course $course): void
+    {
+        $queryBuilder = $this->_em->createQueryBuilder();
+        $queryBuilder->delete(CourseInfo::class, 'i')
+            ->where('i.course = :course')
+            ->setParameter('course', $course)
+            ->getQuery()
+            ->getResult();
+        unset($queryBuilder);
+
+        $queryBuilder = $this->_em->createQueryBuilder();
+        $queryBuilder->delete(CourseTheme::class, 't')
+            ->where('t.course = :course')
+            ->setParameter('course', $course)
+            ->getQuery()
+            ->getResult();
+        unset($queryBuilder);
+
+        $queryBuilder = $this->_em->createQueryBuilder();
+        $queryBuilder->delete(Ticket::class, 't')
+            ->where('t.course = :course')
+            ->setParameter('course', $course)
+            ->getQuery()
+            ->getResult();
     }
 }

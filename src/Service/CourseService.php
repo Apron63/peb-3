@@ -21,14 +21,6 @@ class CourseService
     {
         $courseProgress = [];
 
-        // if ($enableChangeStage && null === $permission->getActivatedAt()) {
-        //     $permission
-        //         ->setActivatedAt(new DateTime())
-        //         ->setStage(Permission::STAGE_IN_PROGRESS);
-
-        //     $this->permissionRepository->save($permission, true);
-        // }
-
         if (Course::INTERACTIVE === $permission->getCourse()->getType()) {
             $courseProgress = $this->synchronizeWithPermission(
                 $this->getModuleSectionByCourse($permission->getCourse()), 
@@ -86,15 +78,15 @@ class CourseService
 
     private function synchronizeWithPermission(array $data, Permission $permission): array
     {
-        foreach($data as $moduleKey => $module) {
-            foreach ($module['sections'] as $sectionKey => $section) {
-                if (isset($data[$moduleKey]['sections'][$sectionKey]['active'])) {
-                    $data[$moduleKey]['sections'][$sectionKey]['active'] = true;
-                }
-            }
+        // foreach($data as $moduleKey => $module) {
+        //     foreach ($module['sections'] as $sectionKey => $section) {
+        //         if (isset($data[$moduleKey]['sections'][$sectionKey]['active'])) {
+        //             $data[$moduleKey]['sections'][$sectionKey]['active'] = true;
+        //         }
+        //     }
 
-            $data[$moduleKey]['active'] = true;
-        }
+        //     $data[$moduleKey]['active'] = true;
+        // }
 
         return $data;
     }
