@@ -78,15 +78,30 @@ class CourseService
 
     private function synchronizeWithPermission(array $data, Permission $permission): array
     {
-        // foreach($data as $moduleKey => $module) {
-        //     foreach ($module['sections'] as $sectionKey => $section) {
-        //         if (isset($data[$moduleKey]['sections'][$sectionKey]['active'])) {
-        //             $data[$moduleKey]['sections'][$sectionKey]['active'] = true;
-        //         }
-        //     }
+        $history = $permission->getHistory();
 
-        //     $data[$moduleKey]['active'] = true;
-        // }
+        foreach($data as $moduleKey => $module) {
+            $isModuleActive = false;
+
+            foreach ($module['sections'] as $sectionKey => $section) {
+                if (
+                    isset($data[$moduleKey]['sections'][$sectionKey]['active'])
+                    && isset($history[$moduleKey]['sections'][$sectionKey]['active'])
+                ) {
+                    $data[$moduleKey]['sections'][$sectionKey]['active'] = $history[$moduleKey]['sections'][$sectionKey]['active'];
+
+                    if (!$isModuleActive && $data[$moduleKey]['sections'][$sectionKey]['active']) {
+                        $isModuleActive = true;
+                    }
+                }
+            }
+
+             $data[$moduleKey]['active'] = $isModuleActive;
+        }
+
+        if (!$data[0]['active']) {
+            $data[0]['active'] = true;
+        }
 
         return $data;
     }

@@ -2,6 +2,7 @@
 
 namespace App\Service;
 
+use App\Entity\ModuleSection;
 use App\Entity\Permission;
 use App\Entity\User;
 use App\Repository\PermissionRepository;
@@ -39,6 +40,35 @@ class UserPermissionService
         return $result;
     }
 
+    public function checkPermissionHistory(Permission $permission, ModuleSection $moduleSection)
+    {
+        $currentSection = false;
+        $history = $permission->getHistory();
+
+
+        foreach($permission->getHistory() as $moduleKey => $module) {
+            foreach($module['sections'] as $sectionKey => $section) {
+                if ($currentSection) {
+                    if (false === $section['active']) {
+                        $history[$moduleKey]['sections'][$sectionKey]['active'] = true;
+
+                        $permission->setHistory($history);
+                        $this->permissionRepository->save($permission, true);
+                    }
+
+                    break 2;    
+                }
+
+                if (
+                    $module['moduleId'] === $moduleSection->getModule()->getId()
+                    && $section['id'] === $moduleSection->getId()
+                ) {
+                    $currentSection = true;
+                }
+            }
+        }
+    }
+
     private function createHistory(Permission $permission): array
     {
         $courseProgress = $this->courseService->checkForCourseStage($permission);
@@ -53,6 +83,7 @@ class UserPermissionService
                 $sections[] = [
                     'id' => $section['id'],
                     'active' => $firstBreak,
+                    'time' => 0,
                 ];
 
                 if ($firstBreak) {

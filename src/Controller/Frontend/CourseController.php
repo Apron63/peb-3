@@ -94,6 +94,8 @@ class CourseController extends AbstractController
             throw new NotFoundHttpException('Section not found');
         }
 
+        $this->userPermissionService->checkPermissionHistory($permission, $moduleSection);
+
         $response = new Response();
         $response->headers->setCookie(new Cookie('init', md5($sessionId), time() + 3600));
 
@@ -120,6 +122,8 @@ class CourseController extends AbstractController
         if (!$moduleSection instanceof ModuleSection) {
             throw new NotFoundHttpException();
         }
+
+        $this->userPermissionService->checkPermissionHistory($permission, $moduleSection);
 
         if ($moduleSection->getUrlType() === ModuleSection::URL_TYPE_TEXT) {
             return $this->render('frontend/course/_text.html.twig', [
