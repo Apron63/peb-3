@@ -17,16 +17,12 @@
                             {% endif %}
                         {% else %}
                             <a href="javascript:void(0)" class="modules_item_parts_item">{{ section.name }}</a>
+                            {% set finalTestingEnabled = false %}
                         {% endif %}
                     {% endfor %}
                 </div>
             </div>
         </div>
-
-        {% if module.active == false %}
-            {% set finalTestingEnabled = false %}
-        {% endif %}
-
     {% endfor %}
 
     <div class="modules_item">
