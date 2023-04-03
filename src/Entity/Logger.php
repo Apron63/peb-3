@@ -9,6 +9,8 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Entity(repositoryClass: LoggerRepository::class)]
 class Logger
 {
+    public const DEFAULT_TIME_LEFT_IN_SECONDS = 20 * 60;
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
@@ -38,10 +40,22 @@ class Logger
     private ?int $result = null;
 
     #[ORM\Column(nullable: true)]
-    private array $protokol = [];
+    private array $protocol = [];
 
     #[ORM\ManyToOne]
     private ?Ticket $ticket = null;
+
+    #[ORM\Column(type: Types::SMALLINT, nullable: true)]
+    private ?int $questionNom = null;
+
+    #[ORM\Column]
+    private int $timeLeftInSeconds = 0;
+
+    #[ORM\ManyToOne]
+    private ?Permission $permission = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?\DateTime $timeLastQuestion = null;
 
     public function getId(): ?int
     {
@@ -132,14 +146,14 @@ class Logger
         return $this;
     }
 
-    public function getProtokol(): array
+    public function getProtocol(): array
     {
-        return $this->protokol;
+        return $this->protocol;
     }
 
-    public function setProtokol(?array $protokol): self
+    public function setProtocol(?array $protocol): self
     {
-        $this->protokol = $protokol;
+        $this->protocol = $protocol;
 
         return $this;
     }
@@ -152,6 +166,54 @@ class Logger
     public function setTicket(?Ticket $ticket): self
     {
         $this->ticket = $ticket;
+
+        return $this;
+    }
+
+    public function getQuestionNom(): ?int
+    {
+        return $this->questionNom;
+    }
+
+    public function setQuestionNom(?int $questionNom): self
+    {
+        $this->questionNom = $questionNom;
+
+        return $this;
+    }
+
+    public function getTimeLeftInSeconds(): int
+    {
+        return $this->timeLeftInSeconds;
+    }
+
+    public function setTimeLeftInSeconds(int $timeLeftInSeconds): self
+    {
+        $this->timeLeftInSeconds = $timeLeftInSeconds;
+
+        return $this;
+    }
+
+    public function getPermission(): ?Permission
+    {
+        return $this->permission;
+    }
+
+    public function setPermission(?Permission $permission): self
+    {
+        $this->permission = $permission;
+
+        return $this;
+    }
+
+    public function getTimeLastQuestion(): ?\DateTime
+    {
+        return $this->timeLastQuestion;
+    }
+
+    public function setTimeLastQuestion(?\DateTime $timeLastQuestion): self
+    {
+        $this->timeLastQuestion = $timeLastQuestion;
 
         return $this;
     }

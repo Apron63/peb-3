@@ -47,22 +47,23 @@ class PermissionRepository extends ServiceEntityRepository
     {
         return $this->getEntityManager()->createQuery(
             "SELECT 
-                p.id, 
-                p.createdAt, 
-                p.activatedAt, 
-                p.lastAccess, 
-                IDENTITY(p.user), 
-                p.duration, 
-                p.orderNom, 
+                p.id,
+                p.createdAt,
+                p.activatedAt,
+                p.lastAccess,
+                IDENTITY(p.user),
+                p.duration,
+                p.stage,
+                p.orderNom,
                 c.shortName AS shortName,
                 c.id as courseId,
-                CASE WHEN p.activatedAt IS NULL OR (DateDiff(Now(), p.activatedAt) <= p.duration) 
-                    THEN 1 
-                    ELSE 0 
+                CASE WHEN p.activatedAt IS NULL OR (DateDiff(Now(), p.activatedAt) <= p.duration)
+                    THEN 1
+                    ELSE 0
                     END AS isActive
                 FROM App\Entity\Permission p
                 JOIN App\Entity\Course c WITH c.id = p.course
-                WHERE p.user = :user 
+                WHERE p.user = :user
                 ORDER BY isActive DESC, p.createdAt DESC")
             ->setParameter('user', $user->getId());
     }

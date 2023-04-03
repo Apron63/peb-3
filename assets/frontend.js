@@ -4,3 +4,4 @@ import './styles/mstyle.css';
 
 require('/assets/js/scripts.js')
 require('/assets/js/frontend/profile.js')
+require('/assets/js/frontend/testing.js')

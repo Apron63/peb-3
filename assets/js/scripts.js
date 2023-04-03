@@ -233,6 +233,8 @@ if(timer) {
 
         if (diff <= 0) {
           clearInterval(timerId);
+
+          document.dispatchEvent(new Event('ticketTimeout'))
         }
     
         let minutes = diff > 0 ? Math.floor(diff / 1000 / 60) % 60 : 0;
