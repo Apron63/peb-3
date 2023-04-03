@@ -245,7 +245,10 @@ class TestingService
     
     private function getDataClassic(Logger $logger, Permission $permission): array
     {
-        $ticketId = json_decode($logger->getTicket()->getText()[0])[$logger->getQuestionNom() - 1];
+        $ticketId = $this->getTicketId(
+            json_decode($logger->getTicket()->getText()[0], JSON_OBJECT_AS_ARRAY),
+            $logger->getQuestionNom() - 1
+        );
 
         $question = $this->questionsRepository->find($ticketId);
         if (! $question instanceof Questions) {
@@ -278,5 +281,20 @@ class TestingService
             'type' => $question->getType(),
             'answers' => $dataAnswers,
         ];
+    }
+
+    private function getTicketId(array $ticketData, int $questionNom): ?int
+    {
+        $tmpNom = 0;
+
+        foreach($ticketData as $theme) {
+            foreach($theme as $item) {
+                if ($questionNom === $tmpNom ++) {
+                    return $item;
+                }
+            }
+        }
+
+        return null;
     }
 }

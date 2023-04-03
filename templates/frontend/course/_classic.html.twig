@@ -15,7 +15,7 @@
             {% if permission.stage == 1 %}
                 <a href="javascript:void(0);" class="modules_item_name" content-elem="final-testing" status="not-passed">Итоговое тестирование</a>
             {% else %}
-                <a href="{{ path('app_frontend_testing', {id: permission.id, permissionId: permission.id}) }}" class="modules_item_name" content-elem="final-testing" status="passed">Итоговое тестирование</a>
+                <a href="{{ path('app_frontend_testing', {id: permission.id}) }}" class="modules_item_name" content-elem="final-testing" status="passed">Итоговое тестирование</a>
             {% endif %}
         </div>
     </div>
