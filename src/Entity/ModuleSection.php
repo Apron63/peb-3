@@ -38,7 +38,7 @@ class ModuleSection
     private ?int $part = null;
 
     #[ORM\Column(type: Types::SMALLINT)]
-    private ?int $urlType = null;
+    private ?int $urlType = self::URL_TYPE_INTERACTIVE;
     
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $textData = null;

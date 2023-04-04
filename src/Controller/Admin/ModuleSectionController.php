@@ -29,10 +29,6 @@ class ModuleSectionController extends MobileController
         $form = $this->createForm(ModuleSectionEditType::class, $moduleSection);
         $form->handleRequest($request);
 
-        if (empty($moduleSection->getUrl())) {
-            $moduleSection->setUrl('.');
-        }
-
         if ($form->isSubmitted() && $form->isValid()) {
             $this->moduleSectionRepository->save($moduleSection, true);
 

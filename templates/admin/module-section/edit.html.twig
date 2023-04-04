@@ -29,33 +29,35 @@
             </div>
         </div>
 
-        <div class="col-12 mb-3">
-            <div class="form-group">
-                <span class="text-danger">{{ form_errors(form.url) }}</span>
-                {{ form_widget(form.url) }}
+        {% if form.vars.value.id is not null %}
+            <div class="col-12 mb-3">
+                <div class="form-group">
+                    <span class="text-danger">{{ form_errors(form.url) }}</span>
+                    {{ form_widget(form.url) }}
+                </div>
             </div>
-        </div>
 
-        <div class="col-10 mb-3">
-            <div class="form-group">
-                <span class="text-danger">{{ form_errors(form.filename) }}</span>
-                {{ form_widget(form.filename) }}
+            <div class="col-10 mb-3">
+                <div class="form-group">
+                    <span class="text-danger">{{ form_errors(form.filename) }}</span>
+                    {{ form_widget(form.filename) }}
+                </div>
             </div>
-        </div>
 
-        <div class="col-12 mb-3">
-            <div class="form-group">
-                <span class="text-danger">{{ form_errors(form.urlType) }}</span>
-                {{ form_widget(form.urlType) }}
+            <div class="col-12 mb-3">
+                <div class="form-group">
+                    <span class="text-danger">{{ form_errors(form.urlType) }}</span>
+                    {{ form_widget(form.urlType) }}
+                </div>
             </div>
-        </div>
-        
-        <div class="col-12 mb-3">
-            <div class="form-group">
-                <span class="text-danger">{{ form_errors(form.textData) }}</span>
-                {{ form_widget(form.textData) }}
+            
+            <div class="col-12 mb-3">
+                <div class="form-group">
+                    <span class="text-danger">{{ form_errors(form.textData) }}</span>
+                    {{ form_widget(form.textData) }}
+                </div>
             </div>
-        </div>
+        {% endif %}
 
         <div class="form-group mb-3">
             {{ form_widget(form.submit) }}
