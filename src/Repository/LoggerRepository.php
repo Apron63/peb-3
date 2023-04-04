@@ -2,6 +2,7 @@
 
 namespace App\Repository;
 
+use App\Entity\Course;
 use App\Entity\Logger;
 use App\Entity\Permission;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
@@ -55,5 +56,14 @@ class LoggerRepository extends ServiceEntityRepository
             ->setMaxResults(1)
             ->getQuery()
             ->getOneOrNullResult();
+    }
+
+    public function removeLoggerForCourse(Course $course)
+    {
+        $query = $this->getEntityManager()
+            ->createQuery("DELETE FROM App\Entity\Logger l WHERE l.course = :courseId")
+            ->setParameter('courseId', $course->getId());
+
+        $query->execute();
     }
 }
