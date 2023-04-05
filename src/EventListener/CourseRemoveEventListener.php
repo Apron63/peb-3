@@ -7,8 +7,10 @@ use App\Repository\ActionRepository;
 use App\Repository\CourseInfoRepository;
 use App\Repository\CourseThemeRepository;
 use App\Repository\LoggerRepository;
+use App\Repository\ModuleRepository;
 use App\Repository\PermissionRepository;
 use App\Repository\QuestionsRepository;
+use App\Repository\TicketRepository;
 use Doctrine\Persistence\Event\LifecycleEventArgs;
 
 class CourseRemoveEventListener
@@ -20,6 +22,8 @@ class CourseRemoveEventListener
         readonly QuestionsRepository $questionsRepository,
         readonly PermissionRepository $permissionRepository,
         readonly LoggerRepository $loggerRepository,
+        readonly TicketRepository $ticketRepository,
+        readonly ModuleRepository $moduleRepository,
     ) {}
 
     public function preRemove(LifecycleEventArgs $args): void
@@ -30,11 +34,16 @@ class CourseRemoveEventListener
             return;
         }
 
+        if ($entity->getType() === Course::INTERACTIVE) {
+            $this->moduleRepository->removeModuleFromCourse($entity);
+        }
+
         $this->actionRepository->removeActionForCourse($entity);
         $this->courseInfoRepository->removeCourseInfoForCourse($entity);
         $this->courseThemeRepository->removeCourseThemeForCourse($entity);
         $this->questionsRepository->removeQuestionsForCourse($entity);
         $this->loggerRepository->removeLoggerForCourse($entity);
         $this->permissionRepository->removePermissionForCourse($entity);
+        $this->ticketRepository->deleteOldTickets($entity);
     }
 }

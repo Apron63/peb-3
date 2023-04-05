@@ -48,4 +48,31 @@ class ModuleRepository extends ServiceEntityRepository
             ->getQuery()
             ->getArrayResult();
     }
+
+    public function removeModuleFromCourse(Course $course): void
+    {
+        $query = $this->getEntityManager()
+            ->createQuery("SELECT m.id FROM App\Entity\Module m WHERE m.course = :courseId")
+            ->setParameter('courseId', $course->getId());
+        $mIds = $query->execute();
+
+        $mIds = array_map(function($e) {
+                return $e['id'];
+            }, $mIds);
+        
+        $query = $this->getEntityManager()
+            ->createQuery('DELETE FROM App\Entity\ModuleInfo mi WHERE mi.module IN (:mIds)')
+            ->setParameter('mIds', $mIds);
+        $query->execute();
+        
+        $query = $this->getEntityManager()
+            ->createQuery('DELETE FROM App\Entity\ModuleSection ms WHERE ms.module IN (:mIds)')
+            ->setParameter('mIds', $mIds);
+        $query->execute();
+        
+        $query = $this->getEntityManager()
+            ->createQuery('DELETE FROM App\Entity\Module m WHERE m.id IN (:mIds)')
+            ->setParameter('mIds', $mIds);
+        $query->execute();
+    }
 }
