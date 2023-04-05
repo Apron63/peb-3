@@ -61,11 +61,6 @@ class ModuleRepository extends ServiceEntityRepository
             }, $mIds);
         
         $query = $this->getEntityManager()
-            ->createQuery('DELETE FROM App\Entity\ModuleInfo mi WHERE mi.module IN (:mIds)')
-            ->setParameter('mIds', $mIds);
-        $query->execute();
-        
-        $query = $this->getEntityManager()
             ->createQuery('DELETE FROM App\Entity\ModuleSection ms WHERE ms.module IN (:mIds)')
             ->setParameter('mIds', $mIds);
         $query->execute();
