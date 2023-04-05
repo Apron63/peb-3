@@ -9,3 +9,7 @@ body {
     margin-top: 0.5rem;
     margin-bottom: 0.5rem;
 }
+
+.form-control:disabled {
+    cursor: not-allowed;
+}
