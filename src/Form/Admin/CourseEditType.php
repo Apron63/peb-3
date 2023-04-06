@@ -31,7 +31,11 @@ class CourseEditType extends AbstractType
         ];
 
         if (null !== $options['data']->getId()) {
-            $shortNameAttr = array_merge($shortNameAttr, ['disabled' => 'disabled', 'readonly' => 'readonly', 'aria-disabled' => 'true']);
+            $shortNameAttr = array_merge($shortNameAttr, [
+                'readonly' => 'readonly', 
+                'aria-disabled' => 'true',
+                'aria-readonly' => 'true',
+            ]);
         }
 
         $builder
