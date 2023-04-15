@@ -45,17 +45,33 @@ class LoggerRepository extends ServiceEntityRepository
     public function findLastLogger(Permission $permission, UserInterface $user): ?Logger
     {
         return $this->createQueryBuilder('l')
-            ->where('l.course = :course')
+            ->where('l.permission = :permission')
             ->andWhere('l.user = :user')
-            ->andWhere()
+            ->andWhere('l.result = 0')
             ->setParameters([
-                'course' => $permission->getCourse(),
+                'permission' => $permission,
                 'user' => $user,
             ])
             ->orderBy('l.beginAt', 'desc')
             ->setMaxResults(1)
             ->getQuery()
             ->getOneOrNullResult();
+    }
+    
+    public function findFirstSuccessfullyLogger(Permission $permission, UserInterface $user): Logger
+    {
+        return $this->createQueryBuilder('l')
+            ->where('l.permission = :permission')
+            ->andWhere('l.user = :user')
+            ->andWhere('l.result = 1')
+            ->setParameters([
+                'permission' => $permission,
+                'user' => $user,
+            ])
+            ->orderBy('l.beginAt', 'asc')
+            ->setMaxResults(1)
+            ->getQuery()
+            ->getSingleResult();
     }
 
     public function removeLoggerForCourse(Course $course)

@@ -20,10 +20,6 @@ class Logger
     #[ORM\JoinColumn(nullable: false)]
     private ?User $user = null;
 
-    #[ORM\ManyToOne]
-    #[ORM\JoinColumn(nullable: false)]
-    private ?Course $course = null;
-
     #[ORM\Column(type: Types::SMALLINT, nullable: true)]
     private ?int $errorAllowed = null;
 
@@ -70,18 +66,6 @@ class Logger
     public function setUser(?User $user): self
     {
         $this->user = $user;
-
-        return $this;
-    }
-
-    public function getCourse(): ?Course
-    {
-        return $this->course;
-    }
-
-    public function setCourse(?Course $course): self
-    {
-        $this->course = $course;
 
         return $this;
     }

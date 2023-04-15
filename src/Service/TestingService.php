@@ -160,6 +160,13 @@ class TestingService
         return $skipped;
     }
 
+    public function getFirstSuccesfullyLogger(Permission $permission, UserInterface $user): Logger
+    {
+        $logger = $this->loggerRepository->findFirstSuccessfullyLogger($permission, $user);
+
+        return $logger;
+    }
+
     private function getNewLogger(Permission $permission, UserInterface $user): Logger
     {
         $tickets = $this->ticketRepository->getCourseTickets($permission->getCourse());
@@ -188,7 +195,8 @@ class TestingService
         }
 
         $logger = new Logger;
-        $logger->setCourse($permission->getCourse())
+        
+        $logger
             ->setUser($user)
             ->setTicket($ticket)
             ->setErrorActually(0)

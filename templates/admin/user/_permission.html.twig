@@ -59,6 +59,16 @@
                 {% endif %}
             </td>
             <td>
+                {% if permission.stage == 3 %}
+                    <a
+                        href="{{ path('admin_print_testing', {id: permission.id, userId: user.id}) }}"
+                        class="btn btn-sm btn-outline-primary"
+                        target="_blank"
+                    >
+                        Печать
+                    </a>
+                {% endif %}
+
                 <a
                     href="{{ path('admin_permission_delete', {id: permission.id}) }}"
                     class="btn btn-sm btn-outline-danger"
