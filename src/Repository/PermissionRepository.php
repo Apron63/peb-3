@@ -88,6 +88,7 @@ class PermissionRepository extends ServiceEntityRepository
     {
         return $this->createQueryBuilder('p')
             ->where('p.user = :user')
+            ->andWhere('p.activatedAt IS NULL OR DateDiff(Now(), p.activatedAt) <= p.duration')
             ->setParameter('user', $user)
             ->getQuery()
             ->getResult();

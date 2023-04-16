@@ -33,9 +33,21 @@ class TestingService
 
         if ( 
             null === $logger
-            || null !== $logger->getEndAt()
         ) {
             $logger = $this->getNewLogger($permission, $user);
+        } else {
+            $timeSpentNow = (new \DateTime)->getTimestamp() - $logger->getTimeLastQuestion()->getTimestamp();
+
+            $timeShift = $logger->getTimeLeftInSeconds() - $timeSpentNow;
+            if ($timeShift < 0 ) {
+                $timeShift = 0;
+            }
+
+            $logger
+                ->setTimeLeftInSeconds($timeShift)
+                ->setTimeLastQuestion(new \DateTime());
+
+            $this->loggerRepository->save($logger, true);
         }
 
         return $logger;
@@ -101,12 +113,7 @@ class TestingService
             }
         }
 
-        $timeSpentNow = (new \DateTime)->getTimestamp() - $logger->getTimeLastQuestion()->getTimestamp();
-
-        $logger
-            ->setProtocol($protocol)
-            ->setTimeLastQuestion(new \DateTime())
-            ->setTimeLeftInSeconds($logger->getTimeLeftInSeconds() - $timeSpentNow);
+        $logger->setProtocol($protocol);
 
         if (! $success) {
             $logger->setErrorActually($logger->getErrorActually() + 1);

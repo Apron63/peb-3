@@ -29,6 +29,10 @@ services:
     App\TwigExtension\TwigExtension:
         tags:
         - { name: twig.extension }
+    # Расширение TWIG для результата тестирования
+    App\TwigExtension\HistoryTwigExtension:
+        tags:
+        - { name: twig.extension }
 
     # Gedmo Timestampable services
     gedmo.listener.timestampable:

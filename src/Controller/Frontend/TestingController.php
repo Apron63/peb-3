@@ -33,10 +33,16 @@ class TestingController extends AbstractController
 
         $logger = $this->testingService->getLogger($permission, $user);
 
-        return $this->render('frontend/testing/index.html.twig', [
-            'permission' => $permission,
-            'data' =>  $this->testingService->getData($logger, $permission),
-        ]);
+        if (0 === $logger->getTimeLeftInSeconds()) {
+            return $this->redirect(
+                $this->generateUrl('app_frontend_testing_end', ['id' => $logger->getId()])
+            );
+        } else {
+            return $this->render('frontend/testing/index.html.twig', [
+                'permission' => $permission,
+                'data' =>  $this->testingService->getData($logger, $permission),
+            ]);
+        }
     } 
     
     #[Route('/frontend/testing-next-step/{id<\d+>}/', name: 'app_frontend_testing_next_step',  condition: 'request.isXmlHttpRequest()')]

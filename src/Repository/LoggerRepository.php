@@ -48,6 +48,7 @@ class LoggerRepository extends ServiceEntityRepository
             ->where('l.permission = :permission')
             ->andWhere('l.user = :user')
             ->andWhere('l.result = 0')
+            ->andWhere('l.endAt IS NULL')
             ->setParameters([
                 'permission' => $permission,
                 'user' => $user,
