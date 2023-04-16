@@ -167,7 +167,7 @@ class TestingService
         return $skipped;
     }
 
-    public function getFirstSuccesfullyLogger(Permission $permission, UserInterface $user): Logger
+    public function getFirstSuccesfullyLogger(Permission $permission, UserInterface $user): ?Logger
     {
         $logger = $this->loggerRepository->findFirstSuccessfullyLogger($permission, $user);
 

@@ -59,7 +59,7 @@ class LoggerRepository extends ServiceEntityRepository
             ->getOneOrNullResult();
     }
     
-    public function findFirstSuccessfullyLogger(Permission $permission, UserInterface $user): Logger
+    public function findFirstSuccessfullyLogger(Permission $permission, UserInterface $user): ?Logger
     {
         return $this->createQueryBuilder('l')
             ->where('l.permission = :permission')
@@ -72,7 +72,7 @@ class LoggerRepository extends ServiceEntityRepository
             ->orderBy('l.beginAt', 'asc')
             ->setMaxResults(1)
             ->getQuery()
-            ->getSingleResult();
+            ->getOneOrNullResult();
     }
 
     public function removeLoggerForCourse(Course $course)

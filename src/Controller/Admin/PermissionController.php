@@ -8,6 +8,7 @@ use App\Entity\Permission;
 use App\Service\TestingService;
 use App\Repository\UserRepository;
 use App\Decorator\MobileController;
+use App\Entity\Logger;
 use App\Form\Admin\PermissionEditType;
 use App\Repository\PermissionRepository;
 use Symfony\Component\HttpFoundation\Request;
@@ -92,9 +93,13 @@ class PermissionController extends MobileController
 
         $logger = $this->testingService->getFirstSuccesfullyLogger($permission, $user);
 
-        return $this->render('admin/testing/protocol.html.twig', [
-            'logger' => $logger,
-            'skipped' => $this->testingService->getSkippedQuestion($logger),
-        ]);
+        if ($logger instanceof Logger) {
+            return $this->render('admin/testing/protocol.html.twig', [
+                'logger' => $logger,
+                'skipped' => $this->testingService->getSkippedQuestion($logger),
+            ]);
+        } else {
+            throw new NotFoundHttpException('Logger with success not found');
+        }
     }
 }
