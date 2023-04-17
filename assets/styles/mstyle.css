@@ -93,6 +93,13 @@
         padding-right: 0;
         padding-left: 0;
     }
+
+    .history_table_content .history_table_row .header {
+        display: inline;
+    }
+    .history_table_content .history_table_row .header.hidden {
+        display: none;
+    }
 }
 
 @media screen and (max-width: 992px) {
@@ -186,6 +193,8 @@
     }
 
     .express-test_form_button_end {
+        display: block;
+        text-align: center;
         width: 100%;
         margin-top: 20px;
         margin-left: 0;

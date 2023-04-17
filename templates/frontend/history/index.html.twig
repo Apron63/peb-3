@@ -36,10 +36,22 @@
                                             обучение завершено    
                                         {% endif %}
                                     </div>
-                                    <div class="start_at">{{ permission.activatedAt | date('d.m.Y') }}</div>
-                                    <div class="finish_at">{{ getResultDescription(permission.id).endDate }}</div>
-                                    <div class="results">{{ getResultDescription(permission.id).result }}</div>
-                                    <div class="duration">{{ getResultDescription(permission.id).duration }}</div>
+                                    <div class="start_at">
+                                        {% if permission.activatedAt is not empty %}
+                                            <span class="header">начало обучения: </span>{{ permission.activatedAt | date('d.m.Y') }}
+                                        {% endif %}
+                                    </div>
+                                    <div class="finish_at">
+                                        {% if getResultDescription(permission.id).endDate is not empty %}
+                                            <span class="header">завершение обучения: </span>{{ getResultDescription(permission.id).endDate }}
+                                        {% endif %}
+                                    </div>
+                                    <div class="results">
+                                        <span class="header">результат: </span>{{ getResultDescription(permission.id).result }}
+                                    </div>
+                                    <div class="duration">
+                                        <span class="header">длительность: </span>{{ getResultDescription(permission.id).duration }}
+                                    </div>
                                 </div>
                             {% endfor %}
                         </div>

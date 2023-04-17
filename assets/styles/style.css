@@ -113,6 +113,10 @@ a:hover {
     opacity: 0.8;
 }
 
+img {
+    max-width: 100%;
+}
+
 .global-wrapper {
     position: relative;
     display: flex;
@@ -704,6 +708,7 @@ a:hover {
 }
 
 .modules_item_check {
+    flex-shrink: 0;
     position: relative;
     width: 25px;
     height: 25px;
@@ -1157,6 +1162,10 @@ a:hover {
 
 .history_table_content .history_table_row:last-child {
     margin-bottom: 0;
+}
+
+.history_table_content .history_table_row .header {
+    display: none;
 }
 
 .course {

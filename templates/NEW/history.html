@@ -193,26 +193,54 @@
                                 <div class="history_table_row">
                                     <div class="course">Оказание помощи пострадавшим</div>
                                     <div class="status">обучение завершено</div>
-                                    <div class="start_at">20.09.2022</div>
-                                    <div class="finish_at">28.09.2022</div>
-                                    <div class="results">сдано</div>
-                                    <div class="duration">10 ч. 28 м.</div>
+                                    <div class="start_at">
+                                        <!--Если у поля есть значение (в данное случае дата начала обучения),-->
+                                        <!--то выводим значения поля-->
+                                        <span class="header">начало обучения: </span>20.09.2022
+                                    </div>
+                                    <div class="finish_at">
+                                        <span class="header">завершение обучения: </span>28.09.2022
+                                    </div>
+                                    <div class="results">
+                                        <span class="header">результат: </span>сдано
+                                    </div>
+                                    <div class="duration">
+                                        <span class="header">длительность: </span>10 ч. 28 м.
+                                    </div>
                                 </div>
                                 <div class="history_table_row">
                                     <div class="course">Общие вопросы охраны труда и функционирования СУОТ</div>
                                     <div class="status">обучение идет</div>
-                                    <div class="start_at">05.10.2022</div>
-                                    <div class="finish_at"></div>
-                                    <div class="results"></div>
-                                    <div class="duration">3 ч. 18 м.</div>
+                                    <div class="start_at">
+                                        <span class="header">начало обучения: </span>05.10.2022
+                                    </div>
+                                    <!--Если у поля нет значения (в данное случае даты окончани обучения нет),-->
+                                    <!--то для заголовка добавляем класс hidden-->
+                                    <div class="finish_at">
+                                        <span class="header hidden">завершение обучения: </span>
+                                    </div>
+                                    <div class="results">
+                                        <span class="header hidden">результат: </span>
+                                    </div>
+                                    <div class="duration">
+                                        <span class="header">длительность: </span>3 ч. 18 м.
+                                    </div>
                                 </div>
                                 <div class="history_table_row">
                                     <div class="course">Б2. Нефтяная и газовая промышленность</div>
                                     <div class="status">обучение начато</div>
-                                    <div class="start_at"></div>
-                                    <div class="finish_at"></div>
-                                    <div class="results"></div>
-                                    <div class="duration"></div>
+                                    <div class="start_at">
+                                        <span class="header hidden">начало обучения: </span>
+                                    </div>
+                                    <div class="finish_at">
+                                        <span class="header hidden">завершение обучения: </span>
+                                    </div>
+                                    <div class="results">
+                                        <span class="header hidden">результат: </span>
+                                    </div>
+                                    <div class="duration">
+                                        <span class="header hidden">длительность: </span>
+                                    </div>
                                 </div>
                             </div>
                         </div>
