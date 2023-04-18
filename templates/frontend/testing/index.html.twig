@@ -37,7 +37,7 @@
                         {% if data.type == 1 %}
                             {% for answer in data['answers'] %}
                                 <label class="test_form_label test_form_radio_wrapper">
-                                    <input class="test_form_radio" type="radio" name="answer{{ answer['nom'] }}" value="{{ answer['nom'] }}">
+                                    <input class="test_form_radio" type="radio" name="answer1" value="{{ answer['nom'] }}">
                                     <div class="test_form_custom_radio"></div>
                                     <div class="test_form_answer">{{ answer['text'] | raw }}</div>
                                 </label>    
@@ -47,7 +47,7 @@
 
                             {% for answer in data['answers'] %}
                                 <label class="test_form_label test_form_checkbox_wrapper">
-                                    <input class="test_form_checkbox" type="checkbox" name="answer{{ answer['nom'] }}" value="{{ answer['nom'] }}">
+                                    <input class="test_form_checkbox" type="checkbox" name="answer1" value="{{ answer['nom'] }}">
                                     <div class="test_form_custom_checkbox"></div>
                                     <div class="test_form_answer">{{ answer['text'] | raw }}</div>
                                 </label>
