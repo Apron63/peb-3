@@ -53,3 +53,8 @@ services:
         tags:
             - name: 'doctrine.event_listener'
               event: 'preRemove'
+    # Permission auto-remove child records
+    App\EventListener\PermissionRemoveEventListener:
+        tags:
+            - name: 'doctrine.event_listener'
+              event: 'preRemove'

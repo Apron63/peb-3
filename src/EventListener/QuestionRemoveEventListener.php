@@ -9,7 +9,7 @@ use Doctrine\Persistence\Event\LifecycleEventArgs;
 class QuestionRemoveEventListener
 {
     public function __construct(
-        readonly AnswerRepository $answerRepository
+        private readonly AnswerRepository $answerRepository
     ) {}
 
     public function preRemove(LifecycleEventArgs $args): void

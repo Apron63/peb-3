@@ -16,14 +16,14 @@ use Doctrine\Persistence\Event\LifecycleEventArgs;
 class CourseRemoveEventListener
 {
     public function __construct(
-        readonly ActionRepository $actionRepository,
-        readonly CourseInfoRepository $courseInfoRepository,
-        readonly CourseThemeRepository $courseThemeRepository,
-        readonly QuestionsRepository $questionsRepository,
-        readonly PermissionRepository $permissionRepository,
-        readonly LoggerRepository $loggerRepository,
-        readonly TicketRepository $ticketRepository,
-        readonly ModuleRepository $moduleRepository,
+        private readonly ActionRepository $actionRepository,
+        private readonly CourseInfoRepository $courseInfoRepository,
+        private readonly CourseThemeRepository $courseThemeRepository,
+        private readonly QuestionsRepository $questionsRepository,
+        private readonly PermissionRepository $permissionRepository,
+        private readonly LoggerRepository $loggerRepository,
+        private readonly TicketRepository $ticketRepository,
+        private readonly ModuleRepository $moduleRepository,
     ) {}
 
     public function preRemove(LifecycleEventArgs $args): void
