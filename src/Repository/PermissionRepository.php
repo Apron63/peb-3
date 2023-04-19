@@ -100,6 +100,21 @@ class PermissionRepository extends ServiceEntityRepository
     public function removePermissionForCourse(Course $course)
     {
         $query = $this->getEntityManager()
+            ->createQuery("SELECT p.id FROM App\Entity\Permission p WHERE p.course = :courseId")
+            ->setParameter('courseId', $course->getId());
+
+        $qIds = $query->execute();
+        $qIds = array_map(function($e) {
+                return $e['id'];
+            }, $qIds);
+        
+        $query = $this->getEntityManager()
+            ->createQuery('DELETE FROM App\Entity\Logger l WHERE l.permission IN (:qIds)')
+            ->setParameter('qIds', $qIds);
+
+        $qIds = $query->execute();
+
+        $query = $this->getEntityManager()
             ->createQuery("DELETE FROM App\Entity\Permission p WHERE p.course = :courseId")
             ->setParameter('courseId', $course->getId());
 
