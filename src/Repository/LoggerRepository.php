@@ -83,4 +83,13 @@ class LoggerRepository extends ServiceEntityRepository
 
         $query->execute();
     }
+
+    public function removeLoggerForPermission(Permission $permission)
+    {
+        $query = $this->getEntityManager()
+            ->createQuery("DELETE FROM App\Entity\Logger l WHERE l.permission = :permissionId")
+            ->setParameter('permissionId', $permission->getId());
+
+        $query->execute();
+    }
 }

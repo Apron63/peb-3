@@ -20,6 +20,6 @@ class PermissionRemoveEventListener
             return;
         }
 
-        $this->loggerRepository->removeLoggerForCourse($entity->getCourse());
+        $this->loggerRepository->removeLoggerForPermission($entity);
     }
 }
