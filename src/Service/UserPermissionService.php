@@ -10,8 +10,8 @@ use App\Repository\PermissionRepository;
 class UserPermissionService
 {
     public function __construct(
-        readonly PermissionRepository $permissionRepository,
-        readonly CourseService $courseService,
+        private readonly PermissionRepository $permissionRepository,
+        private readonly CourseService $courseService,
     ) { }
 
     public function checkPermissionForUser(Permission $permission, User $user, bool $canChangeStage): bool
@@ -33,6 +33,7 @@ class UserPermissionService
                 $permission->setActivatedAt(new \DateTime())
                     ->setStage(Permission::STAGE_IN_PROGRESS)
                     ->setHistory($this->createHistory($permission));
+
                 $this->permissionRepository->save($permission, true);
             }
         }
@@ -42,28 +43,18 @@ class UserPermissionService
 
     public function checkPermissionHistory(Permission $permission, ModuleSection $moduleSection)
     {
-        $currentSection = false;
-        $history = $permission->getHistory();
+        if ($moduleSection->getType() === ModuleSection::TYPE_INTERMEDIATE) {
+            $history = $permission->getHistory();
+            
+            $moduleId = $moduleSection->getModule()->getId();
 
+            foreach($permission->getHistory() as $moduleKey => $module) {
+                if ($module['moduleId'] === $moduleId) {
+                    $history[$moduleKey]['active'] = true;
 
-        foreach($permission->getHistory() as $moduleKey => $module) {
-            foreach($module['sections'] as $sectionKey => $section) {
-                if ($currentSection) {
-                    if (false === $section['active']) {
-                        $history[$moduleKey]['sections'][$sectionKey]['active'] = true;
-
-                        $permission->setHistory($history);
-                        $this->permissionRepository->save($permission, true);
-                    }
-
-                    break 2;    
-                }
-
-                if (
-                    $module['moduleId'] === $moduleSection->getModule()->getId()
-                    && $section['id'] === $moduleSection->getId()
-                ) {
-                    $currentSection = true;
+                    $permission->setHistory($history);
+                    $this->permissionRepository->save($permission, true);
+                    break;
                 }
             }
         }
@@ -74,7 +65,6 @@ class UserPermissionService
         $courseProgress = $this->courseService->checkForCourseStage($permission);
 
         $history = [];
-        $firstBreak = true;
 
         foreach($courseProgress as $module) {
             $sections = [];
@@ -82,18 +72,14 @@ class UserPermissionService
             foreach($module['sections'] as $section) {
                 $sections[] = [
                     'id' => $section['id'],
-                    'active' => $firstBreak,
                     'time' => 0,
                 ];
-
-                if ($firstBreak) {
-                    $firstBreak = false;
-                }
             }
 
             $history[] = [
                 'moduleId' => $module['id'],
                 'sections' => $sections,
+                'active' => false,
             ];    
         }
 

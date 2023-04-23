@@ -3,18 +3,18 @@
 namespace App\Service;
 
 use App\Entity\Course;
+use App\Entity\ModuleSection;
 use App\Entity\Permission;
 use App\Repository\ModuleRepository;
 use App\Repository\ModuleSectionRepository;
 use App\Repository\PermissionRepository;
-use DateTime;
 
 class CourseService
 {
     public function __construct(
-        readonly PermissionRepository $permissionRepository,
-        readonly ModuleSectionRepository $moduleSectionRepository,
-        readonly ModuleRepository $moduleRepository
+        private readonly PermissionRepository $permissionRepository,
+        private readonly ModuleSectionRepository $moduleSectionRepository,
+        private readonly ModuleRepository $moduleRepository
     ) {}
 
     public function checkForCourseStage(Permission $permission, bool $enableChangeStage = false): array
@@ -34,7 +34,6 @@ class CourseService
     private function getModuleSectionByCourse(Course $course): array
     {
         $data = [];
-        $firstBreak = true;
 
         $modules = $this->moduleRepository->findBy(['course' => $course]);
 
@@ -44,20 +43,16 @@ class CourseService
 
                 if (!empty($moduleSections)) {
                     $sectionData = [];
+                    $isActive = true;
 
                     foreach($moduleSections as $section) {
+                        if ($section->getType() === ModuleSection::TYPE_INTERMEDIATE) {
+                            $isActive = false;
+                        }
                         $sectionData[] = [
                             'id' => $section->getId(),
                             'name' => $section->getName(),
-                            'url' => $section->getUrl(),
-                            'urlType' => $section->getUrlType(),
-                            'part' => $section->getPart(),
-                            'active' => $firstBreak,
                         ];
-
-                        if ($firstBreak) {
-                            $firstBreak = false;
-                        }
                     }
 
                     $data[] = [
@@ -65,13 +60,11 @@ class CourseService
                         'courseId' => $course->getId(),
                         'name' => $module->getName(),
                         'sections' => $sectionData,
-                        'active' => false,
+                        'active' => $isActive,
                     ];
                 }
             }
         }
-        
-        $data[0]['active'] = true;
 
         return $data;
     }
@@ -81,26 +74,15 @@ class CourseService
         $history = $permission->getHistory();
 
         foreach($data as $moduleKey => $module) {
-            $isModuleActive = false;
-
-            foreach ($module['sections'] as $sectionKey => $section) {
-                if (
-                    isset($data[$moduleKey]['sections'][$sectionKey]['active'])
-                    && isset($history[$moduleKey]['sections'][$sectionKey]['active'])
-                ) {
-                    $data[$moduleKey]['sections'][$sectionKey]['active'] = $history[$moduleKey]['sections'][$sectionKey]['active'];
-
-                    if (!$isModuleActive && $data[$moduleKey]['sections'][$sectionKey]['active']) {
-                        $isModuleActive = true;
+            foreach ($history as $row) {
+                if ($row['moduleId'] === $module['id']) {
+                    if ($row['active']) {
+                        $data[$moduleKey]['active'] = true;
                     }
+
+                    break;
                 }
             }
-
-             $data[$moduleKey]['active'] = $isModuleActive;
-        }
-
-        if (!$data[0]['active']) {
-            $data[0]['active'] = true;
         }
 
         return $data;

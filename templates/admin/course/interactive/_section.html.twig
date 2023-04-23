@@ -1,89 +1,36 @@
 <p></p>
 
-<div class="col-12 mb-3">
-    <div class="card">
-        <div class="card-header">
-            Теоретическая часть
-        </div>
+{% if is_granted('ROLE_SUPER_ADMIN') %}
+    <a
+        href="{{ path('admin_module_section_add', {id: form.vars['value'].id}) }}"
+        class="btn btn-outline-success"
+    >
+        Добавить страницу
+    </a>
+{% endif %}
 
-        <div class="card-body">
-            <table class="table">
-                <tbody>
-                    {% for section in moduleSection %}
-                        {% if section.part == 1 %}
-                            <tr>
-                                <td>
-                                    <a href="{{ path('admin_module_section_edit', {id: section.id}) }}" class="">
-                                        {{ section.name }}
-                                    </a>
-                                </td>
-                                <td style="width: 30px">
-                                    {% if is_granted('ROLE_SUPER_ADMIN') %}
-                                        <a
-                                            href="{{ path('admin_module_section_delete', {'id': section.id}) }}"
-                                            class="btn btn-sm btn-outline-danger"
-                                            onclick="return window.confirm('Подтвердите действие');"
-                                        >
-                                            Удалить
-                                        </a>
-                                    {% endif %}
-                                </td>
-                            </tr>
-                        {% endif %}
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
+<table class="table">
 
-        <div class="card-footer">
-            <a
-                href="{{ path('admin_module_section_add', {id: form.vars['value'].id, part: 1}) }}"
-                class="btn btn-outline-success"
-            >
-                Добавить раздел
-            </a>
-        </div>
-    </div>
-    <p></p>
-    <div class="card">
-        <div class="card-header">
-            Практическая часть
-        </div>
-        <div class="card-body">
-            <table class="table">
-                <tbody>
-                {% for section in moduleSection %}
-                    {% if section.part == 2 %}
-                        <tr>
-                            <td>
-                                <a href="{{ path('admin_module_section_edit', {id: section.id}) }}" class="">
-                                    {{ section.name }}
-                                </a>
-                            </td>
-                            <td style="width: 30px">
-                                {% if is_granted('ROLE_SUPER_ADMIN') %}
-                                    <a
-                                        href="{{ path('admin_module_section_delete', {'id': section.id}) }}"
-                                        class="btn btn-sm btn-outline-danger"
-                                        onclick="return window.confirm('Подтвердите действие');"
-                                    >
-                                        Удалить
-                                    </a>
-                                {% endif %}
-                            </td>
-                        </tr>
-                    {% endif %}
-                {% endfor %}
-                </tbody>
-            </table>
-        </div>
-        <div class="card-footer">
-            <a
-                href="{{ path('admin_module_section_add', {id: form.vars['value'].id, part: 2}) }}"
-                class="btn btn-outline-success"
-            >
-                Добавить  раздел
-            </a>
-        </div>
-    </div>
-</div>
+    <tbody>
+        {% for section in moduleSection %}
+            <tr>
+                <td>
+                    <a href="{{ path('admin_module_section_edit', {id: section.id}) }}" class="">
+                        {{ section.name }}
+                    </a>
+                </td>
+                {% if is_granted('ROLE_SUPER_ADMIN') %}
+                    <td>
+                        <a
+                            href="{{ path('admin_module_section_delete', {'id': section.id}) }}"
+                            class="btn btn-sm btn-outline-danger"
+                            onclick="return window.confirm('Подтвердите действие');"
+                        >
+                            Удалить
+                        </a>
+                    </td>
+                {% endif %}
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>

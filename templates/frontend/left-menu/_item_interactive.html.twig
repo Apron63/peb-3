@@ -23,70 +23,24 @@
             {% endfor %} #}
         {% endif %}
 
-        {# {{ dump(permission) }} #}
-
         {% set finalTestingEnabled = true %}
 
         {% for menu in permission.courseMenu %}
-
             <li class="modules-menu_item">
                 <div class="modules-menu_item_header">{{ menu.name }}</div>
                 <ul class="parts-menu">
                     {% for section in menu.sections %}
-
-                        {% if section.active == false %}
+                        {% if menu.active == false %}
                             {% set finalTestingEnabled = false %}
                         {% endif %}
-
                         <li class="parts-menu_item">
-                            {% if section.active %}
-                                {% if section.urlType == 1 %}
-                                    <a href="{{ path('user_get_info_module', {id: permission.id, moduleId: section.id}) }}">{{ section.name }}</a>
-                                {% else %}
-                                    <a href="{{ path('user_get_info_module_external', {id: permission.id, moduleId: section.id}) }}">{{ section.name }}</a>
-                                {% endif %}
-                            {% else %}
-                                <a href="javascript:void(0)">{{ section.name }}</a>
-                            {% endif %}
+                            <a href="{{ path('user_get_info_module', {id: permission.id, moduleId: section.id}) }}">{{ section.name }}</a>
                         </li>
                     {% endfor %}
                 </ul>
             </li>    
         {% endfor %}
 
-        {# <li class="modules-menu_item">
-            <div class="modules-menu_item_header">Модуль 1. Название модуля</div>
-            <ul class="parts-menu">
-                <li class="parts-menu_item">
-                    <a href="module_theory.html">Теоретическая часть</a>
-                </li>
-                <li class="parts-menu_item">
-                    <a href="javascript:void(0)">Практическая часть</a>
-                </li>
-            </ul>
-        </li>
-        <li class="modules-menu_item">
-            <div class="modules-menu_item_header">Модуль 2. Название модуля</div>
-            <ul class="parts-menu">
-                <li class="parts-menu_item">
-                    <a href="javascript:void(0)">Теоретическая часть</a>
-                </li>
-                <li class="parts-menu_item">
-                    <a href="javascript:void(0)">Практическая часть</a>
-                </li>
-            </ul>
-        </li>
-        <li class="modules-menu_item">
-            <div class="modules-menu_item_header">Модуль 3. Название модуля</div>
-            <ul class="parts-menu">
-                <li class="parts-menu_item">
-                    <a href="javascript:void(0)">Теоретическая часть</a>
-                </li>
-                <li class="parts-menu_item">
-                    <a href="javascript:void(0)">Практическая часть</a>
-                </li>
-            </ul>
-        </li> #}
         <li class="modules-menu_item">
             <div class="modules-menu_item_header">
                 {% if finalTestingEnabled %}

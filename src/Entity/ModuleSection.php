@@ -2,23 +2,23 @@
 
 namespace App\Entity;
 
-use App\Repository\ModuleSectionRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use App\Repository\ModuleSectionRepository;
 
 #[ORM\Entity(repositoryClass: ModuleSectionRepository::class)]
 class ModuleSection
 {
-    public const URL_TYPE_INTERACTIVE = 1;
-    public const URL_TYPE_LINK = 2;
-    public const URL_TYPE_TEXT = 3;
+    public const TYPE_NORMAL = 1;
+    public const TYPE_INTERMEDIATE = 2;
+    public const TYPE_TESTING = 3;
 
-    public const URL_TYPES = [
-        'Интерактивные материалы' => self::URL_TYPE_INTERACTIVE,
-        'Внешняя ссылка' => self::URL_TYPE_LINK,
-        'Текст' => self::URL_TYPE_TEXT,
+    public const PAGE_TYPES = [
+        'Стандартная' => self::TYPE_NORMAL,
+        'Промежуточное тестирование' => self::TYPE_INTERMEDIATE,
+        //'Вопрос-ответ' => self::TYPE_TESTING,
     ];
-    
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
@@ -31,17 +31,8 @@ class ModuleSection
     #[ORM\Column(length: 255)]
     private ?string $name = null;
 
-    #[ORM\Column(length: 255, nullable: true)]
-    private ?string $url = null;
-
-    #[ORM\Column(type: Types::SMALLINT)]
-    private ?int $part = null;
-
-    #[ORM\Column(type: Types::SMALLINT)]
-    private ?int $urlType = self::URL_TYPE_INTERACTIVE;
-    
-    #[ORM\Column(type: Types::TEXT, nullable: true)]
-    private ?string $textData = null;
+    #[ORM\Column(type: Types::SMALLINT )]
+    private int $type = self::TYPE_NORMAL;
 
     public function getId(): ?int
     {
@@ -71,51 +62,15 @@ class ModuleSection
 
         return $this;
     }
-
-    public function getUrl(): ?string
-    {
-        return $this->url;
-    }
-
-    public function setUrl(?string $url): self
-    {
-        $this->url = $url;
-
-        return $this;
-    }
-
-    public function getPart(): ?int
-    {
-        return $this->part;
-    }
-
-    public function setPart(int $part): self
-    {
-        $this->part = $part;
-
-        return $this;
-    }
-
-    public function getUrlType(): ?int
-    {
-        return $this->urlType;
-    }
-
-    public function setUrlType(int $urlType): self
-    {
-        $this->urlType = $urlType;
-
-        return $this;
-    }
     
-    public function getTextData(): ?string
+    public function getType(): int
     {
-        return $this->textData;
+        return $this->type;
     }
 
-    public function setTextData(?string $textData): self
+    public function setType(int $type): self
     {
-        $this->textData = $textData;
+        $this->type = $type;
 
         return $this;
     }

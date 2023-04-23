@@ -12,10 +12,34 @@
             {{ render(path('app_frontend_left_menu', {'activeItem': 'my-programs', 'activeCourse': course.id})) }}
             <div class="content">
                 <div class="module">
-                    <h1>{{ moduleTitle }}</h1>
-                    <div class="module_slider">
-                        <iframe src="{{ fileName }}" style="width:100%; height: 100vh" frameborder="0" allowfullscreen></iframe>
-                    </div>
+                    <h1>{{ moduleSection.name }}</h1>
+                    {% for page in moduleSectionPages %}
+                        {% if page.type == 1 %}
+                            <div class="module_slider">
+                                <iframe 
+                                    src="/storage/interactive/{{ moduleSection.module.course.id }}/{{ page.id}}/res/index.php" 
+                                    style="width:100%; height: 100vh" 
+                                    frameborder="0" 
+                                    allowfullscreen
+                                    >
+                                </iframe>
+                            </div>
+                        {% elseif page.type == 2 %}
+                            <div class="module_slider">
+                                <iframe 
+                                    src="{{ page.url }}" 
+                                    style="width:100%; height: 100vh" 
+                                    frameborder="0" 
+                                    allowfullscreen
+                                    >
+                                </iframe>
+                            </div>
+                        {% else %}
+                            <div class="module_slider">
+                                {{ page.textData | raw }}
+                            </div>
+                        {% endif %}
+                    {% endfor %}
                 </div>
             </div>
         </div>

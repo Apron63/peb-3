@@ -1,0 +1,23 @@
+{% extends 'admin/base.html.twig' %}
+
+{% block title %}Панель управления | Учебные материалы{% endblock %}
+
+{% block breadcrumbs %}
+    <a href="{{ path('admin_homepage') }}">Панель управления</a>
+    <span>/</span>
+    <a href="{{ path('admin_course_list') }}">Учебные материалы</a>
+    <span>/</span>
+    <a href="{{ path('admin_module_edit', {id: module.id}) }}">{{ module.name }}</a>
+    <span>/</span>
+    <span>Редактирование</span>
+{% endblock %}
+
+{% block content %}
+
+    <h3>
+        Редактирование страницы
+    </h3>
+
+
+
+{% endblock %}

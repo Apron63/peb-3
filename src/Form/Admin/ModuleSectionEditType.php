@@ -4,14 +4,11 @@ namespace App\Form\Admin;
 
 use App\Entity\ModuleSection;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
-use Symfony\Component\Form\Extension\Core\Type\FileType;
-use Symfony\Component\Form\Extension\Core\Type\SubmitType;
-use Symfony\Component\Form\Extension\Core\Type\TextareaType;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Validator\Constraints\File;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 
 class ModuleSectionEditType extends AbstractType
 {
@@ -29,67 +26,20 @@ class ModuleSectionEditType extends AbstractType
                 'label_attr' => [
                     'class' => 'col-sm-2 col-form-label'
                 ],
-            ]);
-
-        if (null !== $options['data']->getId()) {
-            $builder
-                ->add('url', TextType::class, [
-                    'required' => false,
-                    'label' => 'Ссылка',
-                    'attr' => [
-                        'class' => 'form-control',
-                        'placeholder' => 'Ссылка',
-                        'onfocus' => 'this.placeholder = ""',
-                        'onblur' => 'this.placeholder = "Ссылка"',
-                    ],
-                    'label_attr' => [
-                        'class' => 'col-sm-2 col-form-label'
-                    ],
-                ])
-                ->add('filename', FileType::class, [
-                    'label' => 'ZIP архив',
-                    'mapped' => false,
-                    'required' => false,
-                    'constraints' => [
-                        new File([
-                            'maxSize' => '100m',
-                            'mimeTypes' => [
-                                'application/zip',
-                            ],
-                            'mimeTypesMessage' => 'Выбранный файл не является ZIP архивом',
-                        ])
-                    ],
-                ])
-                ->add('urlType', ChoiceType::class, [
-                    'label' => 'Тип материалов',
-                    'choices' => ModuleSection::URL_TYPES,
-                    'attr' => [
-                        'class' => 'form-select',
-                        'placeholder' => 'Тип материалов',
-                        'onfocus' => 'this.placeholder = ""',
-                        'onblur' => 'this.placeholder = "Ссылка"',
-                    ],
-                    'label_attr' => [
-                        'class' => 'col-sm-2 col-form-label'
-                    ],
-                ])
-                ->add('textData', TextareaType::class, [
-                    'required' => false,
-                    'label' => 'Текст',
-                    'attr' => [
-                        'class' => 'form-control',
-                        'placeholder' => 'Текст',
-                        'onfocus' => 'this.placeholder = ""',
-                        'onblur' => 'this.placeholder = "Текст"',
-                        'rows' => '6',
-                    ],
-                    'label_attr' => [
-                        'class' => 'col-sm-2 col-form-label'
-                    ],
-                ]);
-        }
-        
-        $builder
+            ])
+            ->add('type', ChoiceType::class, [
+                'label' => 'Тип материалов',
+                'choices' => ModuleSection::PAGE_TYPES,
+                'attr' => [
+                    'class' => 'form-select',
+                    'placeholder' => 'Тип раздела',
+                    'onfocus' => 'this.placeholder = ""',
+                    'onblur' => 'this.placeholder = "Тип раздела"',
+                ],
+                'label_attr' => [
+                    'class' => 'col-sm-2 col-form-label'
+                ],
+            ])
             ->add('submit', SubmitType::class, [
                 'label' => 'Сохранить',
                 'attr' => [

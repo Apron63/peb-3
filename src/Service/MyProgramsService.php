@@ -11,10 +11,10 @@ use App\Repository\PermissionRepository;
 class MyProgramsService
 {
     public function __construct(
-        readonly PermissionRepository $permissionRepository,
-        readonly CourseInfoRepository $courseInfoRepository,
-        readonly CourseThemeRepository $courseThemeRepository,
-        readonly CourseService $courseService
+        private readonly PermissionRepository $permissionRepository,
+        private readonly CourseInfoRepository $courseInfoRepository,
+        private readonly CourseThemeRepository $courseThemeRepository,
+        private readonly CourseService $courseService
     ) {}
 
     public function createSideMenuForUser(User $user): array

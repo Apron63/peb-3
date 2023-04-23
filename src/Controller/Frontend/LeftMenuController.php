@@ -12,8 +12,8 @@ use Symfony\Component\Routing\Annotation\Route;
 class LeftMenuController extends AbstractController
 {
     public function __construct(
-        readonly PermissionRepository $permissionRepository,
-        readonly MyProgramsService $myProgramsService
+        private readonly PermissionRepository $permissionRepository,
+        private readonly MyProgramsService $myProgramsService
     ) {}
 
     #[Route('/frontend/left/menu/', name: 'app_frontend_left_menu')]

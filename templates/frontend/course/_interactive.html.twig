@@ -3,22 +3,18 @@
     {% set finalTestingEnabled = true %}
 
     {% for module in courseProgress %}
+
+        {% if module.active == false %}
+            {% set finalTestingEnabled = false %}
+        {% endif %}
+
         <div class="modules_item">
             <div class="modules_item_check" {% if module.active %}status="passed"{% endif %}></div>
             <div class="modules_item_composition">
                 <div class="modules_item_name" status="{% if module.active %}passed{% else %}not-passed{% endif %}">{{ module.name }}</div>
                 <div class="modules_item_parts">
                     {% for section in module.sections %}
-                        {% if section.active %}
-                            {% if section.urlType == 1 %}
-                                <a href="{{ path('user_get_info_module', {id: permission.id, moduleId: section.id}) }}" class="modules_item_parts_item">{{ section.name }}</a>
-                            {% else %}
-                                <a href="{{ path('user_get_info_module_external', {id: permission.id, moduleId: section.id}) }}" class="modules_item_parts_item">{{ section.name }}</a>
-                            {% endif %}
-                        {% else %}
-                            <a href="javascript:void(0)" class="modules_item_parts_item">{{ section.name }}</a>
-                            {% set finalTestingEnabled = false %}
-                        {% endif %}
+                        <a href="{{ path('user_get_info_module', {id: permission.id, moduleId: section.id}) }}" class="modules_item_parts_item">{{ section.name }}</a>
                     {% endfor %}
                 </div>
             </div>

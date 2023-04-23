@@ -59,6 +59,20 @@ class ModuleRepository extends ServiceEntityRepository
         $mIds = array_map(function($e) {
                 return $e['id'];
             }, $mIds);
+            
+        $query = $this->getEntityManager()
+            ->createQuery("SELECT ms.id FROM App\Entity\ModuleSection ms WHERE ms.module IN (:mIds)")
+            ->setParameter('mIds', $mIds);
+        $moduleSectionIds = $query->execute();
+
+        $moduleSectionIds = array_map(function($e) {
+            return $e['id'];
+        }, $moduleSectionIds);
+
+        $query = $this->getEntityManager()
+            ->createQuery("DELETE FROM App\Entity\ModuleSectionPage msp WHERE msp.section IN (:moduleSectionIds)")
+            ->setParameter('moduleSectionIds', $moduleSectionIds);
+        $moduleSectionIds = $query->execute();
         
         $query = $this->getEntityManager()
             ->createQuery('DELETE FROM App\Entity\ModuleSection ms WHERE ms.module IN (:mIds)')
