@@ -2,10 +2,10 @@
 
 namespace App\Repository;
 
-use App\Entity\Course;
+use App\Entity\Module;
 use App\Entity\ModuleSection;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 
 /**
  * @extends ServiceEntityRepository<ModuleSection>
@@ -38,5 +38,27 @@ class ModuleSectionRepository extends ServiceEntityRepository
         if ($flush) {
             $this->getEntityManager()->flush();
         }
+    }
+
+    public function removeModuleSection(Module $module): void
+    {
+        $query = $this->getEntityManager()
+            ->createQuery("SELECT ms.id FROM App\Entity\ModuleSection ms WHERE ms.module = :moduleId")
+            ->setParameter('moduleId', $module->getId());
+        $moduleSectionIds = $query->execute();
+
+        $moduleSectionIds = array_map(function($e) {
+            return $e['id'];
+        }, $moduleSectionIds);
+
+        $query = $this->getEntityManager()
+            ->createQuery("DELETE FROM App\Entity\ModuleSectionPage msp WHERE msp.section IN (:moduleSectionIds)")
+            ->setParameter('moduleSectionIds', $moduleSectionIds);
+        $moduleSectionIds = $query->execute();
+        
+        $query = $this->getEntityManager()
+            ->createQuery('DELETE FROM App\Entity\ModuleSection ms WHERE ms.module = :moduleId')
+            ->setParameter('moduleId', $module->getId());
+        $query->execute();
     }
 }

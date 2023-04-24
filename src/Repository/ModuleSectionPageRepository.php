@@ -48,4 +48,12 @@ class ModuleSectionPageRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult();
     }
+
+    public function removeModuleSectionPage(ModuleSection $moduleSection): void
+    {
+        $query = $this->getEntityManager()
+            ->createQuery("DELETE FROM App\Entity\ModuleSectionPage msp WHERE msp.section = :moduleSectionId")
+            ->setParameter('moduleSectionId', $moduleSection->getId());
+        $query->execute();
+    }
 }

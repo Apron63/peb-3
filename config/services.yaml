@@ -58,3 +58,13 @@ services:
         tags:
             - name: 'doctrine.event_listener'
               event: 'preRemove'
+    # ModuleSectionPage auto-remove child records
+    App\EventListener\ModuleSectionRemoveEventListener:
+        tags:
+            - name: 'doctrine.event_listener'
+              event: 'preRemove'
+    # ModuleSection auto-remove child records
+    App\EventListener\ModuleRemoveEventListener:
+        tags:
+            - name: 'doctrine.event_listener'
+              event: 'preRemove'
