@@ -12,8 +12,8 @@ use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 class QuestionUploadMessageHandler
 {
     public function __construct(
-        readonly QuestionUploadService $questionUploadService,
-        readonly JobService $jobService
+        private readonly QuestionUploadService $questionUploadService,
+        private readonly JobService $jobService
     ) { }
 
     /**

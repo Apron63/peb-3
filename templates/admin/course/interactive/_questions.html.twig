@@ -3,7 +3,12 @@
         <a class="btn btn-outline-success" href="{{ path('admin_question_create', {id: course.id, parentId: null}) }}">
             Добавить вопрос
         </a>
-        <a class="btn btn-outline-primary" href="{{ path('admin_load_question', {id: course.id}) }}">
+        <a 
+            class="btn btn-outline-primary" 
+            href="{{ path('admin_load_question', {id: course.id}) }}" 
+            id="admin-load-question"
+            data-qcount="{{ questions | length }}"
+        >
            Загрузить вопросы
         </a>
     {% endif %}

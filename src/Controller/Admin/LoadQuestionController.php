@@ -16,8 +16,8 @@ use Symfony\Component\HttpFoundation\Session\Session;
 class LoadQuestionController extends MobileController
 {
     public function __construct(
-        readonly QuestionUploadService $questionUploadService,
-        readonly MessageBusInterface $messageBus
+        private readonly QuestionUploadService $questionUploadService,
+        private readonly MessageBusInterface $messageBus
     ) { }
     
     #[Route('/admin/load/question/{id<\d+>}/', name: 'admin_load_question')]

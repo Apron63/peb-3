@@ -82,3 +82,13 @@ $('#build-tickets').on('click', function (e) {
 
     return false
 })
+
+$('#admin-load-question').on('click', function (e) {
+    e.stopImmediatePropagation()
+
+    if ($('#admin-load-question').data('qcount') > 0) {
+        if(!confirm('Вопросы уже загружены. При новой загрузке вопросы и билеты будут удалены и созданы заново. Продолжить ?')) {
+            return false
+        }
+    }
+})

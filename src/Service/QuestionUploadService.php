@@ -4,6 +4,9 @@ namespace App\Service;
 
 use App\Entity\Course;
 use App\Repository\CourseRepository;
+use App\Repository\PermissionRepository;
+use App\Repository\QuestionsRepository;
+use App\Repository\TicketRepository;
 use Doctrine\DBAL\Exception;
 use Doctrine\ORM\EntityManagerInterface;
 use DOMElement;
@@ -33,7 +36,10 @@ class QuestionUploadService
     public function __construct(
         EntityManagerInterface $em, 
         string $courseUploadPath,
-        readonly CourseRepository $courseRepository
+        private readonly CourseRepository $courseRepository,
+        private readonly QuestionsRepository $questionsRepository,
+        private readonly PermissionRepository $permissionRepository,
+        private readonly TicketRepository $ticketRepository,
     ) {
         $this->em = $em;
         $this->em->getConnection()->getConfiguration()->setSQLLogger();
@@ -185,6 +191,11 @@ class QuestionUploadService
      */
     private function saveDataToDb(Course $course): void
     {
+       
+        $this->questionsRepository->removeQuestionsForCourse($course);
+        $this->permissionRepository->removePermissionForCourse($course);
+        $this->ticketRepository->deleteOldTickets($course);
+
         $themeNom = 1;
 
         foreach ($this->data as $theme) {
