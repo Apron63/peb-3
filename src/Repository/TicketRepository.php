@@ -81,7 +81,7 @@ class TicketRepository extends ServiceEntityRepository
             $ticketIdsArray = implode(',', $ticketIds);
 
             // И удалим их.
-            $sql = "DELETE from logger l WHERE l.ticket_id  IN ({$ticketIdsArray}) AND l.end_at IS NULL";
+            $sql = "DELETE from logger WHERE ticket_id IN ({$ticketIdsArray}) AND end_at IS NULL";
             $this->getEntityManager()->getConnection()->executeQuery($sql);
         }
         
