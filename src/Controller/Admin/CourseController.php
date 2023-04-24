@@ -25,18 +25,18 @@ use Symfony\Component\String\Slugger\SluggerInterface;
 class CourseController extends MobileController
 {
     public function __construct(
-        readonly CourseRepository $couseRepository,
-        readonly ProfileRepository $profileRepository,
-        readonly CourseInfoRepository $courseInfoRepository,
-        readonly CourseThemeRepository $courseThemeRepository,
-        readonly ModuleRepository $moduleRepository,
-        readonly ModuleInfoRepository $moduleInfoRepository,
-        readonly QuestionsRepository $questionsRepository,
-        readonly TicketRepository $ticketRepository,
-        readonly TicketService $ticketService,
-        readonly SluggerInterface $slugger,
-        readonly PaginatorInterface $paginator,
-        readonly ModuleTicketService $moduleTicketService,
+        private readonly CourseRepository $couseRepository,
+        private readonly ProfileRepository $profileRepository,
+        private readonly CourseInfoRepository $courseInfoRepository,
+        private readonly CourseThemeRepository $courseThemeRepository,
+        private readonly ModuleRepository $moduleRepository,
+        private readonly ModuleInfoRepository $moduleInfoRepository,
+        private readonly QuestionsRepository $questionsRepository,
+        private readonly TicketRepository $ticketRepository,
+        private readonly TicketService $ticketService,
+        private readonly SluggerInterface $slugger,
+        private readonly PaginatorInterface $paginator,
+        private readonly ModuleTicketService $moduleTicketService,
     ) {}
 
     #[Route('/admin/course/', name: 'admin_course_list')]
@@ -139,15 +139,12 @@ class CourseController extends MobileController
             $courseThemes = $this->courseThemeRepository->getCourseThemes($course);
             $ticketCount = $this->ticketRepository->getTicketCount($course, $courseThemes);
 
-            // $totalTicketCount = $this->em->getRepository(Ticket::class)
-            //     ->getTotalTicketCount($course);
             return $this->mobileRender('admin/course/edit.html.twig', [
                 'form' => $form->createView(),
                 'course' => $course,
                 'courseInfos' => $this->courseInfoRepository->getCourseInfos($course),
                 'courseThemes' => $courseThemes,
                 'ticketCount' => $ticketCount,
-                // 'totalTicketCount' => $totalTicketCount,
                 'tickets' => $this->ticketService->renderTickets($course),
             ]);
         }

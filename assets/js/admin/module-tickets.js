@@ -2,15 +2,18 @@ import $ from 'jquery'
 import * as bootstrap from 'bootstrap'
 
 $('#createTickets').on('click', function() {
+
+    let hasTicketCount = $('#createTickets').data('count')
+    if (hasTicketCount > 0 ) {
+        if (!confirm('Билеты уже созданы. Вы уверены, что хотите создать новые билеты ?')) {
+            return false
+        }
+    }
+
     let ticketCount = Number($('#ticketCount').val())
     let questionCount = Number($('#questionCount').val())
     let errorsCount = Number($('#errorsCount').val())
 
-    if (ticketCount === 0 || questionCount === 0) {
-        alert('Нужно указать количество билетов и количество вопросов, отличное от 0')
-        return false
-    }
-    
     if (ticketCount === 0 || questionCount === 0) {
         alert('Нужно указать количество билетов и количество вопросов, отличное от 0')
         return false

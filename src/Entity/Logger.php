@@ -2,9 +2,10 @@
 
 namespace App\Entity;
 
-use App\Repository\LoggerRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use App\Repository\LoggerRepository;
+use Doctrine\ORM\Mapping\JoinColumn;
 
 #[ORM\Entity(repositoryClass: LoggerRepository::class)]
 class Logger
@@ -39,6 +40,7 @@ class Logger
     private array $protocol = [];
 
     #[ORM\ManyToOne]
+    #[ORM\JoinColumn(onDelete: 'SET NULL')]
     private ?Ticket $ticket = null;
 
     #[ORM\Column(type: Types::SMALLINT, nullable: true)]

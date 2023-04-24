@@ -15,11 +15,11 @@ use App\Repository\TicketRepository;
 class TicketService
 {
     public function __construct(
-        readonly TicketRepository $ticketRepository,
-        readonly QuestionsRepository $questionsRepository,
-        readonly AnswerRepository $answerRepository,
-        readonly CourseRepository $courseRepository,
-        readonly CourseThemeRepository $courseThemeRepository
+        private readonly TicketRepository $ticketRepository,
+        private readonly QuestionsRepository $questionsRepository,
+        private readonly AnswerRepository $answerRepository,
+        private readonly CourseRepository $courseRepository,
+        private readonly CourseThemeRepository $courseThemeRepository
     ) {}
 
     public function createTickets(int $courseId, int $ticketsCnt, int $errorsCnt, array $themes): void

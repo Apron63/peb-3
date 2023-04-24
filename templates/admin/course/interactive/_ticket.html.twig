@@ -29,6 +29,7 @@
             class="btn btn-outline-success" 
             id="createTickets" 
             data-url="{{ path('admin_module_create_tickets', {id: course.id}) }}"
+            data-count = "{{ tickets | length }}"
         >
             Создать билеты
         </button>

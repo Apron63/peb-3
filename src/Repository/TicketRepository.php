@@ -73,6 +73,19 @@ class TicketRepository extends ServiceEntityRepository
 
     public function deleteOldTickets(Course $course): void
     {
+        // Выберем незавершенные экзамены, у которых билет будет удален.
+        $sql = "SELECT id from ticket WHERE course_id = {$course->getId()}";
+        $ticketIds = $this->getEntityManager()->getConnection()->executeQuery($sql)->fetchFirstColumn();
+
+        if (count($ticketIds) > 0) {
+            $ticketIdsArray = implode(',', $ticketIds);
+
+            // И удалим их.
+            $sql = "DELETE from logger l WHERE l.ticket_id  IN ({$ticketIdsArray}) AND l.end_at IS NULL";
+            $this->getEntityManager()->getConnection()->executeQuery($sql);
+        }
+        
+        // Удаляем старые билеты.
         $sql = "DELETE from ticket WHERE course_id = {$course->getId()}";
         $this->getEntityManager()->getConnection()->executeQuery($sql);
     }
