@@ -3,6 +3,7 @@
 namespace App\Service;
 
 use App\Entity\ModuleSectionPage;
+use App\Repository\ModuleSectionPageRepository;
 use RuntimeException;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
@@ -13,8 +14,10 @@ class InteractiveUploadService
     private string $originalFilename;
     private string $interactiveUploadPath;
 
-    public function __construct(string $interactiveUploadPath)
-    {
+    public function __construct(
+        string $interactiveUploadPath,
+        private readonly ModuleSectionPageRepository $moduleSectionPageRepository,
+    ) {
         $this->interactiveUploadPath = $interactiveUploadPath;
     }
 
@@ -85,5 +88,8 @@ class InteractiveUploadService
         }
 
         fclose($stream);
+
+        $moduleSectionPage->setUrl($data->getClientOriginalName());
+        $this->moduleSectionPageRepository->save($moduleSectionPage, true);
     }
 }
