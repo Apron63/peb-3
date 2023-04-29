@@ -101,12 +101,18 @@ class CourseController extends AbstractController
         $response = new Response();
         $response->headers->setCookie(new Cookie('init', md5($sessionId), time() + 3600));
 
+        if ($moduleSection->getType() === ModuleSection::TYPE_TESTING) {
+            return $this->redirectToRoute('app_frontend_preparation_interactive', ['id' => $permission->getId()]);
+        } else {
+            $moduleSectionPages = $this->moduleSectionPageRepository->getmoduleSectionPages($moduleSection);
+        }
+
         return $this->render(
             'frontend/course/_file.html.twig', 
             [
                 'course' => $permission->getCourse(),
                 'moduleSection' => $moduleSection,
-                'moduleSectionPages' => $this->moduleSectionPageRepository->getmoduleSectionPages($moduleSection),
+                'moduleSectionPages' => $moduleSectionPages,
             ],
             $response
         );

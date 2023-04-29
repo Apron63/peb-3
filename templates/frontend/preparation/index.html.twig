@@ -15,8 +15,13 @@
                     <h1>Подготовка к аттестации</h1>
                     {% include('frontend/preparation/_counters.html.twig') %}
                     <div class="control-questions_wrapper">
-                        {% include('frontend/preparation/_radio-question.html.twig') %}
-                        {% include('frontend/preparation/_checkbox-question.html.twig') %}
+                        {% for item in data.questions %}
+                            {% if item.type ==1  %}
+                                {% include('frontend/preparation/_radio-question.html.twig') %}
+                            {%else %}
+                                {% include('frontend/preparation/_checkbox-question.html.twig') %}        
+                            {% endif %}
+                        {% endfor %}
                     </div> 
                     {% include('frontend/preparation/_counters.html.twig') %}
                 </div>

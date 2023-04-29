@@ -16,7 +16,7 @@ class ModuleSection
     public const PAGE_TYPES = [
         'Стандартная' => self::TYPE_NORMAL,
         'Промежуточное тестирование' => self::TYPE_INTERMEDIATE,
-        //'Вопрос-ответ' => self::TYPE_TESTING,
+        'Подготовка к аттестации' => self::TYPE_TESTING,
     ];
 
     #[ORM\Id]

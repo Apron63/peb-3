@@ -2,25 +2,51 @@
     <div class="control-questions_display_count_wrapper">
         <div class="control-questions_display_count_header">отображать по: </div>
         <div class="control-questions_display_count">
-            <a href="javascript:void(0)" class="control-questions_display_count_item active">20</a>
+            <a 
+                href="{% if data.perPage == 20 %}javascript:void(0){% else %}{{ data.url }}?perPage=20{% endif %}"
+                class="control-questions_display_count_item {% if data.perPage == 20 %}active{% endif %}"
+            >
+                20
+            </a>
             <div class="control-questions_display_separator">|</div>
-            <a href="javascript:void(0)" class="control-questions_display_count_item">50</a>
+            <a
+                href="{% if data.perPage == 50 %}javascript:void(0){% else %}{{ data.url }}?perPage=50{% endif %}"
+                class="control-questions_display_count_item {% if data.perPage == 50 %}active{% endif %}"
+            >
+                50
+            </a>
             <div class="control-questions_display_separator">|</div>
-            <a href="javascript:void(0)" class="control-questions_display_count_item">100</a>
+            <a 
+               href="{% if data.perPage == 100 %}javascript:void(0){% else %}{{ data.url }}?perPage=100{% endif %}"
+                class="control-questions_display_count_item {% if data.perPage == 100 %}active{% endif %}"
+            >
+                100
+            </a>
         </div>
     </div>
     <div class="control-questions_display_pages_wrapper">
-        <!--отображаем если не на 1 транице-->
-        <!--<a href="javascript:void(0)" class="control-questions_display_pages_item">в начало</a>
-        <div class="control-questions_display_separator">|</div>-->
-        <a href="javascript:void(0)" class="control-questions_display_pages_item active">1</a>
-        <div class="control-questions_display_separator">|</div>
-        <a href="javascript:void(0)" class="control-questions_display_pages_item">2</a>
-        <div class="control-questions_display_separator">|</div>
-        <a href="javascript:void(0)" class="control-questions_display_pages_item">3</a>
-        <div class="control-questions_display_separator">|</div>
-        <a href="javascript:void(0)" class="control-questions_display_pages_item">4</a>
-        <div class="control-questions_display_separator">|</div>
-        <a href="javascript:void(0)" class="control-questions_display_pages_item">в конец</a>
+
+        {% if data.page > 1 %}
+            <a href="{{ data.url }}?perPage={{ data.perPage }}" class="control-questions_display_pages_item">в начало</a>
+            <div class="control-questions_display_separator">|</div>
+        {% endif %}
+
+        {% for pageNo in 1..data.maxPages %}
+            <a 
+                href="{% if pageNo == data.page %}javascript:void(0){% else %}{{ data.url }}?page={{ pageNo }}&perPage={{ data.perPage }}{% endif %}" 
+                class="control-questions_display_pages_item {% if pageNo == data.page %}active{% endif %}"
+            >
+                {{ pageNo }}
+            </a>
+            {% if pageNo < data.maxPages %}
+                <div class="control-questions_display_separator">|</div>
+            {% endif %}
+        {% endfor %}
+
+        {% if data.page != data.maxPages %}
+            <div class="control-questions_display_separator">|</div>
+            <a href="{{ data.url }}?page={{ data.maxPages }}&perPage={{ data.perPage }}" class="control-questions_display_pages_item">в конец</a>    
+        {% endif %}
+
     </div>
 </div>

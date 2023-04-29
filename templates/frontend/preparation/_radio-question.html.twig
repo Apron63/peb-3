@@ -1,38 +1,34 @@
-<form class="control-questions_item" test-form-elem="form">
+<form class="control-questions_item" test-form-elem="form" id="question-{{ item.id }}">
+
     <div class="test_form_question_wrapper">
         <div class="test_form_question_number">
-            1.
+            {{ item.nom }}.
         </div>
         <div class="test_form_question">
-            Какое из приведенных испытаний не является обязательным видом механических испытаний котлов (трубопроводов)?
+            {{ item.description | raw }}
         </div>
     </div>
-    <label class="test_form_label test_form_radio_wrapper">
-        <input class="test_form_radio" type="radio" name="answer1" value="1">
-        <div class="test_form_custom_radio"></div>
-        <div class="test_form_answer">Испытание на статическое растяжение</div>
-    </label>
-    <label class="test_form_label test_form_radio_wrapper">
-        <input class="test_form_radio" type="radio" name="answer1" value="2">
-        <div class="test_form_custom_radio"></div>
-        <div class="test_form_answer">Испытание на статический изгиб</div>
-    </label>
-    <label class="test_form_label test_form_radio_wrapper">
-        <input class="test_form_radio" type="radio" name="answer1" value="3">
-        <div class="test_form_custom_radio"></div>
-        <div class="test_form_answer">Испытание на ударный изгиб</div>
-    </label>
+
+    {% for answer in item.answers %}
+        <label class="test_form_label test_form_radio_wrapper">
+            <input class="test_form_radio" type="radio" name="answer1" value="{{ answer.nom }}" data-right="{{ answer.right }}">
+            <div class="test_form_custom_radio"></div>
+            <div class="test_form_answer">{{ answer.description | raw }}</div>
+        </label>    
+    {% endfor %}
+
     <div class="control-questions_item_prompt_wrapper" test-form-elem="prompt-wrapper">
         <a class="control-questions_item_prompt_open" test-form-elem="prompt-open">подсказка</a>
         <div class="control-questions_item_prompt" test-form-elem="prompt">
-            <span>Подсказка: </span><!--Тут вставляем подсказку-->
-            Подсказка на вопрос
+            <span>Подсказка: </span>
+            {{ item.help | raw }}
         </div>
     </div>
+
     <div class="control-questions_item_buttons_wrapper">
-        <button type="button" class="white-blue_button control-questions_item_button">Ответить</button>
-        <!--Результат ответа-->
-        <div class="control-questions_item_result right">Правильно</div>
+        <button type="button" class="white-blue_button control-questions_item_button" data-form-id="question-{{ item.id }}" data-answer-type="{{ item.type }}">Ответить</button>
+        <div class="control-questions_item_result"></div>
     </div>
+
 </form>
                         

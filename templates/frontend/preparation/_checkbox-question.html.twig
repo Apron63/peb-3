@@ -1,37 +1,33 @@
-<form class="control-questions_item" test-form-elem="form">
+<form class="control-questions_item" test-form-elem="form" id="question-{{ item.id }}">
+
     <div class="test_form_question_wrapper">
         <div class="test_form_question_number">
-            3.
+            {{ item.nom }}.
         </div>
         <div class="test_form_question">
-            Кто осуществляет ведение ремонтного журнала (ремонтных журналов) в эксплуатирующей трубопроводы организации?
+            {{ item.description | raw }}
         </div>
     </div>
-    <label class="test_form_label test_form_checkbox_wrapper">
-        <input class="test_form_checkbox" type="checkbox" name="answer3" value="1">
-        <div class="test_form_custom_checkbox"></div>
-        <div class="test_form_answer">Лицо, ответственное за осуществление производственного контроля за безопасной эксплуатацией оборудования под давлением</div>
-    </label>
-    <label class="test_form_label test_form_checkbox_wrapper">
-        <input class="test_form_checkbox" type="checkbox" name="answer3" value="1">
-        <div class="test_form_custom_checkbox"></div>
-        <div class="test_form_answer">Лицо, ответственное за исправное состояние и безопасную эксплуатацию трубопроводов</div>
-    </label>
-    <label class="test_form_label test_form_checkbox_wrapper">
-        <input class="test_form_checkbox" type="checkbox" name="answer3" value="1">
-        <div class="test_form_custom_checkbox"></div>
-        <div class="test_form_answer">Правилами промышленной безопасности при использовании оборудования, работающего под избыточным давлением, не регламентировано; лицо, осуществляющее ведение ремонтного журнала, определяется распорядительным документом эксплуатирующей организации</div>
-    </label>
+
+    {% for answer in item.answers %}
+        <label class="test_form_label test_form_checkbox_wrapper">
+            <input class="test_form_checkbox" type="checkbox" name="answer3" value="{{ answer.nom }}" data-right="{{ answer.right }}">
+            <div class="test_form_custom_checkbox"></div>
+            <div class="test_form_answer">{{ answer.description | raw }}</div>
+        </label>
+    {% endfor %}
+
     <div class="control-questions_item_prompt_wrapper" test-form-elem="prompt-wrapper">
         <a class="control-questions_item_prompt_open" test-form-elem="prompt-open">подсказка</a>
         <div class="control-questions_item_prompt" test-form-elem="prompt">
-            <span>Подсказка: </span><!--Тут вставляем подсказку-->
-            Приказ Ростехнадзора от 15.12.2020 №536 "Об утверждении Федеральных норм и правил в области промышленной безопасности "Правила промышленной безопасности при использовании оборудования, работающего под избыточным давлением"381. В эксплуатирующей трубопроводы организации должен вестись ремонтный журнал (ремонтные журналы) в бумажном или электронном виде (при условии обеспечения сохранности (резервирования) хранимой в электронном виде информации и обеспечения возможности идентифицировать лицо, вносившее информацию в электронную форму журнала), в который за подписью лица, ответственного за исправное состояние и безопасную эксплуатацию трубопроводов, должны вносить сведения о всех выполненных ремонтных работах, в том числе не вызывающих необходимости внеочередного технического освидетельствования. Сведения о ремонтных работах, вызывающих необходимость проведения внеочередного освидетельствования трубопровода, о материалах, использованных при ремонте, а также сведения о документах, подтверждающих качество сварки должны быть занесены в паспорт трубопровода.
+            <span>Подсказка: </span>
+            {{ item.help | raw }}
         </div>
     </div>
+
     <div class="control-questions_item_buttons_wrapper">
-        <button type="button" class="white-blue_button control-questions_item_button">Ответить</button>
-        <!--Результат ответа-->
+        <button type="button" class="white-blue_button control-questions_item_button" data-form-id="question-{{ item.id }}" data-answer-type="{{ item.type }}">Ответить</button>
         <div class="control-questions_item_result"></div>
     </div>
+
 </form>

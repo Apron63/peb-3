@@ -115,4 +115,19 @@ class QuestionsRepository extends ServiceEntityRepository
 
         $query->execute();
     }
+
+    public function getQuestionsCount(Course $course, ?int $parentId): int
+    {
+        $queryBuilder = $this->createQueryBuilder('q')
+            ->select('COUNT (q.id)')
+            ->where('q.course = :course')
+            ->setParameter('course', $course);
+        
+        if (null !== $parentId) {
+            $queryBuilder->andWhere('q.parentId = :parentId')
+                ->setParameter('parentId', $parentId);
+        }
+
+        return $queryBuilder->getQuery()->getSingleScalarResult();
+    }
 }
