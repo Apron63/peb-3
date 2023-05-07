@@ -19,12 +19,12 @@ use Symfony\Component\Security\Core\User\UserInterface;
 class TestingService
 {
     public function __construct(
-        readonly LoggerRepository $loggerRepository,
-        readonly TicketRepository $ticketRepository,
-        readonly QuestionsRepository $questionsRepository,
-        readonly AnswerRepository $answerRepository,
-        readonly PermissionRepository $permissionRepository,
-        readonly UrlGeneratorInterface $router,
+        private readonly LoggerRepository $loggerRepository,
+        private readonly TicketRepository $ticketRepository,
+        private readonly QuestionsRepository $questionsRepository,
+        private readonly AnswerRepository $answerRepository,
+        private readonly PermissionRepository $permissionRepository,
+        private readonly UrlGeneratorInterface $router,
     ) {}
 
     public function getLogger(Permission $permission, UserInterface $user): Logger
@@ -64,7 +64,7 @@ class TestingService
         return $data;
     }
 
-    public function ticketProcessing(array $data): string
+    public function ticketProcessing(array $data, int $courseType): string
     {
         $logger = $this->loggerRepository->find($data['loggerId']);
         if (! $logger instanceof Logger) {
@@ -72,6 +72,11 @@ class TestingService
         }
 
         $ticketsArray = json_decode($logger->getTicket()->getText()[0]);
+
+        if ($courseType === Course::CLASSC) {
+            $ticketsArray = $this->transformTicketArray($ticketsArray);
+        }
+
         $ticketId = $ticketsArray[$logger->getQuestionNom() - 1];
 
         $question = $this->questionsRepository->find($ticketId);
@@ -189,6 +194,11 @@ class TestingService
         }
 
         $questionArray = json_decode($ticket->getText()[0]);
+
+        if ($permission->getCourse()->getType() === Course::CLASSC) {
+            $questionArray = $this->transformTicketArray($questionArray);
+        }
+
         $protocol = [];
         $questionNom = 1;
 
@@ -311,5 +321,19 @@ class TestingService
         }
 
         return null;
+    }
+
+    private function transformTicketArray($ticketArray): array
+    {
+        $index = 0;
+        $result = [];
+
+        foreach ($ticketArray as $theme) {
+            foreach ($theme as $questionId) {
+                $result[$index++] = $questionId;
+            }
+        }
+        
+        return $result;
     }
 }

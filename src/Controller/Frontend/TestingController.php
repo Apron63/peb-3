@@ -49,7 +49,10 @@ class TestingController extends AbstractController
     public function nextStep(Permission $permission, Request $request): JsonResponse
     {
         return new JsonResponse([
-            'redirectUrl' => $this->testingService->ticketProcessing($request->request->all())
+            'redirectUrl' => $this->testingService->ticketProcessing(
+                $request->request->all(), 
+                $permission->getCourse()->getType()
+            )
         ]);
     }
 

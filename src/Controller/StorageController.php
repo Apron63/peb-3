@@ -14,7 +14,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class StorageController extends AbstractController
 {
     public function __construct(
-        readonly CourseRepository $courseRepository
+        private readonly CourseRepository $courseRepository
     ) { }
 
     #[Route('/storage', name: 'app_storage')]

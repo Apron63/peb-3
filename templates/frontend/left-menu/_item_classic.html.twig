@@ -29,7 +29,7 @@
                 {% if permission.hasMultipleThemes %}
                     <a href="{{ path('app_frontend_preparation_many', {id: permission.id}) }}">Подготовка к аттестации</a>
                 {% else %}
-                    <a href="{{ path('app_frontend_preparation_one', {id: permission.id}) }}">Подготовка к аттестации</a>
+                    <a href="{{ path('app_frontend_preparation_one', {id: permission.id, themeId: permission.themeId}) }}">Подготовка к аттестации</a>
                 {% endif %}
             </div>
         </li>

@@ -11,7 +11,8 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class ProfileController extends AbstractController
 {
-    public function __construct(readonly Security $security)
+    public function __construct(
+        private readonly Security $security)
     {}
 
     #[Route('/profile/', name: 'profilePage')]

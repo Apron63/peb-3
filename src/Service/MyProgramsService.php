@@ -2,7 +2,7 @@
 
 namespace App\Service;
 
-use App\Entity\Course;
+use App\Entity\CourseTheme;
 use App\Entity\User;
 use App\Repository\CourseInfoRepository;
 use App\Repository\CourseThemeRepository;
@@ -26,6 +26,17 @@ class MyProgramsService
         foreach ($permissions as $permission) {
             $courseInfo = $this->courseInfoRepository->findBy(['course' => $permission->getCourse()]);
 
+            $hasMultipleThemes = $this->courseService->hasMultipleThemes($permission->getCourse());
+
+            $themeId = null;
+            if (!$hasMultipleThemes) {
+                $courseTheme = $this->courseThemeRepository->findOneBy(['course' => $permission->getCourse()]);
+                
+                if ($courseTheme instanceof CourseTheme) {
+                    $themeId = $courseTheme->getId();
+                }
+            }
+            
             $result[] = [
                 'id' => $permission->getId(),
                 'name' => $permission->getCourse()->getName(),
@@ -33,22 +44,10 @@ class MyProgramsService
                 'type' => $permission->getCourse()->getType(),
                 'courseInfo' => $courseInfo,
                 'courseId' => $permission->getCourse()->getId(),
-                'hasMultipleThemes' => $this->hasMultipleThemes($permission->getCourse()),
+                'hasMultipleThemes' => $hasMultipleThemes,
+                'themeId' => $themeId,
                 'courseMenu' => $this->courseService->checkForCourseStage($permission, false),
             ];
-        }
-
-        return $result;
-    }
-
-    private function hasMultipleThemes(Course $course): bool
-    {
-        $result = false;
-
-        if ($course->getType() === Course::CLASSC) {
-            if (count($this->courseThemeRepository->getCourseThemes($course)) > 1) {
-                $result = true;
-            }
         }
 
         return $result;

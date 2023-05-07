@@ -23,7 +23,7 @@ class PreparationController extends AbstractController
     ) {}
     
     #[Route('/preparation-one/{id<\d+>}/{themeId<\d+>}/', name: 'app_frontend_preparation_one')]
-    public function preparationOne(Permission $permission, int $themeId): Response
+    public function preparationOne(Permission $permission, int $themeId = null, Request $request): Response
     {
         if (!$this->userPermissionService->checkPermissionForUser($permission, $this->getUser(), true)) {
             throw new ExceptionAccessDeniedException();
@@ -34,8 +34,15 @@ class PreparationController extends AbstractController
             throw new NotFoundHttpException('Course theme not found');
         }
 
+        $data = $this->preparationService->getQuestionData(
+            $permission,
+            $themeId,
+            $request->get('page', 1),
+            $request->get('perPage', 20),
+        );
+
         return $this->render('frontend/preparation/index.html.twig', [
-            'courseTheme' => $courseTheme,
+            'data' => $data,
         ]);
     }
     

@@ -5,7 +5,7 @@
             {% if hasMultipleThemes %}
                 <a href="{{ path('app_frontend_preparation_many', {id: permission.id}) }}" class="modules_item_name" status="passed">Подготовка к аттестации</a>
             {% else %}
-                <a href="{{ path('app_frontend_preparation_one', {id: permission.id}) }}" class="modules_item_name" status="passed">Подготовка к аттестации</a>
+                <a href="{{ path('app_frontend_preparation_one', {id: permission.id, themeId: themeId}) }}" class="modules_item_name" status="passed">Подготовка к аттестации</a>
             {% endif %}
         </div>
     </div>

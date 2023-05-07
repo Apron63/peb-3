@@ -2,20 +2,21 @@
 
 namespace App\Controller\Frontend;
 
-use App\Entity\ModuleSection;
+use App\Entity\Course;
 use App\Entity\Permission;
-use App\Repository\CourseInfoRepository;
-use App\Repository\ModuleInfoRepository;
-use App\Repository\ModuleSectionPageRepository;
-use App\Repository\ModuleSectionRepository;
+use App\Entity\ModuleSection;
 use App\Service\CourseService;
 use App\Service\UserPermissionService;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use App\Repository\CourseInfoRepository;
+use App\Repository\ModuleInfoRepository;
+use App\Repository\ModuleSectionRepository;
 use Symfony\Component\HttpFoundation\Cookie;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use App\Repository\ModuleSectionPageRepository;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException as ExceptionAccessDeniedException;
 
 class CourseController extends AbstractController
@@ -36,12 +37,24 @@ class CourseController extends AbstractController
             throw new ExceptionAccessDeniedException();
         }
 
-        return $this->render('frontend/course/index.html.twig', [
+        $options = [
             'permission' => $permission,
             'courseInfo' => $this->courseInfoRepository->findBy(['course' => $permission->getCourse()]),
             'courseProgress' => $this->courseService->checkForCourseStage($permission, true),
-            'hasMultipleThemes' => true,
-        ]);
+        ];
+
+        if ($permission->getCourse()->getType() === Course::CLASSC) {
+            $themeId = $this->courseService->getClassicCourseTheme($permission->getCourse());
+
+            if (null !== $themeId) {
+                $options['hasMultipleThemes'] = false;
+                $options['themeId'] = $themeId;
+            } else {
+                $options['hasMultipleThemes'] = true;
+            }
+        }
+
+        return $this->render('frontend/course/index.html.twig', $options);
     }
     
     #[Route('/course/view-list/{id<\d+>}/', name: 'app_frontend_course_view_list')]

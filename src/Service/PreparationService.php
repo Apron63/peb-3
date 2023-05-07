@@ -2,6 +2,7 @@
 
 namespace App\Service;
 
+use App\Entity\Course;
 use App\Entity\Questions;
 use App\Entity\Permission;
 use App\Repository\AnswerRepository;
@@ -46,7 +47,7 @@ class PreparationService
             ->getResult();
 
         /** @var Questions $question */
-        foreach($questions as $question) {
+        foreach ($questions as $question) {
             $answers = $this->answerRepository->getAnswers($question, true);
             $answerData = [];
 
@@ -69,6 +70,12 @@ class PreparationService
             ];
         }
 
+        if ($permission->getCourse()->getType() === Course::INTERACTIVE) {
+            $url = $this->urlGenerator->generate('app_frontend_preparation_interactive', ['id' => $permission->getId()]);
+        } else {
+            $url = $this->urlGenerator->generate('app_frontend_preparation_one', ['id' => $permission->getId(), 'themeId' => $themeId]);
+        }
+
         return [
             'permissionId' => $permission->getId(),
             'permissionLastAccess' => $permission->getLastAccess()->getTimestamp(),
@@ -76,7 +83,7 @@ class PreparationService
             'page' => $page,
             'perPage' => $perPage,
             'maxPages' => $maxPages,
-            'url' => $this->urlGenerator->generate('app_frontend_preparation_interactive', ['id' => $permission->getId()]),
+            'url' => $url,
         ];
     }
 }
