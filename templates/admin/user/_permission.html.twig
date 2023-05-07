@@ -10,6 +10,7 @@
             <th>Заказ</th>
             <th>Активирован</th>
             <th>Посл. доступ</th>
+            <th>Время</th>
             <th>Статус</th>
             <th></th>
         </tr>
@@ -47,6 +48,11 @@
                     {{ permission.lastAccess | date('d.m.Y H:i:s') }}
                 {% else %}
                     -
+                {% endif %}
+            </td>
+            <td>
+                {% if permission.timeSpent is not empty %}
+                    {{ permission.timeSpent | date('H:i') }}
                 {% endif %}
             </td>
             <td>

@@ -42,6 +42,9 @@ class Permission
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
     private ?\DateTimeInterface $lastAccess = null;
+    
+    #[ORM\Column(type: Types::INTEGER, nullable: true)]
+    private ?int $timeSpent = null;
 
     #[ORM\Column(type: Types::SMALLINT)]
     private ?int $stage = self::STAGE_NOT_STARTED;
@@ -98,6 +101,18 @@ class Permission
     public function setActivatedAt(?\DateTimeInterface $activatedAt): self
     {
         $this->activatedAt = $activatedAt;
+
+        return $this;
+    }
+    
+    public function getTimeSpent(): ?int
+    {
+        return $this->timeSpent;
+    }
+
+    public function setTimeSpent(?int $timeSpent): self
+    {
+        $this->timeSpent = $timeSpent;
 
         return $this;
     }

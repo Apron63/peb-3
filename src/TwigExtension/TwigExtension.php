@@ -2,6 +2,7 @@
 
 namespace App\TwigExtension;
 
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFunction;
 use function Symfony\Component\String\u;
@@ -9,12 +10,9 @@ use function Symfony\Component\String\u;
 class TwigExtension extends AbstractExtension
 {
 
-    /**
-     * TwigExtension constructor.
-     */
-    public function __construct()
-    {
-    }
+    public function __construct(
+        private readonly UrlGeneratorInterface $urlGenerator,
+    ) {}
 
     /**
      * @return array|TwigFunction[]
@@ -23,6 +21,7 @@ class TwigExtension extends AbstractExtension
     {
         return [
             new TwigFunction('shortDescription', [$this, 'shortDescription']),
+            new TwigFunction('getTimingControlUrl', [$this, 'getTimingControlUrl']),
         ];
     }
 
@@ -38,5 +37,10 @@ class TwigExtension extends AbstractExtension
             $description = $nom . '.';
         }
         return $shortDescription;
+    }
+
+    public function getTimingControlUrl(): string
+    {
+        return $this->urlGenerator->generate('app_frontend_timing');
     }
 }

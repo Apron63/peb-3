@@ -70,6 +70,8 @@ class PreparationService
         }
 
         return [
+            'permissionId' => $permission->getId(),
+            'permissionLastAccess' => $permission->getLastAccess()->getTimestamp(),
             'questions' => $result,
             'page' => $page,
             'perPage' => $perPage,

@@ -45,6 +45,17 @@ class HistoryTwigExtension extends AbstractExtension
                 $testingEndDate = $logger->getEndAt()->format('d.m.Y');
                 $testingResult = 'сдано';
             }
+
+            $spentHours = (int)($permission->getTimeSpent() / 3600);
+            $spentMinutes = (int)(($permission->getTimeSpent() - $spentHours * 3600) / 60);
+
+            if ($spentHours > 0) {
+                $testingDuration .= $spentHours . ' ч. ';
+            }
+            
+            if ($spentMinutes > 0) {
+                $testingDuration .= $spentMinutes . ' м.';
+            }
         }
 
         return [

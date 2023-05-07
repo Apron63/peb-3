@@ -110,7 +110,7 @@ class CourseController extends AbstractController
         return $this->render(
             'frontend/course/_file.html.twig', 
             [
-                'course' => $permission->getCourse(),
+                'permission' => $permission,
                 'moduleSection' => $moduleSection,
                 'moduleSectionPages' => $moduleSectionPages,
             ],

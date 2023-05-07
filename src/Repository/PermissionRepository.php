@@ -55,6 +55,7 @@ class PermissionRepository extends ServiceEntityRepository
                 p.duration,
                 p.stage,
                 p.orderNom,
+                p.timeSpent,
                 c.shortName AS shortName,
                 c.id as courseId,
                 CASE WHEN p.activatedAt IS NULL OR (DateDiff(Now(), p.activatedAt) <= p.duration)

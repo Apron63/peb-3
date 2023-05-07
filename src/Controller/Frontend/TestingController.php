@@ -17,9 +17,9 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException as Exception
 class TestingController extends AbstractController
 {
     public function __construct(
-        readonly PermissionRepository $permissionRepository,
-        readonly TestingService $testingService,
-        readonly UserPermissionService $userPermissionService,
+        private readonly PermissionRepository $permissionRepository,
+        private readonly TestingService $testingService,
+        private readonly UserPermissionService $userPermissionService,
     ) {}
 
     #[Route('/frontend/testing/{id<\d+>}/', name: 'app_frontend_testing')]

@@ -33,4 +33,12 @@
 
     <div class="overlay" popup-element="overlay"></div>
 
+    <input 
+        type="hidden" 
+        class="time-control" 
+        data-url="{{ getTimingControlUrl() }}" 
+        data-permission-id="{{ data.permissionId }}"
+        data-permission-start="{{ data.permissionLastAccess }}"
+    >
+
 {% endblock %}

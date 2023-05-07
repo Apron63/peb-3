@@ -2,9 +2,10 @@
 
 namespace App\Service;
 
-use App\Entity\ModuleSection;
-use App\Entity\Permission;
+use DateTime;
 use App\Entity\User;
+use App\Entity\Permission;
+use App\Entity\ModuleSection;
 use App\Repository\PermissionRepository;
 
 class UserPermissionService
@@ -17,6 +18,8 @@ class UserPermissionService
     public function checkPermissionForUser(Permission $permission, User $user, bool $canChangeStage): bool
     {
 
+        $timeNow = new DateTime();
+
         $permissions = $this->permissionRepository->getPermissionQuery($user)->getResult();
         
         $courseIds = array_map(
@@ -28,14 +31,16 @@ class UserPermissionService
 
         $result = in_array($permission->getCourse()->getId(), $courseIds);
 
-        if ($result) {
-            if ($canChangeStage && null === $permission->getActivatedAt()) {
-                $permission->setActivatedAt(new \DateTime())
+        if ($result && $canChangeStage) {
+            if (null === $permission->getActivatedAt()) {
+                $permission->setActivatedAt($timeNow)
                     ->setStage(Permission::STAGE_IN_PROGRESS)
                     ->setHistory($this->createHistory($permission));
-
-                $this->permissionRepository->save($permission, true);
             }
+
+            $permission->setLastAccess($timeNow);
+
+            $this->permissionRepository->save($permission, true);
         }
 
         return $result;
@@ -48,7 +53,7 @@ class UserPermissionService
             
             $moduleId = $moduleSection->getModule()->getId();
 
-            foreach($permission->getHistory() as $moduleKey => $module) {
+            foreach ($permission->getHistory() as $moduleKey => $module) {
                 if ($module['moduleId'] === $moduleId) {
                     $history[$moduleKey]['active'] = true;
 
@@ -66,10 +71,10 @@ class UserPermissionService
 
         $history = [];
 
-        foreach($courseProgress as $module) {
+        foreach ($courseProgress as $module) {
             $sections = [];
 
-            foreach($module['sections'] as $section) {
+            foreach ($module['sections'] as $section) {
                 $sections[] = [
                     'id' => $section['id'],
                     'time' => 0,
