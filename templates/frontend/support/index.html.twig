@@ -24,40 +24,47 @@
                             График работы: с 8:00 до 22:00 без перерывов и выходных
                         </div>
                     </div>
-                    <form class="support_form" form-elem="form">
-                        <!--В каждом поле если есть ошибка, в support_form_label добавляем класс error-->
-                        <label class="support_form_label" form-elem="label">
+                    <form class="support_form" form-elem="form" action="{{ path('app_frontend_support') }}" method="POST">
+
+                        <label class="support_form_label{% if (form_errors(form.name)) is not empty %} error{% endif %}" form-elem="label">
                             <div class="support_form_name">Ваше имя</div>
-                            <input type="text" name="name" class="support_form_input" form-elem="input-text">
-                            <!--Здесь выводим ошибку поля-->
-                            <div class="support_form_error"></div>
+                            <input type="text" name="support[name]" class="support_form_input" form-elem="input-text" value="{{ form.vars.data.name }}">
+                            <div class="support_form_error">{{ form_errors(form.name) }}</div>
                         </label>
-                        <label class="support_form_label" form-elem="label">
+
+                        <label class="support_form_label{% if (form_errors(form.email)) is not empty %} error{% endif %}" form-elem="label">
                             <div class="support_form_name">Email</div>
-                            <input type="email" name="email" class="support_form_input" form-elem="input-text">
-                            <div class="support_form_error"></div>
+                            <input type="email" name="support[email]" class="support_form_input" form-elem="input-text" value="{{ form.vars.data.email }}">
+                            <div class="support_form_error">{{ form_errors(form.email) }}</div>
                         </label>
-                        <label class="support_form_label" form-elem="label">
+
+                        <label class="support_form_label{% if (form_errors(form.phone)) is not empty %} error{% endif %}" form-elem="label">
                             <div class="support_form_name">Телефон</div>
-                            <input type="text" name="phone" class="support_form_input" form-elem="input-text">
-                            <div class="support_form_error"></div>
+                            <input type="text" name="support[phone]" class="support_form_input" form-elem="input-text" value="{{ form.vars.data.phone }}">
+                            <div class="support_form_error">{{ form_errors(form.phone) }}</div>
                         </label>
-                        <label class="support_form_label" form-elem="label">
+
+                        <label class="support_form_label{% if (form_errors(form.course)) is not empty %} error{% endif %}" form-elem="label">
                             <div class="support_form_name">Ваш курс</div>
-                            <input type="text" name="course" class="support_form_input" form-elem="input-text">
-                            <div class="support_form_error"></div>
+                            <input type="text" name="support[course]" class="support_form_input" form-elem="input-text" value="{{ form.vars.data.course }}">
+                            <div class="support_form_error">{{ form_errors(form.course) }}</div>
                         </label>
-                        <label class="support_form_label" form-elem="label">
+
+                        <label class="support_form_label{% if (form_errors(form.question)) is not empty %} error{% endif %}" form-elem="label">
                             <div class="support_form_name">Ваш вопрос</div>
-                            <input type="text" name="question" class="support_form_input" form-elem="input-text">
-                            <div class="support_form_error"></div>
+                            <input type="text" name="support[question]" class="support_form_input" form-elem="input-text" value="{{ form.vars.data.question }}">
+                            <div class="support_form_error">{{ form_errors(form.question) }}</div>
                         </label>
+
                         <div class="support_agree">
                             Нажимая кнопку "Отправить сообщение" вы соглашаетесь с условиями <a href="javascript:void(0)">политики конфиденциальности</a>
                         </div>
+
                         <div class="support_submit_wrapper">
-                            <button class="support_submit red_button" type="button">Отправить сообщение</button>
+                            <button class="support_submit red_button" type="submit">Отправить сообщение</button>
                         </div>
+                        
+                        <input type="hidden" name="support[_token]" value="{{ csrf_token('support') }}"/>
                     </form>
                 </div>
             </div>

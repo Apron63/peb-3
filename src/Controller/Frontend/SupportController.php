@@ -2,17 +2,36 @@
 
 namespace App\Controller\Frontend;
 
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use App\Entity\Support;
+use App\Frontend\Form\SupportType;
+use App\Service\SupportService;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class SupportController extends AbstractController
 {
-    #[Route('/frontend/support', name: 'app_frontend_support')]
-    public function index(): Response
+    public function __construct(
+        private readonly SupportService $supportService,
+    ) {}
+    
+    #[Route('/support/', name: 'app_frontend_support')]
+    public function index(Request $request): Response
     {
+        $support = new Support();
+        $form = $this->createForm(SupportType::class, $support);
+
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $this->supportService->sendSupportMailMessage($support);
+
+            return $this->redirectToRoute('homepage');
+        }
+
         return $this->render('frontend/support/index.html.twig', [
-            'controller_name' => 'SupportController',
+            'form' => $form->createView(),
         ]);
     }
 }
