@@ -41,6 +41,12 @@ services:
         - { name: doctrine.event_subscriber, connection: default }
         calls:
         - [ setAnnotationReader, [ "@annotation_reader" ] ]
+
+    # Модификация стандартного логгера для логирования ip адресов
+    monolog.processor.web:
+        class: Monolog\Processor\WebProcessor
+        tags:
+        - { name: monolog.processor }
     
     # Course auto-remove child records
     App\EventListener\CourseRemoveEventListener:
