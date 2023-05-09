@@ -3,7 +3,7 @@
 namespace App\Controller\Frontend;
 
 use App\Entity\Support;
-use App\Frontend\Form\SupportType;
+use App\Form\Frontend\SupportType;
 use App\Service\SupportService;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
