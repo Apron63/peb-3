@@ -24,7 +24,7 @@ class SendEmailMessageHandler
             ->from('ucoks@safety63.ru')
             ->to($message->getContent()['to'])
             ->subject($message->getContent()['subject'])
-            ->text($message->getContent()['content']);
+            ->html($message->getContent()['content']);
 
         $this->mailer->send($email);
     }

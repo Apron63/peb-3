@@ -17,13 +17,13 @@ class SupportService
     {
         $this->bus->dispatch(new SendEmailMessage(
             'support@safety63.ru',
-            'Заявка с формы должна приходить',
+            'Зпрос технической поддержки СДО',
             $this->composeMail($support)
         )); 
         
         $this->bus->dispatch(new SendEmailMessage(
             'info@safety63.ru',
-            'Заявка с формы должна приходить',
+            'Зпрос технической поддержки СДО',
             $this->composeMail($support)
         ));
     }
