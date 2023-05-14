@@ -52,7 +52,7 @@
             </td>
             <td>
                 {% if permission.timeSpent is not empty %}
-                    {{ permission.timeSpent | date('H:i') }}
+                    {{ getSheduledTime(permission.timeSpent) }}
                 {% endif %}
             </td>
             <td>

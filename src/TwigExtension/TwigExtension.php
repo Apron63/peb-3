@@ -22,6 +22,7 @@ class TwigExtension extends AbstractExtension
         return [
             new TwigFunction('shortDescription', [$this, 'shortDescription']),
             new TwigFunction('getTimingControlUrl', [$this, 'getTimingControlUrl']),
+            new TwigFunction('getSheduledTime', [$this, 'getSheduledTime']),
         ];
     }
 
@@ -42,5 +43,10 @@ class TwigExtension extends AbstractExtension
     public function getTimingControlUrl(): string
     {
         return $this->urlGenerator->generate('app_frontend_timing');
+    }
+
+    public function getSheduledTime(int $timeInSeconds): string
+    {
+        return gmdate('H:i', $timeInSeconds);
     }
 }
