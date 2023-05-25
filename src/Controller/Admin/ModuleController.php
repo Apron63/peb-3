@@ -19,11 +19,11 @@ use Symfony\Component\Routing\Annotation\Route;
 class ModuleController extends MobileController
 {
     public function __construct(
-        readonly ModuleRepository $moduleRepository,
-        readonly ModuleSectionRepository $moduleSectionRepository,
-        readonly QuestionsRepository $questionsRepository,
-        readonly TicketService $ticketService,
-        readonly ModuleTicketService $moduleTicketservice
+        private readonly ModuleRepository $moduleRepository,
+        private readonly ModuleSectionRepository $moduleSectionRepository,
+        private readonly QuestionsRepository $questionsRepository,
+        private readonly TicketService $ticketService,
+        private readonly ModuleTicketService $moduleTicketservice
     ) {}
 
     #[Route('/admin/module/add/{id<\d+>}/', name: 'admin_module_create')]
@@ -82,9 +82,10 @@ class ModuleController extends MobileController
     {
         $ticketCount = (int)$request->get('ticketCount');
         $questionCount = (int)$request->get('questionCount');
+        $timeLeft = (int)$request->get('timeLeft');
         $errorsCount = (int)$request->get('errorsCount');
 
-        $this->ticketService->createModuleTickets($course, $ticketCount, $questionCount, $errorsCount);
+        $this->ticketService->createModuleTickets($course, $ticketCount, $questionCount, $timeLeft, $errorsCount);
         
         return new JsonResponse([
             'result' => true,

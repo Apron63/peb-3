@@ -27,6 +27,9 @@ class Ticket
     #[ORM\Column(type: Types::SMALLINT, nullable: true)]
     private ?int $errCnt = null;
 
+    #[ORM\Column(nullable: true)]
+    private ?int $timeLeft = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -76,6 +79,18 @@ class Ticket
     public function setErrCnt(?int $errCnt): self
     {
         $this->errCnt = $errCnt;
+
+        return $this;
+    }
+
+    public function getTimeLeft(): ?int
+    {
+        return $this->timeLeft;
+    }
+
+    public function setTimeLeft(?int $timeLeft): self
+    {
+        $this->timeLeft = $timeLeft;
 
         return $this;
     }

@@ -22,7 +22,7 @@ class TicketService
         private readonly CourseThemeRepository $courseThemeRepository
     ) {}
 
-    public function createTickets(int $courseId, int $ticketsCnt, int $errorsCnt, array $themes): void
+    public function createTickets(int $courseId, int $ticketsCnt, int $errorsCnt, int $timeLeft, array $themes): void
     {
         $themesIds = array_map(static function ($e) {
             return $e['id'];
@@ -52,6 +52,10 @@ class TicketService
                 ->setText((array)json_encode($arr, JSON_NUMERIC_CHECK))
                 ->setErrCnt($errorsCnt);
 
+            if (0 !== $timeLeft) {
+                $ticket->setTimeLeft($timeLeft);
+            }
+
             $this->ticketRepository->save($ticket, true);
         }
     }
@@ -59,7 +63,8 @@ class TicketService
     public function createModuleTickets(
         Course $course, 
         int $ticketCount, 
-        int $questionCount, 
+        int $questionCount,
+        int $timeLeft,
         int $errorsCount
     ): void {
         $this->ticketRepository->deleteOldTickets($course);
@@ -77,6 +82,10 @@ class TicketService
                 ->setErrCnt($errorsCount)
                 ->setText((array)json_encode($arr, JSON_NUMERIC_CHECK))
                 ->setNom($i);
+
+            if (0!== $timeLeft) {
+                $ticket->setTimeLeft($timeLeft);
+            }
 
             $this->ticketRepository->save($ticket, true);
         }

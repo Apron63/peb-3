@@ -45,7 +45,10 @@
                     </tr>
                     <tr>
                         <td>Номер билета:</td>
-                        <td>{{ logger.ticket.nom }}</td>
+                        <td> {% if logger.ticket is defined %}
+                                {{ logger.ticket.nom }}
+                            {% endif %}
+                        </td>
                     </tr>
                     <tr>
                         <td>Дата проведения тестирования:</td>

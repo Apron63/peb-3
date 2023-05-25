@@ -66,6 +66,7 @@ $('#build-tickets').on('click', function (e) {
         course: Number($('#course-id').val()),
         ticketCnt: Number($('#ticket-cnt').val()),
         errCnt: Number($('#err-cnt').val()),
+        timeLeft: Number($('#time-left').val()),
         themes: theme
     };
 

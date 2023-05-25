@@ -33,6 +33,14 @@
                 {# value="{% if ticket != false %}{{ ticket.errCnt }}{% endif %}" #}
             >
         </div>
+        <div class="col-3">
+            <label for="time-left">Время, мин</label>
+            <input
+                id="time-left"
+                class="form-inline"
+                {# value="{% if ticket != false %}{{ ticket.errCnt }}{% endif %}" #}
+            >
+        </div>
         <input type="hidden" id="course-id" value="{{ course.id }}">
     </div>
     <div class="row">

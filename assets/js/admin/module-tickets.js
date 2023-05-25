@@ -12,6 +12,7 @@ $('#createTickets').on('click', function() {
 
     let ticketCount = Number($('#ticketCount').val())
     let questionCount = Number($('#questionCount').val())
+    let timeLeft = Number($('#timeLeft').val())
     let errorsCount = Number($('#errorsCount').val())
 
     if (ticketCount === 0 || questionCount === 0) {
@@ -21,7 +22,7 @@ $('#createTickets').on('click', function() {
 
     $.ajax({
         url: $('#createTickets').data('url'),
-        data: {ticketCount: ticketCount, questionCount: questionCount, errorsCount: errorsCount}
+        data: {ticketCount: ticketCount, questionCount: questionCount, timeLeft: timeLeft, errorsCount: errorsCount}
     }).done(function (data) {
         if (data.result) {
             $('#toast-message').html('Билеты были успешно созданы')

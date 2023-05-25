@@ -44,7 +44,13 @@
                         </div>
                         <div class="results_data_row">
                             <div class="results_data_row_name">Номер билета:</div>
-                            <div class="results_data_row_value">{{ logger.ticket.nom }}</div>
+                            <div class="results_data_row_value">
+                                {% if logger.ticket is not empty %}
+                                    {{ logger.ticket.nom }}
+                                {% else %}
+                                    -
+                                {% endif %}
+                            </div>
                         </div>
                         <div class="results_data_row">
                             <div class="results_data_row_name">Дата проведения тестирования:</div>

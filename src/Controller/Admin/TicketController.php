@@ -12,8 +12,9 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class TicketController extends AbstractController
 {
-    public function __construct(readonly TicketService $ticketService)
-    {}
+    public function __construct(
+        private readonly TicketService $ticketService
+    ) {}
 
     #[Route('/admin/tickets/create/', name: 'admin_tickets_create', condition: 'request.isXmlHttpRequest()')]
     public function createTickets(Request $request): Response
@@ -22,10 +23,13 @@ class TicketController extends AbstractController
             $request->get('course'),
             $request->get('ticketCnt', 1),
             $request->get('errCnt', 1),
+            $request->get('timeLeft', 0),
             $request->get('themes', [])
         );
+
         $response = new JsonResponse();
         $response->setContent(json_encode(['result' => 'success'], JSON_THROW_ON_ERROR));
+        
         return $response;
     }
 

@@ -2,19 +2,20 @@
 
 namespace App\Service;
 
+use DateTime;
 use App\Entity\Course;
 use App\Entity\Logger;
-use App\Entity\Permission;
-use App\Entity\Questions;
 use App\Entity\Ticket;
+use App\Entity\Questions;
+use App\Entity\Permission;
 use App\Repository\AnswerRepository;
 use App\Repository\LoggerRepository;
-use App\Repository\PermissionRepository;
-use App\Repository\QuestionsRepository;
 use App\Repository\TicketRepository;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use App\Repository\QuestionsRepository;
+use App\Repository\PermissionRepository;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class TestingService
 {
@@ -36,7 +37,7 @@ class TestingService
         ) {
             $logger = $this->getNewLogger($permission, $user);
         } else {
-            $timeSpentNow = (new \DateTime)->getTimestamp() - $logger->getTimeLastQuestion()->getTimestamp();
+            $timeSpentNow = (new DateTime)->getTimestamp() - $logger->getTimeLastQuestion()->getTimestamp();
 
             $timeShift = $logger->getTimeLeftInSeconds() - $timeSpentNow;
             if ($timeShift < 0 ) {
@@ -212,6 +213,8 @@ class TestingService
         }
 
         $logger = new Logger;
+
+        $timeLeft = null === $ticket->getTimeLeft() ? Logger::DEFAULT_TIME_LEFT_IN_SECONDS : $ticket->getTimeLeft() * 60;
         
         $logger
             ->setUser($user)
@@ -224,7 +227,7 @@ class TestingService
             ->setResult(false)
             ->setPermission($permission)
             ->setTimeLastQuestion($logger->getBeginAt())
-            ->setTimeLeftInSeconds(Logger::DEFAULT_TIME_LEFT_IN_SECONDS);
+            ->setTimeLeftInSeconds($timeLeft);
 
         $this->loggerRepository->save($logger, true);
 
