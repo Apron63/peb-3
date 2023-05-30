@@ -10,8 +10,7 @@ class SupportService
 {
     public function __construct(
         private readonly MessageBusInterface $bus,
-    )
-    {}
+    ) {}
 
     public function sendSupportMailMessage(Support $support): void
     {
@@ -23,6 +22,12 @@ class SupportService
         
         $this->bus->dispatch(new SendEmailMessage(
             'info@safety63.ru',
+            'Запрос технической поддержки СДО',
+            $this->composeMail($support)
+        ));
+        
+        $this->bus->dispatch(new SendEmailMessage(
+            '1103@safety63.ru',
             'Запрос технической поддержки СДО',
             $this->composeMail($support)
         ));
