@@ -62,6 +62,9 @@ class TestingService
             $data = $this->getDataClassic($logger, $permission);
         }
 
+        $data['permissionId'] = $permission->getId();
+        $data['permissionLastAccess'] = $permission->getLastAccess()->getTimestamp();
+
         return $data;
     }
 

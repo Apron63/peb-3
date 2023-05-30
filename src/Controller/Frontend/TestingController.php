@@ -27,7 +27,7 @@ class TestingController extends AbstractController
     {
         $user = $this->getUser();
 
-        if (!$this->userPermissionService->checkPermissionForUser($permission, $user, false)) {
+        if (!$this->userPermissionService->checkPermissionForUser($permission, $user, true)) {
             throw new ExceptionAccessDeniedException();
         }
 
