@@ -1,6 +1,6 @@
 {% extends 'frontend/base.html.twig' %}
 
-{% block title %}{{ course.name }}{% endblock %}
+{% block title %}{{ permission.course.name }}{% endblock %}
 
 {% block body %}
 
@@ -9,7 +9,7 @@
     <div class="global-content">
         {% include('frontend/components/background.html.twig') %}
         <div class="wrapper container">
-            {{ render(path('app_frontend_left_menu', {'activeItem': 'my-programs', 'activeCourse': course.id})) }}
+            {{ render(path('app_frontend_left_menu', {'activeItem': 'my-programs', 'activeCourse': permission.course.id})) }}
             <div class="content">
                 <div class="module">
                     <h1>{{ moduleTitle }}</h1>
@@ -30,5 +30,13 @@
     {% include('frontend/components/footer.html.twig') %}
 
     <div class="overlay" popup-element="overlay"></div>
+
+    <input 
+        type="hidden" 
+        class="time-control" 
+        data-url="{{ getTimingControlUrl() }}" 
+        data-permission-id="{{ permission.id }}"
+        data-permission-start="{{ lastAccess }}"
+    >
 
 {% endblock %}

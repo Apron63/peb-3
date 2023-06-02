@@ -76,7 +76,7 @@ class CourseController extends AbstractController
     #[Route('/course/view-file/{id<\d+>}/{fileName}/', name: 'app_frontend_course_view_file')]
     public function viewFile(Permission $permission, Request $request, string $fileName): Response
     {
-        if (!$this->userPermissionService->checkPermissionForUser($permission, $this->getUser(), false)) {
+        if (!$this->userPermissionService->checkPermissionForUser($permission, $this->getUser(), true)) {
             throw new ExceptionAccessDeniedException();
         }
 
@@ -89,9 +89,10 @@ class CourseController extends AbstractController
         }
 
         return $this->render('frontend/course/_storage.html.twig', [
-            'course' => $permission->getCourse(),
+            'permission' => $permission,
             'fileName' => $url,
             'moduleTitle' => $request->get('moduleTitle'),
+            'lastAccess' => $permission->getLastAccess()->getTimestamp(),
         ]);
     }
 
