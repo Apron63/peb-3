@@ -208,6 +208,7 @@ class DemoService
         }
 
         $questionNom = 1;
+        $timeLeft = null === $ticket->getTimeLeft() ? Logger::DEFAULT_TIME_LEFT_IN_SECONDS : $ticket->getTimeLeft() * 60;
 
         $logger = new DemoLogger();
 
@@ -219,7 +220,7 @@ class DemoService
             ->setErrorAllowed($ticket->getErrCnt())
             ->setProtocol($protocol)
             ->setQuestionNom($questionNom)
-            ->setTimeLeftInSeconds($ticket->getTimeLeft() * 60)
+            ->setTimeLeftInSeconds($timeLeft)
             ->setTimeLastQuestion(new DateTime());
 
         $this->demoLoggerRepository->save($logger, true);
