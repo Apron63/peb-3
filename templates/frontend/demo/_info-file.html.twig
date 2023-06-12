@@ -1,0 +1,47 @@
+{% extends 'frontend/base.html.twig' %}
+
+{% block title %}{{ moduleSection.name }}{% endblock %}
+
+{% block body %}
+
+    {% include('frontend/components/header.html.twig') %}
+
+    <div class="global-content">
+        {% include('frontend/components/background.html.twig') %}
+        <div class="container">
+            <h1>{{ moduleSection.name }}</h1>
+            {% for page in moduleSectionPages %}
+                {% if page.type == 1 %}
+                    <div class="module_slider">
+                        <iframe 
+                            src="/storage/interactive/{{ moduleSection.module.course.id }}/{{ page.id}}/res/index.php" 
+                            style="width:100%; height: 100vh" 
+                            frameborder="0" 
+                            allowfullscreen
+                            >
+                        </iframe>
+                    </div>
+                {% elseif page.type == 2 %}
+                    <div class="module_slider">
+                        <iframe 
+                            src="{{ page.url }}" 
+                            style="width:100%; height: 100vh" 
+                            frameborder="0" 
+                            allowfullscreen
+                            >
+                        </iframe>
+                    </div>
+                {% else %}
+                    <div class="module_slider">
+                        {{ page.textData | raw }}
+                    </div>
+                {% endif %}
+            {% endfor %}
+        </div>
+    </div>
+
+    {% include('frontend/components/footer.html.twig') %}
+
+    <div class="overlay" popup-element="overlay"></div>
+
+{% endblock %}

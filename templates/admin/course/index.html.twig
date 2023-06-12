@@ -20,7 +20,6 @@
                 <option {% if app.request.get('type') == '' %}selected{% endif %} value="0">Все материалы</option>
                 <option {% if app.request.get('type') == '1' %}selected{% endif %} value="1">Классические</option>
                 <option {% if app.request.get('type') == '3' %}selected{% endif %} value="2">Интерактивные</option>
-                <option {% if app.request.get('type') == '2' %}selected{% endif %} value="3">Демо</option>
             </select>
         </div>
 
@@ -29,8 +28,8 @@
                 <option {% if app.request.get('profile') == '' %}selected{% endif %} value="0">Все профили</option>
                 {% for profile in profiles %}
                     <option
-                            {% if app.request.get('profile') == profile['id'] %}selected{% endif %}
-                            value="{{ profile['id'] }}"
+                        {% if app.request.get('profile') == profile['id'] %}selected{% endif %}
+                        value="{{ profile['id'] }}"
                     >
                         {{ profile['name'] }}
                     </option>
@@ -57,12 +56,12 @@
             <tr>
                 <td>{{ course.id }}</td>
                 <td>
-                    {% if course.type == 1 %}
+                    {% if course.forDemo == 1 %}
+                        <img src="{{ asset('svg/eye.svg') }}">
+                    {% elseif course.type == 1 %}
                         <img src="{{ asset('svg/key.svg') }}">
                     {% elseif course.type == 2 %}
                         <img src="{{ asset('svg/game.svg') }}">
-                    {% else %}
-                        <img src="{{ asset('svg/eye.svg') }}">
                     {% endif %}
                 </td>
                 <td>

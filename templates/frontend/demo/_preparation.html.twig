@@ -1,0 +1,35 @@
+{% extends 'frontend/base.html.twig' %}
+
+{% block title %}Контрольные вопросы по теме{% endblock %}
+
+{% block body %}
+
+    {% include('frontend/components/header.html.twig') %}
+
+    <div class="global-content">
+        {% include('frontend/components/background.html.twig') %}
+        <div class="wrapper container">
+            <div class="content">
+                <div class="control-questions">
+                    <h1>Подготовка к аттестации</h1>
+                    {% include('frontend/preparation/_counters.html.twig') %}
+                    <div class="control-questions_wrapper">
+                        {% for item in data.questions %}
+                            {% if item.type ==1  %}
+                                {% include('frontend/preparation/_radio-question.html.twig') %}
+                            {%else %}
+                                {% include('frontend/preparation/_checkbox-question.html.twig') %}        
+                            {% endif %}
+                        {% endfor %}
+                    </div> 
+                    {% include('frontend/preparation/_counters.html.twig') %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {% include('frontend/components/footer.html.twig') %}
+
+    <div class="overlay" popup-element="overlay"></div>
+
+{% endblock %}

@@ -13,7 +13,7 @@ class HistoryController extends AbstractController
         private readonly PermissionRepository $permissionRepository,
     ) {}
 
-    #[Route('/frontend/history', name: 'app_frontend_history')]
+    #[Route('/frontend/history/', name: 'app_frontend_history')]
     public function index(): Response
     {
         return $this->render('frontend/history/index.html.twig', [

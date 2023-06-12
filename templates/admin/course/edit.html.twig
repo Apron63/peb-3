@@ -44,6 +44,14 @@
                 {{ form_widget(form.profile) }}
             </div>
         </div>
+
+        <div class="col-12 mb-3">
+            <div class="form-check form-switch">
+                <span class="text-danger">{{ form_errors(form.forDemo) }}</span>
+                {{ form_label(form.forDemo) }}
+                {{ form_widget(form.forDemo) }}
+            </div>
+        </div>
         
         <div class=row>
             {% if form.vars['value'].image is not empty %}

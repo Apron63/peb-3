@@ -30,17 +30,17 @@
                     <div class="modules_item">
                         <div class="modules_item_check"></div>
                         <div class="modules_item_composition">
-                            {# {% if hasMultipleThemes %}
-                                <a href="{{ path('app_frontend_preparation_many', {id: permission.id}) }}" class="modules_item_name" status="passed">Подготовка к аттестации</a>
+                            {% if hasMultipleThemes %}
+                                <a href="{{ path('app_demo_preparation_course_many', {id: course.id}) }}" class="modules_item_name" status="passed">Подготовка к аттестации</a>
                             {% else %}
-                                <a href="{{ path('app_frontend_preparation_one', {id: permission.id, themeId: themeId}) }}" class="modules_item_name" status="passed">Подготовка к аттестации</a>
-                            {% endif %} #}
+                                <a href="{{ path('app_demo_preparation_course_one', {id: course.id, themeId: themeId}) }}" class="modules_item_name" status="passed">Подготовка к аттестации</a>
+                            {% endif %}
                         </div>
                     </div>
                     <div class="modules_item">
                         <div class="modules_item_check"></div>
                         <div class="modules_item_composition">
-                            <a href="{{ path('app_frontend_testing', {id: course.id}) }}" class="modules_item_name" content-elem="final-testing" status="passed">Итоговое тестирование</a>
+                            <a href="{{ path('app_demo_final_testing', {id: course.id}) }}" class="modules_item_name" content-elem="final-testing" status="passed">Итоговое тестирование</a>
                         </div>
                     </div>
                 </div>

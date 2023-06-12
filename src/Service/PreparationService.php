@@ -86,4 +86,73 @@ class PreparationService
             'url' => $url,
         ];
     }
+    
+    public function getQuestionDataForCourse(
+        Course $course,
+        ?int $themeId = null,
+        int $page = 1,
+        int $perPage = 20,
+    ): array {
+        $result = [];
+
+        $totalQuestions  = $this->questionsRepository->getQuestionsCount($course, $themeId);
+
+        if (!in_array($perPage, [20, 50, 100])) {
+            $perPage = 20;
+        }
+
+        $maxPages = intdiv($totalQuestions, $perPage);
+        if ($totalQuestions % $perPage > 0 ) {
+            $maxPages ++;
+        }
+
+        if ($page > $maxPages) {
+            $page = $maxPages;
+        }
+
+        $questions = $this->questionsRepository
+            ->getQuestionQuery($course, $themeId)
+            ->setFirstResult(($page - 1) * $perPage)
+            ->setMaxResults($perPage)
+            ->getResult();
+
+        /** @var Questions $question */
+        foreach ($questions as $question) {
+            $answers = $this->answerRepository->getAnswers($question, true);
+            $answerData = [];
+
+            foreach ($answers as $answer) {
+                $answerData[] = [
+                    'description' => $answer['description'],
+                    'right' => $answer['isCorrect'],
+                    'nom' => $answer['nom'],
+                    
+                ];
+            }
+
+            $result[] = [
+                'id' => $question->getId(),
+                'nom' =>$question->getNom(),
+                'type' => $question->getType(),
+                'description' => $question->getDescription(),
+                'help' => $question->getHelp(),
+                'answers' => $answerData,
+            ];
+        }
+
+        if ($course->getType() === Course::INTERACTIVE) {
+            $url = $this->urlGenerator->generate('app_demo_preparation_course', ['id' => $course->getId()]);
+        } else {
+            $url = $this->urlGenerator->generate('app_demo_preparation_course', ['id' => $course->getId(), 'themeId' => $themeId]);
+        }
+
+        return [
+            'courseId' => $course->getId(),
+            'questions' => $result,
+            'page' => $page,
+            'perPage' => $perPage,
+            'maxPages' => $maxPages,
+            'url' => $url,
+        ];
+    }
 }

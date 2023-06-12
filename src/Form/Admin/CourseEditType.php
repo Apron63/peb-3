@@ -5,15 +5,16 @@ namespace App\Form\Admin;
 use App\Entity\Course;
 use App\Entity\Profile;
 use App\Repository\ProfileRepository;
-use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
-use Symfony\Component\Form\Extension\Core\Type\FileType;
-use Symfony\Component\Form\Extension\Core\Type\SubmitType;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Validator\Constraints\File;
+use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 
 class CourseEditType extends AbstractType
 {
@@ -78,17 +79,17 @@ class CourseEditType extends AbstractType
                         'mimeTypesMessage' => 'Допускаются только форматы JPG и PNG',
                     ])
                 ],
-            ]);
-//            ->add('forDemo', CheckboxType::class, [
-//                'label' => 'Демо-версия',
-//                'required' => false,
-//                'attr' => [
-//                    'class' => 'form-check-input',
-//                ],
-//                'label_attr' => [
-//                    'class' => 'form-check-label',
-//                ],
-//            ]);
+            ])
+           ->add('forDemo', CheckboxType::class, [
+               'label' => 'Демо-версия',
+               'required' => false,
+               'attr' => [
+                   'class' => 'form-check-input',
+               ],
+               'label_attr' => [
+                   'class' => 'form-check-label',
+               ],
+           ]);
 
         if ($options['data']->getId() === null) {
             $builder->add('type', ChoiceType::class, [
@@ -96,7 +97,6 @@ class CourseEditType extends AbstractType
                 'choices'  => [
                     'Вопрос-ответ' => Course::CLASSC,
                     'Интерактивные' => Course::INTERACTIVE,
-                    'Демо' => Course::DEMO,
                 ],
                 'attr' => [
                     'label' => false,

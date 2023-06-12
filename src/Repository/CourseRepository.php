@@ -61,6 +61,8 @@ class CourseRepository extends ServiceEntityRepository
                 'c.id',
                 'c.name',
                 'c.shortName',
+                'c.image',
+                'c.forDemo',
                 'p.name AS profileName',
                 '(SELECT count(t) FROM App\Entity\Ticket t WHERE t.course = c.id) AS ticketCnt',
                 'IDENTITY (c.profile) AS profileId',
@@ -84,7 +86,7 @@ class CourseRepository extends ServiceEntityRepository
             ->setCacheable(true);
 
         if ($demoOnly) {
-            $queryBuilder->andWhere('c.type = :courseDemoValue')
+            $queryBuilder->andWhere('c.forDemo = :courseDemoValue')
                 ->setParameter('courseDemoValue', true);
         }
 

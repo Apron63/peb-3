@@ -24,7 +24,7 @@ class CourseService
     {
         $themeId = null;
 
-        if (!$this->hasMultipleThemes($course)) {
+        if (! $this->hasMultipleThemes($course)) {
             $courseTheme = $this->courseThemeRepository->findOneBy(['course' => $course]);
 
             if ($courseTheme instanceof CourseTheme) {
@@ -60,6 +60,11 @@ class CourseService
         }
 
         return $courseProgress;
+    }
+
+    public function getCourseProgressForDemo(Course $course): array
+    {
+        return $this->getModuleSectionByCourse($course);
     }
 
     private function getModuleSectionByCourse(Course $course): array

@@ -1,12 +1,17 @@
 <header class="header container">
+
     <div class="header_logo">
         <img src="{{ asset('img/header-logo.png') }}" alt="logo">
     </div>
-    <div class="header_profile">
-        {% if app.request.attributes.get('_route') == 'profilePage'%}
-            {% include 'frontend/components/_disabled_profile.html.twig' %}
-        {% else %}
-            {% include 'frontend/components/_active_profile.html.twig' %}
-        {% endif %}
-    </div>
+
+    {% if app.user is not empty %}
+        <div class="header_profile">
+            {% if app.request.attributes.get('_route') == 'profilePage'%}
+                {% include 'frontend/components/_disabled_profile.html.twig' %}
+            {% else %}
+                {% include 'frontend/components/_active_profile.html.twig' %}
+            {% endif %}
+        </div>    
+    {% endif %}
+    
 </header>

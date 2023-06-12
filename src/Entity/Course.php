@@ -13,7 +13,6 @@ class Course
 {
     public const CLASSC = 1;
     public const INTERACTIVE = 2;
-    public const DEMO = 3;
     
     #[ORM\Id]
     #[ORM\GeneratedValue]
