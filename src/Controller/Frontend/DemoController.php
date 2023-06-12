@@ -1,0 +1,189 @@
+<?php
+
+namespace App\Controller\Frontend;
+
+use App\Entity\Course;
+use App\Entity\CourseTheme;
+use App\Entity\ModuleSection;
+use App\Service\CourseService;
+use App\Service\PreparationService;
+use App\Repository\CourseRepository;
+use App\Repository\CourseInfoRepository;
+use App\Repository\CourseThemeRepository;
+use Symfony\Component\HttpFoundation\Cookie;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use App\Repository\ModuleSectionPageRepository;
+use App\Repository\TicketRepository;
+use App\Service\DemoService;
+use DateTime;
+use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+
+class DemoController extends AbstractController
+{
+    public function __construct(
+        private readonly CourseRepository $courseRepository,
+        private readonly CourseInfoRepository $courseInfoRepository,
+        private readonly CourseService $courseService,
+        private readonly ModuleSectionPageRepository $moduleSectionPageRepository,
+        private readonly CourseThemeRepository $courseThemeRepository,
+        private readonly PreparationService $preparationService,
+        private readonly DemoService $demoService,
+        private readonly TicketRepository $ticketRepository,
+    ) {}
+
+    #[Route('/demo/', name: 'app_demo')]
+    public function index(): Response
+    {
+        $courses = $this->courseRepository->findBy(['forDemo' => true]);
+
+        return $this->render('frontend/demo/index.html.twig', [
+            'courses' => $courses,
+        ]);
+    }
+
+    #[Route('/demo/{id<\d+>}/', name: 'app_demo_course')]
+    public function getCourse(Course $course): Response
+    {
+        if (!$course->isForDemo()) {
+            throw new NotFoundHttpException();
+        }
+
+        $courseInfo = $this->courseInfoRepository->getCourseInfos($course);
+
+        if ($course->getType() === Course::CLASSC) {
+            return $this->render('frontend/demo/_classic.html.twig', [
+                'course' => $course,
+                'courseInfo' => $courseInfo,
+            ]);
+        } else {
+            return $this->render('frontend/demo/_interactive.html.twig', [
+                'course' => $course,
+                'courseInfo' => $courseInfo,
+                'courseProgress' => $this->courseService->getCourseProgressForDemo($course),
+            ]);
+        }
+    }
+    
+    #[Route('/demo/section/{id<\d+>}/', name: 'app_demo_module_section')]
+    public function getSection(ModuleSection $section, Request $request): Response
+    {
+        if (!$section->getModule()->getCourse()->isForDemo()) {
+            throw new NotFoundHttpException();
+        }
+
+        if ($section->getType() === ModuleSection::TYPE_TESTING) {
+            return $this->redirectToRoute(
+                'app_demo_preparation_course', 
+                ['id' => $section->getModule()->getCourse()->getId(), 'themeId' => null]
+            );
+        }
+
+        $sessionId = $request->cookies->get('PHPSESSID');
+        $response = new Response();
+        $response->headers->setCookie(new Cookie('init', md5($sessionId), time() + 3600));
+
+        $moduleSectionPages = $this->moduleSectionPageRepository->getmoduleSectionPages($section);
+        return $this->render(
+            'frontend/demo/_info-file.html.twig',
+            [
+                'moduleSection' => $section,
+                'moduleSectionPages' => $moduleSectionPages,
+            ],
+            $response
+        );
+    }
+    
+    #[Route('/demo/final-testing/{id<\d+>}/', name: 'app_demo_final_testing')]
+    public function finalTesting(Course $course, Request $request): Response
+    {
+        if (!$course->isForDemo()) {
+            throw new NotFoundHttpException();
+        }
+
+        $ticketId = $request->cookies->get('ticketId');
+
+        if (null === $ticketId) {
+            $ticketId = $this->demoService->startTesting($course);
+            $questionNom = 1;
+            $ticket = $this->ticketRepository->find($ticketId);
+            $timeLeft = (new DateTime())->getTimestamp() + $ticket->getTimeLeft();
+        } else {
+            $questionNom = $request->cookies->get('questionNom');
+            $timeLeft = $request->cookies->get('timeLeft');
+        }
+
+        $response = new Response();
+        $response->headers->setCookie(new Cookie('ticketId', $ticketId, time() + 3600));
+        $response->headers->setCookie(new Cookie('questionNom', $questionNom, time() + 3600));
+        $response->headers->setCookie(new Cookie('timeLeft', $timeLeft, time() + 3600));
+        
+        return $this->render(
+            'frontend/demo/_final-testing.html.twig',
+            [
+                'course' => $course,
+                'data' =>  $this->demoService->getData($ticketId, $questionNom, $timeLeft),
+            ],
+            $response
+        );
+    }
+    
+    #[Route('/demo/info-list/{id<\d+>}/', name: 'app_demo_info_list')]
+    public function getInfoList(Course $course): Response
+    {
+        if (!$course->isForDemo()) {
+            throw new NotFoundHttpException();
+        }
+
+        return $this->render('frontend/demo/_info-list.html.twig', [
+            'course' => $course,
+            'courseInfo' => $this->courseInfoRepository->getCourseInfos($course),
+        ]);
+    }
+    
+    #[Route('/demo/info-view/{fileName}/{moduleTitle}/{id<\d+>}/', name: 'app_demo_info_view')]
+    public function getInfoView(string $fileName, string $moduleTitle, Course $course): Response
+    {
+        if (!$course->isForDemo()) {
+            throw new NotFoundHttpException();
+        }
+
+        $infoName = $this->getParameter('course_upload_directory') . '/' . $course->getShortNameCleared() . '/' . $fileName;
+
+        if(!file_exists($infoName)) {
+            throw new NotFoundHttpException();
+        }
+
+        return new BinaryFileResponse($infoName);
+    }
+
+    #[Route('demo/preparation/{id<\d+>}/{?themeId}/', name: 'app_demo_preparation_course')]
+    public function preparationOne(Course $course, ?int $themeId = null, Request $request): Response
+    {
+        if (!$course->isForDemo()) {
+            throw new NotFoundHttpException();
+        }
+
+        if (null !== $themeId) {
+            $courseTheme = $this->courseThemeRepository->find($themeId);
+
+            if (!$courseTheme instanceof CourseTheme) {
+                throw new NotFoundHttpException('Course theme not found');
+            }
+        }
+
+        $data = $this->preparationService->getQuestionDataForCourse(
+            $course,
+            $themeId,
+            $request->get('page', 1),
+            $request->get('perPage', 20),
+        );
+
+        return $this->render('frontend/demo/_preparation.html.twig', [
+            'data' => $data,
+        ]);
+    }
+}

@@ -1,0 +1,37 @@
+{% extends 'frontend/base.html.twig' %}
+
+{% block title %}Демонстрационные программы{% endblock %}
+
+{% block body %}
+
+    {% include('frontend/components/header.html.twig') %}
+
+    <div class="global-content">
+        {% include('frontend/components/background.html.twig') %}
+        <div class="container">
+            <div class="demo-programs">
+                {% for course in courses %}
+                    <div class="demo-programs_item">
+                        <div class="demo-programs_item_image_wrapper">
+                            <div class="demo-programs_item_image_inner">
+                                {% if course.image is null %}
+                                    <img src="{{ asset('img/no_course_image.jpg') }}" alt="">
+                                {% else %}
+                                    <img src="/storage/course/{{ course.shortNameCleared }}{{ asset(course.image) }}" alt="">
+                                {% endif %}
+                            </div>
+                        </div>
+                        <a href="{{ path('app_demo_course', {id: course.id }) }}" class="demo-programs_item_header">
+                            {{ course.name }}
+                        </a>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+    {% include('frontend/components/footer.html.twig') %}
+
+    <div class="overlay" popup-element="overlay"></div>
+
+{% endblock %}
