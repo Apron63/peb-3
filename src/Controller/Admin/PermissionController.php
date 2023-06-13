@@ -19,9 +19,9 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 class PermissionController extends MobileController
 {
     public function __construct(
-        readonly PermissionRepository $permissionRepository,
-        readonly TestingService $testingService,
-        readonly UserRepository $userRepository,
+        private readonly PermissionRepository $permissionRepository,
+        private readonly TestingService $testingService,
+        private readonly UserRepository $userRepository,
     ) {}
 
     #[Route('/admin/permission/create/{id<\d+>}', name: 'admin_permission_create')]

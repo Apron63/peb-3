@@ -2,28 +2,30 @@
 
 namespace App\Controller\Admin;
 
-use App\Decorator\MobileController;
+use RuntimeException;
 use App\Entity\Course;
 use App\Entity\CourseInfo;
+use App\Decorator\MobileController;
 use App\Form\Admin\CourseInfoEditType;
 use App\Repository\CourseInfoRepository;
-use RuntimeException;
-use Symfony\Component\HttpFoundation\File\Exception\FileException;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\String\Slugger\SluggerInterface;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
+use Symfony\Component\HttpFoundation\File\Exception\FileException;
 
 class CourseInfoController extends MobileController
 {
     public function __construct(
-        readonly SluggerInterface $slugger,
-        readonly CourseInfoRepository $courseInfoRepository
+        private readonly SluggerInterface $slugger,
+        private readonly CourseInfoRepository $courseInfoRepository
     ) {
     }
 
     #[Route('/admin/course_info/create/{id<\d+>}/', name: 'admin_course_info_create')]
+    #[IsGranted('ROLE_SUPER_ADMIN')]
     public function adminCourseInfoCreate(Request $request, Course $course): Response
     {
         $courseInfo = new CourseInfo();
@@ -62,6 +64,7 @@ class CourseInfoController extends MobileController
     }
 
     #[Route('/admin/course_info/{id<\d+>}/', name: 'admin_course_info_edit')]
+    #[IsGranted('ROLE_SUPER_ADMIN')]
     public function adminCourseInfoEdit(Request $request, CourseInfo $courseInfo): Response
     {
         $form = $this->createForm(CourseInfoEditType::class, $courseInfo);
@@ -112,6 +115,7 @@ class CourseInfoController extends MobileController
     }
 
     #[Route('/admin/course_info/delete/{id<\d+>}/', name: 'admin_course_info_delete')]
+    #[IsGranted('ROLE_SUPER_ADMIN')]
     public function adminCourseInfoDelete(Request $request, CourseInfo $courseInfo): Response
     {
         $courseId = $courseInfo->getCourse() ? $courseInfo->getCourse()->getId() : null;

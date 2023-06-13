@@ -17,11 +17,10 @@ use Knp\Component\Pager\PaginatorInterface;
 class UserController extends MobileController
 {
     public function __construct(
-        readonly UserService $userService,
-        readonly UserRepository $userRepository,
-        readonly PermissionRepository $permissionRepository
-    ) {
-    }
+        private readonly UserService $userService,
+        private readonly UserRepository $userRepository,
+        private readonly PermissionRepository $permissionRepository
+    ) {}
 
     #[Route('/admin/user/', name: 'admin_user_list')]
     public function adminUserList(Request $request, PaginatorInterface $paginator): Response
@@ -73,12 +72,6 @@ class UserController extends MobileController
         ]);
     }
 
-    /**
-     * @param Request $request
-     * @param PaginatorInterface $paginator
-     * @param User $user
-     * @return Response
-     */
     #[Route('/admin/user/{id<\d+>}/', name: 'admin_user_edit')]
     public function adminUserEditAction(Request $request, PaginatorInterface $paginator, User $user): Response
     {

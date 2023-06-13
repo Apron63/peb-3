@@ -4,11 +4,12 @@ namespace App\Controller\Admin;
 
 use App\Entity\Ticket;
 use App\Service\TicketService;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class TicketController extends AbstractController
 {
@@ -17,6 +18,7 @@ class TicketController extends AbstractController
     ) {}
 
     #[Route('/admin/tickets/create/', name: 'admin_tickets_create', condition: 'request.isXmlHttpRequest()')]
+    #[IsGranted('ROLE_SUPER_ADMIN')]
     public function createTickets(Request $request): Response
     {
         $this->ticketService->createTickets(
@@ -34,6 +36,7 @@ class TicketController extends AbstractController
     }
 
     #[Route('/admin/tickets/print/{id<\d+>}/', name: 'admin_tickets_print')]
+    #[IsGranted('ROLE_SUPER_ADMIN')]
     public function printTicket(Ticket $ticket)
     {
         $arTicket = [
@@ -50,6 +53,7 @@ class TicketController extends AbstractController
     }
     
     #[Route('/admin/module-tickets/print/{id<\d+>}/', name: 'admin_module_tickets_print')]
+    #[IsGranted('ROLE_SUPER_ADMIN')]
     public function printModuleTicket(Ticket $ticket)
     {
         $arTicket = [

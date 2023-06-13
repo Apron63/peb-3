@@ -2,25 +2,26 @@
 
 namespace App\Controller\Admin;
 
-use App\Decorator\MobileController;
 use App\Entity\Course;
+use App\Service\TicketService;
 use App\Form\Admin\CourseEditType;
+use App\Decorator\MobileController;
+use App\Repository\CourseRepository;
+use App\Repository\ModuleRepository;
+use App\Repository\TicketRepository;
+use App\Service\ModuleTicketService;
+use App\Repository\ProfileRepository;
+use App\Repository\QuestionsRepository;
 use App\Repository\CourseInfoRepository;
+use App\Repository\ModuleInfoRepository;
+use App\Repository\CourseThemeRepository;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Knp\Component\Pager\PaginatorInterface;
-use App\Repository\CourseRepository;
-use App\Repository\CourseThemeRepository;
-use App\Repository\ModuleInfoRepository;
-use App\Repository\ModuleRepository;
-use App\Repository\ProfileRepository;
-use App\Repository\QuestionsRepository;
-use App\Repository\TicketRepository;
-use App\Service\ModuleTicketService;
-use App\Service\TicketService;
-use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\String\Slugger\SluggerInterface;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
+use Symfony\Component\HttpFoundation\File\Exception\FileException;
 
 class CourseController extends MobileController
 {
@@ -40,6 +41,7 @@ class CourseController extends MobileController
     ) {}
 
     #[Route('/admin/course/', name: 'admin_course_list')]
+    #[IsGranted('ROLE_SUPER_ADMIN')]
     public function index(Request $request, PaginatorInterface $paginator): Response
     {
         $type = $request->get('type');
@@ -58,6 +60,7 @@ class CourseController extends MobileController
     }
     
     #[Route('/admin/course/create', name: 'admin_course_create')]
+    #[IsGranted('ROLE_SUPER_ADMIN')]
     public function create(Request $request, PaginatorInterface $paginator): Response
     {
         $course = new Course();
@@ -78,6 +81,7 @@ class CourseController extends MobileController
     }
 
     #[Route('/admin/course/{id<\d+>}/', name: 'admin_course_edit')]
+    #[IsGranted('ROLE_SUPER_ADMIN')]
     public function adminCourseEdit(Request $request, Course $course): Response
     {
         $form = $this->createForm(CourseEditType::class, $course);
@@ -151,6 +155,7 @@ class CourseController extends MobileController
     }
 
     #[Route('/admin/course/delete/{id<\d+>}/', name: 'admin_course_delete')]
+    #[IsGranted('ROLE_SUPER_ADMIN')]
     public function adminCourseDelete(Request $request, Course $course): Response
     {
         if ($this->isGranted('ROLE_SUPER_ADMIN')) {

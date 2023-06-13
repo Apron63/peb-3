@@ -2,19 +2,20 @@
 
 namespace App\Controller\Admin;
 
-use App\Decorator\MobileController;
 use App\Entity\Course;
 use App\Entity\Module;
-use App\Form\Admin\ModuleEditType;
-use App\Repository\ModuleRepository;
-use App\Repository\ModuleSectionRepository;
-use App\Repository\QuestionsRepository;
-use App\Service\ModuleTicketService;
 use App\Service\TicketService;
-use Symfony\Component\HttpFoundation\JsonResponse;
+use App\Form\Admin\ModuleEditType;
+use App\Decorator\MobileController;
+use App\Repository\ModuleRepository;
+use App\Service\ModuleTicketService;
+use App\Repository\QuestionsRepository;
+use App\Repository\ModuleSectionRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 class ModuleController extends MobileController
 {
@@ -27,6 +28,7 @@ class ModuleController extends MobileController
     ) {}
 
     #[Route('/admin/module/add/{id<\d+>}/', name: 'admin_module_create')]
+    #[IsGranted('ROLE_SUPER_ADMIN')]
     public function adminAddModule(Request $request, Course $course): Response
     {
         $module = new Module();
@@ -48,6 +50,7 @@ class ModuleController extends MobileController
     }
 
     #[Route('/admin/module/edit/{id<\d+>}/', name: 'admin_module_edit')]
+    #[IsGranted('ROLE_SUPER_ADMIN')]
     public function adminEditModule(
         Module $module, 
         Request $request, 
@@ -70,6 +73,7 @@ class ModuleController extends MobileController
     }
 
     #[Route('/admin/module/delete/{id<\d+>}/', name: 'admin_module_delete')]
+    #[IsGranted('ROLE_SUPER_ADMIN')]
     public function adminDeleteModule(Module $module): Response
     {
         $courseId = $module->getCourse()->getId();
@@ -78,6 +82,7 @@ class ModuleController extends MobileController
     }
     
     #[Route('/admin/module/create-tickets/{id<\d+>}/', name: 'admin_module_create_tickets', condition: 'request.isXmlHttpRequest()')]
+    #[IsGranted('ROLE_SUPER_ADMIN')]
     public function adminCreateTickets(Request $request, Course $course): JsonResponse
     {
         $ticketCount = (int)$request->get('ticketCount');

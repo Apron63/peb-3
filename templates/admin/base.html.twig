@@ -44,11 +44,13 @@
                    class="list-group-item list-group-item-action list-group-item-light">
                     Загрузка из 1C
                 </a>
-                <a href="{{ path('admin_course_list') }}"
-                   class="list-group-item list-group-item-action list-group-item-light">
-                    Учебные материалы
-                </a>
+
                 {% if is_granted('ROLE_SUPER_ADMIN') %}
+                    <a href="{{ path('admin_course_list') }}"
+                    class="list-group-item list-group-item-action list-group-item-light">
+                        Учебные материалы
+                    </a>
+                
                     <a href="{{ path('admin_profile_list') }}"
                        class="list-group-item list-group-item-action list-group-item-light">
                         Профили
@@ -57,11 +59,13 @@
                        class="list-group-item list-group-item-action list-group-item-light">
                         Загрузка курсов
                     </a>
+                
+                    <a href="{{ path('admin_query_job') }}"
+                    class="list-group-item list-group-item-action list-group-item-light">
+                        Задачи
+                    </a>
                 {% endif %}
-                <a href="{{ path('admin_query_job') }}"
-                   class="list-group-item list-group-item-action list-group-item-light">
-                    Задачи
-                </a>
+                
                 <a href="{{ path('admin_query_1cload') }}"
                    class="list-group-item list-group-item-action list-group-item-light">
                     Очередь

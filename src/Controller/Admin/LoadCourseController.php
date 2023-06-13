@@ -2,26 +2,28 @@
 
 namespace App\Controller\Admin;
 
-use App\Decorator\MobileController;
 use App\Form\Admin\LoadCourseType;
+use App\Decorator\MobileController;
 use App\Message\CourseUploadMessage;
 use App\Service\CourseUploadService;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\HttpFoundation\Session\Session;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 class LoadCourseController extends MobileController
 {
     public function __construct(
-        readonly CourseUploadService $courseUploadService,
-        readonly MessageBusInterface $messageBus
+        private readonly CourseUploadService $courseUploadService,
+        private readonly MessageBusInterface $messageBus
     ) {
 
     }
     
     #[Route('/admin/load/course/', name: 'admin_load_course')]
+    #[IsGranted('ROLE_SUPER_ADMIN')]
     public function actionLoadCourse(Request $request): Response
     {
         /** @var Session $session */

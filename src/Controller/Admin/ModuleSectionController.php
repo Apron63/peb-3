@@ -2,16 +2,17 @@
 
 namespace App\Controller\Admin;
 
-use App\Decorator\MobileController;
 use App\Entity\Module;
 use App\Entity\ModuleSection;
+use App\Decorator\MobileController;
 use App\Form\Admin\ModuleSectionEditType;
-use App\Repository\ModuleSectionPageRepository;
-use App\Repository\ModuleSectionRepository;
 use App\Service\InteractiveUploadService;
+use App\Repository\ModuleSectionRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use App\Repository\ModuleSectionPageRepository;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 class ModuleSectionController extends MobileController
 {
@@ -22,6 +23,7 @@ class ModuleSectionController extends MobileController
     ) {}
 
     #[Route('/admin/module_section/add/{id<\d+>}/', name: 'admin_module_section_add')]
+    #[IsGranted('ROLE_SUPER_ADMIN')]
     public function adminAddModuleSection(Module $module, Request $request): Response
     {
         $moduleSection = new ModuleSection();
@@ -43,6 +45,7 @@ class ModuleSectionController extends MobileController
     }
 
     #[Route('/admin/module_section/edit/{id<\d+>}/', name: 'admin_module_section_edit')]
+    #[IsGranted('ROLE_SUPER_ADMIN')]
     public function adminEditModuleSection(ModuleSection $moduleSection, Request $request): Response
     {
         $form = $this->createForm(ModuleSectionEditType::class, $moduleSection);
@@ -62,6 +65,7 @@ class ModuleSectionController extends MobileController
     }
 
     #[Route('/admin/module_section/delete/{id<\d+>}/', name: 'admin_module_section_delete')]
+    #[IsGranted('ROLE_SUPER_ADMIN')]
     public function adminDeleteModuleSection(ModuleSection $moduleSection): Response
     {
         $moduleId = $moduleSection->getModule()->getId();
