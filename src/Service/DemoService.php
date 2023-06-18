@@ -186,7 +186,7 @@ class DemoService
         $ticket = $this->ticketRepository->findOneBy(['course' => $course, 'nom' => $ticketNom]);
 
         if (! $ticket instanceof Ticket) {
-            throw new NotFoundHttpException('Ticket Not Found');
+            throw new NotFoundHttpException('Ticket Not Found for course Id: ' . $course->getShortName());
         }
 
         $questionArray = json_decode($ticket->getText()[0]);
