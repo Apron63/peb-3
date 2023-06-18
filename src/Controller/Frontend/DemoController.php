@@ -221,7 +221,7 @@ class DemoController extends AbstractController
         return new BinaryFileResponse($infoName);
     }
 
-    #[Route('demo/preparation/{id<\d+>}/', name: 'app_demo_preparation_course')]
+    #[Route('demo/preparation/{id<\d+>}/{themeId?}/', name: 'app_demo_preparation_course')]
     public function preparation(Course $course, ?int $themeId = null, Request $request): Response
     {
         if (!$course->isForDemo()) {
