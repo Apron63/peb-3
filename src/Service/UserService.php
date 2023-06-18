@@ -12,10 +12,10 @@ use Symfony\Component\String\Slugger\SluggerInterface;
 class UserService
 {
     public function __construct(
-        readonly SluggerInterface $slugger,
-        readonly UserPasswordHasherInterface $passwordEncoder,
-        readonly TokenStorageInterface $token,
-        readonly UserRepository $userRepository
+        private readonly SluggerInterface $slugger,
+        private readonly UserPasswordHasherInterface $passwordEncoder,
+        private readonly TokenStorageInterface $token,
+        private readonly UserRepository $userRepository
     ) { }
 
     /**

@@ -1,0 +1,32 @@
+<div class="mb-3">
+    <label for="duration" class="form-label">Укажите число дней доступа</label>
+    <input class="form-control" name="duration" id="duration">
+</div>
+
+<div class="mb-3">
+    <label for="course-select" class="form-label">Выберите курсы</label>
+    <select class="form-select" id="course-select" name="course-select" multiple>
+        {% for item in course %}
+            <option class="course-select-item" data-profile="{{ item['profileId'] }}" value="{{ item['id'] }}">
+                {{ item['name'] }}
+            </option>
+        {% endfor %}
+    </select>
+</div>
+
+<div class="mb-3">
+    <label for="q-search" class="form-label">Быстрый поиск</label>
+    <input class="form-control" name="q-search" id="q-search">
+</div>
+
+<div class="mb-3">
+    <label for="profile-select" class="form-label">Профиль</label>
+    <select class="form-select" id="profile-select" name="course-select">
+        <option value="0">Все профили</option>
+        {% for profile in profiles %}
+            <option value="{{ profile['id'] }}">{{ profile['name'] }}</option>
+        {% endfor %}
+    </select>
+</div>
+
+<button class="btn btn-outline-primary" id="send-to-query" data-url="{{ path('admin_loader_send_to_query') }}">Продолжить</button>

@@ -1,0 +1,109 @@
+{% extends 'admin/base.html.twig' %}
+
+{% block title %}Загрузка слушателей{% endblock %}
+
+{% block content %}
+
+    <h3>Загрузка слушателей</h3>
+
+    <div class="btn-group">
+        <button class="btn btn-outline-dark" id="load1C" data-url="{{ load1CUrl }}">Загрузить из 1С</button>
+        <button class="btn btn-outline-dark" id="selectAll" data-url="{{ setAllCheckBoxValueUrl }}">Выбрать всех</button>
+        <button class="btn btn-outline-dark" id="unselectAll" data-url="{{ setAllCheckBoxValueUrl }}">Снять отметку</button>
+        <button 
+            class="btn btn-outline-dark" 
+            id ="assignCourse" 
+            data-check="{{ assignCourse }}" 
+            data-prepare="{{ prepareCourse }}"
+            data-query={{ path('admin_loader_check_query') }}
+        >
+            Назначить курс
+        </button>
+        <div class="dropdown">
+            <button class="btn btn-outline-dark dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                Скачать
+            </button>
+            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                <li><a class="dropdown-item color-item" href="#" onclick="getContent('CSV')">CSV</a></li>
+                <li><a class="dropdown-item color-item" href="#" onclick="getContent('XLSX')">XLSX</a></li>
+                <li><a class="dropdown-item color-item" href="#" onclick="getContent('TXT')">TXT</a></li>
+                <li><a class="dropdown-item color-item" href="#" onclick="getContent('DOCX')">DOCX</a></li>
+            </ul>
+        </div>
+        <div class="dropdown">
+            <button class="btn btn-outline-dark dropdown-toggle" type="button" id="dropdownMenuButton2" data-bs-toggle="dropdown" aria-expanded="false">
+                Скачать и отправить
+            </button>
+            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton2">
+                <li><a class="dropdown-item color-item" href="#" onclick="getEmail('CSV')">CSV</a></li>
+                <li><a class="dropdown-item color-item" href="#" onclick="getEmail('XLSX')">XLSX</a></li>
+                <li><a class="dropdown-item color-item" href="#" onclick="getEmail('TXT')">TXT</a></li>
+                <li><a class="dropdown-item color-item" href="#" onclick="getEmail('DOCX')">DOCX</a></li>
+            </ul>
+        </div>
+    </div>
+
+    <table class="table">
+        <thead>
+        <tr>
+            <th></th>
+            <th>Заказ</th>
+            <th>Фамилия</th>
+            <th>Имя</th>
+            <th>Отчество</th>
+            <th>Должность</th>
+            <th>Организация</th>
+            <th>Курс</th>
+        </tr>
+        </thead>
+
+        <tbody>
+            {% for item in data %}
+                <tr> 
+                    <td>
+                        <div>
+                            <input 
+                                class="form-check-input loader-checkbox" 
+                                type="checkbox" 
+                                id="check_{{ item.id }}"
+                                data-loader-id="{{ item.id }}"
+                                value="" 
+                                aria-label="..." 
+                                {% if item.checked %}
+                                    checked
+                                {% endif %}
+                            >
+                        </div>
+                    </td>
+                    <td>{{ item.orderNo}}</td>
+                    <td>{{ item.lastName}}</td>   
+                    <td>{{ item.firstName}}</td>   
+                    <td>{{ item.patronymic }}</td>   
+                    <td>{{ item.position }}</td>   
+                    <td>{{ item.organization }}</td>   
+                    <td>{{ item.courseName }}</td>   
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <input type="hidden" id="checkbox-change-url" data-url="{{ checkboxChangeUrl }}">
+    <input type="hidden" id="empty-data" data-empty="{{ emptyData }}">
+    <div id="loading-content"></div>
+
+    <script>
+        function getContent(type)
+        {
+            alert('В работе!')
+            return false;
+        }
+        
+        function getEmail(type)
+        {
+            alert('В работе!')
+            //https://www.rapidtables.com/web/html/mailto.html#what
+            return false;
+        }
+    </script>
+
+{% endblock %}

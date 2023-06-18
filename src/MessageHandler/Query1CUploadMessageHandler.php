@@ -4,7 +4,7 @@ namespace App\MessageHandler;
 
 use App\Message\Query1CUploadMessage;
 use App\Service\JobService;
-use App\Service\Query1CUploadService;
+use App\Service\LoaderService;
 use Doctrine\ORM\NonUniqueResultException;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 
@@ -12,8 +12,8 @@ use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 class Query1CUploadMessageHandler
 {
     public function __construct(
-        readonly Query1CUploadService $query1CUploadService,
-        readonly JobService $jobService
+        private readonly LoaderService $loaderService,
+        private readonly JobService $jobService,
     ) {}
 
     /**
@@ -26,7 +26,7 @@ class Query1CUploadMessageHandler
             $message->getContent()['userId']
         );
 
-        $documentLink = $this->query1CUploadService->createUsersAndPermissions();
-        $this->jobService->finishJob($job, $documentLink);
+        $this->loaderService->createUsersAndPermissions($message->getContent()['userId']);
+        $this->jobService->finishJob($job);
     }
 }

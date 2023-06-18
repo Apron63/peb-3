@@ -2,10 +2,11 @@
 
 namespace App\Repository;
 
-use App\Entity\QueryUser;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use App\Entity\User;
 use Doctrine\ORM\Query;
+use App\Entity\QueryUser;
 use Doctrine\Persistence\ManagerRegistry;
+use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 
 /**
  * @extends ServiceEntityRepository<QueryUser>
@@ -40,22 +41,37 @@ class QueryUserRepository extends ServiceEntityRepository
         }
     }
 
-    public function getQueryUser(): Query
+    public function getQueryUser(User $user): Query
     {
         return $this->createQueryBuilder('q')
             ->where('q.result = :result')
+            ->andWhere('q.createdBy = :user')
             ->setParameter('result', 'new')
+            ->setParameter('user', $user)
             ->orderBy('q.createdAt', 'DESC')
             ->getQuery();
     }
 
-    public function getUserQueryNew(): array
+    public function getUserQueryNew(User $user): array
     {
         $qb = $this->createQueryBuilder('uq')
             ->select('uq')
             //->select('uq, IDENTITY(uq.createdBy) AS createdBy')
-            ->where('uq.result = \'new\'');
+            ->where('uq.result = \'new\'')
+            ->andWhere('uq.createdBy = :user')
+            ->setParameter('user', $user);
 
         return $qb->getQuery()->getResult();
+    }
+
+    public function checkUserQueryIsEmpty(User $user): bool
+    {
+        $query = $this
+            ->getEntityManager()
+            ->createQuery('SELECT COUNT(q.id) FROM App\Entity\QueryUser q where q.createdBy = :user AND q.result = :result')
+            ->setParameter('user', $user)
+            ->setParameter('result', 'new');
+        
+        return $query->getSingleScalarResult() === 0;
     }
 }

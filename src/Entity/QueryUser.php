@@ -3,7 +3,6 @@
 namespace App\Entity;
 
 use App\Repository\QueryUserRepository;
-use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
 
@@ -18,7 +17,7 @@ class QueryUser
     private ?int $id = null;
 
     #[ORM\ManyToOne]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\JoinColumn(nullable: false, name: "created_by")]
     private ?User $createdBy = null;
 
     #[ORM\Column(length: 50)]
@@ -48,6 +47,10 @@ class QueryUser
     #[ORM\Column(length: 50)]
     private ?string $orderNom = null;
 
+    #[ORM\ManyToOne]
+    #[ORM\JoinColumn(onDelete: 'SET NULL')]
+    private ?Loader $loader = null;
+    
     public function getId(): ?int
     {
         return $this->id;
@@ -169,6 +172,18 @@ class QueryUser
     public function setOrderNom(string $orderNom): self
     {
         $this->orderNom = $orderNom;
+
+        return $this;
+    }
+
+    public function getLoader(): ?Loader
+    {
+        return $this->loader;
+    }
+
+    public function setLoader(?Loader $loader): self
+    {
+        $this->loader = $loader;
 
         return $this;
     }

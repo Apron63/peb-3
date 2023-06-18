@@ -11,10 +11,6 @@ use App\Repository\CourseRepository;
 use App\Repository\PermissionRepository;
 use App\Repository\QueryUserRepository;
 use App\Repository\UserRepository;
-use DateTime;
-use Doctrine\ORM\NonUniqueResultException;
-use Psr\Container\ContainerExceptionInterface;
-use Psr\Container\NotFoundExceptionInterface;
 use RuntimeException;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
@@ -27,25 +23,19 @@ class Query1CUploadService
     private string $exchange1cUploadDirectory;
 
     public function __construct(
-        readonly MessageBusInterface $bus,
-        readonly QueryUserRepository $queryUserRepository,
-        readonly UserRepository $userRepository,
-        readonly UserService $userService,
-        readonly CourseRepository $courseRepository,
-        readonly PermissionRepository $permissionRepository,
+        private readonly MessageBusInterface $bus,
+        private readonly QueryUserRepository $queryUserRepository,
+        private readonly UserRepository $userRepository,
+        private readonly UserService $userService,
+        private readonly CourseRepository $courseRepository,
+        private readonly PermissionRepository $permissionRepository,
         string $reportUploadPath,
         string $exchange1cUploadDirectory
     ) {
         $this->reportUploadPath = $reportUploadPath;
         $this->exchange1cUploadDirectory = $exchange1cUploadDirectory;
     }
-
-    /**
-     * @param UploadedFile $data
-     * @return array
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
-     */
+   
     public function getUsersList(UploadedFile $data): array
     {
         $userData = [];
@@ -84,14 +74,6 @@ class Query1CUploadService
         return $userData;
     }
 
-    /**
-     * @param User $user
-     * @param $courseIds
-     * @param int $duration
-     * @param array $data
-     * @return array
-     */
-
     public function sendUserDataToQuery(User $user, $courseIds, int $duration, array $data): array
     {
         if (0 === count($data)) {
@@ -129,102 +111,98 @@ class Query1CUploadService
         return ['success' => true, 'message' => 'Пользователи успешно добавлены в очередь'];
     }
 
-    /**
-     * @return string|null
-     * @throws NonUniqueResultException
-     */
-    public function createUsersAndPermissions(): ?string
-    {
-        $userData = $this->queryUserRepository->getUserQueryNew();
+    // public function createUsersAndPermissions(): ?string
+    // {
+    //     $userData = $this->queryUserRepository->getUserQueryNew();
 
-        $fileName = $this->reportUploadPath . '/' . (new DateTime())->format('d-m-Y_H_i_s') . '_' . uniqid() . '.csv';
-        $file = fopen($fileName, 'w');
-        // BOM для корректной работы с кодировкой
-        fputs($file, chr(0xEF) . chr(0xBB) . chr(0xBF));
+    //     $fileName = $this->reportUploadPath . '/' . (new DateTime())->format('d-m-Y_H_i_s') . '_' . uniqid() . '.csv';
+    //     $file = fopen($fileName, 'w');
+    //     // BOM для корректной работы с кодировкой
+    //     fputs($file, chr(0xEF) . chr(0xBB) . chr(0xBF));
 
-        $fileData = 'Номер заказа;'
-            . 'ФИО;'
-            . 'Должность;'
-            . 'Организация;'
-            . 'Логин;'
-            . 'Пароль;'
-            . 'Курсы;'
-            . 'Дней' . PHP_EOL;
+    //     $fileData = 'Номер заказа;'
+    //         . 'ФИО;'
+    //         . 'Должность;'
+    //         . 'Организация;'
+    //         . 'Логин;'
+    //         . 'Пароль;'
+    //         . 'Курсы;'
+    //         . 'Дней' . PHP_EOL;
 
-        fputs($file, $fileData);
+    //     fputs($file, $fileData);
 
-        foreach ($userData as $row) {
-            $createdByUser = $this->userRepository->find($row->getCreatedBy()->getId());
+    //     foreach ($userData as $row) {
+    //         $createdByUser = $this->userRepository->find($row->getCreatedBy()->getId());
 
-            // Ищем пользователя по логину и организации.
-            $user = $this->userRepository
-                ->findOneBy([
-                    'fullName' => implode(
-                        ' ',
-                        [
-                            $row->getLastName(),
-                            $row->getFirstName(),
-                            $row->getPatronymic()
-                        ]
-                    ),
-                    'organization' => $row->getOrganization()
-                ]);
+    //         // Ищем пользователя по логину и организации.
+    //         $user = $this->userRepository
+    //             ->findOneBy([
+    //                 'fullName' => implode(
+    //                     ' ',
+    //                     [
+    //                         $row->getLastName(),
+    //                         $row->getFirstName(),
+    //                         $row->getPatronymic()
+    //                     ]
+    //                 ),
+    //                 'organization' => $row->getOrganization()
+    //             ]);
 
-            // Создадим нового если не нашлось.
-            if (!$user instanceof User) {
-                $user = (new User())
-                    ->setOrganization($row->getOrganization())
-                    ->setLastName($row->getLastName())
-                    ->setFirstName($row->getFirstName())
-                    ->setPatronymic($row->getPatronymic())
-                    ->setPosition($row->getPosition())
-                    ->setPatronymic($row->getPatronymic())
-                    ->setCreatedAt($row->getCreatedAt())
-                    ->setCreatedBy($createdByUser);
+    //         // Создадим нового если не нашлось.
+    //         if (!$user instanceof User) {
+    //             $user = (new User())
+    //                 ->setOrganization($row->getOrganization())
+    //                 ->setLastName($row->getLastName())
+    //                 ->setFirstName($row->getFirstName())
+    //                 ->setPatronymic($row->getPatronymic())
+    //                 ->setPosition($row->getPosition())
+    //                 ->setPatronymic($row->getPatronymic())
+    //                 ->setCreatedAt($row->getCreatedAt())
+    //                 ->setCreatedBy($createdByUser);
                     
-                $user = $this->userService->setNewUser($user);
-                $this->userRepository->save($user, true);
-            }
+    //             $user = $this->userService->setNewUser($user);
+    //             $this->userRepository->save($user, true);
+    //         }
 
-            // Проверяем доступы.
-            foreach (explode(',', $row->getCourseIds()) as $courseId) {
-                $course = $this->courseRepository->find($courseId);
-                if ($course instanceof Course) {
-                    $permission = $this->permissionRepository
-                        ->getLastActivePermission($course, $user);
+    //         // Проверяем доступы.
+    //         foreach (explode(',', $row->getCourseIds()) as $courseId) {
+    //             $course = $this->courseRepository->find($courseId);
+    //             if ($course instanceof Course) {
+    //                 $permission = $this->permissionRepository
+    //                     ->getLastActivePermission($course, $user);
 
-                    // Создаем новый доступ если нет активного.
-                    if (!$permission instanceof Permission) {
-                        $permission = (new Permission())
-                            ->setCreatedAt(new DateTime())
-                            ->setOrderNom($row->getOrderNom())
-                            ->setDuration($row->getDuration())
-                            ->setCourse($course)
-                            ->setUser($user);
+    //                 // Создаем новый доступ если нет активного.
+    //                 if (!$permission instanceof Permission) {
+    //                     $permission = (new Permission())
+    //                         ->setCreatedAt(new DateTime())
+    //                         ->setOrderNom($row->getOrderNom())
+    //                         ->setDuration($row->getDuration())
+    //                         ->setCourse($course)
+    //                         ->setUser($user);
 
-                        $this->permissionRepository->save($permission, true);
-                    }
+    //                     $this->permissionRepository->save($permission, true);
+    //                 }
 
-                    $fileData = $row->getOrderNom() . ';'
-                        . $user->getFullName() . ';'
-                        . $user->getPosition() . ';'
-                        . $user->getOrganization() . ';'
-                        . $user->getLogin() . ';'
-                        . $user->getPlainPassword() . ';'
-                        . $course->getShortName() . ';'
-                        . $permission->getDuration() . PHP_EOL;
+    //                 $fileData = $row->getOrderNom() . ';'
+    //                     . $user->getFullName() . ';'
+    //                     . $user->getPosition() . ';'
+    //                     . $user->getOrganization() . ';'
+    //                     . $user->getLogin() . ';'
+    //                     . $user->getPlainPassword() . ';'
+    //                     . $course->getShortName() . ';'
+    //                     . $permission->getDuration() . PHP_EOL;
 
-                    fputs($file, $fileData);
-                }
-            }
+    //                 fputs($file, $fileData);
+    //             }
+    //         }
 
-            // Очередь.
-            $row->setResult('success');
-            $this->queryUserRepository->save($row, true);
-        }
+    //         // Очередь.
+    //         $row->setResult('success');
+    //         $this->queryUserRepository->save($row, true);
+    //     }
 
-        fclose($file);
+    //     fclose($file);
 
-        return $fileName;
-    }
+    //     return $fileName;
+    // }
 }

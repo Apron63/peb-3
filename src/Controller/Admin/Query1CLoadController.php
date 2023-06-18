@@ -11,13 +11,14 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class Query1CLoadController extends MobileController
 {
-    public function __construct(readonly QueryUserRepository $queryUserRepository)
+    public function __construct(
+        private readonly QueryUserRepository $queryUserRepository)
     {}
 
     #[Route('/admin/query/1cload/', name: 'admin_query_1cload')]
     public function index(Request $request, PaginatorInterface $paginator): Response
     {
-        $query = $this->queryUserRepository->getQueryUser();
+        $query = $this->queryUserRepository->getQueryUser($this->getUser());
 
         $pagination = $paginator->paginate(
             $query,
