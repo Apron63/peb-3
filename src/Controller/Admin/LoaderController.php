@@ -51,11 +51,6 @@ class LoaderController extends MobileController
 
         return $this->render('admin/loader/index.html.twig', [
             'data' => $data,
-            'checkboxChangeUrl' => $this->generateUrl('admin_loader_change_check_box'),
-            'setAllCheckBoxValueUrl' => $this->generateUrl('admin_loader_set_all_check_box'),
-            'load1CUrl' => $this->generateUrl('admin_import_1C'),
-            'assignCourse' =>$this->generateUrl('admin_loader_check_empty'),
-            'prepareCourse' =>$this->generateUrl('admin_loader_prepare_data'),
             'emptyData' => $emptyData,
         ]);
     }

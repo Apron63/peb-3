@@ -7,14 +7,14 @@
     <h3>Загрузка слушателей</h3>
 
     <div class="btn-group">
-        <button class="btn btn-outline-dark" id="load1C" data-url="{{ load1CUrl }}">Загрузить из 1С</button>
-        <button class="btn btn-outline-dark" id="selectAll" data-url="{{ setAllCheckBoxValueUrl }}">Выбрать всех</button>
-        <button class="btn btn-outline-dark" id="unselectAll" data-url="{{ setAllCheckBoxValueUrl }}">Снять отметку</button>
+        <button class="btn btn-outline-dark" id="load1C" data-url="{{ path('admin_import_1C') }}">Загрузить из 1С</button>
+        <button class="btn btn-outline-dark" id="selectAll" data-url="{{ path('admin_loader_set_all_check_box') }}">Выбрать всех</button>
+        <button class="btn btn-outline-dark" id="unselectAll" data-url="{{ path('admin_loader_set_all_check_box') }}">Снять отметку</button>
         <button 
             class="btn btn-outline-dark" 
             id ="assignCourse" 
-            data-check="{{ assignCourse }}" 
-            data-prepare="{{ prepareCourse }}"
+            data-check="{{ path('admin_loader_check_empty') }}" 
+            data-prepare="{{ path('admin_loader_prepare_data') }}"
             data-query={{ path('admin_loader_check_query') }}
         >
             Назначить курс
@@ -87,7 +87,7 @@
         </tbody>
     </table>
 
-    <input type="hidden" id="checkbox-change-url" data-url="{{ checkboxChangeUrl }}">
+    <input type="hidden" id="checkbox-change-url" data-url="{{ path('admin_loader_change_check_box') }}">
     <input type="hidden" id="empty-data" data-empty="{{ emptyData }}">
     <div id="loading-content"></div>
 
