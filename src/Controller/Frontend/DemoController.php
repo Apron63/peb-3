@@ -222,7 +222,7 @@ class DemoController extends AbstractController
     }
 
     #[Route('demo/preparation/{id<\d+>}/{themeId?}/', name: 'app_demo_preparation_course')]
-    public function preparation(Course $course, ?int $themeId = null, Request $request): Response
+    public function preparation(Course $course, Request $request, ?int $themeId = null): Response
     {
         if (!$course->isForDemo()) {
             throw new NotFoundHttpException();
