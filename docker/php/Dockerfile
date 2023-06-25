@@ -1,4 +1,4 @@
-FROM php:8.1-fpm
+FROM php:8.2-fpm
 
 RUN usermod -u 1000 www-data
 RUN chown -R 1000 /var/www/html/
@@ -15,6 +15,7 @@ RUN apt-get update && \
      apt-get install -y \
      libzip-dev \
      libxml2-dev \
+     libpng-dev \
      unzip \
      && docker-php-ext-install zip
 
@@ -23,7 +24,9 @@ RUN apt-get install -y zlib1g-dev libicu-dev g++ \
     && docker-php-ext-install intl \
     && docker-php-ext-enable intl \
     && docker-php-ext-install iconv \
-    && docker-php-ext-install dom
+    && docker-php-ext-install dom \
+    && docker-php-ext-configure gd \
+    && docker-php-ext-install -j$(nproc) gd
 
 RUN pecl install xdebug \
     && docker-php-ext-enable xdebug

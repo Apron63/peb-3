@@ -52,6 +52,10 @@ class Permission
     #[ORM\Column(nullable: true)]
     private array $history = [];
 
+    #[ORM\ManyToOne(inversedBy: 'permissions')]
+    #[ORM\JoinColumn(onDelete: 'SET NULL')]
+    private ?Loader $loader = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -181,5 +185,17 @@ class Permission
             case self::STAGE_FINISHED:
                 return 'Окончено';
         }
+    }
+
+    public function getLoader(): ?Loader
+    {
+        return $this->loader;
+    }
+
+    public function setLoader(?Loader $loader): self
+    {
+        $this->loader = $loader;
+
+        return $this;
     }
 }

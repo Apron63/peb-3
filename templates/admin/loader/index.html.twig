@@ -20,17 +20,23 @@
             Назначить курс
         </button>
         <div class="dropdown">
-            <button class="btn btn-outline-dark dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+            <button 
+                class="btn btn-outline-dark dropdown-toggle" 
+                type="button" 
+                id="dropdownMenuButton1" 
+                data-bs-toggle="dropdown" 
+                aria-expanded="false" 
+            >
                 Скачать
             </button>
             <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                <li><a class="dropdown-item color-item" href="#" onclick="getContent('CSV')">CSV</a></li>
-                <li><a class="dropdown-item color-item" href="#" onclick="getContent('XLSX')">XLSX</a></li>
-                <li><a class="dropdown-item color-item" href="#" onclick="getContent('TXT')">TXT</a></li>
-                <li><a class="dropdown-item color-item" href="#" onclick="getContent('DOCX')">DOCX</a></li>
+                <li><a class="dropdown-item color-item" href="{{ path('admin_loader_report_to_csv')}}" id="getContentCSV">CSV</a></li>
+                <li><a class="dropdown-item color-item" href="{{ path('admin_loader_report_to_xlsx') }}" id="getContentXLSX">XLSX</a></li>
+                <li><a class="dropdown-item color-item" href="{{ path('admin_loader_report_to_txt') }}" id="getContentTXT">TXT</a></li>
+                <li><a class="dropdown-item color-item" href="{{ path('admin_loader_report_to_docx') }}" id="getContentDOCX">DOCX</a></li>
             </ul>
         </div>
-        <div class="dropdown">
+        {# <div class="dropdown hide">
             <button class="btn btn-outline-dark dropdown-toggle" type="button" id="dropdownMenuButton2" data-bs-toggle="dropdown" aria-expanded="false">
                 Скачать и отправить
             </button>
@@ -40,7 +46,7 @@
                 <li><a class="dropdown-item color-item" href="#" onclick="getEmail('TXT')">TXT</a></li>
                 <li><a class="dropdown-item color-item" href="#" onclick="getEmail('DOCX')">DOCX</a></li>
             </ul>
-        </div>
+        </div> #}
     </div>
 
     <table class="table">
@@ -91,19 +97,13 @@
     <input type="hidden" id="empty-data" data-empty="{{ emptyData }}">
     <div id="loading-content"></div>
 
-    <script>
-        function getContent(type)
-        {
-            alert('В работе!')
-            return false;
-        }
-        
+    {# <script>
         function getEmail(type)
         {
             alert('В работе!')
             //https://www.rapidtables.com/web/html/mailto.html#what
             return false;
         }
-    </script>
+    </script> #}
 
 {% endblock %}

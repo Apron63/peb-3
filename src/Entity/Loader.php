@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\LoaderRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: LoaderRepository::class)]
@@ -44,6 +46,14 @@ class Loader
 
     #[ORM\Column]
     private ?bool $checked = null;
+
+    #[ORM\OneToMany(mappedBy: 'loader', targetEntity: Permission::class)]
+    private Collection $permissions;
+
+    public function __construct()
+    {
+        $this->permissions = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -166,6 +176,36 @@ class Loader
     public function setChecked(bool $checked): self
     {
         $this->checked = $checked;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Permission>
+     */
+    public function getPermissions(): Collection
+    {
+        return $this->permissions;
+    }
+
+    public function addPermission(Permission $permission): self
+    {
+        if (!$this->permissions->contains($permission)) {
+            $this->permissions->add($permission);
+            $permission->setLoader($this);
+        }
+
+        return $this;
+    }
+
+    public function removePermission(Permission $permission): self
+    {
+        if ($this->permissions->removeElement($permission)) {
+            // set the owning side to null (unless already changed)
+            if ($permission->getLoader() === $this) {
+                $permission->setLoader(null);
+            }
+        }
 
         return $this;
     }

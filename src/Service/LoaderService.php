@@ -149,7 +149,8 @@ class LoaderService
                             ->setOrderNom($queryUser->getOrderNom())
                             ->setDuration($queryUser->getDuration())
                             ->setCourse($course)
-                            ->setUser($user);
+                            ->setUser($user)
+                            ->setLoader($queryUser->getLoader());
 
                         $this->permissionRepository->save($permission, true);
 
