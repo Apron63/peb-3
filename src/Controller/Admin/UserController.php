@@ -27,7 +27,7 @@ class UserController extends MobileController
     {
         $criteria = $request->get('user_search');
 
-        $query = $this->userRepository->getUserSearchQuery($criteria);
+        $query = $this->permissionRepository->getUserSearchQuery($criteria);
 
         $pagination = $paginator->paginate(
             $query,
@@ -117,7 +117,7 @@ class UserController extends MobileController
         ]);
     }
 
-    #[Route('/admin/user/info/{id<\d+>}', name: 'admin_user_info')]
+    #[Route('/admin/user/info/{id<\d+>}/', name: 'admin_user_info')]
     public function adminUserInfo(Request $request, User $user): Response
     {
         return $this->mobileRender('admin/user/info.html.twig', [

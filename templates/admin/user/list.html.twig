@@ -4,43 +4,109 @@
 
 {% block content %}
     <h3>Список пользователей</h3>
-    <div class="count">
-        Всего записей: {{ pagination.getTotalItemCount }}
+    <div class="row count">
+
+        {% set criteria = app.request.request.all %}
+
+        <div class="col-2">
+            Всего записей: {{ pagination.getTotalItemCount }}
+        </div>
+        <div class="col-10">
+            <div class="btn-group">
+                <div class="dropdown">
+                    <button class="btn btn-outline-dark dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                        Скачать статистику
+                    </button>
+                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                        <li><a class="dropdown-item color-item" href="{{ path('admin_user_report_stattistic_to_pdf', {criteria: criteria}) }}">PDF</a></li>
+                        <li><a class="dropdown-item color-item" href="{{ path('admin_user_report_stattistic_to_docx', {criteria: criteria}) }}">DOCX</a></li>
+                        <li><a class="dropdown-item color-item" href="{{ path('admin_user_report_stattistic_to_xlsx', {criteria: criteria}) }}">XLSX</a></li>
+                    </ul>
+                </div>
+                <div class="dropdown">
+                    <button class="btn btn-outline-dark dropdown-toggle" type="button" id="dropdownMenuButton2" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Скачать данные
+                    </button>
+                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton2">
+                        <li><a class="dropdown-item color-item" href="{{ path('admin_user_report_list_to_csv', {criteria: criteria}) }}">CSV</a></li>
+                        <li><a class="dropdown-item color-item" href="{{ path('admin_user_report_list_to_xlsx', {criteria: criteria}) }}">XLSX</a></li>
+                        <li><a class="dropdown-item color-item" href="{{ path('admin_user_report_list_to_txt', {criteria: criteria}) }}">TXT</a></li>
+                        <li><a class="dropdown-item color-item" href="{{ path('admin_user_report_list_to_docx', {criteria: criteria}) }}">DOCX</a></li>
+                    </ul>
+                </div>
+                {#
+                <div class="dropdown">
+                    <button class="btn btn-outline-dark dropdown-toggle" type="button" id="dropdownMenuButton3" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Скачать данные и отправить
+                    </button>
+                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton3">
+                        <li><a class="dropdown-item" href="#">Action</a></li>
+                        <li><a class="dropdown-item" href="#">Another action</a></li>
+                        <li><a class="dropdown-item" href="#">Something else here</a></li>
+                    </ul>
+                </div>
+                #}
+            </div>
+        </div>
     </div>
 
-    <table class="table">
-        <thead>
-        <tr>
-            <th>Создан</th>
-            <th>Логин</th>
-            <th>ФИО</th>
-            <th>Организация</th>
-            <th>Активный</th>
-        </tr>
-        </thead>
+    <div class="scroll-table">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Создан</th>
+                    <th>Логин</th>
+                    <th>ФИО</th>
+                    <th>Организация</th>
+                    <th>Курс</th>
+                    <th>Дней</th>
+                    <th>Статус</th>
+                    <th>Акт</th>
+                </tr>
+            </thead>
 
-        <tbody>
-        {% for user in pagination %}
-            <tr>
-                <td>{{ user.createdAt | date('d.m.Y H:i:s') }}</td>
-                <td>
-                    <a href="{{ path('admin_user_edit', {'id': user.id}) }}">{{ user.login }}</a>
-                </td>
-                <td>{{ user.fullName }}</td>
-                <td>{{ user.organization }}</td>
-                <td>
-                    <span>
-                        <input class="form-check-input" type="checkbox" id="checkboxNoLabel" value=""
-                               {% if user.active == 1 %}checked{% endif %} disabled>
-                    </span>
-                </td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+            <tbody>
+                {% for user in pagination %}
+                    <tr>
+                        <td>{{ user.createdAt | date('d.m.Y H:i:s') }}</td>
+                        <td>
+                            <a href="{{ path('admin_user_edit', {'id': user.userId}) }}">{{ user.login }}</a>
+                        </td>
+                        <td>{{ user.fullName }}</td>
+                        <td>{{ user.organization }}</td>
+                        <td>{{ user.shortName }}</td>
+                        <td>
+                            <div class="input-group" style="width:120px;">
+                                <span style="padding-right:5px;">{{ user.duration }}</span>
+                                <input type="number" class="form-control">
+                                <button class="btn btn-danger btn-sm button-add-duration" data-permission-id="{{ user.permissionId }}">+</button>
+                            </div>
+                        </td>
+                        <td>
+                            {% if user.stage == 1 %}
+                               Не начато
+                            {% elseif user.stage == 2 %}
+                                В процессе
+                            {% elseif user.stage == 3 %}
+                                <a href="#">Завершено</a>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <span>
+                                <input class="form-check-input" type="checkbox" id="checkboxNoLabel" value=""
+                                    {% if user.active == 1 %}checked{% endif %} disabled>
+                            </span>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
 
     <div class="navigation">
         {{ knp_pagination_render(pagination) }}
     </div>
+
+    <input type="hidden" id="add-duration-button" data-add-duration-url="{{ path('admin_permission_add_duration') }}">
 
 {% endblock %}

@@ -11,10 +11,12 @@ use App\Decorator\MobileController;
 use App\Entity\Logger;
 use App\Form\Admin\PermissionEditType;
 use App\Repository\PermissionRepository;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 class PermissionController extends MobileController
 {
@@ -101,5 +103,22 @@ class PermissionController extends MobileController
         } else {
             throw new NotFoundHttpException('Logger with success not found');
         }
+    } 
+    
+    #[Route('/admin/permission/add-duration/', name: 'admin_permission_add_duration', condition: 'request.isXmlHttpRequest()'), IsGranted('ROLE_ADMIN')]
+    public function addDuration(Request $request): JsonResponse
+    {
+        $permissionId = $request->get('permissionId');
+        $duration = $request->get('duration');
+
+        $permission = $this->permissionRepository->find($permissionId);
+        if (! $permission instanceof Permission) {
+            throw new NotFoundHttpException('Permission Not Found');
+        }
+
+        $permission->setDuration($permission->getDuration() + $duration);
+        $this->permissionRepository->save($permission, true);
+
+        return new JsonResponse(['duration' => $permission->getDuration()]);
     }
 }

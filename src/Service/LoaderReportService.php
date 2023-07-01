@@ -123,7 +123,7 @@ class LoaderReportService
         foreach($this->loaderRepository->getLoaderforCheckedUser($user) as $loader) {
             foreach($loader->getPermissions() as $permission) {
                 $fileData = 
-                    $loader->getUser()?->getFullName()
+                    $loader->getUser()?->getFullName() . PHP_EOL
                     . $loader->getPosition() . PHP_EOL
                     . $loader->getOrganization() . PHP_EOL
                     . $loader->getUser()?->getLogin() . PHP_EOL

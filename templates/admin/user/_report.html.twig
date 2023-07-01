@@ -1,0 +1,40 @@
+{% set rowNom = 1 %}
+
+<table border="1">
+    <thead>
+        <tr>
+            <th align="center">№</th>
+            <th>Дата доступа</th>
+            <th>ФИО</th>
+            <th>Организация</th>
+            <th>Логин</th>
+            <th>Курс</th>
+            <th>Дата активации</th>
+            <th>Посл. действие</th>
+            <th>Дата экзамена</th>
+            <th>Результат</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for row in data%}
+            <tr>
+                <td align="center">{{ rowNom }}</td>
+                <td>{{ row.createdAt | date('d.m.Y') }}</td>
+                <td>{{ row.fullName }}</td>
+                <td>{{ row.organization }}</td>
+                <td>{{ row.login }}</td>
+                <td>{{ row.shortName }}</td>
+                <td>{{ row.activatedAt | date('d.m.Y') }}</td>
+                <td>{{ row.lastAccess | date('d.m.Y') }}</td>
+                <td>
+                    {% if row.lastExam is not empty %}
+                        {{ row.lastExam | date('d.m.Y') }}    
+                    {% endif %}
+                </td>
+                <td>{% if row.stage == 3 %}Сдано{% else %}Не сдано{% endif %}</td>
+            </tr>
+
+            {% set rowNom = rowNom + 1 %}
+        {% endfor %}
+    </tbody>
+</table>

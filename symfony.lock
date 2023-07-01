@@ -35,6 +35,9 @@
             "migrations/.gitignore"
         ]
     },
+    "jonasarts/tcpdf-bundle": {
+        "version": "v6.0.4"
+    },
     "knplabs/knp-paginator-bundle": {
         "version": "v6.1.1"
     },

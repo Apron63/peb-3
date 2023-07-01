@@ -3,11 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\User;
-use DateInterval;
-use DateTime;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Doctrine\ORM\AbstractQuery;
-use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bridge\Doctrine\Security\User\UserLoaderInterface;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
@@ -88,61 +84,6 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
      */
     public function loadUserByUsername(string $username)
     {
-    }
-
-    /**
-     * @param array|null $criteria
-     * @return Query
-     * @throws Exception
-     */
-    public function getUserSearchQuery(?array $criteria): AbstractQuery
-    {
-        $queryBuilder = $this->getEntityManager()->createQueryBuilder();
-        $queryBuilder->select('u')
-            ->from(User::class, 'u')
-            ->leftJoin('App\Entity\Permission', 'p', Join::WITH, 'p.user = u.id')
-            ->orderBy('u.login');
-
-        if (isset($criteria['login']) && $criteria['login']) {
-            $queryBuilder->andWhere('u.login LIKE :login')
-                ->setParameter('login', "{$criteria['login']}%");
-        }
-        if (isset($criteria['name']) && $criteria['name']) {
-            $queryBuilder->andWhere('u.fullName LIKE :name')
-                ->setParameter('name', "{$criteria['name']}%");
-        }
-        if (isset($criteria['organization']) && $criteria['organization']) {
-            $queryBuilder->andWhere('u.organization LIKE :organization')
-                ->setParameter('organization', "%{$criteria['organization']}%");
-        }
-        if (isset($criteria['position']) && $criteria['position']) {
-            $queryBuilder->andWhere('u.position LIKE :position')
-                ->setParameter('position', "%{$criteria['position']}%");
-        }
-        if (isset($criteria['orderNumber']) && $criteria['orderNumber']) {
-            $queryBuilder->andWhere('p.orderNom = :orderNumber')
-                ->setParameter('orderNumber', $criteria['orderNumber']);
-        }
-
-        if (isset($criteria['startPeriod']) && $criteria['startPeriod']) {
-            $queryBuilder->andWhere('p.createdAt >= :startPeriod')
-                ->setParameter('startPeriod', (new DateTime($criteria['startPeriod']))->modify('today'));
-        }
-
-        if (isset($criteria['endPeriod']) && $criteria['endPeriod']) {
-            $queryBuilder->andWhere('p.createdAt <= :endPeriod')
-                ->setParameter(
-                    'endPeriod',
-                    (new DateTime($criteria['endPeriod']))->modify('tomorrow')->sub(new DateInterval('PT1S'))
-                );
-        }
-
-        if (isset($criteria['course']) && $criteria['course']) {
-            $queryBuilder->andWhere('p.course IN (:course)')
-                ->setParameter('course', $criteria['course']);
-        }
-
-        return $queryBuilder->getQuery();
     }
 
     public function getUserExistsByLoginAndOrganization(string $login, string $organization): bool

@@ -18,10 +18,6 @@ class UserService
         private readonly UserRepository $userRepository
     ) { }
 
-    /**
-     * @param array $criteria
-     * @return User|null
-     */
     public function checkUserExist(array $criteria): ?User
     {
         $lastName = $this->slugger->slug($criteria['lastName'])->lower()->toString();
@@ -42,10 +38,6 @@ class UserService
         );
     }
 
-    /**
-     * @param User $user
-     * @return User
-     */
     public function setNewUser(User $user): User
     {
         if (null === $user->getLogin() || '' === $user->getLogin()) {
@@ -73,10 +65,6 @@ class UserService
         return $user;
     }
 
-    /**
-     * @param User $user
-     * @return User
-     */
     public function getNewLoginForUser(User $user): User
     {
         $lastName = $this->slugger->slug($user->getLastName())->lower()->toString();
@@ -111,16 +99,17 @@ class UserService
         return $user;
     }
 
-    /**
-     * @param User $user
-     * @return User
-     */
     public function getNewPasswordForUser(User $user): User
     {
         $newPassword = $user->getPlainPassword();
         if (null === $newPassword || '' === $newPassword) {
             $newPassword = ByteString::fromRandom(8)->toString();
+
+            if ('0' === $newPassword[0]) {
+                $newPassword[0] = chr(rand(ord('A'), ord('Z')));
+            }
         }
+        
         $user->setPassword($this->passwordEncoder->hashPassword($user, $newPassword));
         $user->setPlainPassword($newPassword);
         return $user;

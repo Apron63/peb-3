@@ -18,6 +18,10 @@ body {
     background: rgb(23, 177, 180);
 }
 
+.scroll-table {
+    overflow-x: auto;
+}
+
 .loading {
     z-index: 20;
     position: absolute;
