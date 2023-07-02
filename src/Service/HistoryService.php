@@ -3,16 +3,35 @@
 namespace App\Service;
 
 use App\Repository\LoggerRepository;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 class HistoryService
 {
     public function __construct(
-        readonly LoggerRepository $loggerRepository,
+        private readonly LoggerRepository $loggerRepository,
     ) {}
 
-    public function getPermissionTestingResults()
+    public function getPermissionTestingResults(array $permissions, UserInterface $user): array
     {
-        # code...
+        $result = [];
+
+        foreach($permissions as $permission) {
+            $logger = $this->loggerRepository->findOneBy(
+                [
+                    'permission' => $permission,
+                    'user' => $user,
+                ],
+                [
+                    'beginAt' => 'desc',
+                ]
+            );
+
+            $result[] = [
+                'permission' => $permission,
+                'logger' => $logger
+            ];
+        }
+
+        return $result;
     }
-    
 }

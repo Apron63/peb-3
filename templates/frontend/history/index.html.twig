@@ -24,33 +24,37 @@
                             </div>
                         </div>
                         <div class="history_table_content">
-                            {% for permission in permissions %}
+                            {% for item in items %}
                                 <div class="history_table_row">
-                                    <div class="course">{{ permission.course.name }}</div>
+                                    <div class="course">{{ item.permission.course.name }}</div>
                                     <div class="status">
-                                        {% if permission.stage == 1 %}
+                                        {% if item.permission.stage == 1 %}
                                             обучение не начато
-                                        {% elseif permission.stage == 1 %}
+                                        {% elseif item.permission.stage == 1 %}
                                             обучение идет
                                         {% else %}
                                             обучение завершено    
                                         {% endif %}
                                     </div>
                                     <div class="start_at">
-                                        {% if permission.activatedAt is not empty %}
-                                            <span class="header">начало обучения: </span>{{ permission.activatedAt | date('d.m.Y') }}
+                                        {% if item.permission.activatedAt is not empty %}
+                                            <span class="header">начало обучения: </span>{{ item.permission.activatedAt | date('d.m.Y') }}
                                         {% endif %}
                                     </div>
                                     <div class="finish_at">
-                                        {% if getResultDescription(permission.id).endDate is not empty %}
-                                            <span class="header">завершение обучения: </span>{{ getResultDescription(permission.id).endDate }}
+                                        {% if getResultDescription(item.permission.id).endDate is not empty %}
+                                            <span class="header">завершение обучения: </span>{{ getResultDescription(item.permission.id).endDate }}
                                         {% endif %}
                                     </div>
                                     <div class="results">
-                                        <span class="header">результат: </span>{{ getResultDescription(permission.id).result }}
+                                        <span class="header">результат: </span>
+                                        {{ getResultDescription(item.permission.id).result }}
+                                        {% if item.logger is not empty %}
+                                            <a href="{{ path('app_frontend_testing_print', {id: item.logger.id}) }}">(Скачать протокол)</a>
+                                        {% endif %}
                                     </div>
                                     <div class="duration">
-                                        <span class="header">длительность: </span>{{ getResultDescription(permission.id).duration }}
+                                        <span class="header">длительность: </span>{{ getResultDescription(item.permission.id).duration }}
                                     </div>
                                 </div>
                             {% endfor %}

@@ -1,0 +1,80 @@
+<h1>Протокол экзамена</h1>
+
+<div class="row">
+    <div class="col-6">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th></th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Тестируемый:</td>
+                    <td>{{ logger.user.fullname}}</td>
+                </tr>
+                <tr>
+                    <td>Организация:</td>
+                    <td>{{ logger.user.organization}}</td>
+                </tr>
+                <tr>
+                    <td>Результат:</td>
+                    <td>{% if not logger.result %} не {% endif %}сдан</td>
+                </tr>
+                <tr>
+                    <td>Допустимое количество ошибок:</td>
+                    <td>{{ logger.errorAllowed }}</td>
+                </tr>
+                <tr>
+                    <td>Допущено ошибок:</td>
+                    <td>{{ logger.errorActually }}</td>
+                </tr>
+                <tr>
+                    <td>Пропушено вопросов:</td>
+                    <td>{{ skipped}}</td>
+                </tr>
+                <tr>
+                    <td>Предмет тестирования:</td>
+                    <td>{{ logger.permission.course.name }}</td>
+                </tr>
+                <tr>
+                    <td>Номер билета:</td>
+                    <td> {% if logger.ticket is defined %}
+                            {{ logger.ticket.nom }}
+                        {% endif %}
+                    </td>
+                </tr>
+                <tr>
+                    <td>Дата проведения тестирования:</td>
+                    <td>{{ logger.beginAt | date('d.m.Y H:i:s') }}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<table class="table" border="1">
+    <thead>
+        <tr>
+            <th align="center" width="25">№</th>
+            <th width="200">Вопрос</th>
+            <th width="200">Ответ</th>
+            <th width="100">Результат</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for question in logger.protocol %}
+            <tr>
+                <td align="center" width="25">{{ question.nom }}</td>
+                <td width="200">{{ question.qText | raw }}</td>
+                <td width="200">
+                    {% for answer in question.aText %}
+                        {{ answer |raw }}
+                    {% endfor %}
+                </td>
+                <td width="100">{% if question['isCorrect'] %}Правильно{% else %}Неправильно{% endif %}</td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>

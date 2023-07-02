@@ -4,14 +4,17 @@ namespace App\Controller\Frontend;
 
 use App\Entity\Logger;
 use App\Entity\Permission;
-use App\Repository\PermissionRepository;
 use App\Service\TestingService;
+use App\Service\TestingReportService;
 use App\Service\UserPermissionService;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\JsonResponse;
+use App\Repository\PermissionRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\ResponseHeaderBag;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException as ExceptionAccessDeniedException;
 
 class TestingController extends AbstractController
@@ -20,6 +23,7 @@ class TestingController extends AbstractController
         private readonly PermissionRepository $permissionRepository,
         private readonly TestingService $testingService,
         private readonly UserPermissionService $userPermissionService,
+        private readonly TestingReportService $reportService,
     ) {}
 
     #[Route('/frontend/testing/{id<\d+>}/', name: 'app_frontend_testing')]
@@ -63,5 +67,25 @@ class TestingController extends AbstractController
             'logger' => $this->testingService->closeLogger($logger),
             'skipped' => $this->testingService->getSkippedQuestion($logger),
         ]);
+    }
+    
+    #[Route('/frontend/testing/print/{id<\d+>}/', name: 'app_frontend_testing_print')]
+    public function printTesting(Logger $logger): BinaryFileResponse
+    {
+        $permission = $logger->getPermission();
+        $user = $this->getUser();
+        if (!$this->userPermissionService->checkPermissionForUser($permission, $user, false)) {
+            throw new ExceptionAccessDeniedException();
+        }
+
+
+        $fileName = $this->reportService->generateTestingPdf($logger);
+        $response = new BinaryFileResponse($fileName);
+        $response->headers->set('Content-Type', 'application/pdf');
+        $response
+            ->setContentDisposition(ResponseHeaderBag::DISPOSITION_ATTACHMENT, 'protocol.pdf')
+            ->deleteFileAfterSend(true);
+
+        return $response;
     }
 }

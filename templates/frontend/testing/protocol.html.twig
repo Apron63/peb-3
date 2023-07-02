@@ -57,6 +57,7 @@
                             <div class="results_data_row_value">{{ logger.beginAt | date('d.m.Y H:i:s') }}</div>
                         </div>
                     </div>
+                    <a href="{{ path('app_frontend_testing_print', {id: logger.id}) }}">Скачать протокол</a>
                     <div class="results_table">
                         <div class="results_table_header">
                             <div class="results_table_row">
@@ -85,6 +86,8 @@
             </div>
         </div>
     </div>
+
+    
 
     {% include('frontend/components/footer.html.twig') %}
 
