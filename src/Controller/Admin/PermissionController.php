@@ -26,7 +26,7 @@ class PermissionController extends MobileController
         private readonly UserRepository $userRepository,
     ) {}
 
-    #[Route('/admin/permission/create/{id<\d+>}', name: 'admin_permission_create')]
+    #[Route('/admin/permission/create/{id<\d+>}/', name: 'admin_permission_create')]
     public function adminPermissionCreate(Request $request, User $user): Response
     {
         $permission = new Permission();
@@ -73,7 +73,7 @@ class PermissionController extends MobileController
         ]);
     }
 
-    #[Route('/admin/permission/delete/{id<\d+>}', name: 'admin_permission_delete')]
+    #[Route('/admin/permission/delete/{id<\d+>}/', name: 'admin_permission_delete')]
     public function adminPermissionDelete(Permission $permission): Response
     {
         $userId = $permission->getUser()->getId();

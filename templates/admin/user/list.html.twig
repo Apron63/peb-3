@@ -66,35 +66,40 @@
             </thead>
 
             <tbody>
-                {% for user in pagination %}
+                {% for permission in pagination %}
                     <tr>
-                        <td>{{ user.createdAt | date('d.m.Y H:i:s') }}</td>
+                        <td>{{ permission.createdAt | date('d.m.Y H:i:s') }}</td>
                         <td>
-                            <a href="{{ path('admin_user_edit', {'id': user.userId}) }}">{{ user.login }}</a>
+                            <a href="{{ path('admin_user_edit', {'id': permission.userId}) }}">{{ permission.login }}</a>
                         </td>
-                        <td>{{ user.fullName }}</td>
-                        <td>{{ user.organization }}</td>
-                        <td>{{ user.shortName }}</td>
+                        <td>{{ permission.fullName }}</td>
+                        <td>{{ permission.organization }}</td>
+                        <td>{{ permission.shortName }}</td>
                         <td>
                             <div class="input-group" style="width:120px;">
-                                <span style="padding-right:5px;">{{ user.duration }}</span>
+                                <span style="padding-right:5px;">{{ permission.duration }}</span>
                                 <input type="number" class="form-control">
-                                <button class="btn btn-danger btn-sm button-add-duration" data-permission-id="{{ user.permissionId }}">+</button>
+                                <button class="btn btn-danger btn-sm button-add-duration" data-permission-id="{{ permission.permissionId }}">+</button>
                             </div>
                         </td>
                         <td>
-                            {% if user.stage == 1 %}
+                            {% if permission.stage == 1 %}
                                Не начато
-                            {% elseif user.stage == 2 %}
+                            {% elseif permission.stage == 2 %}
                                 В процессе
-                            {% elseif user.stage == 3 %}
-                                <a href="#">Завершено</a>
+                            {% elseif permission.stage == 3 %}
+                                <a 
+                                    href="{{ path('admin_print_testing', {id: permission.permissionId, userId: permission.userId}) }}"
+                                    target="_blank"
+                                >
+                                    Завершено
+                                </a>
                             {% endif %}
                         </td>
                         <td>
                             <span>
                                 <input class="form-check-input" type="checkbox" id="checkboxNoLabel" value=""
-                                    {% if user.active == 1 %}checked{% endif %} disabled>
+                                    {% if permission.active == 1 %}checked{% endif %} disabled>
                             </span>
                         </td>
                     </tr>
