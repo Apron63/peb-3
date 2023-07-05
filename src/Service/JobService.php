@@ -12,8 +12,8 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 class JobService
 {
     public function __construct(
-        readonly QueryJobRepository $queryJobRepository, 
-        readonly UserRepository $userRepository
+        private readonly QueryJobRepository $queryJobRepository, 
+        private readonly UserRepository $userRepository
     ) { }
 
     /**

@@ -15,8 +15,8 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 class CreateAdminCommand extends Command
 {
     public function __construct (
-        readonly UserRepository $userRepository, 
-        readonly UserPasswordHasherInterface $passwordEncoder
+        private readonly UserRepository $userRepository, 
+        private readonly UserPasswordHasherInterface $passwordEncoder
     ) {
         parent::__construct();
     }

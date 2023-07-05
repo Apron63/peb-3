@@ -2,11 +2,12 @@
 
 namespace App\Entity;
 
-use App\Repository\PermissionRepository;
-use DateInterval;
 use DateTime;
+use DateInterval;
+use DateTimeInterface;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use App\Repository\PermissionRepository;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
 
 #[ORM\Entity(repositoryClass: PermissionRepository::class)]
@@ -35,13 +36,13 @@ class Permission
     private ?string $orderNom = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
-    private ?\DateTimeInterface $activatedAt = null;
+    private ?DateTimeInterface $activatedAt = null;
 
     #[ORM\Column(type: Types::SMALLINT)]
     private ?int $duration = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
-    private ?\DateTimeInterface $lastAccess = null;
+    private ?DateTimeInterface $lastAccess = null;
     
     #[ORM\Column(type: Types::INTEGER, nullable: true)]
     private ?int $timeSpent = null;
@@ -55,6 +56,10 @@ class Permission
     #[ORM\ManyToOne(inversedBy: 'permissions')]
     #[ORM\JoinColumn(onDelete: 'SET NULL')]
     private ?Loader $loader = null;
+
+    #[ORM\ManyToOne]
+    #[ORM\JoinColumn(name: 'created_by')]
+    private ?User $createdBy = null;
 
     public function getId(): ?int
     {
@@ -195,6 +200,18 @@ class Permission
     public function setLoader(?Loader $loader): self
     {
         $this->loader = $loader;
+
+        return $this;
+    }
+
+    public function getCreatedBy(): ?User
+    {
+        return $this->createdBy;
+    }
+
+    public function setCreatedBy(?User $createdBy): self
+    {
+        $this->createdBy = $createdBy;
 
         return $this;
     }

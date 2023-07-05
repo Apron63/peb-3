@@ -1,0 +1,15 @@
+Вам назначен курс: {{ permission.course.name }} 
+<a href="https://ucoks.safety63.ru">Доступ по ссылке</a>
+
+Логин для входа: {{permission.user.login }}
+Пароль: {{ permission.user.plainPassword }}
+Продолжительность доступа в днях: {{ permission.duration }}
+
+Техническая поддержка: телефон  +7-937-077-11-65, +7 (846) 26-915-26, Email: support@safety63.ru
+График работы: с 8:00 до 22:00 без перерывов и выходных
+{% if permission.createdBy is not empty %}
+    Ответственный методист: {{ permission.createdBy.fullName }}
+    Телефон: {{ permission.createdBy.contact }}
+{% endif %}
+
+Для корректной работы необходим браузер с поддержкой JavaScript

@@ -62,8 +62,8 @@ services:
     # Permission auto-remove child records
     App\EventListener\PermissionRemoveEventListener:
         tags:
-            - name: 'doctrine.event_listener'
-              event: 'preRemove'
+            - { name: 'doctrine.event_listener', event: preRemove }
+            - { name: 'doctrine.event_listener', event: prePersist }
     # ModuleSectionPage auto-remove child records
     App\EventListener\ModuleSectionRemoveEventListener:
         tags:

@@ -33,7 +33,10 @@ class PermissionController extends MobileController
         if (null === $permission->getCreatedAt()) {
             $permission->setCreatedAt(new DateTime());
         }
-        $permission->setUser($user);
+        $permission
+            ->setUser($user)
+            ->setCreatedBy($this->getUser());
+            
         $form = $this->createForm(PermissionEditType::class, $permission);
         $form->handleRequest($request);
 
