@@ -97,6 +97,21 @@ class PermissionRepository extends ServiceEntityRepository
             ->getResult();
     }
 
+    /**
+     * @return Permission[]
+     */
+    public function getExpiredPermissionsList(): array
+    {
+        return $this
+            ->createQueryBuilder('p')
+            ->join('p.user', 'u')
+            ->where('u.email IS NOT NULL')
+            ->andwhere('p.activatedAt IS NOT NULL')
+            ->andWhere('DateDiff(Now(), p.activatedAt) = p.duration - 5')
+            ->getQuery()
+            ->getResult();
+    }
+
     public function removePermissionForCourse(Course $course)
     {
         $query = $this->getEntityManager()

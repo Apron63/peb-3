@@ -4,8 +4,11 @@ namespace App\Service;
 
 use DateTime;
 use App\Entity\User;
+use Twig\Environment;
 use App\Entity\Permission;
+use App\Entity\MailingQueue;
 use App\Entity\ModuleSection;
+use App\Repository\MailingQueueRepository;
 use App\Repository\PermissionRepository;
 
 class UserPermissionService
@@ -13,6 +16,8 @@ class UserPermissionService
     public function __construct(
         private readonly PermissionRepository $permissionRepository,
         private readonly CourseService $courseService,
+        private readonly MailingQueueRepository $mailingQueueRepository,
+        private Environment $twig,
     ) { }
 
     public function checkPermissionForUser(Permission $permission, User $user, bool $canChangeStage): bool
@@ -36,6 +41,18 @@ class UserPermissionService
                 $permission->setActivatedAt($timeNow)
                     ->setStage(Permission::STAGE_IN_PROGRESS)
                     ->setHistory($this->createHistory($permission));
+
+                $mailingQueue = new MailingQueue;
+
+                $mailingQueue
+                    ->setUser($permission->getUser())
+                    ->setSubject('Активирован учебный курс')
+                    ->setContent($this->twig->render('mail\permission-activated.html.twig', [
+                        'permission' => $permission,
+                        'lastDate' => date('d.m.Y', strtotime('+' . $permission->getDuration() . ' days')),
+                    ]));
+
+                $this->mailingQueueRepository->save($mailingQueue, true);
             }
 
             $permission->setLastAccess($timeNow);
