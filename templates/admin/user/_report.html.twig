@@ -24,8 +24,16 @@
                 <td>{{ row.organization }}</td>
                 <td>{{ row.login }}</td>
                 <td>{{ row.shortName }}</td>
-                <td>{{ row.activatedAt | date('d.m.Y') }}</td>
-                <td>{{ row.lastAccess | date('d.m.Y') }}</td>
+                <td>
+                    {% if row.activatedAt is not empty %}
+                        {{ row.activatedAt | date('d.m.Y') }}
+                    {% endif %}
+                </td>
+                <td>
+                    {% if row.lastAccess is not empty %}
+                        {{ row.lastAccess | date('d.m.Y') }}
+                    {% endif %}
+                </td>
                 <td>
                     {% if row.lastExam is not empty %}
                         {{ row.lastExam | date('d.m.Y') }}    
