@@ -1,4 +1,4 @@
-{% set rowNom = 1 %}
+{% set localCourse = null %}
 
 <table border="1">
     <thead>
@@ -8,7 +8,6 @@
             <th>ФИО</th>
             <th>Организация</th>
             <th>Логин</th>
-            <th>Курс</th>
             <th>Дата активации</th>
             <th>Посл. действие</th>
             <th>Дата экзамена</th>
@@ -17,13 +16,23 @@
     </thead>
     <tbody>
         {% for row in data%}
+
+            {% if localCourse != row.shortName %}
+                {% set localCourse = row.shortName%}
+                {% set rowNom = 1 %}
+                <tr>
+                    <td></td>
+                    <td>Курс</td>
+                    <td colspan="7">{{ row.shortName }}</td>
+                </tr>
+            {% endif %}
+
             <tr>
                 <td align="center">{{ rowNom }}</td>
                 <td>{{ row.createdAt | date('d.m.Y') }}</td>
                 <td>{{ row.fullName }}</td>
                 <td>{{ row.organization }}</td>
                 <td>{{ row.login }}</td>
-                <td>{{ row.shortName }}</td>
                 <td>
                     {% if row.activatedAt is not empty %}
                         {{ row.activatedAt | date('d.m.Y') }}

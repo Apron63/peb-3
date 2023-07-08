@@ -53,6 +53,7 @@ class AdminReportService
     public function generateStatisticDocx(array $data): string
     {
         $data = $this->prepareData($data);
+        $localCourse = null;
 
         $phpWord = new PhpWord();
 
@@ -64,28 +65,36 @@ class AdminReportService
 
         $table = $section->addTable();
 
-        $rowNom = 1;
-
         $table->addRow();
         $table->addCell(500)->addText('№');
         $table->addCell(1000)->addText('Дата доступа');
-        $table->addCell(1000)->addText('ФИО');
-        $table->addCell(1000)->addText('Организация');
+        $table->addCell(1500)->addText('ФИО');
+        $table->addCell(1500)->addText('Организация');
         $table->addCell(1000)->addText('Логин');
-        $table->addCell(1000)->addText('Курс');
         $table->addCell(1000)->addText('Дата активации');
         $table->addCell(1000)->addText('Посл. действие');
         $table->addCell(1000)->addText('Дата экзамена');
         $table->addCell(1000)->addText('Результат');
 
         foreach($data as $row) {
+            if ($localCourse !== $row['shortName']) {
+                $localCourse = $row['shortName'];
+                $rowNom = 1;
+
+                $table->addRow();
+                $table->addCell(500);
+                $table->addCell(1000)->addText('Курс');    
+                $cell = $table->addCell();
+                $cell->addText($localCourse);
+                $cell->getStyle()->setGridSpan(7);
+            }
+
             $table->addRow();
             $table->addCell(500)->addText($rowNom++);
             $table->addCell(1000)->addText($row['createdAt']?->format('d.m.Y'));
-            $table->addCell(1000)->addText($row['fullName']);
-            $table->addCell(1000)->addText($row['organization']);
+            $table->addCell(1500)->addText($row['fullName']);
+            $table->addCell(1500)->addText($row['organization']);
             $table->addCell(1000)->addText($row['login']);
-            $table->addCell(1000)->addText($row['shortName']);
             $table->addCell(1000)->addText($row['activatedAt']?->format('d.m.Y'));
             $table->addCell(1000)->addText($row['lastAccess']?->format('d.m.Y'));
             $table->addCell(1000)->addText($row['lastExam']?->format('d.m.Y'));
@@ -104,6 +113,7 @@ class AdminReportService
     public function generateStatisticXlsx(array $data): string
     {
         $data = $this->prepareData($data);
+        $localCourse = null;
 
         $spreadsheet = new Spreadsheet();
         $activeWorksheet = $spreadsheet->getActiveSheet();
@@ -113,26 +123,35 @@ class AdminReportService
         $activeWorksheet->setCellValue('C1', 'ФИО');
         $activeWorksheet->setCellValue('D1', 'Организация');
         $activeWorksheet->setCellValue('E1', 'Логин');
-        $activeWorksheet->setCellValue('F1', 'Курс');
-        $activeWorksheet->setCellValue('G1', 'Дата активации');
-        $activeWorksheet->setCellValue('H1', 'Посл. действие');
-        $activeWorksheet->setCellValue('I1', 'Дата экзамена');
-        $activeWorksheet->setCellValue('J1', 'Результат');
+        $activeWorksheet->setCellValue('F1', 'Дата активации');
+        $activeWorksheet->setCellValue('G1', 'Посл. действие');
+        $activeWorksheet->setCellValue('H1', 'Дата экзамена');
+        $activeWorksheet->setCellValue('I1', 'Результат');
 
-        $rowNom = 1;
         $line = 2;
 
         foreach($data as $row) {
+            if ($localCourse !== $row['shortName']) {
+                $localCourse = $row['shortName'];
+                $rowNom = 1;
+
+                $activeWorksheet->setCellValue('A' . $line, '');
+                $activeWorksheet->setCellValue('B' . $line, 'Курс');
+                $activeWorksheet->setCellValue('C' . $line, $row['shortName']);
+                $activeWorksheet->mergeCells('C' . $line . ':I' . $line);
+
+                $line ++;
+            }
+
             $activeWorksheet->setCellValue('A' . $line, $rowNom++);
             $activeWorksheet->setCellValue('B' . $line, $row['createdAt']?->format('d.m.Y'));
             $activeWorksheet->setCellValue('C' . $line, $row['fullName']);
             $activeWorksheet->setCellValue('D' . $line, $row['organization']);
             $activeWorksheet->setCellValue('E' . $line, $row['login']);
-            $activeWorksheet->setCellValue('F' . $line, $row['shortName']);
-            $activeWorksheet->setCellValue('G' . $line, $row['activatedAt']?->format('d.m.Y'));
-            $activeWorksheet->setCellValue('H' . $line, $row['lastAccess']?->format('d.m.Y'));
-            $activeWorksheet->setCellValue('I' . $line, $row['lastExam']?->format('d.m.Y'));
-            $activeWorksheet->setCellValue('J' . $line, $row['stage'] === Permission::STAGE_FINISHED ? 'Сдано' : 'Не сдано');
+            $activeWorksheet->setCellValue('F' . $line, $row['activatedAt']?->format('d.m.Y'));
+            $activeWorksheet->setCellValue('G' . $line, $row['lastAccess']?->format('d.m.Y'));
+            $activeWorksheet->setCellValue('H' . $line, $row['lastExam']?->format('d.m.Y'));
+            $activeWorksheet->setCellValue('I' . $line, $row['stage'] === Permission::STAGE_FINISHED ? 'Сдано' : 'Не сдано');
 
             $line++;
         }
@@ -143,7 +162,7 @@ class AdminReportService
             ],
         ];
 
-        $activeWorksheet->getStyle('A1:J' . $line - 1)->applyFromArray($styleArray, false);
+        $activeWorksheet->getStyle('A1:I' . $line - 1)->applyFromArray($styleArray, false);
 
         $activeWorksheet->getColumnDimension('A')->setAutoSize(true);
         $activeWorksheet->getColumnDimension('B')->setAutoSize(true);
@@ -154,7 +173,6 @@ class AdminReportService
         $activeWorksheet->getColumnDimension('G')->setAutoSize(true);
         $activeWorksheet->getColumnDimension('H')->setAutoSize(true);
         $activeWorksheet->getColumnDimension('I')->setAutoSize(true);
-        $activeWorksheet->getColumnDimension('J')->setAutoSize(true);
 
         $fileName = $this->reportUploadPath . '/' . (new DateTime())->format('d-m-Y_H_i_s') . '_' . uniqid() . '.xlsx';
 

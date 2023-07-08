@@ -23,7 +23,7 @@ class UserReportController extends AbstractController
         $criteria = $request->get('criteria');
 
         if (!empty($criteria)) {
-            $data = $this->permissionRepository->getUserSearchQuery($criteria['user_search'])->getResult();
+            $data = $this->permissionRepository->getUserSearchQuery($criteria['user_search'], true)->getResult();
         }
 
         $fileName = $this->reportService->generateStatisticPdf($data);
@@ -42,7 +42,7 @@ class UserReportController extends AbstractController
         $criteria = $request->get('criteria');
 
         if (!empty($criteria)) {
-            $data = $this->permissionRepository->getUserSearchQuery($criteria['user_search'])->getResult();
+            $data = $this->permissionRepository->getUserSearchQuery($criteria['user_search'], true)->getResult();
         }
 
         $fileName = $this->reportService->generateStatisticDocx($data);
@@ -61,7 +61,7 @@ class UserReportController extends AbstractController
         $criteria = $request->get('criteria');
 
         if (!empty($criteria)) {
-            $data = $this->permissionRepository->getUserSearchQuery($criteria['user_search'])->getResult();
+            $data = $this->permissionRepository->getUserSearchQuery($criteria['user_search'], true)->getResult();
         }
 
         $fileName = $this->reportService->generateStatisticXlsx($data);

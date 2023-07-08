@@ -136,7 +136,7 @@ class PermissionRepository extends ServiceEntityRepository
         $query->execute();
     }
 
-    public function getUserSearchQuery(?array $criteria): AbstractQuery
+    public function getUserSearchQuery(?array $criteria, bool $forReport = false): AbstractQuery
     {
         $queryBuilder = $this->createQueryBuilder('p');
 
@@ -186,6 +186,10 @@ class PermissionRepository extends ServiceEntityRepository
         if (isset($criteria['course']) && $criteria['course']) {
             $queryBuilder->andWhere('p.course IN (:course)')
                 ->setParameter('course', $criteria['course']);
+        }
+
+        if ($forReport) {
+            $queryBuilder->orderBy('p.course');
         }
 
         return $queryBuilder->getQuery();
