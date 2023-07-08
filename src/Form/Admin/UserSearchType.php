@@ -183,6 +183,7 @@ class UserSearchType extends AbstractType
                 'attr' => [
                     'class' => 'btn btn-outline-dark',
                 ],
-            ]);
+            ])
+            ->setMethod('GET');
     }
 }
