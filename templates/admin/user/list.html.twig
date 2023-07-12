@@ -34,18 +34,17 @@
                         <li><a class="dropdown-item color-item" href="{{ path('admin_user_report_list_to_docx', {criteria: criteria}) }}">DOCX</a></li>
                     </ul>
                 </div>
-                {#
                 <div class="dropdown">
                     <button class="btn btn-outline-dark dropdown-toggle" type="button" id="dropdownMenuButton3" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         Скачать данные и отправить
                     </button>
                     <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton3">
-                        <li><a class="dropdown-item" href="#">Action</a></li>
-                        <li><a class="dropdown-item" href="#">Another action</a></li>
-                        <li><a class="dropdown-item" href="#">Something else here</a></li>
+                        <li><a class="dropdown-item color-item" href="{{ path('admin_user_report_send_to_csv', {criteria: criteria}) }}">CSV</a></li>
+                        <li><a class="dropdown-item color-item" href="{{ path('admin_user_report_send_to_xlsx', {criteria: criteria}) }}">XLSX</a></li>
+                        <li><a class="dropdown-item color-item" href="{{ path('admin_user_report_send_to_txt', {criteria: criteria}) }}">TXT</a></li>
+                        <li><a class="dropdown-item color-item" href="{{ path('admin_user_report_send_to_docx', {criteria: criteria}) }}">DOCX</a></li>
                     </ul>
                 </div>
-                #}
             </div>
         </div>
     </div>

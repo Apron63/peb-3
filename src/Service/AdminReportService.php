@@ -3,6 +3,7 @@
 namespace App\Service;
 
 use DateTime;
+use Twig\Environment;
 use App\Entity\Permission;
 use PhpOffice\PhpWord\PhpWord;
 use App\Repository\UserRepository;
@@ -14,7 +15,8 @@ use jonasarts\Bundle\TCPDFBundle\TCPDF\TCPDF;
 use PhpOffice\PhpWord\IOFactory as WordFactory;
 use PhpOffice\PhpSpreadsheet\IOFactory as XlsxFactory;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use Twig\Environment;
+use Symfony\Component\Mailer\MailerInterface;
+use Symfony\Component\Mime\Email;
 
 class AdminReportService
 {
@@ -23,6 +25,7 @@ class AdminReportService
         private readonly UserRepository $userRepository,
         private readonly PermissionRepository $permissionRepository,
         private readonly Environment $twig,
+        private readonly MailerInterface $mailer,
         private readonly string $reportUploadPath,
     ) {}
 
@@ -330,6 +333,66 @@ class AdminReportService
         $objWriter->save($fileName);
 
         unset($objWriter);
+
+        return $fileName;
+    }
+
+    public function generateListAndSendCSV(array $data): string
+    {
+        $fileName = $this->generateListCSV($data);
+
+        $mail = (new Email())
+            ->subject('AssHole')
+            ->html('Super Puper')
+            ->attachFromPath($fileName);
+
+		// //Tell PHPMailer to use SMTP
+		// $mail->isSMTP();
+		// //Enable SMTP debugging
+		// // 0 = off (for production use)
+		// // 1 = client messages
+		// // 2 = client and server messages
+		// $mail->SMTPDebug = 0;
+		// //Set the CharSet encoding
+		// $mail->CharSet = 'UTF-8';
+		// //Ask for HTML-friendly debug output
+		// $mail->Debugoutput = 'html';
+		// //Set the hostname of the mail server
+		// $mail->Host = $settings['smtp_host'];
+		// //Set the SMTP port number - likely to be 25, 465 or 587
+		// $mail->Port = $settings['smtp_port'];
+		// //Whether to use SMTP authentication
+		// $mail->SMTPAuth = $settings['smtp_auth'] ? true : false;
+		// //Username to use for SMTP authentication
+		// $mail->Username = $settings['smtp_username'];
+		// //Password to use for SMTP authentication
+		// $mail->Password = $settings['smtp_password'];
+		// //Set who the message is to be sent from
+		// $mail->setFrom($from, $settings['title']);
+		// //Set an alternative reply-to address
+		// $mail->addReplyTo($from, $settings['title']);
+		// //Set who the message is to be sent to
+		// if(is_array($to)) {
+		// 	foreach($to as $address) {
+		// 		$mail->addAddress($address);
+		// 	}
+		// } else {
+		// 	$mail->addAddress($to);
+		// }
+		// //Set the subject line
+		// $mail->Subject = $subject;
+		// //Read an HTML message body from an external file, convert referenced images to embedded,
+		// //convert HTML into a basic plain-text alternative body
+		// $mail->msgHTML($message);
+
+		//send the message, check for errors
+
+        $fileName = $this->reportUploadPath . '/' . (new DateTime())->format('d-m-Y_H_i_s') . '_' . uniqid() . '.eml';
+
+        $message = $mail->getBody();
+        $handle = fopen($fileName,'w');
+        fwrite($handle, $message->toString());
+        fclose($handle);
 
         return $fileName;
     }
