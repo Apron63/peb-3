@@ -42,17 +42,19 @@ class UserPermissionService
                     ->setStage(Permission::STAGE_IN_PROGRESS)
                     ->setHistory($this->createHistory($permission));
 
-                $mailingQueue = new MailingQueue;
-
-                $mailingQueue
-                    ->setUser($permission->getUser())
-                    ->setSubject('Активирован учебный курс')
-                    ->setContent($this->twig->render('mail\permission-activated.html.twig', [
-                        'permission' => $permission,
-                        'lastDate' => date('d.m.Y', strtotime('+' . $permission->getDuration() . ' days')),
-                    ]));
-
-                $this->mailingQueueRepository->save($mailingQueue, true);
+                if (null !== $permission->getUser()->getEmail()) {
+                    $mailingQueue = new MailingQueue;
+    
+                    $mailingQueue
+                        ->setUser($permission->getUser())
+                        ->setSubject('Активирован учебный курс')
+                        ->setContent($this->twig->render('mail\permission-activated.html.twig', [
+                            'permission' => $permission,
+                            'lastDate' => date('d.m.Y', strtotime('+' . $permission->getDuration() . ' days')),
+                        ]));
+    
+                    $this->mailingQueueRepository->save($mailingQueue, true);
+                }
             }
 
             $permission->setLastAccess($timeNow);

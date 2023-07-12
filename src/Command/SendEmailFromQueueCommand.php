@@ -31,20 +31,23 @@ class SendEmailFromQueueCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        /** @var MailingQueue $emailQueue */
         foreach($this->mailingQueueRepository->getEmailPortion(1000) as $emailQueue) {
-            $output->writeln('Отправляем почту для: ' . $emailQueue->getUser()->getEmail());
+            if (null !== $emailQueue->getUser()->getEmail()) {
+                $output->writeln('Отправляем почту для: ' . $emailQueue->getUser()->getEmail());
 
-            $email = (new Email())
-                ->from('ucoks@safety63.ru')
-                ->to($emailQueue->getUser()->getEmail())
-                ->subject($emailQueue->getSubject())
-                ->html($emailQueue->getContent());
+                $email = (new Email())
+                    ->from('ucoks@safety63.ru')
+                    ->to($emailQueue->getUser()->getEmail())
+                    ->subject($emailQueue->getSubject())
+                    ->html($emailQueue->getContent());
 
-            $this->mailer->send($email);
+                $this->mailer->send($email);
 
-            $emailQueue->setSendedAt(new DateTime());
-            $this->mailingQueueRepository->save($emailQueue, true);
+                $emailQueue->setSendedAt(new DateTime());
+                $this->mailingQueueRepository->save($emailQueue, true);
+            } else {
+                $this->mailingQueueRepository->remove($emailQueue, true);
+            }
 
             sleep(2);
         }

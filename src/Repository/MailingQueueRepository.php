@@ -39,6 +39,9 @@ class MailingQueueRepository extends ServiceEntityRepository
         }
     }
 
+    /**
+     * @return MailingQueue[]
+     */
     public function getEmailPortion(int $limit = 1000): array
     {
         $queryBuilder = $this->createQueryBuilder('m');
