@@ -142,7 +142,7 @@ class PermissionRepository extends ServiceEntityRepository
 
         $queryBuilder
             ->select('p.id AS permissionId, u.id AS userId, u.login, u.fullName, p.lastAccess,
-                c.shortName, p.duration, p.createdAt, u.organization, u.active, p.activatedAt, p.stage,
+                c.shortName, c.name, p.duration, p.createdAt, u.organization, u.active, p.activatedAt, p.stage,
                 u.position, u.plainPassword
             ')
             ->leftJoin('p.user', 'u')

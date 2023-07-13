@@ -88,7 +88,7 @@ class AdminReportService
                 $table->addCell(500);
                 $table->addCell(1000)->addText('Курс');    
                 $cell = $table->addCell();
-                $cell->addText($localCourse);
+                $cell->addText($row['name']);
                 $cell->getStyle()->setGridSpan(7);
             }
 
@@ -140,7 +140,9 @@ class AdminReportService
 
                 $activeWorksheet->setCellValue('A' . $line, '');
                 $activeWorksheet->setCellValue('B' . $line, 'Курс');
-                $activeWorksheet->setCellValue('C' . $line, $row['shortName']);
+                $activeWorksheet->setCellValue('C' . $line, $row['name']);
+                $activeWorksheet->getStyle('C' . $line, $row['name'])->getAlignment()->setWrapText(true);
+                $activeWorksheet->getRowDimension($line)->setRowHeight(-1);
                 $activeWorksheet->mergeCells('C' . $line . ':I' . $line);
 
                 $line ++;
@@ -212,7 +214,7 @@ class AdminReportService
                 . $row['organization'] . ';'
                 . $row['login'] . ';'
                 . $row['plainPassword'] . ';'
-                . $row['shortName'] . ';'
+                . $row['name'] . ';'
                 . $row['duration'] 
                 . PHP_EOL;
 
@@ -244,7 +246,7 @@ class AdminReportService
             $workSheet->setCellValue('C' . $item, $row['organization']);
             $workSheet->setCellValue('D' . $item, $row['login']);
             $workSheet->setCellValue('E' . $item, $row['plainPassword']);
-            $workSheet->setCellValue('F' . $item, $row['shortName']);
+            $workSheet->setCellValue('F' . $item, $row['name']);
             $workSheet->setCellValue('G' . $item, $row['duration']);
 
             $item++;
@@ -287,7 +289,7 @@ class AdminReportService
                 . $row['organization'] . PHP_EOL
                 . $row['login'] . PHP_EOL
                 . $row['plainPassword'] . PHP_EOL
-                . $row['shortName'] . PHP_EOL
+                . $row['name'] . PHP_EOL
                 . $row['duration'] . PHP_EOL
                 . PHP_EOL;
 
@@ -324,7 +326,7 @@ class AdminReportService
             $table->addCell(1700)->addText($row['organization']);
             $table->addCell(1300)->addText($row['login']);
             $table->addCell(1300)->addText($row['plainPassword']);
-            $table->addCell(1800)->addText($row['shortName']);
+            $table->addCell(1800)->addText($row['name']);
             $table->addCell(500)->addText($row['duration']);
         }
 
@@ -337,6 +339,7 @@ class AdminReportService
         return $fileName;
     }
 
+    // TODO Возможно, будет реализовано.
     public function generateListAndSendCSV(array $data): string
     {
         $fileName = $this->generateListCSV($data);

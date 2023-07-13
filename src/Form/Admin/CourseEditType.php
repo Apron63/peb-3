@@ -18,31 +18,22 @@ use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 
 class CourseEditType extends AbstractType
 {
-    public function __construct(readonly ProfileRepository $profileRepository)
-    {}
+    public function __construct(
+        private readonly ProfileRepository $profileRepository
+    ) {}
 
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
-        $shortNameAttr = [
-            'label' => false,
-            'class' => 'form-control',
-            'placeholder' => 'Наименование (для админки)',
-            'onfocus' => 'this.placeholder = ""',
-            'onblur' => 'this.placeholder = "Наименование (для админки)"',
-        ];
-
-        if (null !== $options['data']->getId()) {
-            $shortNameAttr = array_merge($shortNameAttr, [
-                'readonly' => 'readonly', 
-                'aria-disabled' => 'true',
-                'aria-readonly' => 'true',
-            ]);
-        }
-
         $builder
             ->add('shortName', TextType::class, [
                 'required' => false,
-                'attr' => $shortNameAttr,
+                'attr' => [
+                    'label' => false,
+                    'class' => 'form-control',
+                    'placeholder' => 'Наименование (для админки)',
+                    'onfocus' => 'this.placeholder = ""',
+                    'onblur' => 'this.placeholder = "Наименование (для админки)"',
+                ],
             ])
             ->add('name', TextType::class, [
                 'required' => false,

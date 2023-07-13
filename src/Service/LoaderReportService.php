@@ -4,7 +4,6 @@ namespace App\Service;
 
 use DateTime;
 use App\Entity\User;
-use App\Entity\Loader;
 use PhpOffice\PhpWord\PhpWord;
 use PhpOffice\PhpWord\IOFactory as WordFactory;
 use App\Repository\LoaderRepository;
@@ -38,7 +37,6 @@ class LoaderReportService
 
         fputs($file, $fileData);
 
-        /** @var Loader $loader */
         foreach($this->loaderRepository->getLoaderforCheckedUser($user) as $loader) {
             foreach($loader->getPermissions() as $permission) {
                 $fileData = 
@@ -47,7 +45,7 @@ class LoaderReportService
                     . $loader->getOrganization() . ';'
                     . $loader->getUser()?->getLogin() . ';'
                     . $loader->getUser()?->getPlainPassword() . ';'
-                    . $permission->getCourse()?->getShortName() . ';'
+                    . $permission->getCourse()?->getName() . ';'
                     . $permission->getDuration() 
                     . PHP_EOL;
 
@@ -74,7 +72,7 @@ class LoaderReportService
         $workSheet->setCellValue('G1', 'Дней');
 
         $row = 2;
-        /** @var Loader $loader */
+
         foreach($this->loaderRepository->getLoaderforCheckedUser($user) as $loader) {
             foreach($loader->getPermissions() as $permission) {
                 $workSheet->setCellValue('A' . $row, $loader->getUser()?->getFullName());
@@ -82,7 +80,7 @@ class LoaderReportService
                 $workSheet->setCellValue('C' . $row, $loader->getOrganization());
                 $workSheet->setCellValue('D' . $row, $loader->getUser()?->getLogin());
                 $workSheet->setCellValue('E' . $row, $loader->getUser()?->getPlainPassword());
-                $workSheet->setCellValue('F' . $row, $permission->getCourse()?->getShortName());
+                $workSheet->setCellValue('F' . $row, $permission->getCourse()?->getName());
                 $workSheet->setCellValue('G' . $row, $permission->getDuration());
 
                 $row++;
@@ -119,7 +117,6 @@ class LoaderReportService
         $fileName = $this->reportUploadPath . '/' . (new DateTime())->format('d-m-Y_H_i_s') . '_' . uniqid() . '.txt';
         $file = fopen($fileName, 'w');
 
-        /** @var Loader $loader */
         foreach($this->loaderRepository->getLoaderforCheckedUser($user) as $loader) {
             foreach($loader->getPermissions() as $permission) {
                 $fileData = 
@@ -128,7 +125,7 @@ class LoaderReportService
                     . $loader->getOrganization() . PHP_EOL
                     . $loader->getUser()?->getLogin() . PHP_EOL
                     . $loader->getUser()?->getPlainPassword() . PHP_EOL
-                    . $permission->getCourse()?->getShortName() . PHP_EOL
+                    . $permission->getCourse()?->getName() . PHP_EOL
                     . $permission->getDuration() . PHP_EOL
                     . PHP_EOL;
 
@@ -159,7 +156,6 @@ class LoaderReportService
         $table->addCell(1800)->addText('Курсы');
         $table->addCell(500)->addText('Дней');
 
-        /** @var Loader $loader */
         foreach($this->loaderRepository->getLoaderforCheckedUser($user) as $loader) {
             foreach($loader->getPermissions() as $permission) { 
                 $table->addRow();
@@ -168,7 +164,7 @@ class LoaderReportService
                 $table->addCell(1700)->addText($loader->getOrganization());
                 $table->addCell(1300)->addText($loader->getUser()?->getLogin());
                 $table->addCell(1300)->addText($loader->getUser()?->getPlainPassword());
-                $table->addCell(1800)->addText($permission->getCourse()?->getShortName());
+                $table->addCell(1800)->addText($permission->getCourse()?->getName());
                 $table->addCell(500)->addText($permission->getDuration());
             }
         }

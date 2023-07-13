@@ -52,6 +52,9 @@ class LoaderRepository extends ServiceEntityRepository
             ->getResult();
     }
     
+    /**
+     * @return Loader[]
+     */
     public function getLoaderforCheckedUser(User $user): array
     {
         $queryBuilder = 
