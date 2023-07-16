@@ -12,8 +12,6 @@ services:
 
         bind:
             $courseUploadPath: '%kernel.project_dir%/public/storage/course'
-            #TODO Удвлить после обновления
-            $interactiveUploadPath: '%kernel.project_dir%/public/storage/interactive'
             $reportUploadPath: '%kernel.project_dir%/public/storage/report'
             $exchange1cUploadDirectory: '%kernel.project_dir%/public/storage/exchange1c'
 

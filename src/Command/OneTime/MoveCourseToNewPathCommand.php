@@ -15,7 +15,6 @@ class MoveCourseToNewPathCommand extends Command
     public function __construct (
         private readonly CourseRepository $courseRepository,
         private readonly string $courseUploadPath,
-        private readonly string $interactiveUploadPath,
     ) {
         parent::__construct();
     }
@@ -35,7 +34,7 @@ class MoveCourseToNewPathCommand extends Command
             if (Course::CLASSC === $course->getType()) {
                 $oldDir = $this->courseUploadPath . '/' . $course->getShortName();
             } else {
-                $oldDir = $this->interactiveUploadPath . '/' . $course->getId();
+                $oldDir = $this->courseUploadPath . '/../interactive' . '/' . $course->getId();
             }
 
             if (file_exists($oldDir)) {
