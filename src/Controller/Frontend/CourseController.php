@@ -82,7 +82,7 @@ class CourseController extends AbstractController
 
         $url = '/view/' . $fileName . '/?courseId=' . $permission->getCourse()->getId();
 
-        $infoName = $this->getParameter('course_upload_directory') . '/' . $permission->getCourse()->getShortNameCleared() . '/' . $fileName;
+        $infoName = $this->getParameter('course_upload_directory') . '/' . $permission->getCourse()->getId() . '/' . $fileName;
 
         if(!file_exists($infoName)) {
             throw new NotFoundHttpException();

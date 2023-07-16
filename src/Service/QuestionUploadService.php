@@ -52,7 +52,7 @@ class QuestionUploadService
     public function fileQuestionUpload(UploadedFile $data, Course $course): void
     {
         $this->originalFilename = pathinfo($data->getClientOriginalName(), PATHINFO_FILENAME);
-        $path = $this->courseUploadPath . DIRECTORY_SEPARATOR . $course->getShortNameCleared();
+        $path = $this->courseUploadPath . DIRECTORY_SEPARATOR . $course->getId();
 
         // Проверить что каталог существует, при необходимости создать.
         if (!file_exists($path) && !mkdir($path, 0777, true) && !is_dir($path)) {
@@ -95,7 +95,7 @@ class QuestionUploadService
 
         $this->originalFilename = pathinfo($fileName, PATHINFO_FILENAME);
         $reader = new XMLReader();
-        $reader->open($this->courseUploadPath . '/' . $course->getShortNameCleared() . '/' . $this->originalFilename . '.xml');
+        $reader->open($this->courseUploadPath . '/' . $course->getId() . '/' . $this->originalFilename . '.xml');
 
         while ($reader->read()) {
             if ($reader->nodeType === XMLReader::ELEMENT) {

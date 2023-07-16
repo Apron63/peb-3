@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Command;
+namespace App\Command\OneTime;
 
 use App\Entity\User;
 use App\Repository\UserRepository;

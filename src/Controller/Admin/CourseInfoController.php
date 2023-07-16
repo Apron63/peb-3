@@ -34,26 +34,25 @@ class CourseInfoController extends MobileController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            if ($this->isGranted('ROLE_SUPER_ADMIN')) {
-                /** @var UploadedFile $file */
-                $file = $form->get('fileName')->getData();
+            // TODO Вынести в сервис
+            /** @var UploadedFile $file */
+            $file = $form->get('fileName')->getData();
 
-                if ($file instanceof UploadedFile) {
-                    $originalFilename = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
-                    $safeFilename = $this->slugger->slug($originalFilename);
-                    $newFilename = $safeFilename . '-' . uniqid('', true) . '.' . $file->guessExtension();
-                    try {
-                        $file->move(
-                            $this->getParameter('course_upload_directory') . '/' . $course->getShortNameCleared(),
-                            $newFilename
-                        );
-                    } catch (FileException $e) {
-                    }
-
-                    $courseInfo->setFileName($newFilename);
+            if ($file instanceof UploadedFile) {
+                $originalFilename = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
+                $safeFilename = $this->slugger->slug($originalFilename);
+                $newFilename = $safeFilename . '-' . uniqid('', true) . '.' . $file->guessExtension();
+                try {
+                    $file->move(
+                        $this->getParameter('course_upload_directory') . '/' . $course->getId(),
+                        $newFilename
+                    );
+                } catch (FileException $e) {
                 }
-                $this->courseInfoRepository->save($courseInfo, true);
+
+                $courseInfo->setFileName($newFilename);
             }
+            $this->courseInfoRepository->save($courseInfo, true);
 
             return $this->redirect('/admin/course/' . $courseInfo->getCourse()->getId() . '/');
         }
@@ -71,40 +70,39 @@ class CourseInfoController extends MobileController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            if ($this->isGranted('ROLE_SUPER_ADMIN')) {
-                /** @var UploadedFile $file */
-                $file = $form->get('fileName')->getData();
+            // TODO Вынести в сервис
+            /** @var UploadedFile $file */
+            $file = $form->get('fileName')->getData();
 
-                if ($file) {
-                    // Проверить что каталог существует, при необходимости создать.
-                    $catalogName = $this->getParameter('course_upload_directory')
-                        . '/'
-                        . $courseInfo->getCourse()->getShortNameCleared();
+            if ($file) {
+                // Проверить что каталог существует, при необходимости создать.
+                $catalogName = $this->getParameter('course_upload_directory')
+                    . '/'
+                    . $courseInfo->getCourse()->getId();
 
-                    if (
-                        !file_exists($catalogName)
-                        && !mkdir($catalogName, 0777, true)
-                        && !is_dir($catalogName)
-                    ) {
-                        throw new RuntimeException(sprintf('Directory "%s" was not created', $catalogName));
-                    }
-                    $originalFilename = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
-                    $safeFilename = $this->slugger->slug($originalFilename);
-                    $newFilename = $safeFilename . '-' . uniqid('', true) . '.' . $file->guessExtension();
+                if (
+                    !file_exists($catalogName)
+                    && !mkdir($catalogName, 0777, true)
+                    && !is_dir($catalogName)
+                ) {
+                    throw new RuntimeException(sprintf('Directory "%s" was not created', $catalogName));
+                }
+                $originalFilename = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
+                $safeFilename = $this->slugger->slug($originalFilename);
+                $newFilename = $safeFilename . '-' . uniqid('', true) . '.' . $file->guessExtension();
 
-                    try {
-                        $file->move(
-                            $catalogName,
-                            $newFilename
-                        );
-                    } catch (FileException $e) {
-                    }
-
-                    $courseInfo->setFileName($newFilename);
+                try {
+                    $file->move(
+                        $catalogName,
+                        $newFilename
+                    );
+                } catch (FileException $e) {
                 }
 
-                $this->courseInfoRepository->save($courseInfo, true);
+                $courseInfo->setFileName($newFilename);
             }
+
+            $this->courseInfoRepository->save($courseInfo, true);
 
             return $this->redirect('/admin/course/' . $courseInfo->getCourse()->getId() . '/');
         }
@@ -116,12 +114,15 @@ class CourseInfoController extends MobileController
 
     #[Route('/admin/course_info/delete/{id<\d+>}/', name: 'admin_course_info_delete')]
     #[IsGranted('ROLE_SUPER_ADMIN')]
-    public function adminCourseInfoDelete(Request $request, CourseInfo $courseInfo): Response
+    public function adminCourseInfoDelete(CourseInfo $courseInfo): Response
     {
-        $courseId = $courseInfo->getCourse() ? $courseInfo->getCourse()->getId() : null;
-        if ($this->isGranted('ROLE_SUPER_ADMIN')) {
-            $this->courseInfoRepository->remove($courseInfo, true);
+        $courseId = $courseInfo->getCourse()?->getId();
+
+        $fileName = $this->getParameter('course_upload_directory') . '/' . $courseInfo->getCourse()->getId() . '/' . $courseInfo->getFileName();
+        if (file_exists($fileName)) {
+            unlink($fileName);
         }
+        $this->courseInfoRepository->remove($courseInfo, true);
 
         return $this->redirect('/admin/course/' . $courseId . '/');
     }

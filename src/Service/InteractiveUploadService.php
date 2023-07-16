@@ -12,27 +12,26 @@ use ZipArchive;
 class InteractiveUploadService
 {
     private string $originalFilename;
-    private string $interactiveUploadPath;
 
     public function __construct(
-        string $interactiveUploadPath,
+        private readonly string $courseUploadPath,
         private readonly ModuleSectionPageRepository $moduleSectionPageRepository,
-    ) {
-        $this->interactiveUploadPath = $interactiveUploadPath;
-    }
+    ) {}
 
     public function fileInteractiveUpload(UploadedFile $data, ModuleSectionPage $moduleSectionPage): void
     {
         $this->originalFilename = pathinfo($data->getClientOriginalName(), PATHINFO_FILENAME);
         $path =
-            $this->interactiveUploadPath
+            $this->courseUploadPath
             . DIRECTORY_SEPARATOR
             . $moduleSectionPage->getSection()->getModule()->getCourse()->getId()
             . DIRECTORY_SEPARATOR
             . $moduleSectionPage->getId()
             . DIRECTORY_SEPARATOR;
 
-        // Проверить что каталог существует, при необходимости создать.
+        // TODO Вынести методы работы с файлами в отдельный сервис
+        
+            // Проверить что каталог существует, при необходимости создать.
         if (!file_exists($path) && !mkdir($path, 0777, true) && !is_dir($path)) {
             throw new RuntimeException(sprintf('Directory "%s" was not created', $path));
         }
@@ -63,12 +62,12 @@ class InteractiveUploadService
         }
 
         // Дописать т.н."защиту от внешних ссылок"
-        $indexFile = $path . DIRECTORY_SEPARATOR . 'res' . DIRECTORY_SEPARATOR . 'index.html';
+        $indexFile = $path . 'res' . DIRECTORY_SEPARATOR . 'index.html';
         if (!file_exists($indexFile)) {
             throw new RuntimeException('Невозможно открыть индексный файл');
         }
 
-        $targetFile = $path . DIRECTORY_SEPARATOR . 'res' . DIRECTORY_SEPARATOR . 'index.php';
+        $targetFile = $path . 'res' . DIRECTORY_SEPARATOR . 'index.php';
         if (!rename($indexFile, $targetFile)) {
             throw new RuntimeException('Невозможно переименовать индексный файл');
         }

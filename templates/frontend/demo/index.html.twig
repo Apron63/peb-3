@@ -17,7 +17,7 @@
                                 {% if course.image is null %}
                                     <img src="{{ asset('img/no_course_image.jpg') }}" alt="">
                                 {% else %}
-                                    <img src="/storage/course/{{ course.shortNameCleared }}{{ asset(course.image) }}" alt="">
+                                    <img src="/storage/course/{{ course.id }}{{ asset(course.image) }}" alt="">
                                 {% endif %}
                             </div>
                         </div>

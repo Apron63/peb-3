@@ -59,7 +59,7 @@ class CourseController extends MobileController
         ]);
     }
     
-    #[Route('/admin/course/create', name: 'admin_course_create')]
+    #[Route('/admin/course/create/', name: 'admin_course_create')]
     #[IsGranted('ROLE_SUPER_ADMIN')]
     public function create(Request $request, PaginatorInterface $paginator): Response
     {
@@ -95,15 +95,13 @@ class CourseController extends MobileController
                 if ($image) {
                     $originalFilename = pathinfo($image->getClientOriginalName(), PATHINFO_FILENAME);
                     
-                    $imgPath = $this->getParameter('course_upload_directory') . '/' . $course->getShortNameCleared();
+                    $imgPath = $this->getParameter('course_upload_directory') . '/' . $course->getId();
 
                     if (!file_exists($imgPath)) { 
                         mkdir($imgPath, 0777, true);
                     }
 
                     $newFilename = 
-                        //$imgPath
-                        //. '/'
                         $this->slugger->slug($originalFilename)
                         . '-'
                         . uniqid()

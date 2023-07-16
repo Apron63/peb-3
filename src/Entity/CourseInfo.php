@@ -71,7 +71,7 @@ class CourseInfo
         try {
             unlink(
                 getcwd() . '/storage/course/'
-                . $this->getCourse()->getShortNameCleared()
+                . $this->getCourse()->getId()
                 . '/' . $this->fileName
             );
         } catch (Exception $e) {

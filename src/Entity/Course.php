@@ -156,15 +156,4 @@ class Course
 
         return $this;
     }
-
-     /**
-     * @return false|string
-     */
-    public function getShortNameCleared(): ?string
-    {
-        if ($this->shortName[strlen($this->shortName) - 1] === '.') {
-            return substr($this->shortName, 0, -1);
-        }
-        return $this->shortName;
-    }
 }

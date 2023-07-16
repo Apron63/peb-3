@@ -212,7 +212,7 @@ class DemoController extends AbstractController
             throw new NotFoundHttpException();
         }
 
-        $infoName = $this->getParameter('course_upload_directory') . '/' . $course->getShortNameCleared() . '/' . $fileName;
+        $infoName = $this->getParameter('course_upload_directory') . '/' . $course->getId() . '/' . $fileName;
 
         if(!file_exists($infoName)) {
             throw new NotFoundHttpException();
