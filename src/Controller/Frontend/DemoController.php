@@ -3,8 +3,8 @@
 namespace App\Controller\Frontend;
 
 use App\Entity\Course;
-use App\Entity\CourseTheme;
 use App\Entity\DemoLogger;
+use App\Entity\CourseTheme;
 use App\Service\DemoService;
 use App\Entity\ModuleSection;
 use App\Service\CourseService;
@@ -12,8 +12,8 @@ use App\Service\PreparationService;
 use App\Repository\CourseRepository;
 use App\Repository\TicketRepository;
 use App\Repository\CourseInfoRepository;
-use App\Repository\CourseThemeRepository;
 use App\Repository\DemoLoggerRepository;
+use App\Repository\CourseThemeRepository;
 use Symfony\Component\HttpFoundation\Cookie;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -21,6 +21,7 @@ use App\Repository\ModuleSectionPageRepository;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
@@ -36,6 +37,7 @@ class DemoController extends AbstractController
         private readonly DemoService $demoService,
         private readonly TicketRepository $ticketRepository,
         private readonly DemoLoggerRepository $demoLoggerRepository,
+        private readonly UrlGeneratorInterface $urlGenerator,
     ) {}
 
     #[Route('/demo/', name: 'app_demo')]
@@ -89,13 +91,13 @@ class DemoController extends AbstractController
         if ($section->getType() === ModuleSection::TYPE_TESTING) {
             $course = $section->getModule()->getCourse();
 
-            return $this->redirectToRoute(
-                'app_demo_preparation_course', 
-                [
-                    'id' => $course->getId(), 
-                    'themeId' => null,
-                ]
-            );
+            if ($course->getType() === Course::INTERACTIVE) {
+                $url = $this->urlGenerator->generate('app_demo_preparation_interactive', ['id' => $course->getId()]);
+            } else {
+                $url = $this->urlGenerator->generate('app_demo_preparation_course_many', ['id' => $course->getId()]);
+            }
+
+            return $this->redirect($url);
         }
 
         $sessionId = $request->cookies->get('PHPSESSID');
@@ -268,10 +270,6 @@ class DemoController extends AbstractController
             throw new NotFoundHttpException();
         }
 
-        if (!$course->isForDemo()) {
-            throw new NotFoundHttpException();
-        }
-
         if (null !== $themeId) {
             $courseTheme = $this->courseThemeRepository->find($themeId);
 
@@ -283,6 +281,25 @@ class DemoController extends AbstractController
         $data = $this->preparationService->getQuestionDataForCourse(
             $course,
             $themeId,
+            $request->get('page', 1),
+            $request->get('perPage', 20),
+        );
+
+        return $this->render('frontend/demo/_preparation.html.twig', [
+            'data' => $data,
+        ]);
+    }
+
+    #[Route('demo/preparation_interactive/{id<\d+>}/', name: 'app_demo_preparation_interactive')]
+    public function preparationInteractive(Course $course, Request $request): Response
+    {
+        if (!$course->isForDemo()) {
+            throw new NotFoundHttpException();
+        }
+
+        $data = $this->preparationService->getQuestionDataForCourse(
+            $course,
+            null,
             $request->get('page', 1),
             $request->get('perPage', 20),
         );

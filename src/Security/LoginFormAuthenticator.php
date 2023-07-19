@@ -31,12 +31,12 @@ class LoginFormAuthenticator extends AbstractLoginFormAuthenticator
     public const LOGIN_ROUTE = 'app_login';
 
     public function __construct(
-        readonly UserRepository $userRepository,
-        readonly UrlGeneratorInterface $urlGenerator,
-        readonly CsrfTokenManagerInterface $csrfTokenManager,
-        readonly UserPasswordHasherInterface $passwordEncoder,
-        readonly Security $security
-    ) { }
+        private readonly UserRepository $userRepository,
+        private readonly UrlGeneratorInterface $urlGenerator,
+        private readonly CsrfTokenManagerInterface $csrfTokenManager,
+        private readonly UserPasswordHasherInterface $passwordEncoder,
+        private readonly Security $security
+    ) {}
 
     public function supports(Request $request): bool
     {

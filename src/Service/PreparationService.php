@@ -141,7 +141,7 @@ class PreparationService
         }
 
         if ($course->getType() === Course::INTERACTIVE) {
-            $url = $this->urlGenerator->generate('app_demo_preparation_course', ['id' => $course->getId()]);
+            $url = $this->urlGenerator->generate('app_demo_preparation_interactive', ['id' => $course->getId()]);
         } else {
             $url = $this->urlGenerator->generate('app_demo_preparation_course', ['id' => $course->getId(), 'themeId' => $themeId]);
         }
