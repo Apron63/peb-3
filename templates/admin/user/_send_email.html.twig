@@ -1,0 +1,19 @@
+<div class="mb-3">
+    <label for="recipient" class="form-label">Email для отправки</label>
+    <input class="form-control" type="email" name="recipient" id="recipient">
+    <span id="email-error" class="text-danger"></span>
+</div>
+
+<div class="mb-3">
+    <label for="subject" class="form-label">Тема письма</label>
+    <input class="form-select" id="subject" name="subject">
+</div>
+
+<div class="mb-3">
+    <label for="comment" class="form-label">Комментарий</label>
+    <input class="form-control" name="comment" id="comment">
+</div>
+
+<br>
+
+<button class="btn btn-outline-primary" id="send-email-to-client" data-url="{{ path('admin_user_report_send_letter_to_client') }}">Продолжить</button>

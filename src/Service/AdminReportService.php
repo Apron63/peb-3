@@ -340,64 +340,51 @@ class AdminReportService
     }
 
     // TODO Возможно, будет реализовано.
-    public function generateListAndSendCSV(array $data): string
+    public function generateListAndSendCSV(string $recipient, string $subject, string $comment, string $type, array $data): array
     {
-        $fileName = $this->generateListCSV($data);
+        $totalRecipients = explode(',', $recipient);
 
-        $mail = (new Email())
-            ->subject('AssHole')
-            ->html('Super Puper')
-            ->attachFromPath($fileName);
+        $success = true;
+        $message = '';
 
-		// //Tell PHPMailer to use SMTP
-		// $mail->isSMTP();
-		// //Enable SMTP debugging
-		// // 0 = off (for production use)
-		// // 1 = client messages
-		// // 2 = client and server messages
-		// $mail->SMTPDebug = 0;
-		// //Set the CharSet encoding
-		// $mail->CharSet = 'UTF-8';
-		// //Ask for HTML-friendly debug output
-		// $mail->Debugoutput = 'html';
-		// //Set the hostname of the mail server
-		// $mail->Host = $settings['smtp_host'];
-		// //Set the SMTP port number - likely to be 25, 465 or 587
-		// $mail->Port = $settings['smtp_port'];
-		// //Whether to use SMTP authentication
-		// $mail->SMTPAuth = $settings['smtp_auth'] ? true : false;
-		// //Username to use for SMTP authentication
-		// $mail->Username = $settings['smtp_username'];
-		// //Password to use for SMTP authentication
-		// $mail->Password = $settings['smtp_password'];
-		// //Set who the message is to be sent from
-		// $mail->setFrom($from, $settings['title']);
-		// //Set an alternative reply-to address
-		// $mail->addReplyTo($from, $settings['title']);
-		// //Set who the message is to be sent to
-		// if(is_array($to)) {
-		// 	foreach($to as $address) {
-		// 		$mail->addAddress($address);
-		// 	}
-		// } else {
-		// 	$mail->addAddress($to);
-		// }
-		// //Set the subject line
-		// $mail->Subject = $subject;
-		// //Read an HTML message body from an external file, convert referenced images to embedded,
-		// //convert HTML into a basic plain-text alternative body
-		// $mail->msgHTML($message);
+        foreach($totalRecipients as $address) {
+            if (!filter_var($address, FILTER_VALIDATE_EMAIL)) {
+                $success = false;
 
-		//send the message, check for errors
+                $message = 'Некорректный email адрес : ' . $address;
+                break;
+            }
+        }
 
-        $fileName = $this->reportUploadPath . '/' . (new DateTime())->format('d-m-Y_H_i_s') . '_' . uniqid() . '.eml';
+        if ($success) {
+            switch($type) {
+                case 'CSV':
+                    $fileName = $this->generateListCSV($data);
+                    break;
+                case 'XLSX':
+                    $fileName = $this->generateListXLSX($data);
+                    break;
+                case 'TXT':
+                    $fileName = $this->generateListTXT($data);
+                    break;
+                case 'DOCX':
+                    $fileName = $this->generateListDocx($data);
+                    break;
+            }
 
-        $message = $mail->getBody();
-        $handle = fopen($fileName,'w');
-        fwrite($handle, $message->toString());
-        fclose($handle);
+            $mail = (new Email())
+                ->to($recipient)
+                ->subject($subject)
+                ->html($comment)
+                ->attachFromPath($fileName);
 
-        return $fileName;
+            $this->mailer->send($mail);
+        }
+
+        return [
+            'success' => $success,
+            'message' => $message,
+        ];
     }
 
     private function generateDataHtml(array $data): string
