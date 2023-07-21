@@ -6,17 +6,18 @@ use DateTime;
 use Twig\Environment;
 use App\Entity\Permission;
 use PhpOffice\PhpWord\PhpWord;
+use Symfony\Component\Mime\Email;
 use App\Repository\UserRepository;
 use App\Repository\LoggerRepository;
 use App\Repository\PermissionRepository;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use Symfony\Component\Mime\Part\DataPart;
 use PhpOffice\PhpSpreadsheet\Style\Border;
 use jonasarts\Bundle\TCPDFBundle\TCPDF\TCPDF;
+use Symfony\Component\Mailer\MailerInterface;
 use PhpOffice\PhpWord\IOFactory as WordFactory;
 use PhpOffice\PhpSpreadsheet\IOFactory as XlsxFactory;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use Symfony\Component\Mailer\MailerInterface;
-use Symfony\Component\Mime\Email;
 
 class AdminReportService
 {
@@ -376,7 +377,7 @@ class AdminReportService
                 ->to($recipient)
                 ->subject($subject)
                 ->html($comment)
-                ->attachFromPath($fileName);
+                ->addPart(new DataPart(fopen($fileName, 'r')));
 
             $this->mailer->send($mail);
         }
