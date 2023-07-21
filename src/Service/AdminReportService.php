@@ -382,10 +382,9 @@ class AdminReportService
 
             $mail = (new Email())
                 ->from('ucoks@safety63.ru')
-                ->to($recipient)
+                ->to(...$totalRecipients)
                 ->subject($subject)
                 ->html($comment)
-                // ->addPart(new DataPart(fopen($fileName, 'r')), $attachmentName, $attachmentType);
                 ->addPart(new DataPart(new File($fileName)));
 
             $this->mailer->send($mail);
