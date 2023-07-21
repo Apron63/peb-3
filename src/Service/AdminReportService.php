@@ -18,6 +18,7 @@ use Symfony\Component\Mailer\MailerInterface;
 use PhpOffice\PhpWord\IOFactory as WordFactory;
 use PhpOffice\PhpSpreadsheet\IOFactory as XlsxFactory;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\Mime\Part\File;
 
 class AdminReportService
 {
@@ -385,7 +386,7 @@ class AdminReportService
                 ->subject($subject)
                 ->html($comment)
                 // ->addPart(new DataPart(fopen($fileName, 'r')), $attachmentName, $attachmentType);
-                ->addPart(new DataPart(fopen($fileName, 'r')), $attachmentName);
+                ->addPart(new DataPart(new File($fileName)));
 
             $this->mailer->send($mail);
         }
