@@ -339,8 +339,7 @@ class AdminReportService
         return $fileName;
     }
 
-    // TODO Возможно, будет реализовано.
-    public function generateListAndSendCSV(string $recipient, string $subject, string $comment, string $type, array $data): array
+    public function generateListAndSend(string $recipient, string $subject, string $comment, string $type, array $data): array
     {
         $totalRecipients = explode(',', $recipient);
 
@@ -373,6 +372,7 @@ class AdminReportService
             }
 
             $mail = (new Email())
+                ->from('ucoks@safety63.ru')
                 ->to($recipient)
                 ->subject($subject)
                 ->html($comment)

@@ -38,7 +38,7 @@ class UserReportAndSendController extends AbstractController
         }
 
         return new JsonResponse(
-            $this->reportService->generateListAndSendCSV($recipient, $subject, $comment, $type, $data)
+            $this->reportService->generateListAndSend($recipient, $subject, $comment, $type, $data)
         );
     }
 
