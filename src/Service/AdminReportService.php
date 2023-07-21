@@ -360,16 +360,23 @@ class AdminReportService
             switch($type) {
                 case 'CSV':
                     $fileName = $this->generateListCSV($data);
+                    $attachmentName = 'report.csv';
+                    $attachmentType = 'text/csv';
                     break;
                 case 'XLSX':
                     $fileName = $this->generateListXLSX($data);
+                    $attachmentName = 'report.xlsx';
+                    $attachmentType = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
                     break;
                 case 'TXT':
                     $fileName = $this->generateListTXT($data);
+                    $attachmentName = 'report.txt';
+                    $attachmentType = 'text/plain';
                     break;
                 case 'DOCX':
                     $fileName = $this->generateListDocx($data);
-                    break;
+                    $attachmentName = 'report.docx';
+                    $attachmentType = 'application/vnd.openxmlformats-officedocument.wordprocessingml.document';
             }
 
             $mail = (new Email())
@@ -377,7 +384,7 @@ class AdminReportService
                 ->to($recipient)
                 ->subject($subject)
                 ->html($comment)
-                ->addPart(new DataPart(fopen($fileName, 'r')));
+                ->addPart(new DataPart(fopen($fileName, 'r')), $attachmentName, $attachmentType);
 
             $this->mailer->send($mail);
         }
