@@ -384,7 +384,8 @@ class AdminReportService
                 ->to($recipient)
                 ->subject($subject)
                 ->html($comment)
-                ->addPart(new DataPart(fopen($fileName, 'r')), $attachmentName, $attachmentType);
+                // ->addPart(new DataPart(fopen($fileName, 'r')), $attachmentName, $attachmentType);
+                ->addPart(new DataPart(fopen($fileName, 'r')), $attachmentName);
 
             $this->mailer->send($mail);
         }
