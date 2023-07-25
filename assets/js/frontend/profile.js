@@ -1,20 +1,32 @@
 import $ from 'jquery'
 
-var fileupload = {}
+let files = {}
+let fileupload = $('#profile-upload')
 
-$('#btnFileUpload').on('click', function() {
-    fileupload = $('#FileUpload1')
-    fileupload.click()
-    //var filePath = $("#spnFilePath");
-    // var button = $('#btnFileUpload')
-    // button.click(function () {
-    //     fileupload.click()
-    // });
-    
+$('#btn-profile-upload').on('click', function(e) {
+    e.stopImmediatePropagation
+   fileupload.trigger('click')
 })
 
 $(fileupload).on('change', function () {
-    console.log($('#FileUpload1'))
-    var fileName = $('#FileUpload1').val().split('\\')[$(this).val().split('\\').length - 1]
-    console.log(fileName)
-});
+    if( typeof files == 'undefined' ) {
+        return
+    }
+
+    $.ajax({
+        url: $(this).data('url'),
+        data: new FormData(profileForm),
+        dataType: 'json',
+        contentType: false,
+        method: 'POST',
+        processData : false, 
+    }).done(function(data) {
+        if (!data.success) {
+            $('#error-message').text(data.message)
+        } else {
+            location.reload(true)
+        }
+    }).fail(function(data) {
+        console.log(data)
+    })
+})

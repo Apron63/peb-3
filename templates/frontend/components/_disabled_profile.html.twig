@@ -8,7 +8,7 @@
     </div>
     {% if app.user.image is not null%}
         <div class="header_profile_avatar">
-            <img src="{{ asset('img/avatar.png') }}" alt="">
+            <img src="/storage/avatar/{{ app.user.image }}" alt="">
         </div>
     {% else %}
         <div class="header_profile_noavatar">

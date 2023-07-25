@@ -18,16 +18,20 @@
                         <div class="photo_wrapper">
                             <div class="photo_inner">
                                 {% if user.image is not null %}
-                                    <img src="/storage/user_photo/{{ user.id }}/{{ user.image }}" alt="">
+                                    <img src="/storage/avatar/{{ user.image }}" alt="">
                                 {% else %}
                                     <img class="photo" src="{{ asset('img/no_user_image.png') }}" alt="">    
                                 {% endif %}
                             </div>
                         </div>
-                        <div class="photo_change_button_wrapper">
-                            <a class="photo_change_button" href="javascript:void(0)" id="btnFileUpload">сменить фото</a>
-                            <input type="file" id="FileUpload1" style="display: none"/>
-                        </div>
+                        <form id="profileForm">
+                            <div class="photo_change_button_wrapper">
+                                <a class="photo_change_button" href="javascript:void(0)" id="btn-profile-upload">сменить фото</a>
+                                <input type="file" name="image" id="profile-upload" style="display: none" data-url="{{ path('profile_upload_image') }}"/>
+                                <p></p>
+                                <div id="error-message" class="text-danger"></div>
+                            </div>
+                        </form>
                     </div>
                     <div class="data_block">
                         <div class="profile_row"><strong>{{ user.lastName }}</strong></div>
@@ -46,20 +50,5 @@
     {% include('frontend/components/footer.html.twig') %}
 
     <div class="overlay" popup-element="overlay"></div>
-
-    {% block customJs %}
-         // <script type="text/javascript">
-        //     var fileupload = $('#FileUpload1')
-        //     //var filePath = $("#spnFilePath");
-        //     var button = $('#btnFileUpload')
-        //     button.click(function () {
-        //         fileupload.click()
-        //     });
-        //     fileupload.change(function () {
-        //         var fileName = $(this).val().split('\\')[$(this).val().split('\\').length - 1]
-        //         console.log(fileName)
-        //     });
-        // </script>
-    {% endblock %}
 
 {% endblock %}
