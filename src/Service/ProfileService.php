@@ -11,6 +11,8 @@ use Symfony\Component\HttpFoundation\File\Exception\FileException;
 
 class ProfileService
 {
+    private const ALPHABET = '1234567890';
+
     public function __construct(
         private readonly UserRepository $userRepository,
         private readonly string $avatarUploadPath,
@@ -33,22 +35,24 @@ class ProfileService
 
         if ($success) {
             $uploadDirectory = 
-                    ByteString::fromRandom(3)->toString() . DIRECTORY_SEPARATOR
-                    . ByteString::fromRandom(3)->toString() . DIRECTORY_SEPARATOR
-                    . ByteString::fromRandom(3)->toString() . DIRECTORY_SEPARATOR;
+                    ByteString::fromRandom(3, self::ALPHABET)->toString() . DIRECTORY_SEPARATOR
+                    . ByteString::fromRandom(3, self::ALPHABET)->toString() . DIRECTORY_SEPARATOR
+                    . ByteString::fromRandom(3, self::ALPHABET)->toString() . DIRECTORY_SEPARATOR;
 
-                if (!file_exists($uploadDirectory) && !mkdir($uploadDirectory, 0777, true) && !is_dir($uploadDirectory)) {
-                    throw new RuntimeException(sprintf('Directory "%s" was not created', $uploadDirectory));
-                }
+            $uploadFullPath = $this->avatarUploadPath . DIRECTORY_SEPARATOR . $uploadDirectory;
 
-                try {
-                    $image->move($this->avatarUploadPath . DIRECTORY_SEPARATOR . $uploadDirectory, $image->getClientOriginalName());
-                } catch (FileException $e) {
-                    throw new RuntimeException('Невозможно переместить файл в каталог загрузки');
-                }
+            if (!file_exists($uploadFullPath) && !mkdir($uploadFullPath, 0777, true) && !is_dir($uploadFullPath)) {
+                throw new RuntimeException(sprintf('Directory "%s" was not created', $uploadFullPath));
+            }
 
-                $user->setImage($uploadDirectory . $image->getClientOriginalName());
-                $this->userRepository->save($user, true);
+            try {
+                $image->move($uploadFullPath, $image->getClientOriginalName());
+            } catch (FileException $e) {
+                throw new RuntimeException('Невозможно переместить файл в каталог загрузки');
+            }
+
+            $user->setImage($uploadDirectory . $image->getClientOriginalName());
+            $this->userRepository->save($user, true);
         }
 
         return [
