@@ -22,16 +22,13 @@ class UserPermissionService
 
     public function checkPermissionForUser(Permission $permission, User $user, bool $canChangeStage): bool
     {
-
         $timeNow = new DateTime();
 
         $permissions = $this->permissionRepository->getPermissionQuery($user)->getResult();
         
         $courseIds = array_map(
-            function($row){
-                return $row['courseId'];
-            }, 
-            $permissions
+            fn($permission) => $permission['courseId'],
+            array_filter($permissions, fn($permission) => $permission['isActive'])
         );
 
         $result = in_array($permission->getCourse()->getId(), $courseIds);
