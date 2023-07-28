@@ -4,20 +4,18 @@ namespace App\Message;
 
 class CourseUploadMessage
 {
-    private string $fileName;
-    private int $userId;
-
-    public function __construct(string $fileName, int $userId)
-    {
-        $this->fileName = $fileName;
-        $this->userId = $userId;
-    }
+    public function __construct(
+        private readonly string $fileName, 
+        private readonly int $userId, 
+        private readonly int $courseId,
+    ) {}
 
     public function getContent(): array
     {
         return [
             'filename' => $this->fileName,
-            'userId' => $this->userId
+            'userId' => $this->userId,
+            'courseId' => $this->courseId,
         ];
     }
 }

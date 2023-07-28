@@ -18,9 +18,7 @@ class LoadCourseController extends MobileController
     public function __construct(
         private readonly CourseUploadService $courseUploadService,
         private readonly MessageBusInterface $messageBus
-    ) {
-
-    }
+    ) {}
     
     #[Route('/admin/load/course/', name: 'admin_load_course')]
     #[IsGranted('ROLE_SUPER_ADMIN')]
@@ -37,12 +35,13 @@ class LoadCourseController extends MobileController
             && $form->isValid()
             && $form->get('filename')->getData() !== null
         ) {
-            $this->courseUploadService->fileCourseUpload($form->get('filename')->getData());
+            $course = $this->courseUploadService->fileCourseUpload($form->get('filename')->getData());
 
             $this->messageBus->dispatch(
                 new CourseUploadMessage(
                     $form->get('filename')->getData()->getClientOriginalName(), 
-                    $this->getUser()->getId()
+                    $this->getUser()->getId(),
+                    $course->getId(),
                 )
             );
 

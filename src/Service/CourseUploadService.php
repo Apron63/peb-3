@@ -3,8 +3,7 @@
 namespace App\Service;
 
 use App\Entity\Course;
-use Doctrine\DBAL\Exception;
-use Doctrine\ORM\EntityManagerInterface;
+use App\Repository\CourseRepository;
 use DOMElement;
 use RuntimeException;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
@@ -14,34 +13,32 @@ use ZipArchive;
 
 class CourseUploadService
 {
-    private EntityManagerInterface $em;
-
     private string $originalFilename;
     private string $courseName;
     private array $materials;
     private array $data;
     private ?Course $course;
-    private string $courseUploadPath;
 
-    /**
-     * CourseUploadService constructor.
-     * @param EntityManagerInterface $em
-     * @param string $courseUploadPath
-     */
-    public function __construct(EntityManagerInterface $em, string $courseUploadPath)
-    {
-        $this->em = $em;
-        $this->em->getConnection()->getConfiguration()->setSQLLogger();
-        $this->courseUploadPath = $courseUploadPath;
-    }
+    public function __construct(
+        private readonly CourseRepository $courseRepository,
+        private readonly string $courseUploadPath
+    ) {}
 
-    /**
-     * @param UploadedFile $data
-     */
-    public function fileCourseUpload(UploadedFile $data): void
+    public function fileCourseUpload(UploadedFile $data): Course
     {
         $this->originalFilename = pathinfo($data->getClientOriginalName(), PATHINFO_FILENAME);
-        $path = $this->courseUploadPath . DIRECTORY_SEPARATOR . $this->originalFilename;
+
+        $course = $this->courseRepository->findOneBy(['shortName' => $this->originalFilename]);
+        if (!$course instanceof Course) {
+            $course = (new Course())
+                ->setShortName($this->originalFilename)
+                ->setName($this->originalFilename)
+                ->setType(Course::CLASSC);
+
+            $this->courseRepository->save($course, true);
+        }
+
+        $path = $this->courseUploadPath . DIRECTORY_SEPARATOR . $course->getId();
 
         // Проверить что каталог существует, при необходимости создать.
         if (!file_exists($path) && !mkdir($path, 0777, true) && !is_dir($path)) {
@@ -72,21 +69,19 @@ class CourseUploadService
         } else {
             throw new RuntimeException('Невозможно распаковать архив');
         }
+
+        return $course;
     }
 
-    /**
-     * @param string $fileName
-     * @throws Exception
-     */
-    public function readCourseIntoDb(string $fileName): void
+    public function readCourseIntoDb(array $content): void
     {
         $themeNom = 0;
         $questionNom = 0;
         $aNom = 0;
         $materialsNom = 0;
 
-        $this->originalFilename = pathinfo($fileName, PATHINFO_FILENAME);
-        $path = $this->courseUploadPath . DIRECTORY_SEPARATOR . $this->originalFilename;
+        $this->originalFilename = pathinfo($content['filename'], PATHINFO_FILENAME);
+        $path = $this->courseUploadPath . DIRECTORY_SEPARATOR . $content['courseId'];
         $reader = new XMLReader();
         $reader->open($path . '/' . $this->originalFilename . '.xml');
 
@@ -173,77 +168,26 @@ class CourseUploadService
             }
         }
         $reader->close();
+
         // Проверить наличие курса в БД
-        $this->checkCourseDb();
+        $this->checkCourseDb($content['courseId']);
         // Сохраняем данные в БД
-        $this->saveDataToDb();
+        $this->courseRepository->saveDataToDb($this->data, $this->materials, $content['courseId']);
     }
 
-    /**
-     * Проверяем есть ли учебный материал в БД, перезаписываем его
-     */
-    private function checkCourseDb(): void
+    private function checkCourseDb(int $courseId): void
     {
-        $this->course = $this->em->getRepository(Course::class)
-            ->findOneBy(['shortName' => $this->originalFilename]);
+        $this->course = $this->courseRepository->find($courseId);
 
-        if ($this->course) {
-            $this->em->getRepository(Course::class)->prepareCourseClear($this->course);
-        } else {
-            $this->course = new Course();
+        if (! $this->course instanceof Course) {
+            throw new RuntimeException('Курс не найден');
         }
 
-        $this->course->setShortName($this->originalFilename)
+        $this->courseRepository->prepareCourseClear($this->course);
+
+        $this->course
             ->setName($this->courseName);
-        $this->em->persist($this->course);
-        $this->em->flush();
-    }
 
-    /**
-     * Сохраняем курсы в БД
-     * @throws Exception
-     */
-    private function saveDataToDb(): void
-    {
-        $themeNom = 1;
-
-        foreach ($this->data as $theme) {
-            $this->em->getConnection()->executeQuery("
-                INSERT INTO course_theme (id, course_id, name, description)
-                VALUES (NULL, '{$this->course->getId()}', '{$themeNom}', '{$theme['theme']['name']}')
-            ");
-            $themeId = $this->em->getConnection()->lastInsertId();
-            $themeNom++;
-
-            // Вопросы
-            $cnt = 1;
-            foreach ($theme['questions'] as $item) {
-                $this->em->getConnection()->executeQuery("
-                    INSERT INTO questions (id, course_id, parent_id , description, type, help, nom)
-                    VALUES (NULL, {$this->course->getId()}, {$themeId}, '{$item['qText']}', {$item['type']}, '{$item['hText']}', {$cnt})
-                ");
-                $questionId = $this->em->getConnection()->lastInsertId();
-
-                // Ответы
-                $aCnt = 1;
-                foreach ($item['answer'] as $row) {
-                    $status = (int)$row['aStatus'];
-                    $this->em->getConnection()->executeQuery("
-                        INSERT INTO answer (id, question_id , description, is_correct, nom)
-                        VALUES (NULL, {$questionId}, '{$row['aText']}', {$status}, {$aCnt})
-                    ");
-                    $aCnt++;
-                }
-                $cnt++;
-            }
-        }
-
-        // Материалы
-        foreach ($this->materials as $material) {
-            $this->em->getConnection()->executeQuery("
-                INSERT INTO course_info (id, course_id, name, file_name)
-                VALUES (NULL, {$this->course->getId()}, '{$material['name']}', '{$material['file']}')
-            ");
-        }
+        $this->courseRepository->save($this->course, true);
     }
 }

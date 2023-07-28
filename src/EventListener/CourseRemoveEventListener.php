@@ -22,6 +22,7 @@ class CourseRemoveEventListener
         private readonly PermissionRepository $permissionRepository,
         private readonly TicketRepository $ticketRepository,
         private readonly ModuleRepository $moduleRepository,
+        private readonly string $courseUploadPath,
     ) {}
 
     public function preRemove(LifecycleEventArgs $args): void
@@ -42,5 +43,21 @@ class CourseRemoveEventListener
         $this->questionsRepository->removeQuestionsForCourse($entity);
         $this->permissionRepository->removePermissionForCourse($entity);
         $this->ticketRepository->deleteOldTickets($entity);
+
+        $this->removeCourseDirectory($entity);
+    }
+
+    private function removeCourseDirectory(Course $course)
+    {
+        $path = $this->courseUploadPath . DIRECTORY_SEPARATOR . $course->getId();
+
+        $files = glob($path . '/*');
+        foreach ($files as $file) {
+            if (is_file($file)) {
+                unlink($file);
+            }
+        }
+
+        rmdir($path);
     }
 }

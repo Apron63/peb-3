@@ -139,4 +139,48 @@ class CourseRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult();
     }
+
+    public function saveDataToDb(array $data, array $materials, int $courseId): void
+    {
+        $themeNom = 1;
+
+        foreach ($data as $theme) {
+            $this->getEntityManager()->getConnection()->executeQuery("
+                INSERT INTO course_theme (id, course_id, name, description)
+                VALUES (NULL, '{$courseId}', '{$themeNom}', '{$theme['theme']['name']}')
+            ");
+            $themeId = $this->getEntityManager()->getConnection()->lastInsertId();
+            $themeNom++;
+
+            // Вопросы
+            $cnt = 1;
+            foreach ($theme['questions'] as $item) {
+                $this->getEntityManager()->getConnection()->executeQuery("
+                    INSERT INTO questions (id, course_id, parent_id , description, type, help, nom)
+                    VALUES (NULL, {$courseId}, {$themeId}, '{$item['qText']}', {$item['type']}, '{$item['hText']}', {$cnt})
+                ");
+                $questionId = $this->getEntityManager()->getConnection()->lastInsertId();
+
+                // Ответы
+                $aCnt = 1;
+                foreach ($item['answer'] as $row) {
+                    $status = (int)$row['aStatus'];
+                    $this->getEntityManager()->getConnection()->executeQuery("
+                        INSERT INTO answer (id, question_id , description, is_correct, nom)
+                        VALUES (NULL, {$questionId}, '{$row['aText']}', {$status}, {$aCnt})
+                    ");
+                    $aCnt++;
+                }
+                $cnt++;
+            }
+        }
+
+        // Материалы
+        foreach ($materials as $material) {
+            $this->getEntityManager()->getConnection()->executeQuery("
+                INSERT INTO course_info (id, course_id, name, file_name)
+                VALUES (NULL, {$courseId}, '{$material['name']}', '{$material['file']}')
+            ");
+        }
+    }
 }

@@ -5,20 +5,16 @@ namespace App\MessageHandler;
 use App\Message\CourseUploadMessage;
 use App\Service\CourseUploadService;
 use App\Service\JobService;
-use Doctrine\DBAL\Exception;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 
 #[AsMessageHandler]
 class CourseUploadMessageHandler
 {
     public function __construct(
-        readonly CourseUploadService $courseUploadService,
-        readonly JobService $jobService
-    ) { }
+        private readonly CourseUploadService $courseUploadService,
+        private readonly JobService $jobService,
+    ) {}
 
-    /**
-     * @throws Exception
-     */
     public function __invoke(CourseUploadMessage $message)
     {
         $job = $this->jobService->createJob(
@@ -26,7 +22,7 @@ class CourseUploadMessageHandler
             $message->getContent()['userId'],
         );
         
-        $this->courseUploadService->readCourseIntoDb($message->getContent()['filename']);
+        $this->courseUploadService->readCourseIntoDb($message->getContent());
         $this->jobService->finishJob($job);
     }
 }
