@@ -3,6 +3,7 @@
 namespace App\Controller\Admin;
 
 use App\Service\AdminReportService;
+use App\Form\Admin\SendListToEmailType;
 use App\Repository\PermissionRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -19,7 +20,33 @@ class UserReportAndSendController extends AbstractController
     #[Route('/admin/user/report/send/get_content/', name: 'admin_user_report_send_get_content', condition: 'request.isXmlHttpRequest()')]
     public function adminGetModalContent():JsonResponse
     {
-        $content = $this->renderView('admin/user/_send_email.html.twig');
+        $data = [
+            'emails' => '',
+            'subject' => '',
+            'comment' => '
+                <p>Здравствуйте!</p>
+                <p>Направляю файл с данными по назначенным доступам в системе дистанционного обучения: ФИО слушателя, должность, организация, логин, пароль, курс, количество дней.</p>
+                <ol>
+                    <li>Для начала обучения требуется перейти по ссылке: <a href="https://ucoks.safety63.ru/"><u><u>СТРАНИЦА ВХОДА </u></u></a>(или ввести в поисковой строке любого браузера - <a href="https://ucoks.safety63.ru/login"><u><u>https://ucoks.safety63.ru/login</u></u></a>);</li>
+                    <li>Далее необходимо ввести свои данные из файла.</li>
+                </ol>
+                <p>&nbsp;</p>
+                <p>Обучение можно проходить с любого устройства: персональный компьютер, планшет, смартфон.</p>
+                <p>Приятного обучения!</p>
+                <p><br />
+                Ответственный методист: &hellip;<br />
+                Телефон: &hellip;</p>
+                <p>График работы методиста: пн-чт - с 08:00 до 17:00, пт &ndash; с 08:00 до 16:00</p>
+                <p>&nbsp;</p>
+                <p>Техническая поддержка: телефон +7-937-077-11-65, +7 (846) 26-915-26</p>
+                <p>Email: <a href="mailto:support@safety63.ru"><u><u>support@safety63.ru</u></u></a><br />
+                График работы техподдержки: с 8:00 до 22:00 без перерывов и выходных</p>
+            ',
+        ];
+
+        $content = $this->renderView('admin/user/_send_email.html.twig', [
+            'form' => $this->createForm(SendListToEmailType::class, $data)->createView(),
+        ]);
 
         return new JsonResponse(['data' => $content]);
     }
@@ -34,86 +61,11 @@ class UserReportAndSendController extends AbstractController
         $criteria = $request->get('criteria');
 
         if (!empty($criteria)) {
-            $data = $this->permissionRepository->getUserSearchQuery($criteria['user_search'])->getResult();
+            $data = $this->permissionRepository->getUserSearchQuery($criteria['user_search'], true)->getResult();
         }
 
         return new JsonResponse(
             $this->reportService->generateListAndSend($recipient, $subject, $comment, $type, $data)
         );
     }
-
-    // #[Route('/admin/user/report/send/to_csv/', name: 'admin_user_report_send_to_csv')]
-    // public function adminUserReportSendToCsv(Request $request): BinaryFileResponse
-    // {
-    //     $criteria = $request->get('criteria');
-
-    //     if (!empty($criteria)) {
-    //         $data = $this->permissionRepository->getUserSearchQuery($criteria['user_search'])->getResult();
-    //     }
-
-    //     $fileName = $this->reportService->generateListAndSendCSV($data);
-    //     $response = new BinaryFileResponse($fileName);
-    //     $response->headers->set('Content-Type', 'application/octet-stream');
-    //     $response
-    //         ->setContentDisposition(ResponseHeaderBag::DISPOSITION_ATTACHMENT, 'mail.eml')
-    //         ->deleteFileAfterSend(true);
-
-    //     return $response;
-    // }
-
-    // #[Route('/admin/user/report/send/to_xlsx/', name: 'admin_user_report_send_to_xlsx')]
-    // public function adminUserReportSendToXlsx(Request $request): BinaryFileResponse
-    // {
-    //     $criteria = $request->get('criteria');
-
-    //     if (!empty($criteria)) {
-    //         $data = $this->permissionRepository->getUserSearchQuery($criteria['user_search'])->getResult();
-    //     }
-
-    //     $fileName = $this->reportService->generateListXLSX($data);
-    //     $response = new BinaryFileResponse($fileName);
-    //     $response->headers->set('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-    //     $response
-    //         ->setContentDisposition(ResponseHeaderBag::DISPOSITION_ATTACHMENT, 'report.xlsx')
-    //         ->deleteFileAfterSend(true);
-
-    //     return $response;
-    // }
-
-    // #[Route('/admin/user/report/send/to_txt/', name: 'admin_user_report_send_to_txt')]
-    // public function adminUserReportSendToTxt(Request $request): BinaryFileResponse
-    // {
-    //     $criteria = $request->get('criteria');
-
-    //     if (!empty($criteria)) {
-    //         $data = $this->permissionRepository->getUserSearchQuery($criteria['user_search'])->getResult();
-    //     }
-    //     $fileName = $this->reportService->generateListTXT($data);
-    //     $response = new BinaryFileResponse($fileName);
-    //     $response->headers->set('Content-Type', 'text/plain');
-    //     $response
-    //         ->setContentDisposition(ResponseHeaderBag::DISPOSITION_ATTACHMENT, 'report.txt')
-    //         ->deleteFileAfterSend(true);
-
-    //     return $response;
-    // }
-
-    // #[Route('/admin/user/report/send/to_docx/', name: 'admin_user_report_send_to_docx')]
-    // public function adminUserReportSendToDocx(Request $request): BinaryFileResponse
-    // {
-    //     $criteria = $request->get('criteria');
-
-    //     if (!empty($criteria)) {
-    //         $data = $this->permissionRepository->getUserSearchQuery($criteria['user_search'])->getResult();
-    //     }
-
-    //     $fileName = $this->reportService->generateListDocx($data);
-    //     $response = new BinaryFileResponse($fileName);
-    //     $response->headers->set('Content-Type', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document');
-    //     $response
-    //         ->setContentDisposition(ResponseHeaderBag::DISPOSITION_ATTACHMENT, 'report.docx')
-    //         ->deleteFileAfterSend(true);
-
-    //     return $response;
-    // }
 }

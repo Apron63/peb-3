@@ -43,14 +43,15 @@ $('.send-user-list').on('click', function(e) {
                 $.ajax({
                     url: $('#send-email-to-client').data('url'),
                     data: {
-                        recipient: $('#recipient').val(),
-                        subject: $('#subject').val(),
-                        comment: $('#comment').val(),
+                        recipient: $('#send_list_to_email_emails').val(),
+                        subject: $('#send_list_to_email_subject').val(),
+                        comment: $('#send_list_to_email_comment').val(),
                         type: sendReportType,
                         criteria: $('#dropdownMenuButton3').data('criteria')
                     }
                 }).done(function (data) {
                     if (!data.success) {
+                        $('#send_list_to_email_emails').after('<p id="email-error" class="text-danger"></p>')
                         $('#email-error').html(data.message)
                     } else {
                         myModal.hide()

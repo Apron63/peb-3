@@ -9,6 +9,7 @@ use PhpOffice\PhpWord\PhpWord;
 use Symfony\Component\Mime\Email;
 use App\Repository\UserRepository;
 use App\Repository\LoggerRepository;
+use Symfony\Component\Mime\Part\File;
 use App\Repository\PermissionRepository;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use Symfony\Component\Mime\Part\DataPart;
@@ -17,8 +18,8 @@ use jonasarts\Bundle\TCPDFBundle\TCPDF\TCPDF;
 use Symfony\Component\Mailer\MailerInterface;
 use PhpOffice\PhpWord\IOFactory as WordFactory;
 use PhpOffice\PhpSpreadsheet\IOFactory as XlsxFactory;
+use PhpOffice\PhpSpreadsheet\Style\Fill;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use Symfony\Component\Mime\Part\File;
 
 class AdminReportService
 {
@@ -232,26 +233,48 @@ class AdminReportService
     {
         $spreadsheet = new Spreadsheet();
         $workSheet = $spreadsheet->getActiveSheet();
+        $courseName = null;
 
-        $workSheet->setCellValue('A1', 'ФИО');
-        $workSheet->setCellValue('B1', 'Должность');
-        $workSheet->setCellValue('C1', 'Организация');
-        $workSheet->setCellValue('D1', 'Логин');
-        $workSheet->setCellValue('E1', 'Пароль');
-        $workSheet->setCellValue('F1', 'Курсы');
+        $workSheet->setCellValue('A1', 'Ном');
+        $workSheet->setCellValue('B1', 'ФИО');
+        $workSheet->setCellValue('C1', 'Должность');
+        $workSheet->setCellValue('D1', 'Организация');
+        $workSheet->setCellValue('E1', 'Логин');
+        $workSheet->setCellValue('F1', 'Пароль');
         $workSheet->setCellValue('G1', 'Дней');
 
         $item = 2;
         foreach($data as $row) {
-            $workSheet->setCellValue('A' . $item, $row['fullName']);
-            $workSheet->setCellValue('B' . $item, $row['position']);
-            $workSheet->setCellValue('C' . $item, $row['organization']);
-            $workSheet->setCellValue('D' . $item, $row['login']);
-            $workSheet->setCellValue('E' . $item, $row['plainPassword']);
-            $workSheet->setCellValue('F' . $item, $row['name']);
+            if ($courseName !== $row['name']) {
+                $workSheet->setCellValue('A' . $item, '');
+
+                $workSheet->setCellValue('B' . $item, 'Курс : ' . $row['name']);
+                $workSheet->getStyle('B' . $item, $row['name'])->getAlignment()->setWrapText(true);
+                $workSheet->getRowDimension($item)->setRowHeight(-1);
+                $workSheet->mergeCells('B' . $item . ':G' . $item);
+
+                $workSheet
+                    ->getStyle('A' . $item . ':G' . $item)
+                    ->getFill()
+                    ->setFillType(Fill::FILL_SOLID)
+                    ->getStartColor()
+                    ->setRGB('EEEEEE');
+
+                $courseName = $row['name'];
+                $item ++;
+                $nom = 1;
+            }
+
+            $workSheet->setCellValue('A' . $item, $nom);
+            $workSheet->setCellValue('B' . $item, $row['fullName']);
+            $workSheet->setCellValue('C' . $item, $row['position']);
+            $workSheet->setCellValue('D' . $item, $row['organization']);
+            $workSheet->setCellValue('E' . $item, $row['login']);
+            $workSheet->setCellValue('F' . $item, $row['plainPassword']);
             $workSheet->setCellValue('G' . $item, $row['duration']);
 
-            $item++;
+            $item ++;
+            $nom ++;
         }
 
         $styleArray = [
@@ -306,6 +329,7 @@ class AdminReportService
     public function generateListDocx(array $data): string
     {
         $phpWord = new PhpWord();
+        $courseName = null;
 
         $section = $phpWord->addSection();
         $section->addText();
@@ -313,23 +337,37 @@ class AdminReportService
         $table = $section->addTable();
 
         $table->addRow();
-        $table->addCell(1700)->addText('ФИО');
-        $table->addCell(1700)->addText('Должность');
-        $table->addCell(1700)->addText('Организация');
+        $table->addCell(500)->addText('Ном');
+        $table->addCell(2000)->addText('ФИО');
+        $table->addCell(2000)->addText('Должность');
+        $table->addCell(2000)->addText('Организация');
         $table->addCell(1300)->addText('Логин');
         $table->addCell(1300)->addText('Пароль');
-        $table->addCell(1800)->addText('Курсы');
         $table->addCell(500)->addText('Дней');
 
         foreach($data as $row) {
+            if ($courseName !== $row['name']) {
+                $table->addRow();
+                $table->addCell(500, ['bgColor'=>'EEEEEE']);
+                $table->addCell(1000, ['bgColor'=>'EEEEEE'])->addText('Курс');    
+                $cell = $table->addCell(null, ['bgColor'=>'EEEEEE']);
+                $cell->addText($row['name']);
+                $cell->getStyle()->setGridSpan(7);
+
+                $courseName = $row['name'];
+                $nom = 1;
+            }
+
             $table->addRow();
-            $table->addCell(1700)->addText($row['fullName']);
-            $table->addCell(1700)->addText($row['position']);
-            $table->addCell(1700)->addText($row['organization']);
+            $table->addCell(500)->addText($nom);
+            $table->addCell(2000)->addText($row['fullName']);
+            $table->addCell(2000)->addText($row['position']);
+            $table->addCell(2000)->addText($row['organization']);
             $table->addCell(1300)->addText($row['login']);
             $table->addCell(1300)->addText($row['plainPassword']);
-            $table->addCell(1800)->addText($row['name']);
             $table->addCell(500)->addText($row['duration']);
+
+            $nom ++;
         }
 
         $fileName = $this->reportUploadPath . '/' . (new DateTime())->format('d-m-Y_H_i_s') . '_' . uniqid() . '.docx';
@@ -343,7 +381,10 @@ class AdminReportService
 
     public function generateListAndSend(string $recipient, string $subject, string $comment, string $type, array $data): array
     {
-        $totalRecipients = explode(',', $recipient);
+        $totalRecipients = array_map(
+            fn($address) => trim($address),
+            explode(',', $recipient
+        ));
 
         $success = true;
         $message = '';
@@ -361,23 +402,15 @@ class AdminReportService
             switch($type) {
                 case 'CSV':
                     $fileName = $this->generateListCSV($data);
-                    $attachmentName = 'report.csv';
-                    $attachmentType = 'text/csv';
                     break;
                 case 'XLSX':
                     $fileName = $this->generateListXLSX($data);
-                    $attachmentName = 'report.xlsx';
-                    $attachmentType = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
                     break;
                 case 'TXT':
                     $fileName = $this->generateListTXT($data);
-                    $attachmentName = 'report.txt';
-                    $attachmentType = 'text/plain';
                     break;
                 case 'DOCX':
                     $fileName = $this->generateListDocx($data);
-                    $attachmentName = 'report.docx';
-                    $attachmentType = 'application/vnd.openxmlformats-officedocument.wordprocessingml.document';
             }
 
             $mail = (new Email())
