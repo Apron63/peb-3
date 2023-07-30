@@ -39,6 +39,15 @@ $('.send-user-list').on('click', function(e) {
             $('#myModalBody').html(data.data)
             myModal.show()
 
+            let myModalEl = document.getElementById('myModal')
+            myModalEl.addEventListener('hidden.bs.modal', function() {
+                $('#toast-message').html('Сообщение успешно отправлено!')
+
+                let toast = new bootstrap.Toast(toastLiveExample)
+                $('.toast-header').css('background-color', 'lime')
+                toast.show()
+            })
+
             $('#send-email-to-client').on('click', function(e) {
                 $.ajax({
                     url: $('#send-email-to-client').data('url'),
