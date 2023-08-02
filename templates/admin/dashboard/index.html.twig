@@ -1,0 +1,55 @@
+{% extends 'admin/base.html.twig' %}
+
+{% block title %}Панель управления | Инструменты{% endblock %}
+
+{% block content %}
+
+    <h3>Инструменты</h3>
+
+    <div class="row">
+        <div class="col-3">
+            <div class="card">
+                <div class="card-header">
+                    Дисковое пространство
+                </div>
+                <div class="card-body">
+                    <table>
+                        <tr>
+                            <td><p class="card-text">Всего</p></td>
+                            <td><p class="card-text text-end">{{ diskTotalSpace }}</p></td>
+                        </tr>
+                        <tr>
+                            <td><p class="card-text">Из них свободно</p></td>
+                            <td><p class="card-text text-end">{{ freeDiskSpace }}</p></td>
+                        </tr>
+                        <tr>
+                            <td><p class="card-text">Занято</p></td>
+                            <td><p class="card-text text-end">{{ usedSpace }} %</p></td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-3">
+            <div class="card">
+                <div class="card-header">
+                    Рассылки
+                </div>
+                <div class="card-body">
+                    <table>
+                        <tr>
+                            <td><p class="card-text">Отправлено за сегодня</p></td>
+                            <td><p class="card-text text-end">{{ mailSenttoday }}</p></td>
+                        </tr>
+                        <tr>
+                            <td><p class="card-text">Неотправленных</p></td>
+                            <td><p class="card-text text-end">{{ mailNotSended }}</p></td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
