@@ -32,12 +32,10 @@ class TestingService
     {
         $logger = $this->loggerRepository->findLastLogger($permission, $user);
 
-        if ( 
-            null === $logger
-        ) {
+        if (null === $logger) {
             $logger = $this->getNewLogger($permission, $user);
         } else {
-            $timeSpentNow = (new DateTime)->getTimestamp() - $logger->getTimeLastQuestion()->getTimestamp();
+            $timeSpentNow = (new DateTime())->getTimestamp() - $logger->getTimeLastQuestion()->getTimestamp();
 
             $timeShift = $logger->getTimeLeftInSeconds() - $timeSpentNow;
             if ($timeShift < 0 ) {
@@ -46,7 +44,7 @@ class TestingService
 
             $logger
                 ->setTimeLeftInSeconds($timeShift)
-                ->setTimeLastQuestion(new \DateTime());
+                ->setTimeLastQuestion(new DateTime());
 
             $this->loggerRepository->save($logger, true);
         }
@@ -131,8 +129,7 @@ class TestingService
         $this->loggerRepository->save($logger, true);
 
         if (isset($ticketsArray[$logger->getQuestionNom()])) {
-            $logger
-                ->setQuestionNom($logger->getQuestionNom() + 1);
+            $logger->setQuestionNom($logger->getQuestionNom() + 1);
 
             $this->loggerRepository->save($logger, true);
 
@@ -144,7 +141,7 @@ class TestingService
 
     public function closeLogger(Logger $logger): Logger
     {
-        $logger->setEndAt(new \DateTime());
+        $logger->setEndAt(new DateTime());
 
         if (
             $logger->getErrorActually() <= $logger->getErrorAllowed()
@@ -217,14 +214,16 @@ class TestingService
 
         $logger = new Logger;
 
-        $timeLeft = null === $ticket->getTimeLeft() ? Logger::DEFAULT_TIME_LEFT_IN_SECONDS : $ticket->getTimeLeft() * 60;
+        $timeLeft = null === $ticket->getTimeLeft()
+            ? Logger::DEFAULT_TIME_LEFT_IN_SECONDS
+            : $ticket->getTimeLeft() * 60;
         
         $logger
             ->setUser($user)
             ->setTicket($ticket)
             ->setErrorActually(0)
             ->setErrorAllowed($ticket->getErrCnt())
-            ->setBeginAt(new \DateTime())
+            ->setBeginAt(new DateTime())
             ->setQuestionNom(1)
             ->setProtocol($protocol)
             ->setResult(false)
@@ -266,7 +265,7 @@ class TestingService
             'loggerId' => $logger->getId(),
             'nom' => $logger->getQuestionNom(),
             'text' => $question->getDescription(),
-            'timeLeftTotal' => (new \Datetime)->getTimestamp() + $logger->getTimeLeftInSeconds(),
+            'timeLeftTotal' => (new Datetime())->getTimestamp() + $logger->getTimeLeftInSeconds(),
             'timeLeftMinutes' => $leftMinutes,
             'timeLeftSeconds' => $leftSeconds,
             'type' => $question->getType(),
@@ -306,7 +305,7 @@ class TestingService
             'loggerId' => $logger->getId(),
             'nom' => $logger->getQuestionNom(),
             'text' => $question->getDescription(),
-            'timeLeftTotal' => (new \Datetime)->getTimestamp() + $logger->getTimeLeftInSeconds(),
+            'timeLeftTotal' => (new Datetime())->getTimestamp() + $logger->getTimeLeftInSeconds(),
             'timeLeftMinutes' => $leftMinutes,
             'timeLeftSeconds' => $leftSeconds,
             'type' => $question->getType(),
