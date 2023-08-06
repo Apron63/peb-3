@@ -16,15 +16,15 @@
                     <table>
                         <tr>
                             <td><p class="card-text">Всего</p></td>
-                            <td><p class="card-text text-end">{{ diskTotalSpace }}</p></td>
+                            <td><p class="card-text text-end">{{ data.diskTotalSpace }}</p></td>
                         </tr>
                         <tr>
                             <td><p class="card-text">Из них свободно</p></td>
-                            <td><p class="card-text text-end">{{ freeDiskSpace }}</p></td>
+                            <td><p class="card-text text-end">{{ data.freeDiskSpace }}</p></td>
                         </tr>
                         <tr>
                             <td><p class="card-text">Занято</p></td>
-                            <td><p class="card-text text-end">{{ usedSpace }} %</p></td>
+                            <td><p class="card-text text-end">{{ data.usedSpace }} %</p></td>
                         </tr>
                     </table>
                 </div>
@@ -39,12 +39,12 @@
                 <div class="card-body">
                     <table>
                         <tr>
-                            <td><p class="card-text">Отправлено за сегодня</p></td>
-                            <td><p class="card-text text-end">{{ mailSenttoday }}</p></td>
+                            <td><p class="card-text">Создано за сегодня</p></td>
+                            <td><p class="card-text text-end">{{ data.mailCreatedToday }}</p></td>
                         </tr>
                         <tr>
                             <td><p class="card-text">Неотправленных</p></td>
-                            <td><p class="card-text text-end">{{ mailNotSended }}</p></td>
+                            <td><p class="card-text text-end">{{ data.mailNotSended }}</p></td>
                         </tr>
                     </table>
                 </div>

@@ -53,4 +53,26 @@ class MailingQueueRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult();
     }
+
+    public function getMailCreatedToday(): int
+    {
+        $queryBuilder = $this->createQueryBuilder('m');
+
+        return $queryBuilder
+            ->select('count(m)')
+            ->where('m.createdAt = NOW()')
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
+    
+    public function getMailNotSended(): int
+    {
+        $queryBuilder = $this->createQueryBuilder('m');
+
+        return $queryBuilder
+            ->select('count(m)')
+            ->where('m.sendedAt IS NULL')
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
 }
