@@ -31,9 +31,7 @@ class CourseThemeController extends MobileController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            if ($this->isGranted('ROLE_SUPER_ADMIN')) {
-                $this->courseThemeRepository->save($courseTheme, true);
-            }
+            $this->courseThemeRepository->save($courseTheme, true);
 
             return $this->redirect('/admin/course/' . $courseTheme->getCourse()->getId() . '/');
         }
@@ -60,9 +58,7 @@ class CourseThemeController extends MobileController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            if ($this->isGranted('ROLE_SUPER_ADMIN')) {
-                $this->courseThemeRepository->save($courseTheme, true);
-            }
+            $this->courseThemeRepository->save($courseTheme, true);
 
             return $this->redirect('/admin/course/' . $courseTheme->getCourse()->getId() . '/');
         }
@@ -76,12 +72,10 @@ class CourseThemeController extends MobileController
 
     #[Route('/admin/course_theme/delete/{id<\d+>}/', name: 'admin_course_theme_delete')]
     #[IsGranted('ROLE_SUPER_ADMIN')]
-    public function adminCourseThemeDelete(Request $request, CourseTheme $courseTheme): Response
+    public function adminCourseThemeDelete(CourseTheme $courseTheme): Response
     {
-        $courseId = $courseTheme->getCourse() ? $courseTheme->getCourse()->getId() : null;
-        if ($this->isGranted('ROLE_SUPER_ADMIN')) {
-            $this->courseThemeRepository->remove($courseTheme, true);
-        }
+        $courseId = $courseTheme->getCourse()?->getId();
+        $this->courseThemeRepository->remove($courseTheme, true);
 
         return $this->redirect('/admin/course/' . $courseId . '/');
     }

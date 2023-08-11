@@ -61,16 +61,14 @@ class CourseController extends MobileController
     
     #[Route('/admin/course/create/', name: 'admin_course_create')]
     #[IsGranted('ROLE_SUPER_ADMIN')]
-    public function create(Request $request, PaginatorInterface $paginator): Response
+    public function create(Request $request): Response
     {
         $course = new Course();
         $form = $this->createForm(CourseEditType::class, $course);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            if ($this->isGranted('ROLE_SUPER_ADMIN')) {
-                $this->couseRepository->save($course, true);
-            }
+            $this->couseRepository->save($course, true);
 
             return $this->redirectToRoute('admin_course_list');
         }
@@ -88,35 +86,34 @@ class CourseController extends MobileController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            if ($this->isGranted('ROLE_SUPER_ADMIN')) {
-                // @TODO вынести в сервис
-                $image = $form->get('image')->getData();
+            // @TODO вынести в сервис
+            $image = $form->get('image')->getData();
 
-                if ($image) {
-                    $originalFilename = pathinfo($image->getClientOriginalName(), PATHINFO_FILENAME);
-                    
-                    $imgPath = $this->getParameter('course_upload_directory') . '/' . $course->getId();
+            if ($image) {
+                $originalFilename = pathinfo($image->getClientOriginalName(), PATHINFO_FILENAME);
+                
+                $imgPath = $this->getParameter('course_upload_directory') . '/' . $course->getId();
 
-                    if (!file_exists($imgPath)) { 
-                        mkdir($imgPath, 0777, true);
-                    }
-
-                    $newFilename = 
-                        $this->slugger->slug($originalFilename)
-                        . '-'
-                        . uniqid()
-                        . '.'
-                        . $image->guessExtension();
-
-                    try {
-                        $image->move($imgPath, $newFilename);
-                    } catch (FileException $e) {
-                    }
-
-                    $course->setImage($newFilename);
+                if (!file_exists($imgPath)) { 
+                    mkdir($imgPath, 0777, true);
                 }
-                $this->couseRepository->save($course, true);
+
+                $newFilename = 
+                    $this->slugger->slug($originalFilename)
+                    . '-'
+                    . uniqid()
+                    . '.'
+                    . $image->guessExtension();
+
+                try {
+                    $image->move($imgPath, $newFilename);
+                } catch (FileException $e) {
+                }
+
+                $course->setImage($newFilename);
             }
+
+            $this->couseRepository->save($course, true);
 
             return $this->redirectToRoute('admin_course_list');
         }
@@ -154,11 +151,9 @@ class CourseController extends MobileController
 
     #[Route('/admin/course/delete/{id<\d+>}/', name: 'admin_course_delete')]
     #[IsGranted('ROLE_SUPER_ADMIN')]
-    public function adminCourseDelete(Request $request, Course $course): Response
+    public function adminCourseDelete(Course $course): Response
     {
-        if ($this->isGranted('ROLE_SUPER_ADMIN')) {
-            $this->couseRepository->remove($course, true);
-        }
+        $this->couseRepository->remove($course, true);
 
         return $this->redirectToRoute('admin_course_list');
     }

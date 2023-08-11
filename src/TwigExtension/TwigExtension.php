@@ -26,17 +26,13 @@ class TwigExtension extends AbstractExtension
         ];
     }
 
-    /**
-     * @param string $description
-     * @param int $nom
-     * @return string
-     */
     public function shortDescription(string $description, int $nom): string
     {
-        $shortDescription = strip_tags(u($description)->truncate(100));
+        $shortDescription = strip_tags(u($description)->truncate(1000));
         if ($description === '') {
             $description = $nom . '.';
         }
+        
         return $shortDescription;
     }
 

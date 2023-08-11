@@ -52,6 +52,9 @@ class QueryUserRepository extends ServiceEntityRepository
             ->getQuery();
     }
 
+    /**
+     * @return QueryUser[]
+     */
     public function getUserQueryNew(User $user): array
     {
         $qb = $this->createQueryBuilder('uq')

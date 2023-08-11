@@ -128,15 +128,17 @@
 </script>
 
 {# read and display just one flash message type #}
-{% for message in app.flashes('error') %}
+{# TODO
+    {% for message in app.flashes('error') %}
     <script>
-        $("#toast-message").html("{{ message }}");
-        $(".toast-header").css("background-color", "#ff0000");
-        $(".me-auto").css("color", "#ffffff");
-        let toast = new bootstrap.Toast(toastLiveExample);
+        console.log(123)
+        $("#toast-message").html("{{ message }}")
+        $(".toast-header").css("background-color", "#ff0000")
+        $(".me-auto").css("color", "#ffffff")
+        let toast = new bootstrap.Toast(toastLiveExample)
         toast.show();
     </script>
-{% endfor %}
+{% endfor %} #}
 
 {% block javascripts %}
      {{ encore_entry_script_tags('admin') }}

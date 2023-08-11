@@ -2,7 +2,6 @@
 
 namespace App\Command;
 
-use App\Entity\MailingQueue;
 use Symfony\Component\Mime\Email;
 use App\Repository\MailingQueueRepository;
 use DateTime;

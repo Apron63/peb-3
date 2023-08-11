@@ -38,7 +38,7 @@ class LoaderController extends MobileController
             return $this->redirectToRoute('admin_loader');
         }
 
-        return $this->mobileRender('admin/load-1c/index.html.twig', [
+        return $this->mobileRender('admin/loader/_select_file.html.twig', [
             'form' => $form->createView(),
         ]);
     }
@@ -55,7 +55,7 @@ class LoaderController extends MobileController
         ]);
     }
     
-    #[Route('/admin/loader/changeCheckBox', name: 'admin_loader_change_check_box', condition: 'request.isXmlHttpRequest()')]
+    #[Route('/admin/loader/changeCheckBox/', name: 'admin_loader_change_check_box', condition: 'request.isXmlHttpRequest()')]
     public function changeCheckBoxValue(Request $request): JsonResponse
     {
         $id = (int) $request->get('id');
@@ -66,7 +66,7 @@ class LoaderController extends MobileController
         return new JsonResponse();
     }
     
-    #[Route('/admin/loader/setAllCheckBox', name: 'admin_loader_set_all_check_box', condition: 'request.isXmlHttpRequest()')]
+    #[Route('/admin/loader/setAllCheckBox/', name: 'admin_loader_set_all_check_box', condition: 'request.isXmlHttpRequest()')]
     public function setAllCheckBoxValue(Request $request): JsonResponse
     {
         $action = strtolower($request->get('action', 'select'));
@@ -76,7 +76,7 @@ class LoaderController extends MobileController
         return new JsonResponse();
     }
     
-    #[Route('/admin/loader/checkIfLoaderIsEmpty', name: 'admin_loader_check_empty', condition: 'request.isXmlHttpRequest()')]
+    #[Route('/admin/loader/checkIfLoaderIsEmpty/', name: 'admin_loader_check_empty', condition: 'request.isXmlHttpRequest()')]
     public function checkIfLoaderIsEmpty(): JsonResponse
     {
         return new JsonResponse([
@@ -84,7 +84,7 @@ class LoaderController extends MobileController
         ]);
     }
     
-    #[Route('/admin/loader/prepareData', name: 'admin_loader_prepare_data', condition: 'request.isXmlHttpRequest()')]
+    #[Route('/admin/loader/prepareData/', name: 'admin_loader_prepare_data', condition: 'request.isXmlHttpRequest()')]
     public function prepareData(): Response
     {
         return new Response(
@@ -95,7 +95,7 @@ class LoaderController extends MobileController
         );
     }
     
-    #[Route('/admin/loader/sendToQuery', name: 'admin_loader_send_to_query', condition: 'request.isXmlHttpRequest()')]
+    #[Route('/admin/loader/sendToQuery/', name: 'admin_loader_send_to_query', condition: 'request.isXmlHttpRequest()')]
     public function sendToQuery(Request $request): JsonResponse
     {
         $user = $this->getUser();
@@ -107,7 +107,7 @@ class LoaderController extends MobileController
         return new JsonResponse(['message' => $result['message']]);
     }
     
-    #[Route('/admin/loader/checkQuery', name: 'admin_loader_check_query', condition: 'request.isXmlHttpRequest()')]
+    #[Route('/admin/loader/checkQuery/', name: 'admin_loader_check_query', condition: 'request.isXmlHttpRequest()')]
     public function checkQuery(): JsonResponse
     {
         return new JsonResponse([

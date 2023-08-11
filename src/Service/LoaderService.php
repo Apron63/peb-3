@@ -62,7 +62,6 @@ class LoaderService
 
     public function sendUserDataToQuery(User $user, $courseIds, int $duration): array
     {
-        /**@var Loader $loader */
         foreach ($this->loaderRepository->getLoaderforCheckedUser($user) as $loader) {
             $queryUser = new QueryUser();
 
@@ -88,7 +87,10 @@ class LoaderService
 
         $this->bus->dispatch(new Query1CUploadMessage($loader->getOrderNo(), $user->getId()));
 
-        return ['success' => true, 'message' => 'Пользователи успешно добавлены в очередь'];
+        return [
+            'success' => true, 
+            'message' => 'Пользователи успешно добавлены в очередь'
+        ];
     }
 
     public function createUsersAndPermissions(int $userId): void
@@ -101,7 +103,6 @@ class LoaderService
 
         $userData = $this->queryUserRepository->getUserQueryNew($createdBy);
 
-        /** @var QueryUser $queryUser */
         foreach ($userData as $queryUser) {
             // Ищем пользователя по логину и организации.
             $user = $this->userRepository
@@ -130,6 +131,7 @@ class LoaderService
                     ->setCreatedBy($createdBy);
                     
                 $user = $this->userService->setNewUser($user);
+                
                 $this->userRepository->save($user, true);
             }
 

@@ -22,6 +22,4 @@ class DashboardController extends MobileController
             'data' => $this->dashboardService->prepareData(),
         ]);
     }
-
-
 }
