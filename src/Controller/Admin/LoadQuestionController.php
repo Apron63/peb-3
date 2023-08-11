@@ -43,7 +43,7 @@ class LoadQuestionController extends MobileController
                 )
             );
 
-            $this->addFlash('error', 'Загрузка курса добавлена в очередь заданий');
+            $this->addFlash('success', 'Загрузка вопросов для курса добавлена в очередь заданий');
 
             return $this->redirectToRoute('admin_course_list');
         }
