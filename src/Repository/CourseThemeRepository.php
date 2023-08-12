@@ -40,7 +40,7 @@ class CourseThemeRepository extends ServiceEntityRepository
         }
     }
 
-    public function getCourseThemes(Course $course)
+    public function getCourseThemes(Course $course): array
     {
         return $this->createQueryBuilder('ct')
             ->where('ct.course = :course')
@@ -49,10 +49,7 @@ class CourseThemeRepository extends ServiceEntityRepository
             ->getResult();
     }
 
-    /**
-     * @param Course $course
-     */
-    public function removeCourseThemeForCourse(Course $course)
+    public function removeCourseThemeForCourse(Course $course): void
     {
         $query = $this->getEntityManager()
             ->createQuery("DELETE FROM App\Entity\CourseTheme t WHERE t.course = :courseId")

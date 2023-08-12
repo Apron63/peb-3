@@ -91,34 +91,16 @@ class UserController extends MobileController
             10
         );
 
-        // $loggerQuery = $this->em->getRepository(Logger::class)
-        //     ->getLoggerQuery($user);
-
-        // $loggerPagination = $paginator->paginate(
-        //     $loggerQuery,
-        //     $request->query->getInt('logPage', 1),
-        //     10
-        // );
-
-        // $actionPagination = $paginator->paginate(
-        //     $this->actionRepository->getActionQuery($user),
-        //     $request->query->getInt('actPage', 1),
-        //     10,
-        //     ['pageParameterName' => 'actPage'],
-        // );
-
         return $this->mobileRender('admin/user/edit.html.twig', [
             'form' => $form->createView(),
             'user' => $user,
             'pagination' => $pagination,
-            // 'loggerPagination' => $loggerPagination,
-            // 'actionPagination' => $actionPagination,
             'actionForm' => $this->createForm(ActionIntervalType::class)->createView(),
         ]);
     }
 
     #[Route('/admin/user/info/{id<\d+>}/', name: 'admin_user_info')]
-    public function adminUserInfo(Request $request, User $user): Response
+    public function adminUserInfo(User $user): Response
     {
         return $this->mobileRender('admin/user/info.html.twig', [
             'user' => $user,

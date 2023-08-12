@@ -111,12 +111,9 @@ class CourseRepository extends ServiceEntityRepository
         $this->getEntityManager()->getConnection()->executeQuery($sql);        
     }
 
-    /**
-     * @param Course $course
-     */
     public function prepareCourseClear(Course $course): void
     {
-        $queryBuilder = $this->_em->createQueryBuilder();
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder();
         $queryBuilder->delete(CourseInfo::class, 'i')
             ->where('i.course = :course')
             ->setParameter('course', $course)
@@ -124,7 +121,7 @@ class CourseRepository extends ServiceEntityRepository
             ->getResult();
         unset($queryBuilder);
 
-        $queryBuilder = $this->_em->createQueryBuilder();
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder();
         $queryBuilder->delete(CourseTheme::class, 't')
             ->where('t.course = :course')
             ->setParameter('course', $course)
@@ -132,7 +129,7 @@ class CourseRepository extends ServiceEntityRepository
             ->getResult();
         unset($queryBuilder);
 
-        $queryBuilder = $this->_em->createQueryBuilder();
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder();
         $queryBuilder->delete(Ticket::class, 't')
             ->where('t.course = :course')
             ->setParameter('course', $course)

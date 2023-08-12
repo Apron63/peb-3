@@ -92,7 +92,7 @@ class QuestionsRepository extends ServiceEntityRepository
         return $this->getEntityManager()->getConnection()->fetchFirstColumn($sql);
     }
 
-    public function removeQuestionsForCourse(Course $course)
+    public function removeQuestionsForCourse(Course $course): void
     {
         $query = $this->getEntityManager()
             ->createQuery("SELECT q.id FROM App\Entity\Questions q WHERE q.course = :courseId")

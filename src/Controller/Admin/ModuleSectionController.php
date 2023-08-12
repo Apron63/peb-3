@@ -70,6 +70,7 @@ class ModuleSectionController extends MobileController
     {
         $moduleId = $moduleSection->getModule()->getId();
         $this->moduleSectionRepository->remove($moduleSection, true);
+        
         return $this->redirectToRoute('admin_module_edit', ['id' => $moduleId]);
     }
 }

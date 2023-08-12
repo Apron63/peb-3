@@ -4,7 +4,6 @@ namespace App\Controller\Frontend;
 
 use App\Entity\User;
 use App\Service\ProfileService;
-use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -15,14 +14,13 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 class ProfileController extends AbstractController
 {
     public function __construct(
-        private readonly Security $security,
         private readonly ProfileService $profileService,
     ) {}
 
     #[Route('/profile/', name: 'profilePage')]
     public function profileAction(): Response
     {
-        $user = $this->security->getUser();
+        $user = $this->getUser();
 
         if (!$user instanceof User) {
             return $this->redirectToRoute('homepage');
@@ -38,7 +36,7 @@ class ProfileController extends AbstractController
     {
         $result = [];
 
-        $user = $this->security->getUser();
+        $user = $this->getUser();
 
         if (! $user instanceof User) {
             $result = [

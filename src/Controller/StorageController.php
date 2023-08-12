@@ -15,7 +15,7 @@ class StorageController extends AbstractController
 {
     public function __construct(
         private readonly CourseRepository $courseRepository
-    ) { }
+    ) {}
 
     #[Route('/storage/', name: 'app_storage')]
     public function index(): Response

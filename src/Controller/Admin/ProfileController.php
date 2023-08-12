@@ -45,7 +45,7 @@ class ProfileController extends MobileController
         ]);
     }
     
-    #[Route('/admin/profile/edit/{id<\d+>}', name: 'admin_profile_edit')]
+    #[Route('/admin/profile/edit/{id<\d+>}/', name: 'admin_profile_edit')]
     #[IsGranted('ROLE_SUPER_ADMIN')]
     public function edit(Request $request, Profile $profile): Response
     {
@@ -64,9 +64,9 @@ class ProfileController extends MobileController
         ]);
     }
     
-    #[Route('/admin/profile/delete/{id<\d+>}', name: 'admin_profile_delete')]
+    #[Route('/admin/profile/delete/{id<\d+>}/', name: 'admin_profile_delete')]
     #[IsGranted('ROLE_SUPER_ADMIN')]
-    public function delete(Request $request, Profile $profile): Response
+    public function delete(Profile $profile): Response
     {
         $this->profileRepository->remove($profile, true);
 

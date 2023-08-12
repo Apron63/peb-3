@@ -51,10 +51,8 @@ class ModuleController extends MobileController
 
     #[Route('/admin/module/edit/{id<\d+>}/', name: 'admin_module_edit')]
     #[IsGranted('ROLE_SUPER_ADMIN')]
-    public function adminEditModule(
-        Module $module, 
-        Request $request, 
-    ): Response {
+    public function adminEditModule(Module $module, Request $request): Response 
+    {
         $form = $this->createForm(ModuleEditType::class, $module);
         $form->handleRequest($request);
 

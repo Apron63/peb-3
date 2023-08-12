@@ -56,10 +56,6 @@ class PermissionController extends MobileController
     #[Route('/admin/permission/{id<\d+>}/', name: 'admin_permission_edit')]
     public function adminPermissionEdit(Request $request, Permission $permission): Response
     {
-        // TODO 
-        $course = $permission->getCourse()->getName();
-        $user = $permission->getUser()->getFullName();
-
         $form = $this->createForm(PermissionEditType::class, $permission);
         $form->handleRequest($request);
 

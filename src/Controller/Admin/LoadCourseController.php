@@ -10,7 +10,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Messenger\MessageBusInterface;
-use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 class LoadCourseController extends MobileController
@@ -24,8 +23,8 @@ class LoadCourseController extends MobileController
     #[IsGranted('ROLE_SUPER_ADMIN')]
     public function actionLoadCourse(Request $request): Response
     {
-        /** @var Session $session */
-        $session = $request->getSession();
+        /** @var User $user */
+        $user = $this->getUser();
 
         $form = $this->createForm(LoadCourseType::class);
         $form->handleRequest($request);
@@ -40,17 +39,12 @@ class LoadCourseController extends MobileController
             $this->messageBus->dispatch(
                 new CourseUploadMessage(
                     $form->get('filename')->getData()->getClientOriginalName(), 
-                    $this->getUser()->getId(),
+                    $user->getId(),
                     $course->getId(),
                 )
             );
 
-            $session
-                ->getFlashBag()
-                ->add(
-                    'error',
-                    'Загрузка курса добавлена в очередь заданий'
-                );
+            $this->addFlash('success', 'Загрузка курса добавлена в очередь заданий');
 
             return $this->redirectToRoute('admin_load_course');
         }

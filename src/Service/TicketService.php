@@ -83,7 +83,7 @@ class TicketService
                 ->setText((array)json_encode($arr, JSON_NUMERIC_CHECK))
                 ->setNom($i);
 
-            if (0!== $timeLeft) {
+            if (0 !== $timeLeft) {
                 $ticket->setTimeLeft($timeLeft);
             }
 

@@ -40,7 +40,7 @@ class CourseInfoRepository extends ServiceEntityRepository
         }
     }
 
-    public function getCourseInfos(Course $course)
+    public function getCourseInfos(Course $course): array
     {
         return $this->createQueryBuilder('ci')
             ->where('ci.course = :course')
@@ -49,10 +49,7 @@ class CourseInfoRepository extends ServiceEntityRepository
             ->getResult();
     }
 
-    /**
-     * @param Course $course
-     */
-    public function removeCourseInfoForCourse(Course $course)
+    public function removeCourseInfoForCourse(Course $course): void
     {
         $query = $this->getEntityManager()
             ->createQuery("DELETE FROM App\Entity\CourseInfo i WHERE i.course = :courseId")

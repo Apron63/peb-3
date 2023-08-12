@@ -75,7 +75,7 @@ class LoggerRepository extends ServiceEntityRepository
             ->getOneOrNullResult();
     }
 
-    public function removeLoggerForPermission(Permission $permission)
+    public function removeLoggerForPermission(Permission $permission): void
     {
         $query = $this->getEntityManager()
             ->createQuery("DELETE FROM App\Entity\Logger l WHERE l.permission = :permissionId")

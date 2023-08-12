@@ -112,7 +112,7 @@ class PermissionRepository extends ServiceEntityRepository
             ->getResult();
     }
 
-    public function removePermissionForCourse(Course $course)
+    public function removePermissionForCourse(Course $course): void
     {
         $query = $this->getEntityManager()
             ->createQuery("SELECT p.id FROM App\Entity\Permission p WHERE p.course = :courseId")

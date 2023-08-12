@@ -74,12 +74,12 @@ class AnswerRepository extends ServiceEntityRepository
         return $result;
     }
 
-    public function removeAnswersForQuestion(Questions $question)
+    public function removeAnswersForQuestion(Questions $question): void
     {
         $query = $this->getEntityManager()
             ->createQuery('DELETE FROM App\Entity\Answer a WHERE a.question = :questionId')
             ->setParameter('questionId', $question->getId());
 
-        $qIds = $query->execute();
+        $query->execute();
     }
 }

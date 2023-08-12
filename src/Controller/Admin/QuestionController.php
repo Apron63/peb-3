@@ -26,18 +26,18 @@ class QuestionController extends MobileController
     public function adminQuestionCreate(Request $request, Course $course, ?int $parentId = null): Response
     {
         $question = new Questions();
-        $question->setCourse($course);
-        $question->setParentId($parentId);
-        $question->setNom(
-            $this->questionsRepository->getNextNumber($course, $parentId)
-        );
+        $question
+            ->setCourse($course)
+            ->setParentId($parentId)
+            ->setNom(
+                $this->questionsRepository->getNextNumber($course, $parentId)
+            );
+
         $form = $this->createForm(QuestionsEditType::class, $question);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            if ($this->isGranted('ROLE_SUPER_ADMIN')) {
-                $this->questionsRepository->save($question, true);
-            }
+            $this->questionsRepository->save($question, true);
 
             if ($question->getCourse()->gettype() === Course::INTERACTIVE) {
                 $redirectUrl = $this->generateUrl('admin_course_edit', ['id' => $question->getCourse()->getId()]);
@@ -57,15 +57,13 @@ class QuestionController extends MobileController
 
     #[Route('/admin/question/{id<\d+>}/', name: 'admin_question_edit')]
     #[IsGranted('ROLE_SUPER_ADMIN')]
-    public function adminQuestionEdit(Request $request, PaginatorInterface $paginator, Questions $question): Response
+    public function adminQuestionEdit(Request $request, Questions $question): Response
     {
         $form = $this->createForm(QuestionsEditType::class, $question);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            if ($this->isGranted('ROLE_SUPER_ADMIN')) {
-                $this->questionsRepository->save($question, true);
-            }
+            $this->questionsRepository->save($question, true);
 
             if ($question->getCourse()->gettype() === Course::INTERACTIVE) {
                 $redirectUrl = $this->generateUrl('admin_course_edit', ['id' => $question->getCourse()->getId()]);
@@ -85,7 +83,7 @@ class QuestionController extends MobileController
 
     #[Route('/admin/question/delete/{id<\d+>}/', name: 'admin_question_delete')]
     #[IsGranted('ROLE_SUPER_ADMIN')]
-    public function adminQuestionDelete(Request $request, Questions $question): Response
+    public function adminQuestionDelete(Questions $question): Response
     {
         if ($question->getCourse()->gettype() === Course::INTERACTIVE) {
             $redirectUrl = $this->generateUrl('admin_course_edit', ['id' => $question->getCourse()->getId()]);
@@ -93,9 +91,7 @@ class QuestionController extends MobileController
             $redirectUrl = $this->generateUrl('admin_course_theme_edit', ['id' => $question->getParentId()]);
         }
 
-        if ($this->isGranted('ROLE_SUPER_ADMIN')) {
-            $this->questionsRepository->remove($question, true);
-        }
+        $this->questionsRepository->remove($question, true);
 
         return $this->redirect($redirectUrl);
     }

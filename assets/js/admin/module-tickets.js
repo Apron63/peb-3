@@ -26,6 +26,8 @@ $('#createTickets').on('click', function() {
     }).done(function (data) {
         if (data.result) {
             $('#toast-message').html('Билеты были успешно созданы')
+            $('.toast-header').css('background-color', 'green')
+            $('.me-auto').css('color', 'white')
             let toast = new bootstrap.Toast(toastLiveExample)
             toast.show()
         }
