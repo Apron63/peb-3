@@ -38,16 +38,7 @@ $('.send-user-list').on('click', function(e) {
         function(data) {
             $('#myModalBody').html(data.data)
             myModal.show()
-
-            let myModalEl = document.getElementById('myModal')
-            myModalEl.addEventListener('hidden.bs.modal', function() {
-                $('#toast-message').html('Сообщение успешно отправлено!')
-
-                let toast = new bootstrap.Toast(toastLiveExample)
-                $('.toast-header').css('background-color', 'lime')
-                toast.show()
-            })
-
+            
             $('#send-email-to-client').on('click', function(e) {
                 $.ajax({
                     url: $('#send-email-to-client').data('url'),
@@ -63,6 +54,16 @@ $('.send-user-list').on('click', function(e) {
                         $('#send_list_to_email_emails').after('<p id="email-error" class="text-danger"></p>')
                         $('#email-error').html(data.message)
                     } else {
+                        let myModalEl = document.getElementById('myModal')
+
+                        myModalEl.addEventListener('hidden.bs.modal', function() {
+                            $('#toast-message').html('Сообщение успешно отправлено!')
+
+                            let toast = new bootstrap.Toast(toastLiveExample)
+                            $('.toast-header').css('background-color', 'lime')
+                            toast.show()
+                        })
+
                         myModal.hide()
                     }
                 }).fail(function (data) {

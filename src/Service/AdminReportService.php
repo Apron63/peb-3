@@ -91,7 +91,7 @@ class AdminReportService
                 $table->addCell(500);
                 $table->addCell(1000)->addText('Курс');    
                 $cell = $table->addCell();
-                $cell->addText($row['name']);
+                $cell->addText($row['shortName']);
                 $cell->getStyle()->setGridSpan(7);
             }
 
@@ -143,10 +143,17 @@ class AdminReportService
 
                 $activeWorksheet->setCellValue('A' . $line, '');
                 $activeWorksheet->setCellValue('B' . $line, 'Курс');
-                $activeWorksheet->setCellValue('C' . $line, $row['name']);
-                $activeWorksheet->getStyle('C' . $line, $row['name'])->getAlignment()->setWrapText(true);
+                $activeWorksheet->setCellValue('C' . $line, $row['shortName']);
+                $activeWorksheet->getStyle('C' . $line)->getAlignment()->setWrapText(true);
                 $activeWorksheet->getRowDimension($line)->setRowHeight(-1);
                 $activeWorksheet->mergeCells('C' . $line . ':I' . $line);
+
+                $activeWorksheet
+                    ->getStyle('A' . $line . ':I' . $line)
+                    ->getFill()
+                    ->setFillType(Fill::FILL_SOLID)
+                    ->getStartColor()
+                    ->setRGB('EEEEEE');
 
                 $line ++;
             }
@@ -217,7 +224,7 @@ class AdminReportService
                 . $row['organization'] . ';'
                 . $row['login'] . ';'
                 . $row['plainPassword'] . ';'
-                . $row['name'] . ';'
+                . $row['shortName'] . ';'
                 . $row['duration'] 
                 . PHP_EOL;
 
@@ -245,11 +252,11 @@ class AdminReportService
 
         $item = 2;
         foreach($data as $row) {
-            if ($courseName !== $row['name']) {
+            if ($courseName !== $row['shortName']) {
                 $workSheet->setCellValue('A' . $item, '');
 
                 $workSheet->setCellValue('B' . $item, 'Курс : ' . $row['name']);
-                $workSheet->getStyle('B' . $item, $row['name'])->getAlignment()->setWrapText(true);
+                $workSheet->getStyle('B' . $item)->getAlignment()->setWrapText(true);
                 $workSheet->getRowDimension($item)->setRowHeight(-1);
                 $workSheet->mergeCells('B' . $item . ':G' . $item);
 
@@ -260,7 +267,7 @@ class AdminReportService
                     ->getStartColor()
                     ->setRGB('EEEEEE');
 
-                $courseName = $row['name'];
+                $courseName = $row['shortName'];
                 $item ++;
                 $nom = 1;
             }
@@ -314,7 +321,7 @@ class AdminReportService
                 . $row['organization'] . PHP_EOL
                 . $row['login'] . PHP_EOL
                 . $row['plainPassword'] . PHP_EOL
-                . $row['name'] . PHP_EOL
+                . $row['shortName'] . PHP_EOL
                 . $row['duration'] . PHP_EOL
                 . PHP_EOL;
 
@@ -346,15 +353,15 @@ class AdminReportService
         $table->addCell(500)->addText('Дней');
 
         foreach($data as $row) {
-            if ($courseName !== $row['name']) {
+            if ($courseName !== $row['shortName']) {
                 $table->addRow();
                 $table->addCell(500, ['bgColor'=>'EEEEEE']);
                 $table->addCell(1000, ['bgColor'=>'EEEEEE'])->addText('Курс');    
                 $cell = $table->addCell(null, ['bgColor'=>'EEEEEE']);
-                $cell->addText($row['name']);
+                $cell->addText($row['shortName']);
                 $cell->getStyle()->setGridSpan(7);
 
-                $courseName = $row['name'];
+                $courseName = $row['shortName'];
                 $nom = 1;
             }
 
