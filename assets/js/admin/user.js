@@ -38,7 +38,7 @@ $('.send-user-list').on('click', function(e) {
         function(data) {
             $('#myModalBody').html(data.data)
             myModal.show()
-            
+
             $('#send-email-to-client').on('click', function(e) {
                 $.ajax({
                     url: $('#send-email-to-client').data('url'),
@@ -62,7 +62,7 @@ $('.send-user-list').on('click', function(e) {
                             let toast = new bootstrap.Toast(toastLiveExample)
                             $('.toast-header').css('background-color', 'lime')
                             toast.show()
-                        })
+                        }, {once : true})
 
                         myModal.hide()
                     }
