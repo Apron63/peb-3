@@ -129,7 +129,7 @@ class CourseUploadService
                                 }
                                 switch ($chNode->tagName) {
                                     case 'my:qtext':
-                                        $this->data[$themeNom]['questions'][++$questionNom]['qText'] = $chNode->nodeValue;
+                                        $this->data[$themeNom]['questions'][++$questionNom]['qText'] = trim($chNode->nodeValue);
                                         $this->data[$themeNom]['questions'][$questionNom]['type'] = 0;
                                         break;
                                     case 'my:answer':
@@ -139,7 +139,7 @@ class CourseUploadService
                                             }
                                             switch ($row->tagName) {
                                                 case 'my:atext':
-                                                    $this->data[$themeNom]['questions'][$questionNom]['answer'][$aNom]['aText'] = $row->nodeValue;
+                                                    $this->data[$themeNom]['questions'][$questionNom]['answer'][$aNom]['aText'] = trim($row->nodeValue);
                                                     break;
                                                 case 'my:astatus':
                                                     if ($row->nodeValue === 'Правильный ответ') {
@@ -158,7 +158,7 @@ class CourseUploadService
                                         }
                                         break;
                                     case 'my:qhelp':
-                                        $this->data[$themeNom]['questions'][$questionNom]['hText'] = $chNode->nodeValue;
+                                        $this->data[$themeNom]['questions'][$questionNom]['hText'] = trim($chNode->nodeValue);
                                         break;
                                 }
                             }
