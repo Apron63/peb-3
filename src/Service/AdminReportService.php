@@ -91,7 +91,7 @@ class AdminReportService
                 $table->addCell(500);
                 $table->addCell(1000)->addText('Курс');    
                 $cell = $table->addCell();
-                $cell->addText($row['shortName']);
+                $cell->addText($row['name']);
                 $cell->getStyle()->setGridSpan(7);
             }
 
@@ -143,7 +143,7 @@ class AdminReportService
 
                 $activeWorksheet->setCellValue('A' . $line, '');
                 $activeWorksheet->setCellValue('B' . $line, 'Курс');
-                $activeWorksheet->setCellValue('C' . $line, $row['shortName']);
+                $activeWorksheet->setCellValue('C' . $line, $row['name']);
                 $activeWorksheet->getStyle('C' . $line)->getAlignment()->setWrapText(true);
                 $activeWorksheet->getRowDimension($line)->setRowHeight(-1);
                 $activeWorksheet->mergeCells('C' . $line . ':I' . $line);
@@ -224,7 +224,7 @@ class AdminReportService
                 . $row['organization'] . ';'
                 . $row['login'] . ';'
                 . $row['plainPassword'] . ';'
-                . $row['shortName'] . ';'
+                . $row['name'] . ';'
                 . $row['duration'] 
                 . PHP_EOL;
 
@@ -321,7 +321,7 @@ class AdminReportService
                 . $row['organization'] . PHP_EOL
                 . $row['login'] . PHP_EOL
                 . $row['plainPassword'] . PHP_EOL
-                . $row['shortName'] . PHP_EOL
+                . $row['name'] . PHP_EOL
                 . $row['duration'] . PHP_EOL
                 . PHP_EOL;
 
@@ -358,7 +358,7 @@ class AdminReportService
                 $table->addCell(500, ['bgColor'=>'EEEEEE']);
                 $table->addCell(1000, ['bgColor'=>'EEEEEE'])->addText('Курс');    
                 $cell = $table->addCell(null, ['bgColor'=>'EEEEEE']);
-                $cell->addText($row['shortName']);
+                $cell->addText($row['name']);
                 $cell->getStyle()->setGridSpan(7);
 
                 $courseName = $row['shortName'];

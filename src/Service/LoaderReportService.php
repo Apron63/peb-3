@@ -5,16 +5,17 @@ namespace App\Service;
 use DateTime;
 use App\Entity\User;
 use PhpOffice\PhpWord\PhpWord;
-use PhpOffice\PhpWord\IOFactory as WordFactory;
-use App\Repository\LoaderRepository;
+use App\Repository\PermissionRepository;
+use PhpOffice\PhpSpreadsheet\Style\Fill;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Style\Border;
+use PhpOffice\PhpWord\IOFactory as WordFactory;
 use PhpOffice\PhpSpreadsheet\IOFactory as ExcelFactory;
 
 class LoaderReportService
 {
     public function __construct(
-        private readonly LoaderRepository $loaderRepository,
+        private readonly PermissionRepository $permissionRepository,
         private readonly string $reportUploadPath,
     ) {}
 
@@ -37,20 +38,18 @@ class LoaderReportService
 
         fputs($file, $fileData);
 
-        foreach($this->loaderRepository->getLoaderforCheckedUser($user) as $loader) {
-            foreach($loader->getPermissions() as $permission) {
-                $fileData = 
-                    $loader->getUser()?->getFullName() . ';'
-                    . $loader->getPosition() . ';'
-                    . $loader->getOrganization() . ';'
-                    . $loader->getUser()?->getLogin() . ';'
-                    . $loader->getUser()?->getPlainPassword() . ';'
-                    . $permission->getCourse()?->getName() . ';'
-                    . $permission->getDuration() 
-                    . PHP_EOL;
+        foreach($this->permissionRepository->getLoaderByCourse($user) as $loader) {
+            $fileData = 
+                $loader['fullName'] . ';'
+                . $loader['position'] . ';'
+                . $loader['organization'] . ';'
+                . $loader['login'] . ';'
+                . $loader['plainPassword'] . ';'
+                . $loader['name'] . ';'
+                . $loader['duration'] 
+                . PHP_EOL;
 
-                fputs($file, $fileData);
-            }
+            fputs($file, $fileData);
         }
 
         fclose($file);
@@ -62,29 +61,48 @@ class LoaderReportService
     {
         $spreadsheet = new Spreadsheet();
         $workSheet = $spreadsheet->getActiveSheet();
+        $courseShortName = null;
 
-        $workSheet->setCellValue('A1', 'ФИО');
-        $workSheet->setCellValue('B1', 'Должность');
-        $workSheet->setCellValue('C1', 'Организация');
-        $workSheet->setCellValue('D1', 'Логин');
-        $workSheet->setCellValue('E1', 'Пароль');
-        $workSheet->setCellValue('F1', 'Курсы');
+        $workSheet->setCellValue('A1', 'Ном');
+        $workSheet->setCellValue('B1', 'ФИО');
+        $workSheet->setCellValue('C1', 'Должность');
+        $workSheet->setCellValue('D1', 'Организация');
+        $workSheet->setCellValue('E1', 'Логин');
+        $workSheet->setCellValue('F1', 'Пароль');
         $workSheet->setCellValue('G1', 'Дней');
 
         $row = 2;
+        $nom = 1;
 
-        foreach($this->loaderRepository->getLoaderforCheckedUser($user) as $loader) {
-            foreach($loader->getPermissions() as $permission) {
-                $workSheet->setCellValue('A' . $row, $loader->getUser()?->getFullName());
-                $workSheet->setCellValue('B' . $row, $loader->getPosition());
-                $workSheet->setCellValue('C' . $row, $loader->getOrganization());
-                $workSheet->setCellValue('D' . $row, $loader->getUser()?->getLogin());
-                $workSheet->setCellValue('E' . $row, $loader->getUser()?->getPlainPassword());
-                $workSheet->setCellValue('F' . $row, $permission->getCourse()?->getName());
-                $workSheet->setCellValue('G' . $row, $permission->getDuration());
+        foreach($this->permissionRepository->getLoaderByCourse($user) as $loader) {
+            if ($courseShortName !== $loader['shortName']) {
+                $workSheet->setCellValue('B' . $row, 'Курс : ' . $loader['name']);
+                $workSheet->getStyle('B' . $row)->getAlignment()->setWrapText(true);
+                $workSheet->getRowDimension($row)->setRowHeight(-1);
+                $workSheet->mergeCells('B' . $row . ':G' . $row);
 
-                $row++;
+                $workSheet
+                    ->getStyle('A' . $row . ':G' . $row)
+                    ->getFill()
+                    ->setFillType(Fill::FILL_SOLID)
+                    ->getStartColor()
+                    ->setRGB('EEEEEE');
+
+                $nom = 1;
+                $row ++;
+                $courseShortName = $loader['shortName'];
             }
+
+            $workSheet->setCellValue('A' . $row, $nom);
+            $workSheet->setCellValue('B' . $row, $loader['fullName']);
+            $workSheet->setCellValue('C' . $row, $loader['position']);
+            $workSheet->setCellValue('D' . $row, $loader['organization']);
+            $workSheet->setCellValue('E' . $row, $loader['login']);
+            $workSheet->setCellValue('F' . $row, $loader['plainPassword']);
+            $workSheet->setCellValue('G' . $row, $loader['duration']);
+
+            $row ++;
+            $nom ++;
         }
 
         $styleArray = [
@@ -117,20 +135,18 @@ class LoaderReportService
         $fileName = $this->reportUploadPath . '/' . (new DateTime())->format('d-m-Y_H_i_s') . '_' . uniqid() . '.txt';
         $file = fopen($fileName, 'w');
 
-        foreach($this->loaderRepository->getLoaderforCheckedUser($user) as $loader) {
-            foreach($loader->getPermissions() as $permission) {
-                $fileData = 
-                    $loader->getUser()?->getFullName() . PHP_EOL
-                    . $loader->getPosition() . PHP_EOL
-                    . $loader->getOrganization() . PHP_EOL
-                    . $loader->getUser()?->getLogin() . PHP_EOL
-                    . $loader->getUser()?->getPlainPassword() . PHP_EOL
-                    . $permission->getCourse()?->getName() . PHP_EOL
-                    . $permission->getDuration() . PHP_EOL
-                    . PHP_EOL;
+        foreach($this->permissionRepository->getLoaderByCourse($user) as $loader) {
+            $fileData = 
+                $loader['fullName'] . PHP_EOL
+                . $loader['position'] . PHP_EOL
+                . $loader['organization'] . PHP_EOL
+                . $loader['login'] . PHP_EOL
+                . $loader['plainPassword'] . PHP_EOL
+                . $loader['name'] . PHP_EOL
+                . $loader['duration'] . PHP_EOL
+                . PHP_EOL;
 
-                fputs($file, $fileData);
-            }
+            fputs($file, $fileData);
         }
 
         fclose($file);
@@ -140,6 +156,9 @@ class LoaderReportService
     
     public function generateDOCX(User $user): string
     {
+        $courseShortName = null;
+        $nom = 1;
+
         $phpWord = new PhpWord();
 
         $section = $phpWord->addSection();
@@ -148,25 +167,37 @@ class LoaderReportService
         $table = $section->addTable();
 
         $table->addRow();
-        $table->addCell(1700)->addText('ФИО');
-        $table->addCell(1700)->addText('Должность');
-        $table->addCell(1700)->addText('Организация');
-        $table->addCell(1300)->addText('Логин');
-        $table->addCell(1300)->addText('Пароль');
-        $table->addCell(1800)->addText('Курсы');
-        $table->addCell(500)->addText('Дней');
+        $table->addCell(700)->addText('Ном');
+        $table->addCell(2000)->addText('ФИО');
+        $table->addCell(1500)->addText('Должность');
+        $table->addCell(2500)->addText('Организация');
+        $table->addCell(1200)->addText('Логин');
+        $table->addCell(1200)->addText('Пароль');
+        $table->addCell(700)->addText('Дней');
 
-        foreach($this->loaderRepository->getLoaderforCheckedUser($user) as $loader) {
-            foreach($loader->getPermissions() as $permission) { 
+        foreach($this->permissionRepository->getLoaderByCourse($user) as $loader) {
+            if ($courseShortName !== $loader['shortName']) {
                 $table->addRow();
-                $table->addCell(1700)->addText($loader->getUser()?->getFullName());
-                $table->addCell(1700)->addText($loader->getPosition());
-                $table->addCell(1700)->addText($loader->getOrganization());
-                $table->addCell(1300)->addText($loader->getUser()?->getLogin());
-                $table->addCell(1300)->addText($loader->getUser()?->getPlainPassword());
-                $table->addCell(1800)->addText($permission->getCourse()?->getName());
-                $table->addCell(500)->addText($permission->getDuration());
+
+                $table->addCell(500, ['bgColor'=>'EEEEEE']);
+                $cell = $table->addCell(null, ['bgColor'=>'EEEEEE']);
+                $cell->addText('Курс : ' . $loader['name']);
+                $cell->getStyle()->setGridSpan(7);
+
+                $courseShortName = $loader['shortName'];
+                $nom = 1;
             }
+
+            $table->addRow();
+            $table->addCell(700)->addText($nom);
+            $table->addCell(2000)->addText($loader['fullName']);
+            $table->addCell(1500)->addText($loader['position']);
+            $table->addCell(2500)->addText($loader['organization']);
+            $table->addCell(1200)->addText($loader['login']);
+            $table->addCell(1200)->addText($loader['plainPassword']);
+            $table->addCell(700)->addText($loader['duration']);
+
+            $nom ++;
         }
 
         $fileName = $this->reportUploadPath . '/' . (new DateTime())->format('d-m-Y_H_i_s') . '_' . uniqid() . '.docx';

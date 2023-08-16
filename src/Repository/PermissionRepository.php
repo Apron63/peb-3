@@ -112,6 +112,32 @@ class PermissionRepository extends ServiceEntityRepository
             ->getResult();
     }
 
+    public function getLoaderByCourse(User $user): array
+    {
+        $queryBuilder = $this->createQueryBuilder('p');
+
+        return $queryBuilder
+            ->select('
+                u.fullName,
+                l.position,
+                l.organization,
+                u.login,
+                u.plainPassword,
+                p.duration,
+                c.name,
+                c.shortName
+            ')
+            ->where('l.createdBy = :user')
+            ->andWhere('l.checked = 1')
+            ->join('p.loader', 'l')
+            ->join('l.user', 'u')
+            ->join('p.course', 'c')
+            ->orderBy('c.id')
+            ->setParameter('user', $user)
+            ->getQuery()
+            ->getResult();
+    }
+
     public function removePermissionForCourse(Course $course): void
     {
         $query = $this->getEntityManager()

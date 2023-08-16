@@ -122,12 +122,12 @@ class UserSearchType extends AbstractType
                 'class' => Course::class,
                 'query_builder' => function (EntityRepository $er) {
                     return $er->createQueryBuilder('c')
-                        ->orderBy('c.name', 'ASC');
+                        ->orderBy('c.shortName', 'ASC');
                 },
                 'multiple' => true,
                 'required' => false,
                 'empty_data' => '',
-                'choice_label' => 'name',
+                'choice_label' => 'shortName',
                 'label' => 'Курсы',
                 'attr' => [
                     'class' => 'form-select',
