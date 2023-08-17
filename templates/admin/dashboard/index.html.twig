@@ -52,4 +52,39 @@
         </div>
     </div>
 
+    <p></p>
+
+    {{ form_start(form) }}
+
+        <div class="col-12">
+            <div class="card">
+                 <div class="card-header">
+                   {{ form_label(form.emailAttachmentStatisticText) }}
+                </div>
+                <div class="card-body">
+                    {{ form_widget(form.emailAttachmentStatisticText) }}
+                </div>
+            </div>
+        </div>
+
+        <p></p>
+        
+        <div class="col-12">
+            <div class="card">
+                 <div class="card-header">
+                   {{ form_label(form.emailAttachmentResultText) }}
+                </div>
+                <div class="card-body">
+                    {{ form_widget(form.emailAttachmentResultText) }}
+                </div>
+            </div>
+        </div>
+
+        <p></p>
+
+        <div class="col-12">
+            {{ form_row(form.actionSubmit) }}
+        </div>
+    {{ form_end(form) }}
+
 {% endblock %}

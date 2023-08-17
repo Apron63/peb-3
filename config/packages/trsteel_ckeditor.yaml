@@ -14,3 +14,4 @@ trsteel_ckeditor:
         insert: ['Image','base64image','Flash','Table','HorizontalRule']
         styles: ['Styles','Format']
         tools: ['Maximize', 'ShowBlocks']
+    enter_mode: ENTER_BR

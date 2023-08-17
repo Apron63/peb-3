@@ -11,6 +11,7 @@ use App\Repository\UserRepository;
 use App\Repository\LoggerRepository;
 use Symfony\Component\Mime\Part\File;
 use App\Repository\PermissionRepository;
+use PhpOffice\PhpSpreadsheet\Style\Fill;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use Symfony\Component\Mime\Part\DataPart;
 use PhpOffice\PhpSpreadsheet\Style\Border;
@@ -18,7 +19,6 @@ use jonasarts\Bundle\TCPDFBundle\TCPDF\TCPDF;
 use Symfony\Component\Mailer\MailerInterface;
 use PhpOffice\PhpWord\IOFactory as WordFactory;
 use PhpOffice\PhpSpreadsheet\IOFactory as XlsxFactory;
-use PhpOffice\PhpSpreadsheet\Style\Fill;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class AdminReportService
