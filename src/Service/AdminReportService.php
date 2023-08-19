@@ -435,6 +435,53 @@ class AdminReportService
             'message' => $message,
         ];
     }
+    
+    public function generateListAndSendStatistic(string $recipient, string $subject, string $comment, string $type, array $data): array
+    {
+        $totalRecipients = array_map(
+            fn($address) => trim($address),
+            explode(',', $recipient
+        ));
+
+        $success = true;
+        $message = '';
+
+        foreach($totalRecipients as $address) {
+            if (!filter_var($address, FILTER_VALIDATE_EMAIL)) {
+                $success = false;
+
+                $message = 'Некорректный email адрес : ' . $address;
+                break;
+            }
+        }
+
+        if ($success) {
+            switch($type) {
+                case 'PDF':
+                    $fileName = $this->generateStatisticPdf($data);
+                    break;
+                case 'XLSX':
+                    $fileName = $this->generateStatisticXlsx($data);
+                    break;
+                case 'DOCX':
+                    $fileName = $this->generateStatisticDocx($data);
+            }
+
+            $mail = (new Email())
+                ->from('ucoks@safety63.ru')
+                ->to(...$totalRecipients)
+                ->subject($subject)
+                ->html($comment)
+                ->addPart(new DataPart(new File($fileName)));
+
+            $this->mailer->send($mail);
+        }
+
+        return [
+            'success' => $success,
+            'message' => $message,
+        ];
+    }
 
     private function generateDataHtml(array $data): string
     {

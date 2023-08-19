@@ -2,14 +2,14 @@
 
 namespace App\Service;
 
+use XMLReader;
+use DOMElement;
+use ZipArchive;
+use RuntimeException;
 use App\Entity\Course;
 use App\Repository\CourseRepository;
-use DOMElement;
-use RuntimeException;
-use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
-use XMLReader;
-use ZipArchive;
+use Symfony\Component\HttpFoundation\File\Exception\FileException;
 
 class CourseUploadService
 {

@@ -36,6 +36,22 @@ class UserReportAndSendController extends AbstractController
         return new JsonResponse(['data' => $content]);
     }
     
+    #[Route('/admin/user/report/send/get_content_statistic/', name: 'admin_user_report_send_get_content_statistic', condition: 'request.isXmlHttpRequest()')]
+    public function adminGetModalContentStatictic():JsonResponse
+    {
+        $data = [
+            'emails' => '',
+            'subject' => '',
+            'comment' => $this->replaceValue($this->configService->getConfigValue('emailAttachmentStatisticText')),
+        ];
+
+        $content = $this->renderView('admin/user/_send_email_statistic.html.twig', [
+            'form' => $this->createForm(SendListToEmailType::class, $data)->createView(),
+        ]);
+
+        return new JsonResponse(['data' => $content]);
+    }
+    
     #[Route('/admin/user/report/send_letter_to_client/', name: 'admin_user_report_send_letter_to_client', condition: 'request.isXmlHttpRequest()')]
     public function adminSendLetterToClient(Request $request):JsonResponse
     {
@@ -51,6 +67,24 @@ class UserReportAndSendController extends AbstractController
 
         return new JsonResponse(
             $this->reportService->generateListAndSend($recipient, $subject, $comment, $type, $data)
+        );
+    }
+    
+    #[Route('/admin/user/report/send_statistic_to_client/', name: 'admin_user_report_send_statistic_to_client', condition: 'request.isXmlHttpRequest()')]
+    public function adminSendStatisticToClient(Request $request):JsonResponse
+    {
+        $recipient = $request->get('recipient');
+        $subject = $request->get('subject');
+        $comment = $request->get('comment');
+        $type = $request->get('type');
+        $criteria = $request->get('criteria');
+
+        if (!empty($criteria)) {
+            $data = $this->permissionRepository->getUserSearchQuery($criteria['user_search'], true)->getResult();
+        }
+
+        return new JsonResponse(
+            $this->reportService->generateListAndSendStatistic($recipient, $subject, $comment, $type, $data)
         );
     }
 
