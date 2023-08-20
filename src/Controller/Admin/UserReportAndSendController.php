@@ -3,10 +3,10 @@
 namespace App\Controller\Admin;
 
 use App\Entity\User;
+use App\Service\ConfigService;
+use App\Repository\UserRepository;
 use App\Service\AdminReportService;
 use App\Form\Admin\SendListToEmailType;
-use App\Repository\PermissionRepository;
-use App\Service\ConfigService;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -16,7 +16,7 @@ class UserReportAndSendController extends AbstractController
 {
     public function __construct(
         private readonly AdminReportService $reportService,
-        private readonly PermissionRepository $permissionRepository,
+        private readonly UserRepository $userRepository,
         private readonly ConfigService $configService,
     ) {}
     
@@ -62,7 +62,7 @@ class UserReportAndSendController extends AbstractController
         $criteria = $request->get('criteria');
 
         if (!empty($criteria)) {
-            $data = $this->permissionRepository->getUserSearchQuery($criteria['user_search'], true)->getResult();
+            $data = $this->userRepository->getUserSearchQuery($criteria['user_search'], true)->getResult();
         }
 
         return new JsonResponse(
@@ -80,7 +80,7 @@ class UserReportAndSendController extends AbstractController
         $criteria = $request->get('criteria');
 
         if (!empty($criteria)) {
-            $data = $this->permissionRepository->getUserSearchQuery($criteria['user_search'], true)->getResult();
+            $data = $this->userRepository->getUserSearchQuery($criteria['user_search'], true)->getResult();
         }
 
         return new JsonResponse(

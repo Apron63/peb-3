@@ -2,8 +2,6 @@
 
 namespace App\Repository;
 
-use DateTime;
-use DateInterval;
 use App\Entity\User;
 use App\Entity\Course;
 use App\Entity\Permission;
@@ -162,62 +160,62 @@ class PermissionRepository extends ServiceEntityRepository
         $query->execute();
     }
 
-    public function getUserSearchQuery(?array $criteria, bool $forReport = false): AbstractQuery
-    {
-        $queryBuilder = $this->createQueryBuilder('p');
+    // public function getUserSearchQuery(?array $criteria, bool $forReport = false): AbstractQuery
+    // {
+    //     $queryBuilder = $this->createQueryBuilder('p');
 
-        $queryBuilder
-            ->select('p.id AS permissionId, u.id AS userId, u.login, u.fullName, p.lastAccess,
-                c.shortName, c.name, p.duration, p.createdAt, u.organization, u.active, p.activatedAt, p.stage,
-                u.position, u.plainPassword
-            ')
-            ->leftJoin('p.user', 'u')
-            ->leftJoin('p.course', 'c')
-            ->orderBy('u.login');
+    //     $queryBuilder
+    //         ->select('p.id AS permissionId, u.id AS userId, u.login, u.fullName, p.lastAccess,
+    //             c.shortName, c.name, p.duration, p.createdAt, u.organization, u.active, p.activatedAt, p.stage,
+    //             u.position, u.plainPassword
+    //         ')
+    //         ->leftJoin('p.user', 'u')
+    //         ->leftJoin('p.course', 'c')
+    //         ->orderBy('u.login');
 
-        if (isset($criteria['login']) && $criteria['login']) {
-            $queryBuilder->andWhere('u.login LIKE :login')
-                ->setParameter('login', "{$criteria['login']}%");
-        }
-        if (isset($criteria['name']) && $criteria['name']) {
-            $queryBuilder->andWhere('u.fullName LIKE :name')
-                ->setParameter('name', "{$criteria['name']}%");
-        }
-        if (isset($criteria['organization']) && $criteria['organization']) {
-            $queryBuilder->andWhere('u.organization LIKE :organization')
-                ->setParameter('organization', "%{$criteria['organization']}%");
-        }
-        if (isset($criteria['position']) && $criteria['position']) {
-            $queryBuilder->andWhere('u.position LIKE :position')
-                ->setParameter('position', "%{$criteria['position']}%");
-        }
-        if (isset($criteria['orderNumber']) && $criteria['orderNumber']) {
-            $queryBuilder->andWhere('p.orderNom = :orderNumber')
-                ->setParameter('orderNumber', $criteria['orderNumber']);
-        }
+    //     if (isset($criteria['login']) && $criteria['login']) {
+    //         $queryBuilder->andWhere('u.login LIKE :login')
+    //             ->setParameter('login', "{$criteria['login']}%");
+    //     }
+    //     if (isset($criteria['name']) && $criteria['name']) {
+    //         $queryBuilder->andWhere('u.fullName LIKE :name')
+    //             ->setParameter('name', "{$criteria['name']}%");
+    //     }
+    //     if (isset($criteria['organization']) && $criteria['organization']) {
+    //         $queryBuilder->andWhere('u.organization LIKE :organization')
+    //             ->setParameter('organization', "%{$criteria['organization']}%");
+    //     }
+    //     if (isset($criteria['position']) && $criteria['position']) {
+    //         $queryBuilder->andWhere('u.position LIKE :position')
+    //             ->setParameter('position', "%{$criteria['position']}%");
+    //     }
+    //     if (isset($criteria['orderNumber']) && $criteria['orderNumber']) {
+    //         $queryBuilder->andWhere('p.orderNom = :orderNumber')
+    //             ->setParameter('orderNumber', $criteria['orderNumber']);
+    //     }
 
-        if (isset($criteria['startPeriod']) && $criteria['startPeriod']) {
-            $queryBuilder->andWhere('p.createdAt >= :startPeriod')
-                ->setParameter('startPeriod', (new DateTime($criteria['startPeriod']))->modify('today'));
-        }
+    //     if (isset($criteria['startPeriod']) && $criteria['startPeriod']) {
+    //         $queryBuilder->andWhere('p.createdAt >= :startPeriod')
+    //             ->setParameter('startPeriod', (new DateTime($criteria['startPeriod']))->modify('today'));
+    //     }
 
-        if (isset($criteria['endPeriod']) && $criteria['endPeriod']) {
-            $queryBuilder->andWhere('p.createdAt <= :endPeriod')
-                ->setParameter(
-                    'endPeriod',
-                    (new DateTime($criteria['endPeriod']))->modify('tomorrow')->sub(new DateInterval('PT1S'))
-                );
-        }
+    //     if (isset($criteria['endPeriod']) && $criteria['endPeriod']) {
+    //         $queryBuilder->andWhere('p.createdAt <= :endPeriod')
+    //             ->setParameter(
+    //                 'endPeriod',
+    //                 (new DateTime($criteria['endPeriod']))->modify('tomorrow')->sub(new DateInterval('PT1S'))
+    //             );
+    //     }
 
-        if (isset($criteria['course']) && $criteria['course']) {
-            $queryBuilder->andWhere('p.course IN (:course)')
-                ->setParameter('course', $criteria['course']);
-        }
+    //     if (isset($criteria['course']) && $criteria['course']) {
+    //         $queryBuilder->andWhere('p.course IN (:course)')
+    //             ->setParameter('course', $criteria['course']);
+    //     }
 
-        if ($forReport) {
-            $queryBuilder->orderBy('p.course');
-        }
+    //     if ($forReport) {
+    //         $queryBuilder->orderBy('p.course');
+    //     }
 
-        return $queryBuilder->getQuery();
-    }
+    //     return $queryBuilder->getQuery();
+    // }
 }

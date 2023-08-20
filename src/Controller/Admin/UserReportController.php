@@ -2,7 +2,7 @@
 
 namespace App\Controller\Admin;
 
-use App\Repository\PermissionRepository;
+use App\Repository\UserRepository;
 use App\Service\AdminReportService;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -14,7 +14,7 @@ class UserReportController extends AbstractController
 {
     public function __construct(
         private readonly AdminReportService $reportService,
-        private readonly PermissionRepository $permissionRepository,
+        private readonly UserRepository $userRepository,
     ) {}
 
     #[Route('/admin/user/report/statistic/to_pdf/', name: 'admin_user_report_stattistic_to_pdf')]
@@ -23,7 +23,7 @@ class UserReportController extends AbstractController
         $criteria = $request->get('criteria');
 
         if (!empty($criteria)) {
-            $data = $this->permissionRepository->getUserSearchQuery($criteria['user_search'], true)->getResult();
+            $data = $this->userRepository->getUserSearchQuery($criteria['user_search'], true)->getResult();
         }
 
         $fileName = $this->reportService->generateStatisticPdf($data);
@@ -42,7 +42,7 @@ class UserReportController extends AbstractController
         $criteria = $request->get('criteria');
 
         if (!empty($criteria)) {
-            $data = $this->permissionRepository->getUserSearchQuery($criteria['user_search'], true)->getResult();
+            $data = $this->userRepository->getUserSearchQuery($criteria['user_search'], true)->getResult();
         }
 
         $fileName = $this->reportService->generateStatisticDocx($data);
@@ -61,7 +61,7 @@ class UserReportController extends AbstractController
         $criteria = $request->get('criteria');
 
         if (!empty($criteria)) {
-            $data = $this->permissionRepository->getUserSearchQuery($criteria['user_search'], true)->getResult();
+            $data = $this->userRepository->getUserSearchQuery($criteria['user_search'], true)->getResult();
         }
 
         $fileName = $this->reportService->generateStatisticXlsx($data);
@@ -80,7 +80,7 @@ class UserReportController extends AbstractController
         $criteria = $request->get('criteria');
 
         if (!empty($criteria)) {
-            $data = $this->permissionRepository->getUserSearchQuery($criteria['user_search'])->getResult();
+            $data = $this->userRepository->getUserSearchQuery($criteria['user_search'])->getResult();
         }
 
         $fileName = $this->reportService->generateListCSV($data);
@@ -99,7 +99,7 @@ class UserReportController extends AbstractController
         $criteria = $request->get('criteria');
 
         if (!empty($criteria)) {
-            $data = $this->permissionRepository->getUserSearchQuery($criteria['user_search'], true)->getResult();
+            $data = $this->userRepository->getUserSearchQuery($criteria['user_search'], true)->getResult();
         }
 
         $fileName = $this->reportService->generateListXLSX($data);
@@ -118,7 +118,7 @@ class UserReportController extends AbstractController
         $criteria = $request->get('criteria');
 
         if (!empty($criteria)) {
-            $data = $this->permissionRepository->getUserSearchQuery($criteria['user_search'])->getResult();
+            $data = $this->userRepository->getUserSearchQuery($criteria['user_search'])->getResult();
         }
         $fileName = $this->reportService->generateListTXT($data);
         $response = new BinaryFileResponse($fileName);
@@ -136,7 +136,7 @@ class UserReportController extends AbstractController
         $criteria = $request->get('criteria');
 
         if (!empty($criteria)) {
-            $data = $this->permissionRepository->getUserSearchQuery($criteria['user_search'], true)->getResult();
+            $data = $this->userRepository->getUserSearchQuery($criteria['user_search'], true)->getResult();
         }
 
         $fileName = $this->reportService->generateListDocx($data);

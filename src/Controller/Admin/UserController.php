@@ -2,37 +2,39 @@
 
 namespace App\Controller\Admin;
 
-use App\Decorator\MobileController;
 use App\Entity\User;
-use App\Form\Admin\ActionIntervalType;
-use App\Form\Admin\UserEditType;
-use App\Repository\PermissionRepository;
-use App\Repository\UserRepository;
 use App\Service\UserService;
+use App\Form\Admin\UserEditType;
+use App\Repository\UserRepository;
+use App\Decorator\MobileController;
+use App\Form\Admin\ActionIntervalType;
+use App\Repository\PermissionRepository;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Knp\Component\Pager\PaginatorInterface;
 
 class UserController extends MobileController
 {
     public function __construct(
         private readonly UserService $userService,
         private readonly UserRepository $userRepository,
-        private readonly PermissionRepository $permissionRepository
+        private readonly PermissionRepository $permissionRepository,
+        private readonly PaginatorInterface $paginator,
     ) {}
 
     #[Route('/admin/user/', name: 'admin_user_list')]
-    public function adminUserList(Request $request, PaginatorInterface $paginator): Response
+    public function adminUserList(Request $request): Response
     {
         $criteria = $request->get('user_search');
 
-        $query = $this->permissionRepository->getUserSearchQuery($criteria);
+        $query = $this->userRepository->getUserSearchQuery($criteria);
 
-        $pagination = $paginator->paginate(
+        $pagination = $this->paginator->paginate(
             $query,
             $request->query->getInt('page', 1),
-            10
+            10,
+            ['distinct' => false],
         );
 
         return $this->mobileRender('admin/user/list.html.twig', [
@@ -41,7 +43,7 @@ class UserController extends MobileController
     }
 
     #[Route('/admin/user/create/', name: 'admin_user_create')]
-    public function adminUserCreateAction(Request $request, PaginatorInterface $paginator): Response
+    public function adminUserCreateAction(Request $request): Response
     {
         $user = new User();
 
@@ -59,7 +61,7 @@ class UserController extends MobileController
         }
 
         $query = $this->permissionRepository->getPermissionQuery($user);
-        $pagination = $paginator->paginate(
+        $pagination = $this->paginator->paginate(
             $query,
             $request->query->getInt('page', 1),
             10
@@ -73,7 +75,7 @@ class UserController extends MobileController
     }
 
     #[Route('/admin/user/{id<\d+>}/', name: 'admin_user_edit')]
-    public function adminUserEditAction(Request $request, PaginatorInterface $paginator, User $user): Response
+    public function adminUserEditAction(Request $request, User $user): Response
     {
         $form = $this->createForm(UserEditType::class, $user);
         $form->handleRequest($request);
@@ -85,7 +87,7 @@ class UserController extends MobileController
         }
 
         $query = $this->permissionRepository->getPermissionQuery($user);
-        $pagination = $paginator->paginate(
+        $pagination = $this->paginator->paginate(
             $query,
             $request->query->getInt('page', 1),
             10
