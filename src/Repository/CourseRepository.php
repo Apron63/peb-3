@@ -2,19 +2,19 @@
 
 namespace App\Repository;
 
+use Exception;
+use RuntimeException;
 use App\Entity\Answer;
 use App\Entity\Course;
-use App\Entity\CourseInfo;
-use App\Entity\CourseTheme;
+use App\Entity\Ticket;
 use App\Entity\Profile;
 use App\Entity\Questions;
-use App\Entity\Ticket;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use App\Entity\CourseInfo;
+use App\Entity\CourseTheme;
 use Doctrine\ORM\AbstractQuery;
 use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\Persistence\ManagerRegistry;
-use Exception;
-use RuntimeException;
+use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 
 /**
  * @extends ServiceEntityRepository<Course>
@@ -74,7 +74,6 @@ class CourseRepository extends ServiceEntityRepository
             )
             ->leftJoin(Profile::class, 'p', Join::WITH, 'p.id = c.profile');
 
-
         if (null !== $type) {
             $queryBuilder->andWhere('c.type = :type')
                 ->setParameter('type', $type);
@@ -100,7 +99,7 @@ class CourseRepository extends ServiceEntityRepository
     public function getAllCourses(): array
     {
         return $this->createQueryBuilder('c')
-            ->select('c.id', 'c.name', 'IDENTITY (c.profile) AS profileId')
+            ->select('c.id', 'c.shortName', 'IDENTITY (c.profile) AS profileId')
             ->where('c.forDemo = 0')
             ->orderBy('c.name')
             ->setCacheable(true)
