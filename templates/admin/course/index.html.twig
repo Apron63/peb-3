@@ -19,7 +19,7 @@
             <select id="course-type-select" class="form-select">
                 <option {% if app.request.get('type') == '' %}selected{% endif %} value="0">Все материалы</option>
                 <option {% if app.request.get('type') == '1' %}selected{% endif %} value="1">Классические</option>
-                <option {% if app.request.get('type') == '3' %}selected{% endif %} value="2">Интерактивные</option>
+                <option {% if app.request.get('type') == '2' %}selected{% endif %} value="2">Интерактивные</option>
             </select>
         </div>
 
@@ -52,43 +52,43 @@
         </thead>
 
         <tbody>
-        {% for course in pagination %}
-            <tr>
-                <td>{{ course.id }}</td>
-                <td>
-                    {% if course.forDemo == 1 %}
-                        <img src="{{ asset('svg/eye.svg') }}">
-                    {% elseif course.type == 1 %}
-                        <img src="{{ asset('svg/key.svg') }}">
-                    {% elseif course.type == 2 %}
-                        <img src="{{ asset('svg/game.svg') }}">
-                    {% endif %}
-                </td>
-                <td>
-                    <a href="{{ path('admin_course_edit', {'id': course.id}) }}">{{ course.shortName }}</a>
-                </td>
-                <td>
-                    {{ course.name }}
-                </td>
-                <td>
-                    {{ course.profileName }}
-                </td>
-                <td>
-                    {{ course.ticketCnt }}
-                </td>
-                <td>
-                    {% if is_granted('ROLE_SUPER_ADMIN') %}
-                        <a
+            {% for course in pagination %}
+                <tr>
+                    <td>{{ course.id }}</td>
+                    <td>
+                        {% if course.forDemo == 1 %}
+                            <img src="{{ asset('svg/eye.svg') }}">
+                        {% elseif course.type == 1 %}
+                            <img src="{{ asset('svg/key.svg') }}">
+                        {% elseif course.type == 2 %}
+                            <img src="{{ asset('svg/game.svg') }}">
+                        {% endif %}
+                    </td>
+                    <td>
+                        <a href="{{ path('admin_course_edit', {'id': course.id}) }}">{{ course.shortName }}</a>
+                    </td>
+                    <td>
+                        {{ course.name }}
+                    </td>
+                    <td>
+                        {{ course.profileName }}
+                    </td>
+                    <td>
+                        {{ course.ticketCnt }}
+                    </td>
+                    <td>
+                        {% if is_granted('ROLE_SUPER_ADMIN') %}
+                            <a
                                 href="{{ path('admin_course_delete', {'id': course.id}) }}"
                                 class="btn btn-sm btn-outline-danger"
                                 onclick="return window.confirm('Подтвердите действие');"
-                        >
-                            Удалить
-                        </a>
-                    {% endif %}
-                </td>
-            </tr>
-        {% endfor %}
+                            >
+                                Удалить
+                            </a>
+                        {% endif %}
+                    </td>
+                </tr>
+            {% endfor %}
         </tbody>
     </table>
 
