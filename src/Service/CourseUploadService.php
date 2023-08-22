@@ -5,6 +5,7 @@ namespace App\Service;
 use XMLReader;
 use DOMElement;
 use ZipArchive;
+use DOMNodeList;
 use RuntimeException;
 use App\Entity\Course;
 use App\Repository\CourseRepository;
@@ -14,9 +15,9 @@ use Symfony\Component\HttpFoundation\File\Exception\FileException;
 class CourseUploadService
 {
     private string $originalFilename;
-    private string $courseName;
-    private array $materials;
-    private array $data;
+    private ?string $courseName = null;
+    private array $materials = [];
+    private array $data = [];
     private ?Course $course;
 
     public function __construct(
@@ -131,6 +132,12 @@ class CourseUploadService
                                     case 'my:qtext':
                                         $this->data[$themeNom]['questions'][++$questionNom]['qText'] = trim($chNode->nodeValue);
                                         $this->data[$themeNom]['questions'][$questionNom]['type'] = 0;
+
+                                        $image = $this->searchImage($chNode);
+                                        if (null !== $image) {
+                                            $this->data[$themeNom]['questions'][$questionNom]['qText'] .= $image;
+                                        }
+
                                         break;
                                     case 'my:answer':
                                         foreach ($chNode->childNodes as $row) {
@@ -140,6 +147,12 @@ class CourseUploadService
                                             switch ($row->tagName) {
                                                 case 'my:atext':
                                                     $this->data[$themeNom]['questions'][$questionNom]['answer'][$aNom]['aText'] = trim($row->nodeValue);
+
+                                                    $image = $this->searchImage($row);
+                                                    if (null !== $image) {
+                                                        $this->data[$themeNom]['questions'][$questionNom]['answer'][$aNom]['aText'] .= $image;
+                                                    }
+
                                                     break;
                                                 case 'my:astatus':
                                                     if ($row->nodeValue === 'Правильный ответ') {
@@ -159,7 +172,14 @@ class CourseUploadService
                                         break;
                                     case 'my:qhelp':
                                         $this->data[$themeNom]['questions'][$questionNom]['hText'] = trim($chNode->nodeValue);
+
+                                        $image = $this->searchImage($chNode);
+                                        if (null !== $image) {
+                                            $this->data[$themeNom]['questions'][$questionNom]['hText'] .= $image;
+                                        }
                                         break;
+                                    case 'img':
+                                        dd($chNode->nodeValue);
                                 }
                             }
                             break;
@@ -185,9 +205,42 @@ class CourseUploadService
 
         $this->courseRepository->prepareCourseClear($this->course);
 
-        $this->course
-            ->setName($this->courseName);
+        if (null !== $this->courseName) {
+            $this->course->setName($this->courseName);
 
-        $this->courseRepository->save($this->course, true);
+            $this->courseRepository->save($this->course, true);
+        }
+    }
+
+    private function searchImage(DOMElement $node): ?string
+    {
+        $image = null;
+
+        $childs = $node->childNodes;
+        if ($childs instanceof DOMNodeList) {
+            foreach ($childs as $child) {
+                if (isset($child->tagName)) {
+                    $tag = $child->tagName;
+    
+                    if ($tag === 'img') {
+                        foreach($child->attributes as $attribute) {
+                            if ($attribute->name === 'src') {
+                                $image = '<br><img src="' . $attribute->value . '">';
+
+                                break;
+                            }
+                        }
+                    } else {
+                        $image = $this->searchImage($child);
+                    }
+    
+                    if (null !== $image) {
+                        return $image;
+                    }
+                }
+            }
+        }
+
+        return $image;
     }
 }
