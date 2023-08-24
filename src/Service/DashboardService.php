@@ -30,12 +30,13 @@ class DashboardService
         ];
     }
 
-    public function replaceValue(string $source, array $from = [], array $target = []): string
+    public function replaceValue(string $source, array $from = [], array $target = [], User $user =  null): string
     {
         $result = $source;
 
-        /** @var User $user */
-        $user = $this->security->getUser();
+        if (! $user instanceof User) {
+            $user = $this->security->getUser();
+        }
 
         if ($user instanceof User) {
             $result = str_replace(

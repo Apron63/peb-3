@@ -36,6 +36,10 @@ class CheckPermissionExpiresCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         foreach($this->permissionRepository->getExpiredPermissionsList() as $permission) {
+            if (null === $permission->getCreatedBy()) {
+                continue;
+            }
+            
             $output->writeln('Найден пользователь: ' . $permission->getUser()->getEmail());
 
             $mailingQueue = new MailingQueue;
@@ -49,7 +53,8 @@ class CheckPermissionExpiresCommand extends Command
                 [
                     $permission->getCourse()->getName(),
                     date('d.m.Y', strtotime('+' . $permission->getDuration() . ' days', $permission->getActivatedAt()->getTimestamp())),
-                ]
+                ],
+                $permission->getCreatedBy()
             );
 
             $mailingQueue
