@@ -2,8 +2,8 @@
 
 namespace App\Controller\Admin;
 
-use App\Entity\User;
 use App\Service\ConfigService;
+use App\Service\DashboardService;
 use App\Repository\UserRepository;
 use App\Service\AdminReportService;
 use App\Form\Admin\SendListToEmailType;
@@ -18,6 +18,7 @@ class UserReportAndSendController extends AbstractController
         private readonly AdminReportService $reportService,
         private readonly UserRepository $userRepository,
         private readonly ConfigService $configService,
+        private readonly DashboardService $dashboardService,
     ) {}
     
     #[Route('/admin/user/report/send/get_content/', name: 'admin_user_report_send_get_content', condition: 'request.isXmlHttpRequest()')]
@@ -26,7 +27,7 @@ class UserReportAndSendController extends AbstractController
         $data = [
             'emails' => '',
             'subject' => '',
-            'comment' => $this->replaceValue($this->configService->getConfigValue('emailAttachmentResultText')),
+            'comment' => $this->dashboardService->replaceValue($this->configService->getConfigValue('emailAttachmentResultText')),
         ];
 
         $content = $this->renderView('admin/user/_send_email.html.twig', [
@@ -42,7 +43,7 @@ class UserReportAndSendController extends AbstractController
         $data = [
             'emails' => '',
             'subject' => '',
-            'comment' => $this->replaceValue($this->configService->getConfigValue('emailAttachmentStatisticText')),
+            'comment' => $this->dashboardService->replaceValue($this->configService->getConfigValue('emailAttachmentStatisticText')),
         ];
 
         $content = $this->renderView('admin/user/_send_email_statistic.html.twig', [
@@ -86,30 +87,5 @@ class UserReportAndSendController extends AbstractController
         return new JsonResponse(
             $this->reportService->generateListAndSendStatistic($recipient, $subject, $comment, $type, $data)
         );
-    }
-
-    public function replaceValue(string $source): string
-    {
-        $result = $source;
-
-        $user = $this->getUser();
-
-        if ($user instanceof User) {
-            $result = str_replace(
-                [
-                    '{FIO}',
-                    '{PHONE}',
-                    '{EMAIL}',
-                ],
-                [
-                    $user->getFullName(),
-                    $user->getContact(),
-                    $user->getEmail(),
-                ], 
-                $source
-            );
-        }
-
-        return $result;
     }
 }

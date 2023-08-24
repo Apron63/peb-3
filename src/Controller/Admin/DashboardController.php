@@ -2,10 +2,10 @@
 
 namespace App\Controller\Admin;
 
+use App\Service\ConfigService;
+use App\Form\Admin\DashboardType;
 use App\Service\DashboardService;
 use App\Decorator\MobileController;
-use App\Form\Admin\DashboardType;
-use App\Service\ConfigService;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -29,12 +29,24 @@ class DashboardController extends MobileController
         $form
             ->get('emailAttachmentResultText')
             ->setData($this->configService->getConfigValue('emailAttachmentResultText'));
+        $form
+            ->get('userHasNewPermission')
+            ->setData($this->configService->getConfigValue('userHasNewPermission'));
+        $form
+            ->get('userHasActivatedPermission')
+            ->setData($this->configService->getConfigValue('userHasActivatedPermission'));
+        $form
+            ->get('permissionWillEndSoon')
+            ->setData($this->configService->getConfigValue('permissionWillEndSoon'));
 
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             $this->configService->setConfigValue('emailAttachmentStatisticText', $form->get('emailAttachmentStatisticText')->getData());
             $this->configService->setConfigValue('emailAttachmentResultText', $form->get('emailAttachmentResultText')->getData());
+            $this->configService->setConfigValue('userHasNewPermission', $form->get('userHasNewPermission')->getData());
+            $this->configService->setConfigValue('userHasActivatedPermission', $form->get('userHasActivatedPermission')->getData());
+            $this->configService->setConfigValue('permissionWillEndSoon', $form->get('permissionWillEndSoon')->getData());
         }
 
         return $this->mobileRender('admin/dashboard/index.html.twig', [

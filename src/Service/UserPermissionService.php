@@ -4,12 +4,11 @@ namespace App\Service;
 
 use DateTime;
 use App\Entity\User;
-use Twig\Environment;
 use App\Entity\Permission;
 use App\Entity\MailingQueue;
 use App\Entity\ModuleSection;
-use App\Repository\MailingQueueRepository;
 use App\Repository\PermissionRepository;
+use App\Repository\MailingQueueRepository;
 
 class UserPermissionService
 {
@@ -17,7 +16,8 @@ class UserPermissionService
         private readonly PermissionRepository $permissionRepository,
         private readonly CourseService $courseService,
         private readonly MailingQueueRepository $mailingQueueRepository,
-        private Environment $twig,
+        private readonly DashboardService $dashboardService,
+        private readonly ConfigService $configService,
     ) { }
 
     public function checkPermissionForUser(Permission $permission, User $user, bool $canChangeStage): bool
@@ -42,13 +42,22 @@ class UserPermissionService
                 if (null !== $permission->getUser()->getEmail()) {
                     $mailingQueue = new MailingQueue;
     
+                    $content = $this->dashboardService->replaceValue(
+                        $this->configService->getConfigValue('userHasActivatedPermission'),
+                        [
+                            '{COURSE}',
+                            '{LASTDATE}',
+                        ],
+                        [
+                            $permission->getCourse()->getName(),
+                            date('d.m.Y', strtotime('+' . $permission->getDuration() . ' days')),
+                        ]
+                    );
+
                     $mailingQueue
                         ->setUser($permission->getUser())
                         ->setSubject('Активирован учебный курс')
-                        ->setContent($this->twig->render('mail\permission-activated.html.twig', [
-                            'permission' => $permission,
-                            'lastDate' => date('d.m.Y', strtotime('+' . $permission->getDuration() . ' days')),
-                        ]));
+                        ->setContent($content);
     
                     $this->mailingQueueRepository->save($mailingQueue, true);
                 }

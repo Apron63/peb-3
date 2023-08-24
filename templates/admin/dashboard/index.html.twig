@@ -81,6 +81,45 @@
         </div>
 
         <p></p>
+        
+        <div class="col-12">
+            <div class="card">
+                 <div class="card-header">
+                   {{ form_label(form.userHasNewPermission) }}
+                </div>
+                <div class="card-body">
+                    {{ form_widget(form.userHasNewPermission) }}
+                </div>
+            </div>
+        </div>
+
+        <p></p>
+        
+        <div class="col-12">
+            <div class="card">
+                 <div class="card-header">
+                   {{ form_label(form.userHasActivatedPermission) }}
+                </div>
+                <div class="card-body">
+                    {{ form_widget(form.userHasActivatedPermission) }}
+                </div>
+            </div>
+        </div>
+
+        <p></p>
+        
+        <div class="col-12">
+            <div class="card">
+                 <div class="card-header">
+                   {{ form_label(form.permissionWillEndSoon) }}
+                </div>
+                <div class="card-body">
+                    {{ form_widget(form.permissionWillEndSoon) }}
+                </div>
+            </div>
+        </div>
+
+        <p></p>
 
         <div class="col-12">
             {{ form_row(form.actionSubmit) }}

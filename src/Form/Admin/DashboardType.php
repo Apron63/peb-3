@@ -21,6 +21,18 @@ class DashboardType extends AbstractType
                 'label' => 'Комментарий к вложению для доступов',
                 'mapped' => false,
             ])
+            ->add('userHasNewPermission', CkeditorType::class, [
+                'label' => 'Информирование слушателя о назначении доступа',
+                'mapped' => false,
+            ])
+            ->add('userHasActivatedPermission', CkeditorType::class, [
+                'label' => 'Информирование слушателя после активации курса',
+                'mapped' => false,
+            ])
+            ->add('permissionWillEndSoon', CkeditorType::class, [
+                'label' => 'Информирование слушателя об окончании действия курса',
+                'mapped' => false,
+            ])
             ->add('actionSubmit', SubmitType::class, [
                 'label' => 'Сохранить',
                 'attr' => [

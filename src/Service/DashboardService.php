@@ -2,14 +2,17 @@
 
 namespace App\Service;
 
+use App\Entity\User;
 use App\Repository\LoggerRepository;
 use App\Repository\MailingQueueRepository;
+use Symfony\Bundle\SecurityBundle\Security;
 
 class DashboardService
 {
     public function __construct(
         private readonly LoggerRepository $loggerRepository,
         private readonly MailingQueueRepository $mailingQueueRepository,
+        private readonly Security $security,
     ) {}
 
     public function prepareData(): array
@@ -25,6 +28,38 @@ class DashboardService
             'mailCreatedToday' => $this->mailingQueueRepository->getMailCreatedToday(),
             'mailNotSended' => $this->mailingQueueRepository->getMailNotSended(),
         ];
+    }
+
+    public function replaceValue(string $source, array $from = [], array $target = []): string
+    {
+        $result = $source;
+
+        /** @var User $user */
+        $user = $this->security->getUser();
+
+        if ($user instanceof User) {
+            $result = str_replace(
+                array_merge(
+                    [
+                        '{FIO}',
+                        '{PHONE}',
+                        '{EMAIL}',
+                    ], 
+                    $from
+                ),
+                array_merge(
+                    [
+                        $user->getFullName(),
+                        $user->getContact(),
+                        $user->getEmail(),
+                    ],
+                    $target
+                ), 
+                $source
+            );
+        }
+
+        return $result;
     }
 
     private function getSymbolByQuantity($bytes): string

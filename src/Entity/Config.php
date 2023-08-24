@@ -20,6 +20,15 @@ class Config
     #[ORM\Column(type: Types::TEXT, nullable: true, length: 50000)]
     private ?string $emailAttachmentResultText = null;
 
+    #[ORM\Column(type: Types::TEXT, nullable: true, length: 50000)]
+    private ?string $userHasNewPermission = null;
+
+    #[ORM\Column(type: Types::TEXT, nullable: true, length: 50000)]
+    private ?string $userHasActivatedPermission = null;
+
+    #[ORM\Column(type: Types::TEXT, nullable: true, length: 50000)]
+    private ?string $permissionWillEndSoon = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -45,6 +54,42 @@ class Config
     public function setEmailAttachmentResultText($emailAttachmentResultText): self
     {
         $this->emailAttachmentResultText = $emailAttachmentResultText;
+
+        return $this;
+    }
+
+    public function getUserHasNewPermission(): ?string
+    {
+        return $this->userHasNewPermission;
+    }
+
+    public function setUserHasNewPermission(?string $userHasNewPermission): self
+    {
+        $this->userHasNewPermission = $userHasNewPermission;
+
+        return $this;
+    }
+
+    public function getUserHasActivatedPermission(): ?string
+    {
+        return $this->userHasActivatedPermission;
+    }
+
+    public function setUserHasActivatedPermission(?string $userHasActivatedPermission): self
+    {
+        $this->userHasActivatedPermission = $userHasActivatedPermission;
+
+        return $this;
+    }
+
+    public function getPermissionWillEndSoon(): ?string
+    {
+        return $this->permissionWillEndSoon;
+    }
+
+    public function setPermissionWillEndSoon(?string $permissionWillEndSoon): self
+    {
+        $this->permissionWillEndSoon = $permissionWillEndSoon;
 
         return $this;
     }
