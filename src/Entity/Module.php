@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\ModuleRepository;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: ModuleRepository::class)]
@@ -19,6 +20,9 @@ class Module
 
     #[ORM\Column(length: 255)]
     private ?string $name = null;
+
+    #[ORM\Column(type: Types::SMALLINT, nullable: true)]
+    private ?int $sortOrder = null;
 
     public function getId(): ?int
     {
@@ -45,6 +49,18 @@ class Module
     public function setName(string $name): self
     {
         $this->name = $name;
+
+        return $this;
+    }
+
+    public function getSortOrder(): ?int
+    {
+        return $this->sortOrder;
+    }
+
+    public function setSortOrder(?int $sortOrder): self
+    {
+        $this->sortOrder = $sortOrder;
 
         return $this;
     }

@@ -13,6 +13,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 
@@ -80,6 +81,9 @@ class CourseEditType extends AbstractType
                'label_attr' => [
                    'class' => 'form-check-label',
                ],
+           ])
+           ->add('sortOrder', HiddenType::class, [
+               'mapped' => false,
            ]);
 
         if ($options['data']->getId() === null) {
@@ -111,6 +115,9 @@ class CourseEditType extends AbstractType
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
+            'attr' => [
+                'id' => 'course-edit-form'
+            ],
             'data_class' => Course::class,
         ]);
     }

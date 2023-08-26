@@ -44,7 +44,8 @@ class ModuleRepository extends ServiceEntityRepository
     {
         return $this->createQueryBuilder('m')
             ->where('m.course = :course')
-            ->setParameter('course', $course->getId())
+            ->setParameter('course', $course)
+            ->orderBy('m.sortOrder')
             ->getQuery()
             ->getArrayResult();
     }

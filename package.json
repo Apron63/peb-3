@@ -29,6 +29,7 @@
     },
     "dependencies": {
         "air-datepicker": "^3.3.5",
-        "jquery": "^3.6.3"
+        "jquery": "^3.6.3",
+        "jquery-ui-bundle": "^1.12.1-migrate"
     }
 }

@@ -3,6 +3,7 @@
 namespace App\Controller\Admin;
 
 use App\Entity\Course;
+use App\Service\CourseService;
 use App\Service\TicketService;
 use App\Form\Admin\CourseEditType;
 use App\Decorator\MobileController;
@@ -38,6 +39,7 @@ class CourseController extends MobileController
         private readonly SluggerInterface $slugger,
         private readonly PaginatorInterface $paginator,
         private readonly ModuleTicketService $moduleTicketService,
+        private readonly CourseService $courseService,
     ) {}
 
     #[Route('/admin/course/', name: 'admin_course_list')]
@@ -113,12 +115,18 @@ class CourseController extends MobileController
                 $course->setImage($newFilename);
             }
 
+            if (Course::INTERACTIVE === $course->getType()) {
+                $sortOrder = $form->get('sortOrder')->getData();
+
+                $this->courseService->saveModuleOrder($course, $sortOrder);
+            }
+            
             $this->couseRepository->save($course, true);
 
             return $this->redirectToRoute('admin_course_list');
         }
 
-        if ($course->getType() === Course::INTERACTIVE) {
+        if (Course::INTERACTIVE === $course->getType()) {
             $pagination = $this->paginator->paginate(
                 $this->questionsRepository->getQuestionQuery($course),
                 $request->query->getInt('page', 1),

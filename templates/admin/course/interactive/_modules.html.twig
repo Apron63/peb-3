@@ -4,33 +4,29 @@
     Добавить модуль
 </a>
 
-<table class="table">
-    <thead>
-        <tr>
-            <th>Наименование</th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for module in modules %}
-            <tr>
-                <td>
-                    <a
+<ul id="draggable-module-container" class="list-unstyled">
+    {% for module in modules %}
+        <li class="draggable-module-item" data-id="{{ module.id }}">
+            <div>
+                {{ module.name }}
+                <span class="module-buttons">
+                    <a 
+                        class="btn btn-outline-primary"
                         href="{{ path('admin_module_edit', {id: module.id}) }}"
+                        title="Редактировать"
                     >
-                        {{ module.name }}
+                        <img src="{{ asset('svg/pencil.svg') }}">
                     </a>
-                </td>
-                <td>
                     <a
                         class="btn btn-outline-danger"
                         href="{{ path('admin_module_delete', {id: module.id}) }}"
                         onclick="return window.confirm('Подтвердите действие');"
+                        title="Удалить"
                     >
-                        Удалить
+                        <img src="{{ asset('svg/trash.svg') }}">
                     </a>
-                </td>
-            </tr>
-        {% endfor %}
-    </tbody>
-</table>
+                </span>
+            </div>
+        </li>
+    {% endfor %}
+</ul>

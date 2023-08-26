@@ -3,13 +3,14 @@
 namespace App\Service;
 
 use App\Entity\Course;
+use App\Entity\Module;
+use App\Entity\Permission;
 use App\Entity\CourseTheme;
 use App\Entity\ModuleSection;
-use App\Entity\Permission;
-use App\Repository\CourseThemeRepository;
 use App\Repository\ModuleRepository;
-use App\Repository\ModuleSectionRepository;
 use App\Repository\PermissionRepository;
+use App\Repository\CourseThemeRepository;
+use App\Repository\ModuleSectionRepository;
 
 class CourseService
 {
@@ -67,17 +68,36 @@ class CourseService
         return $this->getModuleSectionByCourse($course);
     }
 
+    public function saveModuleOrder(Course $course, string $sortOrder): void
+    {
+        $moduleSortOrders = json_decode($sortOrder, true);
+
+        foreach($this->moduleRepository->getModules($course) as $sortedModule) {
+            $module = $this->moduleRepository->find($sortedModule['id']);
+
+            if (! $module instanceof Module) {
+                break;
+            }
+
+            if (isset($moduleSortOrders[$module->getId()])) {
+                $module->setSortOrder($moduleSortOrders[$module->getId()]);
+
+                $this->moduleRepository->save($module, true);
+            }
+        }
+    }
+
     private function getModuleSectionByCourse(Course $course): array
     {
         $data = [];
 
-        $modules = $this->moduleRepository->findBy(['course' => $course]);
+        $modules = $this->moduleRepository->getModules($course);
 
-        if (!empty($modules)) {
+        if (! empty($modules)) {
             foreach($modules as $module) {
-                $moduleSections = $this->moduleSectionRepository->findBy(['module' => $module]);
+                $moduleSections = $this->moduleSectionRepository->findBy(['module' => $module['id']]);
 
-                if (!empty($moduleSections)) {
+                if (! empty($moduleSections)) {
                     $sectionData = [];
                     $isActive = true;
 
@@ -92,9 +112,9 @@ class CourseService
                     }
 
                     $data[] = [
-                        'id' => $module->getId(),
+                        'id' => $module['id'],
                         'courseId' => $course->getId(),
-                        'name' => $module->getName(),
+                        'name' => $module['name'],
                         'sections' => $sectionData,
                         'active' => $isActive,
                     ];
