@@ -192,55 +192,65 @@ class CourseRepository extends ServiceEntityRepository
     {
         $themeNom = 1;
 
-        foreach ($data as $theme) {
-            $this->getEntityManager()->getConnection()->executeQuery("
-                INSERT INTO course_theme (id, course_id, name, description)
-                VALUES (NULL, '{$courseId}', '{$themeNom}', '{$theme['theme']['name']}')
-            ");
-            $themeId = $this->getEntityManager()->getConnection()->lastInsertId();
-            $themeNom++;
+        $this->getEntityManager()->beginTransaction();
 
-            // Вопросы
-            $cnt = 1;
-            foreach ($theme['questions'] as $item) {
-                try {
-                    $this->getEntityManager()->getConnection()->executeQuery("
-                        INSERT INTO questions (id, course_id, parent_id , description, type, help, nom)
-                        VALUES (NULL, {$courseId}, {$themeId}, '{$item['qText']}', {$item['type']}, '{$item['hText']}', {$cnt})
-                    ");
-                } catch (Exception $e) {
-                    throw new RuntimeException($e->getMessage());
-                }
-
-                $questionId = $this->getEntityManager()->getConnection()->lastInsertId();
-
-                // Ответы
-                $aCnt = 1;
-                foreach ($item['answer'] as $row) {
-                    $status = (int) $row['aStatus'];
-
+        try {
+            foreach ($data as $theme) {
+                $this->getEntityManager()->getConnection()->executeQuery("
+                    INSERT INTO course_theme (id, course_id, name, description)
+                    VALUES (NULL, '{$courseId}', '{$themeNom}', '{$theme['theme']['name']}')
+                ");
+                $themeId = $this->getEntityManager()->getConnection()->lastInsertId();
+                $themeNom++;
+    
+                // Вопросы
+                $cnt = 1;
+                foreach ($theme['questions'] as $item) {
                     try {
                         $this->getEntityManager()->getConnection()->executeQuery("
-                            INSERT INTO answer (id, question_id , description, is_correct, nom)
-                            VALUES (NULL, {$questionId}, '{$row['aText']}', {$status}, {$aCnt})
+                            INSERT INTO questions (id, course_id, parent_id , description, type, help, nom)
+                            VALUES (NULL, {$courseId}, {$themeId}, '{$item['qText']}', {$item['type']}, '{$item['hText']}', {$cnt})
                         ");
                     } catch (Exception $e) {
                         throw new RuntimeException($e->getMessage());
                     }
-                    
-                    $aCnt ++;
+    
+                    $questionId = $this->getEntityManager()->getConnection()->lastInsertId();
+    
+                    // Ответы
+                    $aCnt = 1;
+                    foreach ($item['answer'] as $row) {
+                        $status = (int) $row['aStatus'];
+    
+                        try {
+                            $this->getEntityManager()->getConnection()->executeQuery("
+                                INSERT INTO answer (id, question_id , description, is_correct, nom)
+                                VALUES (NULL, {$questionId}, '{$row['aText']}', {$status}, {$aCnt})
+                            ");
+                        } catch (Exception $e) {
+                            throw new RuntimeException($e->getMessage());
+                        }
+                        
+                        $aCnt ++;
+                    }
+    
+                    $cnt ++;
                 }
-
-                $cnt ++;
             }
-        }
+    
+            // Материалы
+            foreach ($materials as $material) {
+                $this->getEntityManager()->getConnection()->executeQuery("
+                    INSERT INTO course_info (id, course_id, name, file_name)
+                    VALUES (NULL, {$courseId}, '{$material['name']}', '{$material['file']}')
+                ");
+            }
 
-        // Материалы
-        foreach ($materials as $material) {
-            $this->getEntityManager()->getConnection()->executeQuery("
-                INSERT INTO course_info (id, course_id, name, file_name)
-                VALUES (NULL, {$courseId}, '{$material['name']}', '{$material['file']}')
-            ");
+            $this->getEntityManager()->commit();
+        } catch(Exception $e) {
+            $this->getEntityManager()->rollback();
+
+            throw($e);
         }
     }
 }
