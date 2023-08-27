@@ -215,4 +215,11 @@ class Permission
 
         return $this;
     }
+    
+    public function getEndDate(): DateTimeInterface
+    {
+        return $this
+            ->createdAt
+            ->add(new DateInterval('P' . $this->duration . 'D'));
+    }
 }

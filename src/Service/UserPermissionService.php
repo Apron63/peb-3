@@ -18,7 +18,7 @@ class UserPermissionService
         private readonly MailingQueueRepository $mailingQueueRepository,
         private readonly DashboardService $dashboardService,
         private readonly ConfigService $configService,
-    ) { }
+    ) {}
 
     public function checkPermissionForUser(Permission $permission, User $user, bool $canChangeStage): bool
     {
@@ -41,7 +41,7 @@ class UserPermissionService
 
                 if (null !== $permission->getUser()->getEmail()) {
                     $mailingQueue = new MailingQueue;
-    
+
                     $content = $this->dashboardService->replaceValue(
                         $this->configService->getConfigValue('userHasActivatedPermission'),
                         [
@@ -50,8 +50,9 @@ class UserPermissionService
                         ],
                         [
                             $permission->getCourse()->getName(),
-                            date('d.m.Y', strtotime('+' . $permission->getDuration() . ' days')),
-                        ]
+                            $permission->getEndDate()->format('d.m.Y'),
+                        ],
+                        $permission->getCreatedBy()
                     );
 
                     $mailingQueue
