@@ -102,12 +102,12 @@ class Permission
         return $this;
     }
 
-    public function getActivatedAt(): ?\DateTimeInterface
+    public function getActivatedAt(): ?DateTimeInterface
     {
         return $this->activatedAt;
     }
 
-    public function setActivatedAt(?\DateTimeInterface $activatedAt): self
+    public function setActivatedAt(?DateTimeInterface $activatedAt): self
     {
         $this->activatedAt = $activatedAt;
 
@@ -144,12 +144,12 @@ class Permission
         return $this->createdAt->add($interval) > new DateTime();
     }
 
-    public function getLastAccess(): ?\DateTimeInterface
+    public function getLastAccess(): ?DateTimeInterface
     {
         return $this->lastAccess;
     }
 
-    public function setLastAccess(?\DateTimeInterface $lastAccess): self
+    public function setLastAccess(?DateTimeInterface $lastAccess): self
     {
         $this->lastAccess = $lastAccess;
 

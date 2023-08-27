@@ -52,7 +52,7 @@ class CheckPermissionExpiresCommand extends Command
                 ],
                 [
                     $permission->getCourse()->getName(),
-                    date('d.m.Y', strtotime('+' . $permission->getDuration() . ' days', $permission->getActivatedAt()->getTimestamp())),
+                    date('d.m.Y', strtotime('+' . $permission->getDuration() . ' days', $permission->getCreatedAt()->getTimestamp())),
                 ],
                 $permission->getCreatedBy()
             );

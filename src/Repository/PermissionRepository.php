@@ -58,7 +58,7 @@ class PermissionRepository extends ServiceEntityRepository
                 p.timeSpent,
                 c.shortName AS shortName,
                 c.id as courseId,
-                CASE WHEN p.activatedAt IS NULL OR (DateDiff(Now(), p.activatedAt) <= p.duration)
+                CASE WHEN DateDiff(Now(), p.createdAt) <= p.duration
                     THEN 1
                     ELSE 0
                     END AS isActive
@@ -75,7 +75,7 @@ class PermissionRepository extends ServiceEntityRepository
                 SELECT p FROM App\Entity\Permission p
                 WHERE p.user = :user
                 AND p.course = :course
-                AND (p.activatedAt IS NULL OR DateDiff(Now(), p.activatedAt) <= p.duration)
+                AND DateDiff(Now(), p.createedAt) <= p.duration
                 ORDER BY p.createdAt DESC
             ')
             ->setMaxResults(1)
@@ -89,7 +89,7 @@ class PermissionRepository extends ServiceEntityRepository
     {
         return $this->createQueryBuilder('p')
             ->where('p.user = :user')
-            ->andWhere('p.activatedAt IS NULL OR DateDiff(Now(), p.activatedAt) <= p.duration')
+            ->andWhere('DateDiff(Now(), p.createdAt) <= p.duration')
             ->setParameter('user', $user)
             ->getQuery()
             ->getResult();
@@ -104,8 +104,7 @@ class PermissionRepository extends ServiceEntityRepository
             ->createQueryBuilder('p')
             ->join('p.user', 'u')
             ->where('u.email IS NOT NULL')
-            ->andwhere('p.activatedAt IS NOT NULL')
-            ->andWhere('DateDiff(Now(), p.activatedAt) = p.duration - 5')
+            ->andWhere('DateDiff(Now(), p.createdAt) = p.duration - 5')
             ->getQuery()
             ->getResult();
     }
@@ -159,63 +158,4 @@ class PermissionRepository extends ServiceEntityRepository
 
         $query->execute();
     }
-
-    // public function getUserSearchQuery(?array $criteria, bool $forReport = false): AbstractQuery
-    // {
-    //     $queryBuilder = $this->createQueryBuilder('p');
-
-    //     $queryBuilder
-    //         ->select('p.id AS permissionId, u.id AS userId, u.login, u.fullName, p.lastAccess,
-    //             c.shortName, c.name, p.duration, p.createdAt, u.organization, u.active, p.activatedAt, p.stage,
-    //             u.position, u.plainPassword
-    //         ')
-    //         ->leftJoin('p.user', 'u')
-    //         ->leftJoin('p.course', 'c')
-    //         ->orderBy('u.login');
-
-    //     if (isset($criteria['login']) && $criteria['login']) {
-    //         $queryBuilder->andWhere('u.login LIKE :login')
-    //             ->setParameter('login', "{$criteria['login']}%");
-    //     }
-    //     if (isset($criteria['name']) && $criteria['name']) {
-    //         $queryBuilder->andWhere('u.fullName LIKE :name')
-    //             ->setParameter('name', "{$criteria['name']}%");
-    //     }
-    //     if (isset($criteria['organization']) && $criteria['organization']) {
-    //         $queryBuilder->andWhere('u.organization LIKE :organization')
-    //             ->setParameter('organization', "%{$criteria['organization']}%");
-    //     }
-    //     if (isset($criteria['position']) && $criteria['position']) {
-    //         $queryBuilder->andWhere('u.position LIKE :position')
-    //             ->setParameter('position', "%{$criteria['position']}%");
-    //     }
-    //     if (isset($criteria['orderNumber']) && $criteria['orderNumber']) {
-    //         $queryBuilder->andWhere('p.orderNom = :orderNumber')
-    //             ->setParameter('orderNumber', $criteria['orderNumber']);
-    //     }
-
-    //     if (isset($criteria['startPeriod']) && $criteria['startPeriod']) {
-    //         $queryBuilder->andWhere('p.createdAt >= :startPeriod')
-    //             ->setParameter('startPeriod', (new DateTime($criteria['startPeriod']))->modify('today'));
-    //     }
-
-    //     if (isset($criteria['endPeriod']) && $criteria['endPeriod']) {
-    //         $queryBuilder->andWhere('p.createdAt <= :endPeriod')
-    //             ->setParameter(
-    //                 'endPeriod',
-    //                 (new DateTime($criteria['endPeriod']))->modify('tomorrow')->sub(new DateInterval('PT1S'))
-    //             );
-    //     }
-
-    //     if (isset($criteria['course']) && $criteria['course']) {
-    //         $queryBuilder->andWhere('p.course IN (:course)')
-    //             ->setParameter('course', $criteria['course']);
-    //     }
-
-    //     if ($forReport) {
-    //         $queryBuilder->orderBy('p.course');
-    //     }
-
-    //     return $queryBuilder->getQuery();
-    // }
 }
