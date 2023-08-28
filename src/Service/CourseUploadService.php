@@ -86,10 +86,14 @@ class CourseUploadService
         $reader = new XMLReader();
         $reader->open($path . '/' . $this->originalFilename . '.xml');
 
+        $this->data = [];
+        $this->materials = [];
+
         while ($reader->read()) {
             if ($reader->nodeType === XMLReader::ELEMENT) {
                 /** @var DOMElement $dom */
                 $dom = $reader->expand();
+                
                 if ($dom === false) {
                     continue;
                 }
@@ -99,10 +103,12 @@ class CourseUploadService
                     switch ($child->nodeName) {
                         case 'my:curs':
                             $this->courseName = $child->nodeValue;
+
                             break;
                         case 'my:tktext':
                             $this->data[++$themeNom]['theme']['name'] = $child->nodeValue;
                             $questionNom = 0;
+
                             break;
                         case 'my:materials':
                             foreach ($child->childNodes as $mNode) {
@@ -112,12 +118,15 @@ class CourseUploadService
                                             switch ($mChNode->nodeName) {
                                                 case 'my:name':
                                                     $this->materials[++$materialsNom]['name'] = $mChNode->nodeValue;
+
                                                     break;
                                                 case 'my:filename':
                                                     $this->materials[$materialsNom]['file'] = $mChNode->nodeValue;
+
                                                     break;
                                             }
                                         }
+
                                         break;
                                 }
                             }
@@ -128,6 +137,7 @@ class CourseUploadService
                                 if (!isset($chNode->tagName)) {
                                     continue;
                                 }
+
                                 switch ($chNode->tagName) {
                                     case 'my:qtext':
                                         $this->data[$themeNom]['questions'][++$questionNom]['qText'] = trim($chNode->nodeValue);
@@ -169,6 +179,7 @@ class CourseUploadService
                                                     break;
                                             }
                                         }
+
                                         break;
                                     case 'my:qhelp':
                                         $this->data[$themeNom]['questions'][$questionNom]['hText'] = trim($chNode->nodeValue);
@@ -177,11 +188,11 @@ class CourseUploadService
                                         if (null !== $image) {
                                             $this->data[$themeNom]['questions'][$questionNom]['hText'] .= $image;
                                         }
+
                                         break;
-                                    case 'img':
-                                        dd($chNode->nodeValue);
                                 }
                             }
+
                             break;
                     }
                 }
