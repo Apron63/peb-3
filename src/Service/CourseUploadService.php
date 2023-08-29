@@ -130,6 +130,7 @@ class CourseUploadService
                                         break;
                                 }
                             }
+
                             break;
                         case 'my:question':
                             $aNom = 0;
@@ -141,9 +142,15 @@ class CourseUploadService
                                 switch ($chNode->tagName) {
                                     case 'my:qtext':
                                         $this->data[$themeNom]['questions'][++$questionNom]['qText'] = trim($chNode->nodeValue);
+                                        
+                                        if (empty($this->data[$themeNom]['questions'][$questionNom]['qText'])) {
+                                            $this->data[$themeNom]['questions'][$questionNom]['qText'] = $questionNom . '.';
+                                        }
+                                        
                                         $this->data[$themeNom]['questions'][$questionNom]['type'] = 0;
 
                                         $image = $this->searchImage($chNode);
+
                                         if (null !== $image) {
                                             $this->data[$themeNom]['questions'][$questionNom]['qText'] .= $image;
                                         }
@@ -158,7 +165,12 @@ class CourseUploadService
                                                 case 'my:atext':
                                                     $this->data[$themeNom]['questions'][$questionNom]['answer'][$aNom]['aText'] = trim($row->nodeValue);
 
+                                                    if (empty($this->data[$themeNom]['questions'][$questionNom]['answer'][$aNom]['aText'])) {
+                                                        $this->data[$themeNom]['questions'][$questionNom]['answer'][$aNom]['aText'] = $aNom . '.';
+                                                    }
+                                                    
                                                     $image = $this->searchImage($row);
+
                                                     if (null !== $image) {
                                                         $this->data[$themeNom]['questions'][$questionNom]['answer'][$aNom]['aText'] .= $image;
                                                     }
@@ -176,6 +188,7 @@ class CourseUploadService
                                                     } elseif ($row->nodeValue === 'Неправильный ответ') {
                                                         $this->data[$themeNom]['questions'][$questionNom]['answer'][++$aNom]['aStatus'] = false;
                                                     }
+
                                                     break;
                                             }
                                         }
@@ -185,6 +198,7 @@ class CourseUploadService
                                         $this->data[$themeNom]['questions'][$questionNom]['hText'] = trim($chNode->nodeValue);
 
                                         $image = $this->searchImage($chNode);
+
                                         if (null !== $image) {
                                             $this->data[$themeNom]['questions'][$questionNom]['hText'] .= $image;
                                         }
@@ -235,8 +249,15 @@ class CourseUploadService
     
                     if ($tag === 'img') {
                         foreach($child->attributes as $attribute) {
-                            if ($attribute->name === 'src') {
+                            if (
+                                $attribute->name === 'src' 
+                                && false === strpos($attribute->value, 'msoinline')
+                            ) {
                                 $image = '<br><img src="' . $attribute->value . '">';
+
+                                break;
+                            } elseif ($attribute->name === 'inline') {
+                                $image = '<br><img src="data:image.jpeg;base64,' . $attribute->value . '">';
 
                                 break;
                             }
