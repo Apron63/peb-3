@@ -14,6 +14,7 @@ use App\Entity\CourseTheme;
 use Doctrine\ORM\AbstractQuery;
 use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\Persistence\ManagerRegistry;
+use Symfony\Component\String\UnicodeString;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 
 /**
@@ -240,9 +241,12 @@ class CourseRepository extends ServiceEntityRepository
     
             // Материалы
             foreach ($materials as $material) {
+
+                $shortMaterialName = $this->shrinkMaterialName($material['name']);
+
                 $this->getEntityManager()->getConnection()->executeQuery("
                     INSERT INTO course_info (id, course_id, name, file_name)
-                    VALUES (NULL, {$courseId}, '{$material['name']}', '{$material['file']}')
+                    VALUES (NULL, {$courseId}, '{$shortMaterialName}', '{$material['file']}')
                 ");
             }
 
@@ -252,5 +256,21 @@ class CourseRepository extends ServiceEntityRepository
 
             throw($e);
         }
+    }
+
+    // TODO Вынести в сервис запись данных
+    private function shrinkMaterialName(string $longName): string
+    {
+        $result = $longName;
+
+        if (mb_strlen($longName) > 1000) {
+
+            $shortName = (new UnicodeString($longName))->slice(0, 1000);
+            $lastSpacePosition = $shortName->indexOfLast(' ');
+
+            $result = $shortName->slice(0, $lastSpacePosition)->toString();
+        }
+
+        return $result;
     }
 }
