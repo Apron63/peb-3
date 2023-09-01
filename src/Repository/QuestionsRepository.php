@@ -3,10 +3,10 @@
 namespace App\Repository;
 
 use App\Entity\Course;
+use Doctrine\ORM\Query;
 use App\Entity\Questions;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Doctrine\ORM\AbstractQuery;
 use Doctrine\Persistence\ManagerRegistry;
+use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 
 /**
  * @extends ServiceEntityRepository<Questions>
@@ -65,7 +65,7 @@ class QuestionsRepository extends ServiceEntityRepository
         return $result;
     }
 
-    public function getQuestionQuery(Course $course, ?int $parentId = null): AbstractQuery
+    public function getQuestionQuery(Course $course, ?int $parentId = null): Query
     {
         $queryBuilder = $this->createQueryBuilder('q')
             ->where('q.course = :course')

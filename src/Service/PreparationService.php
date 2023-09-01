@@ -11,6 +11,10 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class PreparationService
 {
+    private const MAX_PAGES_IN_LINE = 30;
+    private const PAGES_AT_ONCE = 5;
+    private const PAGES_CHANGE_PAGINATOR = 4;
+
     public function __construct(
         private readonly QuestionsRepository $questionsRepository,
         private readonly AnswerRepository $answerRepository,
@@ -70,20 +74,12 @@ class PreparationService
             ];
         }
 
-        if ($permission->getCourse()->getType() === Course::INTERACTIVE) {
-            $url = $this->urlGenerator->generate('app_frontend_preparation_interactive', ['id' => $permission->getId()]);
-        } else {
-            $url = $this->urlGenerator->generate('app_frontend_preparation_one', ['id' => $permission->getId(), 'themeId' => $themeId]);
-        }
-
         return [
             'permissionId' => $permission->getId(),
             'permissionLastAccess' => $permission->getLastAccess()->getTimestamp(),
             'questions' => $result,
-            'page' => $page,
             'perPage' => $perPage,
-            'maxPages' => $maxPages,
-            'url' => $url,
+            'paginator' => $this->preparePaginator($permission, $page, $perPage, $maxPages, $themeId),
         ];
     }
     
@@ -154,5 +150,139 @@ class PreparationService
             'maxPages' => $maxPages,
             'url' => $url,
         ];
+    }
+
+    private function preparePaginator(Permission $permission, int $page, int $perPage, int $maxPages, ?int $themeId = null): array
+    {
+        $paginator = [];
+
+        if ($maxPages > self::MAX_PAGES_IN_LINE) {
+            if ($page <= self::PAGES_CHANGE_PAGINATOR) {
+                for ($index = 1; $index <= self::PAGES_AT_ONCE; $index ++) {
+                    $paginator[] = [
+                        'url' => $this->urlGenerator->generate('app_frontend_preparation_one', [
+                            'id' => $permission->getId(), 
+                            'themeId' => $themeId, 
+                            'page' => $index,
+                            'perPage' => $perPage,
+                        ]),
+                        'title' => $index,
+                        'isActive' => $page === $index,
+                    ];
+                }
+
+                $paginator[] = [
+                    'url' => null,
+                    'title' => '...',
+                    'isActive' => true,
+                ];
+                
+                $paginator[] = [
+                    'url' => $this->urlGenerator->generate('app_frontend_preparation_one', [
+                        'id' => $permission->getId(), 
+                        'themeId' => $themeId, 
+                        'page' => $maxPages,
+                        'perPage' => $perPage,
+                    ]),
+                    'title' => $maxPages,
+                    'isActive' => false,
+                ];
+                
+            } elseif ($maxPages - $page < self::PAGES_CHANGE_PAGINATOR) {
+                $paginator[] = [
+                    'url' => $this->urlGenerator->generate('app_frontend_preparation_one', [
+                        'id' => $permission->getId(), 
+                        'themeId' => $themeId, 
+                        'page' => 1,
+                        'perPage' => $perPage,
+                    ]),
+                    'title' => 1,
+                    'isActive' => false,
+                ];
+
+                $paginator[] = [
+                    'url' => null,
+                    'title' => '...',
+                    'isActive' => true,
+                ];
+
+                for ($index = $maxPages - self::PAGES_AT_ONCE + 1; $index <= $maxPages; $index ++) {
+                    $paginator[] = [
+                        'url' => $this->urlGenerator->generate('app_frontend_preparation_one', [
+                            'id' => $permission->getId(), 
+                            'themeId' => $themeId, 
+                            'page' => $index,
+                            'perPage' => $perPage,
+                        ]),
+                        'title' => $index,
+                        'isActive' => $page === $index,
+                    ];
+                }
+
+            } else {
+                $paginator[] = [
+                    'url' => $this->urlGenerator->generate('app_frontend_preparation_one', [
+                        'id' => $permission->getId(), 
+                        'themeId' => $themeId, 
+                        'page' => 1,
+                        'perPage' => $perPage,
+                    ]),
+                    'title' => 1,
+                    'isActive' => false,
+                ];
+
+                $paginator[] = [
+                    'url' => null,
+                    'title' => '...',
+                    'isActive' => true,
+                ];
+
+                for ($index = $page - self::PAGES_CHANGE_PAGINATOR + 2; $index <=  $page + self::PAGES_CHANGE_PAGINATOR - 2; $index ++) {
+                    $paginator[] = [
+                        'url' => $this->urlGenerator->generate('app_frontend_preparation_one', [
+                            'id' => $permission->getId(), 
+                            'themeId' => $themeId, 
+                            'page' => $index,
+                            'perPage' => $perPage,
+                        ]),
+                        'title' => $index,
+                        'isActive' => $page === $index,
+                    ];
+                }
+                
+                $paginator[] = [
+                    'url' => null,
+                    'title' => '...',
+                    'isActive' => true,
+                ];
+
+                $paginator[] = [
+                    'url' => $this->urlGenerator->generate('app_frontend_preparation_one', [
+                        'id' => $permission->getId(), 
+                        'themeId' => $themeId, 
+                        'page' => $maxPages,
+                        'perPage' => $perPage,
+                    ]),
+                    'title' => $maxPages,
+                    'isActive' => false,
+                ];
+
+            }
+        } else {
+            for ($index = 1; $index <= $maxPages; $index ++) {
+                $paginator[] = [
+                    'url' => $this->urlGenerator->generate('app_frontend_preparation_one', [
+                        'id' => $permission->getId(), 
+                        'themeId' => $themeId, 
+                        'page' => $index,
+                        'perPage' => $perPage,
+                    ]),
+                    'title' => $index,
+                    'isActive' => $page === $index
+                ];
+            }
+        }
+
+        return $paginator;
     }
 }
