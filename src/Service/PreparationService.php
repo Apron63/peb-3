@@ -74,11 +74,18 @@ class PreparationService
             ];
         }
 
+        if ($permission->getCourse()->getType() === Course::INTERACTIVE) {
+            $url = $this->urlGenerator->generate('app_frontend_preparation_interactive', ['id' => $permission->getId()]);
+        } else {
+            $url = $this->urlGenerator->generate('app_frontend_preparation_one', ['id' => $permission->getId(), 'themeId' => $themeId]);
+        }
+
         return [
             'permissionId' => $permission->getId(),
             'permissionLastAccess' => $permission->getLastAccess()->getTimestamp(),
             'questions' => $result,
             'perPage' => $perPage,
+            'url' => $url,
             'paginator' => $this->preparePaginator($permission, $page, $perPage, $maxPages, $themeId),
         ];
     }
