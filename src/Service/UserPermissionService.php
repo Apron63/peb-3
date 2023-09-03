@@ -9,6 +9,7 @@ use App\Entity\MailingQueue;
 use App\Entity\ModuleSection;
 use App\Repository\PermissionRepository;
 use App\Repository\MailingQueueRepository;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class UserPermissionService
 {
@@ -20,8 +21,12 @@ class UserPermissionService
         private readonly ConfigService $configService,
     ) {}
 
-    public function checkPermissionForUser(Permission $permission, User $user, bool $canChangeStage): bool
+    public function checkPermissionForUser(Permission $permission, ?User $user, bool $canChangeStage): bool
     {
+        if (! $user instanceof User) {
+            throw new NotFoundHttpException('User Not Found');
+        }
+
         $timeNow = new DateTime();
 
         $permissions = $this->permissionRepository->getPermissionQuery($user)->getResult();
