@@ -75,7 +75,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?self $createdBy = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    private ?string $image = null;
+    private ?string $image = null; 
+    
+    #[ORM\Column(length: 50, nullable: true)]
+    private ?string $sessionId = null;
 
     public function getId(): ?int
     {
@@ -292,6 +295,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setImage(?string $image): self
     {
         $this->image = $image;
+
+        return $this;
+    }
+
+    public function getSessionId(): ?string
+    {
+        return $this->sessionId;
+    }
+
+    public function setSessionId($sessionId): self
+    {
+        $this->sessionId = $sessionId;
 
         return $this;
     }

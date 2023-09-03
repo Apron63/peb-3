@@ -35,7 +35,7 @@ class LoginFormAuthenticator extends AbstractLoginFormAuthenticator
         private readonly UrlGeneratorInterface $urlGenerator,
         private readonly CsrfTokenManagerInterface $csrfTokenManager,
         private readonly UserPasswordHasherInterface $passwordEncoder,
-        private readonly Security $security
+        private readonly Security $security,
     ) {}
 
     public function supports(Request $request): bool
