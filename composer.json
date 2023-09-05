@@ -46,7 +46,6 @@
         "symfony/web-link": "6.3.*",
         "symfony/webpack-encore-bundle": "^2.0",
         "symfony/yaml": "6.3.*",
-        "symfony/http-kernel": "6.3.*",
         "symfony/http-foundation": "6.3.*",
         "symfony/error-handler": "6.3.*",
         "symfony/security-http": "6.3.*",
@@ -116,6 +115,7 @@
         "symfony/maker-bundle": "^1.48",
         "symfony/phpunit-bridge": "^6.3",
         "symfony/stopwatch": "6.3.*",
-        "symfony/web-profiler-bundle": "6.3.*"
+        "symfony/web-profiler-bundle": "6.3.*",
+        "symfony/http-kernel": "6.3.*"
     }
 }
