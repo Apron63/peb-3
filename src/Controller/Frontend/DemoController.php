@@ -3,27 +3,26 @@
 namespace App\Controller\Frontend;
 
 use App\Entity\Course;
-use App\Entity\DemoLogger;
 use App\Entity\CourseTheme;
-use App\Service\DemoService;
+use App\Entity\DemoLogger;
 use App\Entity\ModuleSection;
-use App\Service\CourseService;
-use App\Service\PreparationService;
-use App\Repository\CourseRepository;
-use App\Repository\TicketRepository;
 use App\Repository\CourseInfoRepository;
-use App\Repository\DemoLoggerRepository;
+use App\Repository\CourseRepository;
 use App\Repository\CourseThemeRepository;
+use App\Repository\DemoLoggerRepository;
+use App\Repository\ModuleSectionPageRepository;
+use App\Service\CourseService;
+use App\Service\DemoPreparationService;
+use App\Service\DemoService;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\Cookie;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use App\Repository\ModuleSectionPageRepository;
-use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\BinaryFileResponse;
-use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class DemoController extends AbstractController
 {
@@ -33,9 +32,8 @@ class DemoController extends AbstractController
         private readonly CourseService $courseService,
         private readonly ModuleSectionPageRepository $moduleSectionPageRepository,
         private readonly CourseThemeRepository $courseThemeRepository,
-        private readonly PreparationService $preparationService,
+        private readonly DemoPreparationService $demoPreparationService,
         private readonly DemoService $demoService,
-        private readonly TicketRepository $ticketRepository,
         private readonly DemoLoggerRepository $demoLoggerRepository,
         private readonly UrlGeneratorInterface $urlGenerator,
     ) {}
@@ -53,13 +51,13 @@ class DemoController extends AbstractController
     #[Route('/demo/{id<\d+>}/', name: 'app_demo_course')]
     public function getCourse(Course $course): Response
     {
-        if (!$course->isForDemo()) {
+        if (! $course->isForDemo()) {
             throw new NotFoundHttpException();
         }
 
         $courseInfo = $this->courseInfoRepository->getCourseInfos($course);
 
-        if ($course->getType() === Course::CLASSC) {
+        if (Course::CLASSC === $course->getType()) {
             $themeId = $this->courseService->getClassicCourseTheme($course);
 
             $hasMultipleThemes = false;
@@ -84,14 +82,14 @@ class DemoController extends AbstractController
     #[Route('/demo/section/{id<\d+>}/', name: 'app_demo_module_section')]
     public function getSection(ModuleSection $section, Request $request): Response
     {
-        if (!$section->getModule()->getCourse()->isForDemo()) {
+        if (! $section->getModule()->getCourse()->isForDemo()) {
             throw new NotFoundHttpException();
         }
 
-        if ($section->getType() === ModuleSection::TYPE_TESTING) {
+        if (ModuleSection::TYPE_TESTING === $section->getType()) {
             $course = $section->getModule()->getCourse();
 
-            if ($course->getType() === Course::INTERACTIVE) {
+            if (Course::INTERACTIVE === $course->getType()) {
                 $url = $this->urlGenerator->generate('app_demo_preparation_interactive', ['id' => $course->getId()]);
             } else {
                 $url = $this->urlGenerator->generate('app_demo_preparation_course_many', ['id' => $course->getId()]);
@@ -105,20 +103,17 @@ class DemoController extends AbstractController
         $response->headers->setCookie(new Cookie('init', md5($sessionId), time() + 3600));
 
         $moduleSectionPages = $this->moduleSectionPageRepository->getmoduleSectionPages($section);
-        return $this->render(
-            'frontend/demo/_info-file.html.twig',
-            [
-                'moduleSection' => $section,
-                'moduleSectionPages' => $moduleSectionPages,
-            ],
-            $response
-        );
+
+        return $this->render('frontend/demo/_info-file.html.twig', [
+            'moduleSection' => $section,
+            'moduleSectionPages' => $moduleSectionPages,
+        ], $response);
     }
     
     #[Route('/demo/final-testing/{id<\d+>}/', name: 'app_demo_final_testing')]
     public function finalTesting(Course $course, Request $request): Response
     {
-        if (!$course->isForDemo()) {
+        if (! $course->isForDemo()) {
             throw new NotFoundHttpException();
         }
 
@@ -147,7 +142,7 @@ class DemoController extends AbstractController
 
         $response->headers->setCookie(new Cookie('loggerId', $logger->getLoggerId(), time() + 3600));
 
-        return $this->render('frontend/demo/_final-testing.html.twig',[
+        return $this->render('frontend/demo/_final-testing.html.twig', [
             'course' => $course,
             'data' => $this->demoService->getData($logger),
         ], $response);
@@ -156,7 +151,7 @@ class DemoController extends AbstractController
     #[Route('/demo/testing-next-step/{id<\d+>}/', name: 'app_demo_testing_next_step',  condition: 'request.isXmlHttpRequest()')]
     public function nextStep(Course $course, Request $request): JsonResponse
     {
-        if (!$course->isForDemo()) {
+        if (! $course->isForDemo()) {
             throw new NotFoundHttpException();
         }
 
@@ -210,13 +205,13 @@ class DemoController extends AbstractController
     #[Route('/demo/info-view/{fileName}/{moduleTitle}/{id<\d+>}/', name: 'app_demo_info_view')]
     public function getInfoView(string $fileName, string $moduleTitle, Course $course): Response
     {
-        if (!$course->isForDemo()) {
+        if (! $course->isForDemo()) {
             throw new NotFoundHttpException();
         }
 
         $infoName = $this->getParameter('course_upload_directory') . '/' . $course->getId() . '/' . $fileName;
 
-        if(!file_exists($infoName)) {
+        if(! file_exists($infoName)) {
             throw new NotFoundHttpException();
         }
 
@@ -226,19 +221,19 @@ class DemoController extends AbstractController
     #[Route('demo/preparation/{id<\d+>}/{themeId?}/', name: 'app_demo_preparation_course')]
     public function preparation(Course $course, Request $request, ?int $themeId = null): Response
     {
-        if (!$course->isForDemo()) {
+        if (! $course->isForDemo()) {
             throw new NotFoundHttpException();
         }
 
         if (null !== $themeId) {
             $courseTheme = $this->courseThemeRepository->find($themeId);
 
-            if (!$courseTheme instanceof CourseTheme) {
+            if (! $courseTheme instanceof CourseTheme) {
                 throw new NotFoundHttpException('Course theme not found');
             }
         }
 
-        $data = $this->preparationService->getQuestionDataForCourse(
+        $data = $this->demoPreparationService->getQuestionDataForCourse(
             $course,
             $themeId,
             $request->get('page', 1),
@@ -253,7 +248,7 @@ class DemoController extends AbstractController
     #[Route('demo/preparation_many/{id<\d+>}/', name: 'app_demo_preparation_course_many')]
     public function preparationMany(Course $course): Response
     {
-        if (!$course->isForDemo()) {
+        if (! $course->isForDemo()) {
             throw new NotFoundHttpException();
         }
 
@@ -266,19 +261,19 @@ class DemoController extends AbstractController
     #[Route('demo/preparation_one/{id<\d+>}/{themeId}', name: 'app_demo_preparation_course_one')]
     public function preparationOne(Course $course, ?int $themeId, Request $request): Response
     {
-        if (!$course->isForDemo()) {
+        if (! $course->isForDemo()) {
             throw new NotFoundHttpException();
         }
 
         if (null !== $themeId) {
             $courseTheme = $this->courseThemeRepository->find($themeId);
 
-            if (!$courseTheme instanceof CourseTheme) {
+            if (! $courseTheme instanceof CourseTheme) {
                 throw new NotFoundHttpException('Course theme not found');
             }
         }
 
-        $data = $this->preparationService->getQuestionDataForCourse(
+        $data = $this->demoPreparationService->getQuestionDataForCourse(
             $course,
             $themeId,
             $request->get('page', 1),
@@ -293,11 +288,11 @@ class DemoController extends AbstractController
     #[Route('demo/preparation_interactive/{id<\d+>}/', name: 'app_demo_preparation_interactive')]
     public function preparationInteractive(Course $course, Request $request): Response
     {
-        if (!$course->isForDemo()) {
+        if (! $course->isForDemo()) {
             throw new NotFoundHttpException();
         }
 
-        $data = $this->preparationService->getQuestionDataForCourse(
+        $data = $this->demoPreparationService->getQuestionDataForCourse(
             $course,
             null,
             $request->get('page', 1),

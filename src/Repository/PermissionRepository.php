@@ -85,6 +85,9 @@ class PermissionRepository extends ServiceEntityRepository
         return $query->getOneOrNullResult();
     }
 
+    /**
+     * @return Permission[]
+     */
     public function getPermissionLeftMenu(User $user): array
     {
         return $this->createQueryBuilder('p')

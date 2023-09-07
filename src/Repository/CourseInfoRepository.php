@@ -40,6 +40,9 @@ class CourseInfoRepository extends ServiceEntityRepository
         }
     }
 
+    /**
+     * @return CourseInfo[]
+     */
     public function getCourseInfos(Course $course): array
     {
         return $this->createQueryBuilder('ci')
