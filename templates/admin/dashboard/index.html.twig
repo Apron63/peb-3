@@ -2,6 +2,12 @@
 
 {% block title %}Панель управления | Инструменты{% endblock %}
 
+{% block breadcrumbs %}
+    <a href="{{ path('admin_homepage') }}">Панель управления</a>
+    <span>/</span>
+    <span>Инструменты</span>
+{% endblock %}
+
 {% block content %}
 
     <h3>Инструменты</h3>
@@ -47,6 +53,9 @@
                             <td><p class="card-text text-end">{{ data.mailNotSended }}</p></td>
                         </tr>
                     </table>
+                    <div>
+                        <a href="{{ path('admin_dashboard_mail_list')}}" class="btn btn-sm btn-outline-primary">Подробнее...</a>
+                    </div>
                 </div>
             </div>
         </div>

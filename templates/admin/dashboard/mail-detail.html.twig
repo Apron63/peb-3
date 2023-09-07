@@ -1,0 +1,78 @@
+{% extends 'admin/base.html.twig' %}
+
+{% block title %}Панель управления | Детализация{% endblock %}
+
+{% block breadcrumbs %}
+    <a href="{{ path('admin_homepage') }}">Панель управления</a>
+    <span>/</span>
+    <a href="{{ path('admin_dashboard') }}">Инструменты</a>
+    <span>/</span>
+    <a href="{{ path('admin_dashboard_mail_list') }}">Рассылки</a>
+    <span>/</span>
+    <span>Детализация</span>
+{% endblock %}
+
+{% block content %}
+
+    <h3>Детализация</h3>
+
+    <div class="row">
+        <table class="table">
+            <tbody>
+                <tr>
+                    <td>
+                        Создано
+                    </td>
+                    <td>
+                        {{ mail.createdAt | date('d.m.Y H:i:s')}}
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Отправлено
+                    </td>
+                    <td>
+                        {% if mail.sendedAt is null %}
+                            -
+                        {% else %}
+                            {{ mail.sendedAt | date('d.m.Y H:i:s')}}
+                        {% endif %}
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Получатель
+                    </td>
+                    <td>
+                        {{ mail.user.fullName}}
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Enail
+                    </td>
+                    <td>
+                        {{ mail.user.email}}
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Тема
+                    </td>
+                    <td>
+                        {{ mail.subject }}
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Содержание
+                    </td>
+                    <td>
+                        {{ mail.content | raw }}
+                    </td>
+                </tr>
+            </tbody>
+        </table>    
+    </div>
+
+{% endblock %}

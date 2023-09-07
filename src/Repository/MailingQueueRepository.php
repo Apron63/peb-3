@@ -4,6 +4,7 @@ namespace App\Repository;
 
 use App\Entity\MailingQueue;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\Query;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -74,5 +75,14 @@ class MailingQueueRepository extends ServiceEntityRepository
             ->where('m.sendedAt IS NULL')
             ->getQuery()
             ->getSingleScalarResult();
+    }
+
+    public function getMailQuery(): Query
+    {
+        $queryBuilder = $this->createQueryBuilder('mq');
+
+        return $queryBuilder
+            ->orderBy('mq.createdAt', 'desc')
+            ->getQuery();
     }
 }

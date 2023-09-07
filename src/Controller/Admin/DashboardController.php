@@ -2,10 +2,13 @@
 
 namespace App\Controller\Admin;
 
-use App\Service\ConfigService;
-use App\Form\Admin\DashboardType;
-use App\Service\DashboardService;
 use App\Decorator\MobileController;
+use App\Entity\MailingQueue;
+use App\Form\Admin\DashboardType;
+use App\Repository\MailingQueueRepository;
+use App\Service\ConfigService;
+use App\Service\DashboardService;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -16,6 +19,8 @@ class DashboardController extends MobileController
     public function __construct(
         private readonly DashboardService $dashboardService,
         private readonly ConfigService $configService,
+        private readonly PaginatorInterface $paginator,
+        private readonly MailingQueueRepository $mailingQueueRepository,
     ) {}
 
     #[Route('/admin/dashboard/', name: 'admin_dashboard')]
@@ -52,6 +57,31 @@ class DashboardController extends MobileController
         return $this->mobileRender('admin/dashboard/index.html.twig', [
             'data' => $this->dashboardService->prepareData(),
             'form' => $form->createView(),
+        ]);
+    }
+
+    #[Route('/admin/dashboard/maillist/', name: 'admin_dashboard_mail_list')]
+    #[IsGranted('ROLE_SUPER_ADMIN')]
+    public function mailList(Request $request): Response
+    {
+
+        $pagination = $this->paginator->paginate(
+            $this->mailingQueueRepository->getMailQuery(),
+            $request->query->getInt('page', 1),
+            10
+        );
+
+        return $this->mobileRender('admin/dashboard/mail-list.html.twig', [
+            'pagination' => $pagination,
+        ]);
+    }
+    
+    #[Route('/admin/dashboard/maillist/detail/{id<\d+>}', name: 'admin_dashboard_mail_list_detail')]
+    #[IsGranted('ROLE_SUPER_ADMIN')]
+    public function mailListDetail(MailingQueue $mail): Response
+    {
+        return $this->mobileRender('admin/dashboard/mail-detail.html.twig', [
+            'mail' => $mail,
         ]);
     }
 }
