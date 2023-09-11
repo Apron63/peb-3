@@ -75,7 +75,7 @@ class PermissionRepository extends ServiceEntityRepository
                 SELECT p FROM App\Entity\Permission p
                 WHERE p.user = :user
                 AND p.course = :course
-                AND DateDiff(Now(), p.createedAt) <= p.duration
+                AND DateDiff(Now(), p.createdAt) <= p.duration
                 ORDER BY p.createdAt DESC
             ')
             ->setMaxResults(1)
