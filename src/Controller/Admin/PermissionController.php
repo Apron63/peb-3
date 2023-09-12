@@ -2,20 +2,22 @@
 
 namespace App\Controller\Admin;
 
-use DateTime;
-use App\Entity\User;
-use App\Entity\Permission;
-use App\Service\TestingService;
-use App\Repository\UserRepository;
 use App\Decorator\MobileController;
 use App\Entity\Logger;
+use App\Entity\Permission;
+use App\Entity\User;
+use App\Form\Admin\PermissionBatchCreateType;
 use App\Form\Admin\PermissionEditType;
 use App\Repository\PermissionRepository;
+use App\Repository\UserRepository;
+use App\Service\BatchCreatePermissionService;
+use App\Service\TestingService;
+use DateTime;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 class PermissionController extends MobileController
@@ -24,6 +26,7 @@ class PermissionController extends MobileController
         private readonly PermissionRepository $permissionRepository,
         private readonly TestingService $testingService,
         private readonly UserRepository $userRepository,
+        private readonly BatchCreatePermissionService $batchCreatePermissionService,
     ) {}
 
     #[Route('/admin/permission/create/{id<\d+>}/', name: 'admin_permission_create')]
@@ -50,6 +53,43 @@ class PermissionController extends MobileController
 
         return $this->mobileRender('admin/permission/edit.html.twig', [
             'form' => $form->createView(),
+        ]);
+    }
+    
+    #[Route('/admin/permission/batch_create/{id<\d+>}/', name: 'admin_permission_batch_create')]
+    public function adminPermissionBatchCreate(Request $request, User $user): Response
+    {
+        $form = $this->createForm(PermissionBatchCreateType::class);
+
+        $data['createdAt'] = $form->get('createdAt')->getData();
+        if (null === $data['createdAt']) {
+            $data['createdAt'] = $form->get('createdAt')->setData(new DateTime());
+        }
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+
+            $data = [
+                'createdAt' => $form->get('createdAt')->getData(),
+                'duration' => $form->get('duration')->getData(),
+                'orderNom' => $form->get('orderNom')->getData(),
+                'course' => $form->get('course')->getData(),
+                'user' => $user,
+                'creator' => $this->getUser(),
+            ];
+
+            $this->batchCreatePermissionService->batchCreatePermission($data);
+
+            $this->addFlash('success', 'Доступы успешно созданы');
+            
+            return $this->redirect(
+                $this->generateUrl('admin_user_edit', ['id' => $user->getId()])
+            );
+        }
+
+        return $this->mobileRender('admin/permission/create-batch.html.twig', [
+            'form' => $form->createView(),
+            'user' => $user,
         ]);
     }
 

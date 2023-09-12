@@ -3,7 +3,6 @@
 namespace App\Form\Admin;
 
 use App\Entity\Course;
-use App\Entity\Permission;
 use App\Entity\Profile;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
@@ -14,12 +13,13 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class PermissionEditType extends AbstractType
+class PermissionBatchCreateType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
             ->add('createdAt', DateTimeType::class, [
+                'mapped' => false,
                 'widget' => 'single_text',
                 'label' => 'Создано',
                 'format' => 'dd.MM.yyyy',
@@ -35,6 +35,7 @@ class PermissionEditType extends AbstractType
                 ],
             ])
             ->add('duration', TextType::class, [
+                'mapped' => false,
                 'label' => 'Длительность',
                 'attr' => [
                     'class' => 'form-control',
@@ -47,6 +48,7 @@ class PermissionEditType extends AbstractType
                 ],
             ])
             ->add('orderNom', TextType::class, [
+                'mapped' => false,
                 'required' => false,
                 'label' => 'Заказ',
                 'attr' => [
@@ -60,14 +62,17 @@ class PermissionEditType extends AbstractType
                 ],
             ])
             ->add('course', EntityType::class, [
+                'mapped' => false,
                 'class' => Course::class,
                 'label' => 'Курс',
+                'multiple' => true,
                 'attr' => [
                     'class' => 'form-select',
                     'placeholder' => 'Курс',
                     'onfocus' => 'this.placeholder = ""',
                     'onblur' => 'this.placeholder = "Курс"',
                     'multiple' => 'multiple',
+                    'size' => 10,
                 ],
                 'label_attr' => [
                     'class' => 'col-sm-2 col-form-label'
@@ -116,24 +121,8 @@ class PermissionEditType extends AbstractType
                     'class' => 'col-sm-2 col-form-label'
                 ],
             ])
-            ->add('activatedAt', DateTimeType::class, [
-                'widget' => 'single_text',
-                'required' => false,
-                'label' => 'Активировано',
-                'format' => 'dd.MM.yyyy',
-                'html5' => false,
-                'attr' => [
-                    'class' => 'form-control',
-                    'placeholder' => 'Не указано',
-                    'onfocus' => 'this.placeholder = ""',
-                    'onblur' => 'this.placeholder = "Не указано"',
-                ],
-                'label_attr' => [
-                    'class' => 'col-sm-2 col-form-label'
-                ],
-            ])
             ->add('submit', SubmitType::class, [
-                'label' => 'Сохранить',
+                'label' => 'Выполнить',
                 'attr' => [
                     'class' => 'btn btn-outline-dark',
                 ],
@@ -143,7 +132,7 @@ class PermissionEditType extends AbstractType
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
-            'data_class' => Permission::class,
+            'data_class' => null,
         ]);
     }
 }

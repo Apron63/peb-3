@@ -95,7 +95,7 @@ class Permission
         return $this->orderNom;
     }
 
-    public function setOrderNom(string $orderNom): self
+    public function setOrderNom(?string $orderNom): self
     {
         $this->orderNom = $orderNom;
 

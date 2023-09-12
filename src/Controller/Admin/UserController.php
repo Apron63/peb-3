@@ -2,13 +2,13 @@
 
 namespace App\Controller\Admin;
 
-use App\Entity\User;
-use App\Service\UserService;
-use App\Form\Admin\UserEditType;
-use App\Repository\UserRepository;
 use App\Decorator\MobileController;
+use App\Entity\User;
 use App\Form\Admin\ActionIntervalType;
+use App\Form\Admin\UserEditType;
 use App\Repository\PermissionRepository;
+use App\Repository\UserRepository;
+use App\Service\UserService;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
