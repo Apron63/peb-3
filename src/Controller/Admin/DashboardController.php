@@ -76,12 +76,23 @@ class DashboardController extends MobileController
         ]);
     }
     
-    #[Route('/admin/dashboard/maillist/detail/{id<\d+>}', name: 'admin_dashboard_mail_list_detail')]
+    #[Route('/admin/dashboard/maillist/detail/{id<\d+>}/', name: 'admin_dashboard_mail_list_detail')]
     #[IsGranted('ROLE_SUPER_ADMIN')]
     public function mailListDetail(MailingQueue $mail): Response
     {
         return $this->mobileRender('admin/dashboard/mail-detail.html.twig', [
             'mail' => $mail,
         ]);
+    }
+    
+    #[Route('/admin/dashboard/query_user/clear/', name: 'admin_dashboard_query_user_clear')]
+    #[IsGranted('ROLE_SUPER_ADMIN')]
+    public function queryUserClear(): Response
+    {
+        $this->dashboardService->queryUserClear();
+        
+        $this->addFlash('success', 'Очередь создания слушателей успешно очищена');
+
+        return $this->redirectToRoute('admin_dashboard');
     }
 }

@@ -59,6 +59,31 @@
                 </div>
             </div>
         </div>
+        
+        <div class="col-3">
+            <div class="card">
+                <div class="card-header">
+                    Очередь слушателей
+                </div>
+                <div class="card-body">
+                    <table>
+                        <tr>
+                            <td><p class="card-text">Ожидают создания: </p></td>
+                            <td><p class="card-text text-end">{{ data.queryJobNewCount }}</p></td>
+                        </tr>
+                    </table>
+                    <div>
+                        <a 
+                            href="{{ path('admin_dashboard_query_user_clear')}}" 
+                            class="btn btn-sm btn-outline-primary"
+                            onclick="return window.confirm('Подтвердите действие');"
+                        >
+                            Очистить
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
     <p></p>

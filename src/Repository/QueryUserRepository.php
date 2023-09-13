@@ -77,4 +77,26 @@ class QueryUserRepository extends ServiceEntityRepository
         
         return $query->getSingleScalarResult() === 0;
     }
+
+    public function getQueryJobNewCount(): int
+    {
+        $query = $this
+            ->getEntityManager()
+            ->createQuery('SELECT COUNT(q.id) FROM App\Entity\QueryUser q where q.result = :result')
+            ->setParameter('result', 'new');
+
+        return $query->getSingleScalarResult();
+    }
+
+    public function queryUserClear(): void
+    {
+        $queryBuilder = $this->createQueryBuilder('qu');
+
+        $queryBuilder
+            ->delete()
+            ->where('qu.result = :result')
+            ->setParameter('result', 'new')
+            ->getQuery()
+            ->execute();
+    }
 }

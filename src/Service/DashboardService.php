@@ -5,6 +5,7 @@ namespace App\Service;
 use App\Entity\User;
 use App\Repository\LoggerRepository;
 use App\Repository\MailingQueueRepository;
+use App\Repository\QueryUserRepository;
 use Symfony\Bundle\SecurityBundle\Security;
 
 class DashboardService
@@ -12,6 +13,7 @@ class DashboardService
     public function __construct(
         private readonly LoggerRepository $loggerRepository,
         private readonly MailingQueueRepository $mailingQueueRepository,
+        private readonly QueryUserRepository $queryUserRepository,
         private readonly Security $security,
     ) {}
 
@@ -27,7 +29,13 @@ class DashboardService
             'usedSpace' => $usedSpace,
             'mailCreatedToday' => $this->mailingQueueRepository->getMailCreatedToday(),
             'mailNotSended' => $this->mailingQueueRepository->getMailNotSended(),
+            'queryJobNewCount' => $this->queryUserRepository->getQueryJobNewCount(),
         ];
+    }
+
+    public function queryUserClear(): void
+    {
+        $this->queryUserRepository->queryUserClear();
     }
 
     public function replaceValue(string $source, array $from = [], array $target = [], User $user =  null): string
