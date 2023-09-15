@@ -11,6 +11,7 @@
             <th>Дата активации</th>
             <th>Посл. действие</th>
             <th>Дата экзамена</th>
+            <th>Длительность обучения</th>
             <th>Результат</th>
         </tr>
     </thead>
@@ -23,7 +24,7 @@
                 <tr>
                     <td></td>
                     <td>Курс</td>
-                    <td colspan="7">{{ row.name }}</td>
+                    <td colspan="8">{{ row.name }}</td>
                 </tr>
             {% endif %}
 
@@ -48,6 +49,7 @@
                         {{ row.lastExam | date('d.m.Y') }}    
                     {% endif %}
                 </td>
+                <td> {{ getSheduledTime(row.timeSpent) }}</td>
                 <td>{% if row.stage == 3 %}Сдано{% else %}Не сдано{% endif %}</td>
             </tr>
 

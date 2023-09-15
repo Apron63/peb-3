@@ -41,8 +41,8 @@ class TwigExtension extends AbstractExtension
         return $this->urlGenerator->generate('app_frontend_timing');
     }
 
-    public function getSheduledTime(int $timeInSeconds): string
+    public function getSheduledTime(?int $timeInSeconds): string
     {
-        return gmdate('H:i', $timeInSeconds);
+        return $timeInSeconds ? gmdate('H ч. i м.', $timeInSeconds) : '';
     }
 }

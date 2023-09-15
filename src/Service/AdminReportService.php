@@ -72,14 +72,15 @@ class AdminReportService
         $table = $section->addTable();
 
         $table->addRow();
-        $table->addCell(500)->addText('№');
-        $table->addCell(1000)->addText('Дата доступа');
-        $table->addCell(1500)->addText('ФИО');
-        $table->addCell(1500)->addText('Организация');
-        $table->addCell(1000)->addText('Логин');
-        $table->addCell(1000)->addText('Дата активации');
-        $table->addCell(1000)->addText('Посл. действие');
-        $table->addCell(1000)->addText('Дата экзамена');
+        $table->addCell(300)->addText('№');
+        $table->addCell(950)->addText('Дата доступа');
+        $table->addCell(1300)->addText('ФИО');
+        $table->addCell(1300)->addText('Организация');
+        $table->addCell(950)->addText('Логин');
+        $table->addCell(950)->addText('Дата активации');
+        $table->addCell(950)->addText('Посл. действие');
+        $table->addCell(950)->addText('Дата экзамена');
+        $table->addCell(1000)->addText('Длительность обучения');
         $table->addCell(1000)->addText('Результат');
 
         foreach($data as $row) {
@@ -92,18 +93,19 @@ class AdminReportService
                 $table->addCell(1000)->addText('Курс');    
                 $cell = $table->addCell();
                 $cell->addText($row['name']);
-                $cell->getStyle()->setGridSpan(7);
+                $cell->getStyle()->setGridSpan(8);
             }
 
             $table->addRow();
-            $table->addCell(500)->addText($rowNom++);
-            $table->addCell(1000)->addText($row['createdAt']?->format('d.m.Y'));
-            $table->addCell(1500)->addText($row['fullName']);
-            $table->addCell(1500)->addText($row['organization']);
-            $table->addCell(1000)->addText($row['login']);
-            $table->addCell(1000)->addText($row['activatedAt']?->format('d.m.Y'));
-            $table->addCell(1000)->addText($row['lastAccess']?->format('d.m.Y'));
-            $table->addCell(1000)->addText($row['lastExam']?->format('d.m.Y'));
+            $table->addCell(300)->addText($rowNom++);
+            $table->addCell(950)->addText($row['createdAt']?->format('d.m.Y'));
+            $table->addCell(1300)->addText($row['fullName']);
+            $table->addCell(1300)->addText($row['organization']);
+            $table->addCell(950)->addText($row['login']);
+            $table->addCell(950)->addText($row['activatedAt']?->format('d.m.Y'));
+            $table->addCell(950)->addText($row['lastAccess']?->format('d.m.Y'));
+            $table->addCell(950)->addText($row['lastExam']?->format('d.m.Y'));
+            $table->addCell(1000)->addText($row['timeSpent'] ? gmdate('H ч i м', $row['timeSpent']) : null);
             $table->addCell(1000)->addText($row['stage'] === Permission::STAGE_FINISHED ? 'Сдано' : 'Не сдано');
         }
 
@@ -132,7 +134,8 @@ class AdminReportService
         $activeWorksheet->setCellValue('F1', 'Дата активации');
         $activeWorksheet->setCellValue('G1', 'Посл. действие');
         $activeWorksheet->setCellValue('H1', 'Дата экзамена');
-        $activeWorksheet->setCellValue('I1', 'Результат');
+        $activeWorksheet->setCellValue('I1', 'Длительность обучения');
+        $activeWorksheet->setCellValue('J1', 'Результат');
 
         $line = 2;
 
@@ -146,10 +149,10 @@ class AdminReportService
                 $activeWorksheet->setCellValue('C' . $line, $row['name']);
                 $activeWorksheet->getStyle('C' . $line)->getAlignment()->setWrapText(true);
                 $activeWorksheet->getRowDimension($line)->setRowHeight(-1);
-                $activeWorksheet->mergeCells('C' . $line . ':I' . $line);
+                $activeWorksheet->mergeCells('C' . $line . ':J' . $line);
 
                 $activeWorksheet
-                    ->getStyle('A' . $line . ':I' . $line)
+                    ->getStyle('A' . $line . ':J' . $line)
                     ->getFill()
                     ->setFillType(Fill::FILL_SOLID)
                     ->getStartColor()
@@ -166,7 +169,11 @@ class AdminReportService
             $activeWorksheet->setCellValue('F' . $line, $row['activatedAt']?->format('d.m.Y'));
             $activeWorksheet->setCellValue('G' . $line, $row['lastAccess']?->format('d.m.Y'));
             $activeWorksheet->setCellValue('H' . $line, $row['lastExam']?->format('d.m.Y'));
-            $activeWorksheet->setCellValue('I' . $line, $row['stage'] === Permission::STAGE_FINISHED ? 'Сдано' : 'Не сдано');
+            $activeWorksheet->setCellValue('I' . $line, $row['timeSpent'] 
+                ? gmdate('H ч i мин', $row['timeSpent'])
+                : null
+            );
+            $activeWorksheet->setCellValue('J' . $line, $row['stage'] === Permission::STAGE_FINISHED ? 'Сдано' : 'Не сдано');
 
             $line++;
         }
@@ -177,7 +184,7 @@ class AdminReportService
             ],
         ];
 
-        $activeWorksheet->getStyle('A1:I' . $line - 1)->applyFromArray($styleArray, false);
+        $activeWorksheet->getStyle('A1:J' . $line - 1)->applyFromArray($styleArray, false);
 
         $activeWorksheet->getColumnDimension('A')->setAutoSize(true);
         $activeWorksheet->getColumnDimension('B')->setAutoSize(true);
@@ -188,6 +195,7 @@ class AdminReportService
         $activeWorksheet->getColumnDimension('G')->setAutoSize(true);
         $activeWorksheet->getColumnDimension('H')->setAutoSize(true);
         $activeWorksheet->getColumnDimension('I')->setAutoSize(true);
+        $activeWorksheet->getColumnDimension('J')->setAutoSize(true);
 
         $fileName = $this->reportUploadPath . '/' . (new DateTime())->format('d-m-Y_H_i_s') . '_' . uniqid() . '.xlsx';
 

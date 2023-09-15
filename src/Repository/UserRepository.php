@@ -113,7 +113,7 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         $queryBuilder
             ->select('p.id AS permissionId, u.id AS userId, u.login, u.fullName, p.lastAccess,
                 c.shortName, c.name, p.duration, p.createdAt, u.organization, u.active, p.activatedAt, p.stage,
-                u.position, u.plainPassword
+                u.position, u.plainPassword, p.timeSpent
             ')
             ->leftJoin(Permission::class, 'p', Join::WITH, 'p.user = u.id')
             ->leftJoin('p.course', 'c')
