@@ -27,7 +27,7 @@
                     <form class="support_form" form-elem="form" action="{{ path('app_frontend_support') }}" method="POST">
 
                         <label class="support_form_label{% if (form_errors(form.name)) is not empty %} error{% endif %}" form-elem="label">
-                            <div class="support_form_name">Ваше имя</div>
+                            <div class="support_form_name">ФИО полностью</div>
                             <input type="text" name="support[name]" class="support_form_input" form-elem="input-text" value="{{ form.vars.data.name }}">
                             <div class="support_form_error">{{ form_errors(form.name) }}</div>
                         </label>
