@@ -52,6 +52,19 @@ class CourseInfoRepository extends ServiceEntityRepository
             ->getResult();
     }
 
+    /**
+     * @return CourseInfo[]
+     */
+    public function getCourseInfoWhereNotEmpty(Course $course): array
+    {
+        return $this->createQueryBuilder('ci')
+            ->where('ci.course = :course')
+            ->andWhere('ci.name IS NOT NULL')
+            ->setParameter('course', $course->getId())
+            ->getQuery()
+            ->getResult();
+    }
+
     public function removeCourseInfoForCourse(Course $course): void
     {
         $query = $this->getEntityManager()
