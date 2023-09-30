@@ -59,7 +59,7 @@ class CourseInfoRepository extends ServiceEntityRepository
     {
         return $this->createQueryBuilder('ci')
             ->where('ci.course = :course')
-            ->andWhere('ci.name IS NOT NULL')
+            ->andWhere('ci.name != \'\'')
             ->setParameter('course', $course->getId())
             ->getQuery()
             ->getResult();
