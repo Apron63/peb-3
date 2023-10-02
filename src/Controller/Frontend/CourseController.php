@@ -38,7 +38,7 @@ class CourseController extends AbstractController
         $options = [
             'permission' => $permission,
             //'courseInfo' => $this->courseInfoRepository->getCourseInfoWhereNotEmpty($permission->getCourse()),
-            'courseInfo' => $this->courseInfoRepository->getCourseInfoWhereNotEmpty($permission->getCourse()),
+            'courseInfo' => $this->courseInfoRepository->findBy(['course' => $permission->getCourse()]),
             'courseProgress' => $this->courseService->checkForCourseStage($permission, true),
         ];
 
