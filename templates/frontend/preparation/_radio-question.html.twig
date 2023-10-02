@@ -17,7 +17,7 @@
         </label>    
     {% endfor %}
 
-    {% if item.help is not empty %}
+    {# {% if item.help is not empty %} #}
         <div class="control-questions_item_prompt_wrapper" test-form-elem="prompt-wrapper">
             <a class="control-questions_item_prompt_open" test-form-elem="prompt-open">подсказка</a>
             <div class="control-questions_item_prompt" test-form-elem="prompt">
@@ -25,7 +25,7 @@
                 {{ item.help | raw }}
             </div>
         </div>
-    {% endif %}
+    {# {% endif %} #}
 
     <div class="control-questions_item_buttons_wrapper">
         <button type="button" class="white-blue_button control-questions_item_button" data-form-id="question-{{ item.id }}" data-answer-type="{{ item.type }}">Ответить</button>
