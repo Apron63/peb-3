@@ -2,7 +2,7 @@ function openPopup() {
     let overlay = document.querySelector('[popup-element="overlay"]')
     let popup = document.querySelector('[popup-element="popup"]')
     overlay.classList.add('show')
-    setTimeout(function() {
+    setTimeout(function () {
         popup.classList.add('show')
     }, 300)
 }
@@ -12,9 +12,9 @@ function closePopup(event) {
     let popup = document.querySelector('[popup-element="popup"]')
     let popupCloseButton = document.querySelector('[popup-element="popup-close"]')
 
-    if(event.target.closest('[popup-element="popup"]') != popup || event.target == popupCloseButton){
+    if (event.target.closest('[popup-element="popup"]') != popup || event.target == popupCloseButton) {
         popup.classList.remove('show')
-        setTimeout(function() {
+        setTimeout(function () {
             overlay.classList.remove('show')
         }, 300)
     }
@@ -25,18 +25,18 @@ function openMenuAfterLoad(menu) {
     let menuItems = menu.querySelectorAll('[menu-elem="main-menu-item"]')
 
     menuItems.forEach(mainMenuElem => {
-        if(mainMenuElem.classList.contains('active')) {
+        if (mainMenuElem.classList.contains('active')) {
             let programsMenu = mainMenuElem.querySelector('[menu-elem="programs-menu"]')
-            
-            if(programsMenu) {
+
+            if (programsMenu) {
                 programsMenu.style.maxHeight = programsMenu.scrollHeight + 'px';
                 let programMenuItem = programsMenu.querySelectorAll('[menu-elem="programs-menu-item"]')
 
                 programMenuItem.forEach(program => {
-                    if(program.classList.contains('active')) {
+                    if (program.classList.contains('active')) {
                         let modulesMenu = program.querySelector('[menu-elem="modules-menu"]')
 
-                        if(modulesMenu) {
+                        if (modulesMenu) {
                             modulesMenu.style.maxHeight = modulesMenu.scrollHeight + 'px';
                             programsMenu.style.maxHeight = modulesMenu.scrollHeight + programsMenu.scrollHeight + 'px';
                         }
@@ -48,12 +48,12 @@ function openMenuAfterLoad(menu) {
 }
 
 // Открытие программ в боковом меню
-function openMenuPrograms(event){
+function openMenuPrograms(event) {
     let mainMenuItem = event.target.closest('[menu-elem="main-menu-item"]')
     let programsMenu = mainMenuItem.querySelector('[menu-elem="programs-menu"]')
 
     // Если кликаем по уже открытому пункту
-    if(mainMenuItem.classList.contains('active')){
+    if (mainMenuItem.classList.contains('active')) {
         mainMenuItem.classList.remove('active')
         programsMenu.style.maxHeight = 0; // Закрываем его
 
@@ -74,12 +74,12 @@ function openMenuPrograms(event){
             let elementMenuItem = element.closest('[menu-elem="main-menu-item"]')
             let elementProgramsMenu = elementMenuItem.querySelector('[menu-elem="programs-menu"]')
 
-            elementMenuItem.classList.remove('active') 
+            elementMenuItem.classList.remove('active')
             elementProgramsMenu.style.maxHeight = 0; // Закрываем их
 
             let elementProgramModulesMenu = elementProgramsMenu.querySelectorAll('[menu-elem="modules-menu"]')
             // Проходим по всем подпунктам с модулями
-            elementProgramModulesMenu.forEach(elem=> {
+            elementProgramModulesMenu.forEach(elem => {
                 let elemProgramItem = elem.closest('[menu-elem="programs-menu-item"]')
                 let elemProgramHeader = elemProgramItem.querySelector('[menu-elem="program-header"]')
                 // Закрываем их
@@ -90,7 +90,7 @@ function openMenuPrograms(event){
         });
 
         // Открываем нужный пункт
-        
+
         mainMenuItem.classList.add('active')
         programsMenu.style.maxHeight = programsMenu.scrollHeight + 'px';
         mainMenu.style.maxHeight = mainMenu.scrollHeight + programsMenu.scrollHeight + 'px';
@@ -98,13 +98,13 @@ function openMenuPrograms(event){
 }
 
 // Открытие модулей в программе
-function openMenuModules(event){
+function openMenuModules(event) {
     let programMenuItem = event.target.closest('[ menu-elem="programs-menu-item"]')
     let modulesMenu = programMenuItem.querySelector('[menu-elem="modules-menu"]')
     let programsMenu = programMenuItem.closest('[menu-elem="programs-menu"]')
 
     // Если кликаем по уже открытому модулю
-    if(programMenuItem.classList.contains('active')){
+    if (programMenuItem.classList.contains('active')) {
         programMenuItem.classList.remove('active')
         modulesMenu.style.maxHeight = 0; // Закрываем его
 
@@ -119,41 +119,41 @@ function openMenuModules(event){
             elementProgramItem.classList.remove('active')
             elementModulesMenu.style.maxHeight = 0;
         })
-        
+
         // Открываем нужный пункт
         programMenuItem.classList.add('active')
-        
+
         modulesMenu.style.maxHeight = modulesMenu.scrollHeight + 'px';
         programsMenu.style.maxHeight = modulesMenu.scrollHeight + programsMenu.scrollHeight + 'px';
         mainMenu.style.maxHeight = mainMenu.scrollHeight + programsMenu.scrollHeight + modulesMenu.scrollHeight + 'px';
-    }   
+    }
 }
 
 let mobileOpenMenuButton = document.querySelector('[menu-elem="mobile-open"]')
-if(mobileOpenMenuButton) {
+if (mobileOpenMenuButton) {
     mobileOpenMenuButton.addEventListener('click', event => {
-        
+
         let mainMenu = document.querySelector('[menu-elem="main-menu"]')
-        if(mainMenu.classList.contains('open')) {
+        if (mainMenu.classList.contains('open')) {
             mainMenu.classList.remove('open')
             mainMenu.style.maxHeight = 0;
         } else {
             mainMenu.classList.add('open')
             mainMenu.style.maxHeight = mainMenu.scrollHeight + 'px';
         }
-       
+
     })
 }
 
 
 let forms = document.querySelectorAll('[form-elem="form"]')
 
-if(forms.length > 0){
+if (forms.length > 0) {
     forms.forEach(form => {
         let textInputs = form.querySelectorAll('[form-elem="input-text"]')
 
         textInputs.forEach(input => {
-            if(input.value != ''){
+            if (input.value != '') {
                 input.closest('[form-elem="label"]').classList.add('active')
             }
         })
@@ -165,7 +165,7 @@ if(forms.length > 0){
         })
         form.addEventListener('focusout', event => {
             if (event.target.getAttribute('form-elem') == 'input-text') {
-                if(event.target.value == ''){
+                if (event.target.value == '') {
                     event.target.closest('[form-elem="label"]').classList.remove('active')
                 }
             }
@@ -176,19 +176,19 @@ if(forms.length > 0){
 
 let openPopupButton = document.querySelector('[element-action="open-popup"]')
 
-if(openPopupButton){
-    openPopupButton.addEventListener('click',  openPopup)
+if (openPopupButton) {
+    openPopupButton.addEventListener('click', openPopup)
 }
 
 
 let overlay = document.querySelector('[popup-element="overlay"]')
-
-overlay.addEventListener('click', closePopup)
-
+if (overlay) {
+    overlay.addEventListener('click', closePopup)
+}
 
 let mainMenu = document.querySelector('[menu-elem="main-menu"]')
 
-if(mainMenu) {
+if (mainMenu) {
     openMenuAfterLoad(mainMenu)
 }
 
@@ -211,35 +211,35 @@ if (programs) {
 
 let finalTestingLink = document.querySelector('[content-elem="final-testing"]')
 
-if(finalTestingLink) {
-    if(finalTestingLink.getAttribute('status') == 'not-passed'){
-        finalTestingLink.addEventListener('click',  openPopup)
+if (finalTestingLink) {
+    if (finalTestingLink.getAttribute('status') == 'not-passed') {
+        finalTestingLink.addEventListener('click', openPopup)
     }
 }
 
 let timer = document.querySelector('[test-elem="timer"]')
 
-if(timer) {
+if (timer) {
     let timerId = null;
     let endTimestamp = timer.getAttribute('end-time') * 1000
     let endDate = new Date(endTimestamp)
 
     let elemMinutes = timer.querySelector('[test-elem="minutes"]')
     let elemSeconds = timer.querySelector('[test-elem="seconds"]')
-    
+
 
     function countdownTimer() {
         let diff = endDate - new Date();
 
         if (diff <= 0) {
-          clearInterval(timerId);
+            clearInterval(timerId);
 
-          document.dispatchEvent(new Event('ticketTimeout'))
+            document.dispatchEvent(new Event('ticketTimeout'))
         }
-    
+
         let minutes = diff > 0 ? Math.floor(diff / 1000 / 60) % 60 : 0;
         let seconds = diff > 0 ? Math.floor(diff / 1000) % 60 : 0;
-    
+
         let formatMinutes = minutes < 10 ? '0' + minutes : minutes;
         let formatSeconds = seconds < 10 ? '0' + seconds : seconds;
 
@@ -250,18 +250,4 @@ if(timer) {
     countdownTimer()
 
     timerId = setInterval(countdownTimer, 1000);
-}
-
-
-let prompts = document.querySelectorAll('[test-form-elem="prompt-wrapper"]')
-
-if(prompts){
-    prompts.forEach(prompt => {
-        let promptOpen = prompt.querySelector('[test-form-elem="prompt-open"]')
-        let promptText = prompt.querySelector('[test-form-elem="prompt"]')
-
-        promptOpen.addEventListener('click', () => {
-            prompt.classList.add('open')
-        })
-    })
 }

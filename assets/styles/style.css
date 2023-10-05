@@ -935,6 +935,10 @@ img {
     margin-left: 15px;
 }
 
+.control-questions_mobile_ajax {
+    display: none;
+}
+
 /* /test-form */
 
 /* control questions */

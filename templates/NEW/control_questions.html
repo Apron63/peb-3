@@ -178,7 +178,7 @@
                     </nav>
                 </div>
                 <div class="content">
-                    <div class="control-questions">
+                    <div class="control-questions" control-questions-elem="wrapper">
                         <h1>Подготовка к аттестации</h1>
                         <div class="control-questions_display">
                             <div class="control-questions_display_count_wrapper">
@@ -206,7 +206,7 @@
                                 <a href="javascript:void(0)" class="control-questions_display_pages_item">в конец</a>
                             </div>
                         </div>
-                        <div class="control-questions_wrapper">
+                        <div class="control-questions_wrapper" control-questions-elem="inner">
                             <form class="control-questions_item" test-form-elem="form">
                                 <div class="test_form_question_wrapper">
                                     <div class="test_form_question_number">
@@ -323,7 +323,15 @@
                                     <div class="control-questions_item_result"></div>
                                 </div>
                             </form>
-                        </div> 
+                            <!-- Вставка новых вопросов будет здесь -->
+                        </div>
+                        <!-- Элемент для загрузки -->
+                        <div class="control-questions_mobile_ajax"
+                             control-questions-elem="ajax-trigger"
+                             data-url="{{ path('app_frontend_preparation_one_next_page') }}"
+                             data-page="2"
+                             data-per-page="20"></div>
+                        <!-- /Элемент для загрузки -->
                         <div class="control-questions_display">
                             <div class="control-questions_display_count_wrapper">
                                 <div class="control-questions_display_count_header">отображать по: </div>
@@ -351,7 +359,6 @@
                             </div>
                         </div>
                     </div>
-                    
                 </div>
             </div>
         </div>
@@ -368,5 +375,6 @@
         </div>
     </div>
     <script src="js/scripts.js"></script>
+    <script src="js/control_questions.js"></script>
 </body>
 </html>

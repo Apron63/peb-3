@@ -85,7 +85,10 @@ class PreparationService
             'permissionLastAccess' => $permission->getLastAccess()->getTimestamp(),
             'questions' => $result,
             'perPage' => $perPage,
+            'maxPages' => $maxPages,
+            'total' => $totalQuestions,
             'url' => $url,
+            'themeId' => $themeId,
             'paginator' => $this->preparePaginator($permission, $page, $perPage, $maxPages, $themeId),
         ];
     }

@@ -1,6 +1,6 @@
 import $ from 'jquery'
 
-$('.control-questions_item_button').on('click', function(e) {
+$(document).on('click', '.control-questions_item_button', function(e) {
     e.stopImmediatePropagation()
     
     let wrapperId = $(e.target).data('form-id')
