@@ -13,6 +13,7 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\LessThanOrEqual;
 
 class PermissionEditType extends AbstractType
 {
@@ -44,6 +45,9 @@ class PermissionEditType extends AbstractType
                 ],
                 'label_attr' => [
                     'class' => 'col-sm-2 col-form-label'
+                ],
+                'constraints' => [
+                    new LessThanOrEqual(Permission::MAX_DURATION),
                 ],
             ])
             ->add('orderNom', TextType::class, [

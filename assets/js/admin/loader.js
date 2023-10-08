@@ -52,6 +52,7 @@ $('#assignCourse').on('click', function(e) {
     e.stopImmediatePropagation
 
     let url = $('#assignCourse').data('check')
+
     $.ajax({
         url: url
     }).done(function (data) {
@@ -101,12 +102,19 @@ function assignUsersToLoader()
         
         $('#send-to-query').on('click', function () {
             let duration = $('#duration').val()
+
             if (duration === 0 || duration === '') {
                 alert('Не указана продолжительность доступа!')
                 return false
             }
+            
+            if (duration > 999) {
+                alert('Длительность не может превышать 999 дней !')
+                return false
+            }
         
             let course = $('#course-select').val()
+
             if (course == 0) {
                 alert('Не выбран курс!')
                 return false
@@ -121,9 +129,13 @@ function assignUsersToLoader()
                     $('#loading-content').addClass('loading-content');
                 },
             }).done(function (data) {
+                if (data.success === false) {
+                    location.reload()
+                }
+
                 $(function(){
                     window.setInterval(checkQuery, 1000 )
-                 });
+                });
                 
             }).fail(function (data) {
                 console.log(data)

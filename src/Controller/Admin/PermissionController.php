@@ -155,8 +155,11 @@ class PermissionController extends MobileController
             throw new NotFoundHttpException('Permission Not Found');
         }
 
-        $permission->setDuration($permission->getDuration() + $duration);
-        $this->permissionRepository->save($permission, true);
+        if ($permission->getDuration() + $duration <= Permission::MAX_DURATION) {
+            $permission->setDuration($permission->getDuration() + $duration);
+
+            $this->permissionRepository->save($permission, true);
+        }
 
         return new JsonResponse(['duration' => $permission->getDuration()]);
     }

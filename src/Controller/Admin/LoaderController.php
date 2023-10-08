@@ -2,8 +2,9 @@
 
 namespace App\Controller\Admin;
 
-use App\Form\Admin\Load1CType;
 use App\Decorator\MobileController;
+use App\Entity\Permission;
+use App\Form\Admin\Load1CType;
 use App\Repository\CourseRepository;
 use App\Repository\LoaderRepository;
 use App\Repository\ProfileRepository;
@@ -102,9 +103,16 @@ class LoaderController extends MobileController
         $courseIds = $request->get('course');
         $duration = $request->get('duration');
 
-        $result = $this->loaderService->sendUserDataToQuery($user, $courseIds, $duration);
+        if ($duration >= Permission::MAX_DURATION) {
+            $result['success'] = false;
+        } else {
+            $result = $this->loaderService->sendUserDataToQuery($user, $courseIds, $duration);
+        }
 
-        return new JsonResponse(['message' => $result['message']]);
+        return new JsonResponse([
+            'success' => $result['success'],
+            'message' => $result['message'] ?? '',
+        ]);
     }
     
     #[Route('/admin/loader/checkQuery/', name: 'admin_loader_check_query', condition: 'request.isXmlHttpRequest()')]

@@ -2,12 +2,12 @@
 
 namespace App\Entity;
 
-use DateTime;
+use App\Repository\PermissionRepository;
 use DateInterval;
+use DateTime;
 use DateTimeInterface;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
-use App\Repository\PermissionRepository;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
 
 #[ORM\Entity(repositoryClass: PermissionRepository::class)]
@@ -18,6 +18,8 @@ class Permission
     public const STAGE_NOT_STARTED = 1;
     public const STAGE_IN_PROGRESS = 2;
     public const STAGE_FINISHED = 3;
+
+    public const MAX_DURATION = 999;
 
     #[ORM\Id]
     #[ORM\GeneratedValue]
