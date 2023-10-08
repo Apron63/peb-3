@@ -2,8 +2,10 @@
 
 namespace App\Controller\Frontend;
 
+use App\Entity\User;
 use App\Repository\PermissionRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\File\Exception\AccessDeniedException;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -16,6 +18,12 @@ class CabinetController extends AbstractController
     #[Route('/', name: 'homepage')]
     public function index(): Response
     {
+        $user = $this->getUser();
+
+        if (! $user instanceof User) {
+            throw new AccessDeniedException('User access denind');
+        }
+        
         if ($this->isGranted('ROLE_ADMIN')) {
             return $this->redirectToRoute('admin_homepage');
         }
