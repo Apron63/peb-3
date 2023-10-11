@@ -20,7 +20,7 @@ class QueryUser
     #[ORM\JoinColumn(nullable: false, name: "created_by")]
     private ?User $createdBy = null;
 
-    #[ORM\Column(length: 50)]
+    #[ORM\Column()]
     private ?string $courseIds = null;
 
     #[ORM\Column]

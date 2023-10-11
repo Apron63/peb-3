@@ -38,7 +38,7 @@ class MailingService
 
             $mail = (new MailingQueue())
                 ->setUser($permission->getUser())
-                ->setSubject('Вам назначен курс : ' . $permission->getCourse()->getName())
+                ->setSubject('Вам назначен курс : ' . $permission->getCourse()->getShortName())
                 ->setContent($content);
 
             $this->mailingQueueRepository->save($mail, true);
