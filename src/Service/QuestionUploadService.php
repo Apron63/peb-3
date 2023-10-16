@@ -10,6 +10,7 @@ use App\Repository\TicketRepository;
 use Doctrine\DBAL\Exception;
 use Doctrine\ORM\EntityManagerInterface;
 use DOMElement;
+use DOMNodeList;
 use RuntimeException;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
@@ -143,6 +144,13 @@ class QuestionUploadService
                                     case 'my:qtext':
                                         $this->data[$themeNom]['questions'][++$questionNom]['qText'] = $chNode->nodeValue;
                                         $this->data[$themeNom]['questions'][$questionNom]['type'] = 0;
+
+                                        $image = $this->searchImage($chNode);
+
+                                        if (null !== $image) {
+                                            $this->data[$themeNom]['questions'][$questionNom]['qText'] .= $image;
+                                        }
+
                                         break;
                                     case 'my:answer':
                                         foreach ($chNode->childNodes as $row) {
@@ -152,6 +160,13 @@ class QuestionUploadService
                                             switch ($row->tagName) {
                                                 case 'my:atext':
                                                     $this->data[$themeNom]['questions'][$questionNom]['answer'][$aNom]['aText'] = $row->nodeValue;
+
+                                                    $image = $this->searchImage($row);
+
+                                                    if (null !== $image) {
+                                                        $this->data[$themeNom]['questions'][$questionNom]['answer'][$aNom]['aText'] .= $image;
+                                                    }
+                                                    
                                                     break;
                                                 case 'my:astatus':
                                                     if ($row->nodeValue === 'Правильный ответ') {
@@ -171,6 +186,13 @@ class QuestionUploadService
                                         break;
                                     case 'my:qhelp':
                                         $this->data[$themeNom]['questions'][$questionNom]['hText'] = $chNode->nodeValue;
+
+                                        $image = $this->searchImage($chNode);
+
+                                        if (null !== $image) {
+                                            $this->data[$themeNom]['questions'][$questionNom]['hText'] .= $image;
+                                        }
+
                                         break;
                                 }
                             }
@@ -220,5 +242,44 @@ class QuestionUploadService
                 $cnt++;
             }
         }
+    }
+
+    private function searchImage(DOMElement $node): ?string
+    {
+        $image = null;
+
+        $childs = $node->childNodes;
+        if ($childs instanceof DOMNodeList) {
+            foreach ($childs as $child) {
+                if (isset($child->tagName)) {
+                    $tag = $child->tagName;
+    
+                    if ($tag === 'img') {
+                        foreach($child->attributes as $attribute) {
+                            if (
+                                $attribute->name === 'src' 
+                                && false === strpos($attribute->value, 'msoinline')
+                            ) {
+                                $image = '<br><img src="' . $attribute->value . '">';
+
+                                break;
+                            } elseif ($attribute->name === 'inline') {
+                                $image = '<br><img src="data:image.jpeg;base64,' . $attribute->value . '">';
+
+                                break;
+                            }
+                        }
+                    } else {
+                        $image = $this->searchImage($child);
+                    }
+    
+                    if (null !== $image) {
+                        return $image;
+                    }
+                }
+            }
+        }
+
+        return $image;
     }
 }
