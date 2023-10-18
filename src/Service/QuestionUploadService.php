@@ -215,7 +215,6 @@ class QuestionUploadService
     {
        
         $this->questionsRepository->removeQuestionsForCourse($course);
-        $this->permissionRepository->removePermissionForCourse($course);
         $this->ticketRepository->deleteOldTickets($course);
 
         $themeNom = 1;
