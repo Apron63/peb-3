@@ -5,9 +5,9 @@ namespace App\Controller\Frontend;
 use App\Entity\User;
 use App\Repository\PermissionRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\File\Exception\AccessDeniedException;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 class CabinetController extends AbstractController
 {
@@ -21,7 +21,7 @@ class CabinetController extends AbstractController
         $user = $this->getUser();
 
         if (! $user instanceof User) {
-            throw new AccessDeniedException('User access denind');
+            throw new AccessDeniedException('User access denied');
         }
         
         if ($this->isGranted('ROLE_ADMIN')) {
