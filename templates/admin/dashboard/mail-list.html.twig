@@ -40,7 +40,11 @@
                             {% endif %}
                         </td>
                         <td>
-                            {{ page.user.fullName }}, {{ page.user.email }}
+                            {% if page.user is null %}
+                                {{ page.reciever }}
+                            {% else%}
+                                {{ page.user.fullName }}, {{ page.user.email }}
+                            {% endif %}
                         </td>
                         <td>
                             {{ page.subject }}

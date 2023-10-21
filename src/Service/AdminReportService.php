@@ -2,24 +2,27 @@
 
 namespace App\Service;
 
-use DateTime;
-use Twig\Environment;
+use App\Entity\MailingQueue;
 use App\Entity\Permission;
-use PhpOffice\PhpWord\PhpWord;
-use Symfony\Component\Mime\Email;
-use App\Repository\UserRepository;
+use App\Entity\User;
 use App\Repository\LoggerRepository;
-use Symfony\Component\Mime\Part\File;
+use App\Repository\MailingQueueRepository;
 use App\Repository\PermissionRepository;
-use PhpOffice\PhpSpreadsheet\Style\Fill;
-use PhpOffice\PhpSpreadsheet\Spreadsheet;
-use Symfony\Component\Mime\Part\DataPart;
-use PhpOffice\PhpSpreadsheet\Style\Border;
+use App\Repository\UserRepository;
+use DateTime;
 use jonasarts\Bundle\TCPDFBundle\TCPDF\TCPDF;
-use Symfony\Component\Mailer\MailerInterface;
-use PhpOffice\PhpWord\IOFactory as WordFactory;
 use PhpOffice\PhpSpreadsheet\IOFactory as XlsxFactory;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Style\Border;
+use PhpOffice\PhpSpreadsheet\Style\Fill;
+use PhpOffice\PhpWord\IOFactory as WordFactory;
+use PhpOffice\PhpWord\PhpWord;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\Mailer\MailerInterface;
+use Symfony\Component\Mime\Email;
+use Symfony\Component\Mime\Part\DataPart;
+use Symfony\Component\Mime\Part\File;
+use Twig\Environment;
 
 class AdminReportService
 {
@@ -29,6 +32,7 @@ class AdminReportService
         private readonly PermissionRepository $permissionRepository,
         private readonly Environment $twig,
         private readonly MailerInterface $mailer,
+        private readonly MailingQueueRepository $mailingQueueRepository,
         private readonly string $reportUploadPath,
     ) {}
 
@@ -48,14 +52,14 @@ class AdminReportService
         $pdf->AddPage();
         $pdf->writeHTML($this->generateDataHtml($data), false);
         $pdf->lastPage();
-        
+
         $fileName = $this->reportUploadPath . '/' . (new DateTime())->format('d-m-Y_H_i_s') . '_' . uniqid() . '.pdf';
         $pdf->Output($fileName, 'F');
         unset($pdf);
 
         return $fileName;
-    } 
-    
+    }
+
     public function generateStatisticDocx(array $data): string
     {
         $data = $this->prepareData($data);
@@ -90,7 +94,7 @@ class AdminReportService
 
                 $table->addRow();
                 $table->addCell(500);
-                $table->addCell(1000)->addText('Курс');    
+                $table->addCell(1000)->addText('Курс');
                 $cell = $table->addCell();
                 $cell->addText($row['name']);
                 $cell->getStyle()->setGridSpan(8);
@@ -125,7 +129,7 @@ class AdminReportService
 
         $spreadsheet = new Spreadsheet();
         $activeWorksheet = $spreadsheet->getActiveSheet();
-        
+
         $activeWorksheet->setCellValue('A1', '№');
         $activeWorksheet->setCellValue('B1', 'Дата доступа');
         $activeWorksheet->setCellValue('C1', 'ФИО');
@@ -169,7 +173,7 @@ class AdminReportService
             $activeWorksheet->setCellValue('F' . $line, $row['activatedAt']?->format('d.m.Y'));
             $activeWorksheet->setCellValue('G' . $line, $row['lastAccess']?->format('d.m.Y'));
             $activeWorksheet->setCellValue('H' . $line, $row['lastExam']?->format('d.m.Y'));
-            $activeWorksheet->setCellValue('I' . $line, $row['timeSpent'] 
+            $activeWorksheet->setCellValue('I' . $line, $row['timeSpent']
                 ? gmdate('H ч i мин', $row['timeSpent'])
                 : null
             );
@@ -213,27 +217,27 @@ class AdminReportService
         $file = fopen($fileName, 'w');
         fputs($file, chr(0xEF) . chr(0xBB) . chr(0xBF));
 
-        $fileData = 
+        $fileData =
             'ФИО;'
             . 'Должность;'
             . 'Организация;'
             . 'Логин;'
             . 'Пароль;'
             . 'Курсы;'
-            . 'Дней' 
+            . 'Дней'
             . PHP_EOL;
 
         fputs($file, $fileData);
 
         foreach($data as $row) {
-            $fileData = 
+            $fileData =
                 $row['fullName'] . ';'
                 . $row['position'] . ';'
                 . $row['organization'] . ';'
                 . $row['login'] . ';'
                 . $row['plainPassword'] . ';'
                 . $row['name'] . ';'
-                . $row['duration'] 
+                . $row['duration']
                 . PHP_EOL;
 
             fputs($file, $fileData);
@@ -323,7 +327,7 @@ class AdminReportService
         $file = fopen($fileName, 'w');
 
         foreach($data as $row) {
-            $fileData = 
+            $fileData =
                 $row['fullName'] . PHP_EOL
                 . $row['position'] . PHP_EOL
                 . $row['organization'] . PHP_EOL
@@ -364,7 +368,7 @@ class AdminReportService
             if ($courseName !== $row['shortName']) {
                 $table->addRow();
                 $table->addCell(500, ['bgColor'=>'EEEEEE']);
-                $table->addCell(1000, ['bgColor'=>'EEEEEE'])->addText('Курс');    
+                $table->addCell(1000, ['bgColor'=>'EEEEEE'])->addText('Курс');
                 $cell = $table->addCell(null, ['bgColor'=>'EEEEEE']);
                 $cell->addText($row['name']);
                 $cell->getStyle()->setGridSpan(7);
@@ -394,15 +398,16 @@ class AdminReportService
         return $fileName;
     }
 
-    public function generateListAndSend(string $recipient, string $subject, string $comment, string $type, array $data): array
+    public function generateListAndSend(string $recipient, string $subject, string $comment, string $type, array $data, User $user): array
     {
         $totalRecipients = array_map(
             fn($address) => trim($address),
-            explode(',', $recipient
-        ));
+            explode(',', $recipient)
+        );
 
         $success = true;
         $message = '';
+        $now = new DateTime();
 
         foreach($totalRecipients as $address) {
             if (!filter_var($address, FILTER_VALIDATE_EMAIL)) {
@@ -428,6 +433,18 @@ class AdminReportService
                     $fileName = $this->generateListDocx($data);
             }
 
+            $mailingQueue = new MailingQueue();
+
+            $mailingQueue
+                ->setReciever($recipient)
+                ->setCreatedAt($now)
+                ->setSendedAt($now)
+                ->setCreatedBy($user)
+                ->setSubject($subject)
+                ->setContent($comment);
+
+            $this->mailingQueueRepository->save($mailingQueue, true);
+
             $mail = (new Email())
                 ->from('ucoks@safety63.ru')
                 ->to(...$totalRecipients)
@@ -443,9 +460,11 @@ class AdminReportService
             'message' => $message,
         ];
     }
-    
-    public function generateListAndSendStatistic(string $recipient, string $subject, string $comment, string $type, array $data): array
+
+    public function generateListAndSendStatistic(string $recipient, string $subject, string $comment, string $type, array $data, User $user): array
     {
+        $now = new DateTime();
+
         $totalRecipients = array_map(
             fn($address) => trim($address),
             explode(',', $recipient
@@ -474,6 +493,18 @@ class AdminReportService
                 case 'DOCX':
                     $fileName = $this->generateStatisticDocx($data);
             }
+
+            $mailingQueue = new MailingQueue();
+
+            $mailingQueue
+                ->setReciever($recipient)
+                ->setCreatedAt($now)
+                ->setSendedAt($now)
+                ->setCreatedBy($user)
+                ->setSubject($subject)
+                ->setContent($comment);
+
+            $this->mailingQueueRepository->save($mailingQueue, true);
 
             $mail = (new Email())
                 ->from('ucoks@safety63.ru')

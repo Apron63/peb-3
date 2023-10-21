@@ -2,27 +2,30 @@
 
 namespace App\Entity;
 
+use App\Repository\MailingQueueRepository;
 use DateTime;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
-use App\Repository\MailingQueueRepository;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
 
 #[ORM\Entity(repositoryClass: MailingQueueRepository::class)]
 class MailingQueue
 {
     use TimestampableEntity;
-    
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
     private ?int $id = null;
 
     #[ORM\ManyToOne]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\JoinColumn()]
     private ?User $user = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column()]
+    private ?string $reciever = null;
+
+    #[ORM\Column()]
     private ?string $subject = null;
 
     #[ORM\Column(type: Types::TEXT)]
@@ -30,6 +33,10 @@ class MailingQueue
 
     #[ORM\Column(nullable: true)]
     private ?DateTime $sendedAt = null;
+
+    #[ORM\ManyToOne]
+    #[ORM\JoinColumn(name: 'created_by')]
+    private ?User $createdBy = null;
 
     public function getId(): ?int
     {
@@ -44,6 +51,18 @@ class MailingQueue
     public function setUser(?User $user): self
     {
         $this->user = $user;
+
+        return $this;
+    }
+
+    public function getReciever(): ?string
+    {
+        return $this->reciever;
+    }
+
+    public function setReciever(?string $reciever): self
+    {
+        $this->reciever = $reciever;
 
         return $this;
     }
@@ -80,6 +99,18 @@ class MailingQueue
     public function setSendedAt(?DateTime $sendedAt): self
     {
         $this->sendedAt = $sendedAt;
+
+        return $this;
+    }
+
+    public function getCreatedBy(): ?User
+    {
+        return $this->createdBy;
+    }
+
+    public function setCreatedBy(?User $createdBy): self
+    {
+        $this->createdBy = $createdBy;
 
         return $this;
     }

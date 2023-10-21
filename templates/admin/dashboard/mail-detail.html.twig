@@ -24,7 +24,11 @@
                         Создано
                     </td>
                     <td>
-                        {{ mail.createdAt | date('d.m.Y H:i:s')}}
+                        {{ mail.createdAt | date('d.m.Y H:i:s') }}
+                        
+                        {% if mail.createdBy is not null %}
+                            {{ mail.createdBy.fullName }}
+                        {% endif %}
                     </td>
                 </tr>
                 <tr>
@@ -35,24 +39,30 @@
                         {% if mail.sendedAt is null %}
                             -
                         {% else %}
-                            {{ mail.sendedAt | date('d.m.Y H:i:s')}}
+                            {{ mail.sendedAt | date('d.m.Y H:i:s') }}
                         {% endif %}
                     </td>
                 </tr>
+                {% if mail.user is not null %}
+                    <tr>
+                        <td>
+                            Получатель
+                        </td>
+                        <td>
+                            {{ mail.user.fullName }}
+                        </td>
+                    </tr>
+                {% endif %}
                 <tr>
                     <td>
-                        Получатель
+                        Email
                     </td>
                     <td>
-                        {{ mail.user.fullName}}
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        Enail
-                    </td>
-                    <td>
-                        {{ mail.user.email}}
+                        {% if mail.user is null %}
+                            {{ mail.reciever }}
+                        {% else %}
+                            {{ mail.user.email }}
+                        {% endif %}
                     </td>
                 </tr>
                 <tr>
@@ -72,7 +82,7 @@
                     </td>
                 </tr>
             </tbody>
-        </table>    
+        </table>
     </div>
 
 {% endblock %}

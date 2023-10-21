@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\MailingQueue;
+use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\Query;
 use Doctrine\Persistence\ManagerRegistry;
@@ -65,7 +66,7 @@ class MailingQueueRepository extends ServiceEntityRepository
             ->getQuery()
             ->getSingleScalarResult();
     }
-    
+
     public function getMailNotSended(): int
     {
         $queryBuilder = $this->createQueryBuilder('m');
@@ -77,9 +78,13 @@ class MailingQueueRepository extends ServiceEntityRepository
             ->getSingleScalarResult();
     }
 
-    public function getMailQuery(): Query
+    public function getMailQuery(?User $mailUser): Query
     {
         $queryBuilder = $this->createQueryBuilder('mq');
+
+        if ($mailUser instanceof User) {
+            $queryBuilder->where('mq.createdBy = :user')->setParameter('user', $mailUser);
+        }
 
         return $queryBuilder
             ->orderBy('mq.createdAt', 'desc')

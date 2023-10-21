@@ -32,19 +32,19 @@
     <div class="row" id="app">
         <div class="col-2">
             <ul class="list-group">
-                <a 
+                <a
                     href="{{ path('admin_homepage') }}"
                     class="list-group-item list-group-item-action list-group-item-light"
                 >
                     Поиск пользователя
                 </a>
-                <a 
+                <a
                     href="{{ path('admin_user_create') }}"
                     class="list-group-item list-group-item-action list-group-item-light"
                 >
                     Создать пользователя
                 </a>
-                <a 
+                <a
                     href="{{ path('admin_loader') }}"
                     class="list-group-item list-group-item-action list-group-item-light"
                 >
@@ -52,42 +52,49 @@
                 </a>
 
                 {% if is_granted('ROLE_SUPER_ADMIN') %}
-                    <a 
+                    <a
                         href="{{ path('admin_course_list') }}"
                         class="list-group-item list-group-item-action list-group-item-light"
                     >
                         Учебные материалы
                     </a>
-                
-                    <a 
+
+                    <a
                         href="{{ path('admin_profile_list') }}"
                         class="list-group-item list-group-item-action list-group-item-light"
                     >
                         Профили
                     </a>
-                    <a 
+                    <a
                         href="{{ path('admin_load_course') }}"
                         class="list-group-item list-group-item-action list-group-item-light"
                     >
                         Загрузка курсов
                     </a>
-                
-                    <a  
+
+                    <a
                         href="{{ path('admin_query_job') }}"
                         class="list-group-item list-group-item-action list-group-item-light"
                     >
                         Задачи
                     </a>
 
-                    <a 
+                    <a
                         href="{{ path('admin_dashboard') }}"
                         class="list-group-item list-group-item-action list-group-item-light"
                     >
                         Инструменты
                     </a>
+                {% else %}
+                    <a
+                        href="{{ path('admin_dashboard_mail_list') }}"
+                        class="list-group-item list-group-item-action list-group-item-light"
+                    >
+                        Рассылки
+                    </a>
                 {% endif %}
-                
-                <a 
+
+                <a
                     href="{{ path('admin_query_1cload') }}"
                     class="list-group-item list-group-item-action list-group-item-light"
                 >

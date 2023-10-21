@@ -4,6 +4,7 @@ namespace App\Controller\Admin;
 
 use App\Decorator\MobileController;
 use App\Entity\MailingQueue;
+use App\Entity\User;
 use App\Form\Admin\DashboardType;
 use App\Repository\MailingQueueRepository;
 use App\Service\ConfigService;
@@ -61,12 +62,20 @@ class DashboardController extends MobileController
     }
 
     #[Route('/admin/dashboard/maillist/', name: 'admin_dashboard_mail_list')]
-    #[IsGranted('ROLE_SUPER_ADMIN')]
+    #[IsGranted('ROLE_ADMIN')]
     public function mailList(Request $request): Response
     {
+        $mailUser = null;
+        $currentUser = $this->getUser();
+
+        $userRoles = $currentUser->getRoles();
+
+        if (! in_array(User::ROLE_SUPER_ADMIN, $userRoles)) {
+            $mailUser = $currentUser;
+        }
 
         $pagination = $this->paginator->paginate(
-            $this->mailingQueueRepository->getMailQuery(),
+            $this->mailingQueueRepository->getMailQuery($mailUser),
             $request->query->getInt('page', 1),
             10
         );
@@ -75,22 +84,34 @@ class DashboardController extends MobileController
             'pagination' => $pagination,
         ]);
     }
-    
+
     #[Route('/admin/dashboard/maillist/detail/{id<\d+>}/', name: 'admin_dashboard_mail_list_detail')]
-    #[IsGranted('ROLE_SUPER_ADMIN')]
+    #[IsGranted('ROLE_ADMIN')]
     public function mailListDetail(MailingQueue $mail): Response
     {
+        /** @var User $currentUser */
+        $currentUser = $this->getUser();
+
+        $userRoles = $currentUser->getRoles();
+
+        if (
+            ! in_array(User::ROLE_SUPER_ADMIN, $userRoles)
+            && (null === $mail->getCreatedBy() || $mail->getCreatedBy()->getId() !== $currentUser->getId())
+        ) {
+            return $this->redirectToRoute('admin_dashboard_mail_list');
+        }
+
         return $this->mobileRender('admin/dashboard/mail-detail.html.twig', [
             'mail' => $mail,
         ]);
     }
-    
+
     #[Route('/admin/dashboard/query_user/clear/', name: 'admin_dashboard_query_user_clear')]
     #[IsGranted('ROLE_SUPER_ADMIN')]
     public function queryUserClear(): Response
     {
         $this->dashboardService->queryUserClear();
-        
+
         $this->addFlash('success', 'Очередь создания слушателей успешно очищена');
 
         return $this->redirectToRoute('admin_dashboard');

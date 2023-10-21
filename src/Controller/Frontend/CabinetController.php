@@ -23,7 +23,7 @@ class CabinetController extends AbstractController
         if (! $user instanceof User) {
             throw new AccessDeniedException('User access denied');
         }
-        
+
         if ($this->isGranted('ROLE_ADMIN')) {
             return $this->redirectToRoute('admin_homepage');
         }
