@@ -22,7 +22,7 @@ class MailingQueue
     #[ORM\JoinColumn()]
     private ?User $user = null;
 
-    #[ORM\Column()]
+    #[ORM\Column(nullable: true)]
     private ?string $reciever = null;
 
     #[ORM\Column()]
