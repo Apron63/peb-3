@@ -5,7 +5,7 @@
 {% block breadcrumbs %}
     <a href="{{ path('admin_homepage') }}">Панель управления</a>
     <span>/</span>
-    {% if is_granted('ROLE_SUPERADMIN') %}
+    {% if is_granted('ROLE_SUPER_ADMIN') %}
         <a href="{{ path('admin_dashboard') }}">Инструменты</a>
         <span>/</span>
     {% endif %}
