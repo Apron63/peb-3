@@ -16,26 +16,26 @@ class SupportService
     {
         $this->bus->dispatch(new SendEmailMessage(
             'support@safety63.ru',
-            'Запрос технической поддержки СДО',
-            $this->composeMail($support)
-        )); 
-        
-        $this->bus->dispatch(new SendEmailMessage(
-            'info@safety63.ru',
-            'Запрос технической поддержки СДО',
+            'Запрос технической поддержки СДО PROобучение',
             $this->composeMail($support)
         ));
-        
+
+        $this->bus->dispatch(new SendEmailMessage(
+            'info@safety63.ru',
+            'Запрос технической поддержки СДО PROобучение',
+            $this->composeMail($support)
+        ));
+
         $this->bus->dispatch(new SendEmailMessage(
             '1103@safety63.ru',
-            'Запрос технической поддержки СДО',
+            'Запрос технической поддержки СДО PROобучение',
             $this->composeMail($support)
         ));
     }
 
     private function composeMail(Support $support): string
     {
-        $result = 
+        $result =
             'ФИО полностью : ' . $support->getName() . '<br>'
             . 'E-Mail : ' . $support->getEmail() . '<br>'
             . 'Телефон : ' . $support->getPhone() . '<br>'
