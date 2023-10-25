@@ -5,8 +5,10 @@
 {% block breadcrumbs %}
     <a href="{{ path('admin_homepage') }}">Панель управления</a>
     <span>/</span>
-    <a href="{{ path('admin_dashboard') }}">Инструменты</a>
-    <span>/</span>
+    {% if is_granted('ROLE_SUPERADMIN') %}
+        <a href="{{ path('admin_dashboard') }}">Инструменты</a>
+        <span>/</span>
+    {% endif %}
     <a href="{{ path('admin_dashboard_mail_list') }}">Рассылки</a>
     <span>/</span>
     <span>Детализация</span>
@@ -25,7 +27,7 @@
                     </td>
                     <td>
                         {{ mail.createdAt | date('d.m.Y H:i:s') }}
-                        
+
                         {% if mail.createdBy is not null %}
                             {{ mail.createdBy.fullName }}
                         {% endif %}
