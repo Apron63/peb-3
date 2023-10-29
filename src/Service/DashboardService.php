@@ -10,6 +10,8 @@ use Symfony\Bundle\SecurityBundle\Security;
 
 class DashboardService
 {
+    private const FREE_DISK_SPACE_MIN = 2_150_000_000;
+
     public function __construct(
         private readonly LoggerRepository $loggerRepository,
         private readonly MailingQueueRepository $mailingQueueRepository,
@@ -25,6 +27,7 @@ class DashboardService
 
         return [
             'freeDiskSpace' => $this->getSymbolByQuantity($freeDiskSpace),
+            'freeDiskSpaceMin' => $this->getSymbolByQuantity(self::FREE_DISK_SPACE_MIN),
             'diskTotalSpace' => $this->getSymbolByQuantity($diskTotalSpace),
             'usedSpace' => $usedSpace,
             'mailCreatedToday' => $this->mailingQueueRepository->getMailCreatedToday(),
@@ -53,7 +56,7 @@ class DashboardService
                         '{FIO}',
                         '{PHONE}',
                         '{EMAIL}',
-                    ], 
+                    ],
                     $from
                 ),
                 array_merge(
@@ -63,7 +66,7 @@ class DashboardService
                         $user->getEmail(),
                     ],
                     $target
-                ), 
+                ),
                 $source
             );
         }
@@ -75,7 +78,7 @@ class DashboardService
     {
         $symbols =['B', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
         $exp = floor(log($bytes)/log(1024));
-    
+
         return sprintf('%.2f ' . $symbols[$exp], ($bytes/pow(1024, floor($exp))));
     }
 }
