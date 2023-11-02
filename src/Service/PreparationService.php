@@ -12,8 +12,9 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 class PreparationService
 {
     private const MAX_PAGES_IN_LINE = 30;
-    private const PAGES_AT_ONCE = 5;
-    private const PAGES_CHANGE_PAGINATOR = 4;
+    private const PAGES_AT_ONCE = 9;
+    private const PAGES_CHANGE_PAGINATOR = 6;
+    private const PAGES_IN_INTERVAL_PART = 5;
 
     public function __construct(
         private readonly QuestionsRepository $questionsRepository,
@@ -31,7 +32,7 @@ class PreparationService
 
         $totalQuestions  = $this->questionsRepository->getQuestionsCount($permission->getCourse(), $themeId);
 
-        if (!in_array($perPage, [20, 50, 100])) {
+        if (! in_array($perPage, [20, 50, 100])) {
             $perPage = 20;
         }
 
@@ -60,7 +61,7 @@ class PreparationService
                     'description' => $answer['description'],
                     'right' => $answer['isCorrect'],
                     'nom' => $answer['nom'],
-                    
+
                 ];
             }
 
@@ -102,8 +103,8 @@ class PreparationService
                 for ($index = 1; $index <= self::PAGES_AT_ONCE; $index ++) {
                     $paginator[] = [
                         'url' => $this->urlGenerator->generate('app_frontend_preparation_one', [
-                            'id' => $permission->getId(), 
-                            'themeId' => $themeId, 
+                            'id' => $permission->getId(),
+                            'themeId' => $themeId,
                             'page' => $index,
                             'perPage' => $perPage,
                         ]),
@@ -117,23 +118,23 @@ class PreparationService
                     'title' => '...',
                     'isActive' => true,
                 ];
-                
+
                 $paginator[] = [
                     'url' => $this->urlGenerator->generate('app_frontend_preparation_one', [
-                        'id' => $permission->getId(), 
-                        'themeId' => $themeId, 
+                        'id' => $permission->getId(),
+                        'themeId' => $themeId,
                         'page' => $maxPages,
                         'perPage' => $perPage,
                     ]),
                     'title' => $maxPages,
                     'isActive' => false,
                 ];
-                
+
             } elseif ($maxPages - $page < self::PAGES_CHANGE_PAGINATOR) {
                 $paginator[] = [
                     'url' => $this->urlGenerator->generate('app_frontend_preparation_one', [
-                        'id' => $permission->getId(), 
-                        'themeId' => $themeId, 
+                        'id' => $permission->getId(),
+                        'themeId' => $themeId,
                         'page' => 1,
                         'perPage' => $perPage,
                     ]),
@@ -150,8 +151,8 @@ class PreparationService
                 for ($index = $maxPages - self::PAGES_AT_ONCE + 1; $index <= $maxPages; $index ++) {
                     $paginator[] = [
                         'url' => $this->urlGenerator->generate('app_frontend_preparation_one', [
-                            'id' => $permission->getId(), 
-                            'themeId' => $themeId, 
+                            'id' => $permission->getId(),
+                            'themeId' => $themeId,
                             'page' => $index,
                             'perPage' => $perPage,
                         ]),
@@ -163,8 +164,8 @@ class PreparationService
             } else {
                 $paginator[] = [
                     'url' => $this->urlGenerator->generate('app_frontend_preparation_one', [
-                        'id' => $permission->getId(), 
-                        'themeId' => $themeId, 
+                        'id' => $permission->getId(),
+                        'themeId' => $themeId,
                         'page' => 1,
                         'perPage' => $perPage,
                     ]),
@@ -178,11 +179,11 @@ class PreparationService
                     'isActive' => true,
                 ];
 
-                for ($index = $page - self::PAGES_CHANGE_PAGINATOR + 2; $index <=  $page + self::PAGES_CHANGE_PAGINATOR - 2; $index ++) {
+                for ($index = $page - self::PAGES_IN_INTERVAL_PART + 2; $index <=  $page + self::PAGES_IN_INTERVAL_PART - 2; $index ++) {
                     $paginator[] = [
                         'url' => $this->urlGenerator->generate('app_frontend_preparation_one', [
-                            'id' => $permission->getId(), 
-                            'themeId' => $themeId, 
+                            'id' => $permission->getId(),
+                            'themeId' => $themeId,
                             'page' => $index,
                             'perPage' => $perPage,
                         ]),
@@ -190,7 +191,7 @@ class PreparationService
                         'isActive' => $page === $index,
                     ];
                 }
-                
+
                 $paginator[] = [
                     'url' => null,
                     'title' => '...',
@@ -199,8 +200,8 @@ class PreparationService
 
                 $paginator[] = [
                     'url' => $this->urlGenerator->generate('app_frontend_preparation_one', [
-                        'id' => $permission->getId(), 
-                        'themeId' => $themeId, 
+                        'id' => $permission->getId(),
+                        'themeId' => $themeId,
                         'page' => $maxPages,
                         'perPage' => $perPage,
                     ]),
@@ -213,8 +214,8 @@ class PreparationService
             for ($index = 1; $index <= $maxPages; $index ++) {
                 $paginator[] = [
                     'url' => $this->urlGenerator->generate('app_frontend_preparation_one', [
-                        'id' => $permission->getId(), 
-                        'themeId' => $themeId, 
+                        'id' => $permission->getId(),
+                        'themeId' => $themeId,
                         'page' => $index,
                         'perPage' => $perPage,
                     ]),

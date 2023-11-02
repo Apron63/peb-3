@@ -2,7 +2,7 @@
     <div class="control-questions_display_count_wrapper">
         <div class="control-questions_display_count_header">отображать по: </div>
         <div class="control-questions_display_count">
-            <a 
+            <a
                 href="{% if data.perPage == 20 %}javascript:void(0){% else %}{{ data.url }}?perPage=20{% endif %}"
                 class="control-questions_display_count_item {% if data.perPage == 20 %}active{% endif %}"
             >
@@ -16,7 +16,7 @@
                 50
             </a>
             <div class="control-questions_display_separator">|</div>
-            <a 
+            <a
                href="{% if data.perPage == 100 %}javascript:void(0){% else %}{{ data.url }}?perPage=100{% endif %}"
                 class="control-questions_display_count_item {% if data.perPage == 100 %}active{% endif %}"
             >
@@ -26,13 +26,13 @@
     </div>
     <div class="control-questions_display_pages_wrapper">
         {% for page in data.paginator %}
-            <a 
-                href="{% if page.isActive%}javascript:void(0){% else %}{{ page.url }}{% endif %}" 
+            <a
+                href="{% if page.isActive %}javascript:void(0){% else %}{{ page.url }}{% endif %}"
                 class="control-questions_display_pages_item{% if page.isActive %} active{% endif %}"
             >
                 {{ page.title }}
             </a>
-            {% if not loop.last%}
+            {% if not loop.last %}
                 <div class="control-questions_display_separator">|</div>
             {% endif %}
         {% endfor %}
