@@ -12,13 +12,11 @@ class ModuleSectionPage
     public const TYPE_SCORM = 1;
     public const TYPE_YOUTUBE = 2;
     public const TYPE_TEXT = 3;
-    public const TYPE_QUESTION = 4;
 
     public const PAGE_TYPES = [
         'Курсы SCORM' => self::TYPE_SCORM,
         'Внешняя ссылка' => self::TYPE_YOUTUBE,
         'Текст' => self::TYPE_TEXT,
-        //'Вопросы' => self::TYPE_QUESTION,
     ];
 
     #[ORM\Id]
