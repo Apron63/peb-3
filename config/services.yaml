@@ -2,6 +2,7 @@
 parameters:
     doc_upload_directory: '%kernel.project_dir%/public/storage/doc'
     course_upload_directory: '%kernel.project_dir%/public/storage/course'
+    report_upload_directory: '%kernel.project_dir%/public/storage/report'
     exchange_1c_upload_directory: '%kernel.project_dir%/public/storage/exchange1c'
 
 services:
@@ -47,13 +48,13 @@ services:
         class: Monolog\Processor\WebProcessor
         tags:
         - { name: monolog.processor }
-    
+
     # Course auto-remove child records
     App\EventListener\CourseRemoveEventListener:
         tags:
             - name: 'doctrine.event_listener'
               event: 'preRemove'
-    
+
     # Answer auto-remove child records
     App\EventListener\QuestionRemoveEventListener:
         tags:

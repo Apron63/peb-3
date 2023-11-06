@@ -31,6 +31,9 @@ class MailingQueue
     #[ORM\Column(type: Types::TEXT)]
     private ?string $content = null;
 
+    #[ORM\Column(type: Types::STRING, nullable: true)]
+    private ?string $attachment = null;
+
     #[ORM\Column(nullable: true)]
     private ?DateTime $sendedAt = null;
 
@@ -87,6 +90,18 @@ class MailingQueue
     public function setContent(string $content): self
     {
         $this->content = $content;
+
+        return $this;
+    }
+
+    public function getAttachment(): ?string
+    {
+        return $this->attachment;
+    }
+
+    public function setAttachment(string $attachment): self
+    {
+        $this->attachment = $attachment;
 
         return $this;
     }

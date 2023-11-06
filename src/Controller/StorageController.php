@@ -17,14 +17,6 @@ class StorageController extends AbstractController
         private readonly CourseRepository $courseRepository
     ) {}
 
-    #[Route('/storage/', name: 'app_storage')]
-    public function index(): Response
-    {
-        return $this->render('storage/index.html.twig', [
-            'controller_name' => 'StorageController',
-        ]);
-    }
-
     #[Route('/view/{filename}/', name: 'view')]
     public function fileViewAction(Request $request, string $filename): Response
     {
@@ -33,6 +25,12 @@ class StorageController extends AbstractController
         $course = $this->courseRepository->findOneBy(['id' => $courseId]);
 
         return new BinaryFileResponse($this->getViewedFileName($course, $filename));
+    }
+
+    #[Route('/view/report/{filename}/', name: 'view_report')]
+    public function reportViewAction(string $filename): Response
+    {
+        return new BinaryFileResponse($this->getParameter('report_upload_directory') . '/' . $filename);
     }
 
     private function getViewedFileName(Course $course, string $filename): string

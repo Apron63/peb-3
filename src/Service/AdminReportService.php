@@ -441,7 +441,8 @@ class AdminReportService
                 ->setSendedAt($now)
                 ->setCreatedBy($user)
                 ->setSubject($subject)
-                ->setContent($comment);
+                ->setContent($comment)
+                ->setAttachment($this->getPureFileName($fileName));
 
             $this->mailingQueueRepository->save($mailingQueue, true);
 
@@ -502,7 +503,8 @@ class AdminReportService
                 ->setSendedAt($now)
                 ->setCreatedBy($user)
                 ->setSubject($subject)
-                ->setContent($comment);
+                ->setContent($comment)
+                ->setAttachment($this->getPureFileName($fileName));
 
             $this->mailingQueueRepository->save($mailingQueue, true);
 
@@ -547,5 +549,12 @@ class AdminReportService
         }
 
         return $data;
+    }
+
+    private function getPureFileName(string $absPath): string
+    {
+        $len = strlen($this->reportUploadPath);
+
+        return substr($absPath, $len + 1);
     }
 }

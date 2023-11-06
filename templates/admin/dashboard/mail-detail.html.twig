@@ -75,6 +75,18 @@
                         {{ mail.subject }}
                     </td>
                 </tr>
+                {% if mail.attachment is not empty %}
+                    <tr>
+                        <td>
+                            Вложение
+                        </td>
+                        <td>
+                            <a href="{{ path('view_report', {filename: mail.attachment}) }}" target="_blank">
+                                {{ mail.attachment }}
+                            </a>
+                        </td>
+                    </tr>
+                {% endif %}
                 <tr>
                     <td>
                         Содержание
