@@ -2,9 +2,11 @@
 
 namespace App\Controller\Frontend;
 
+use App\Entity\User;
 use App\Repository\PermissionRepository;
 use App\Service\HistoryService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\File\Exception\AccessDeniedException;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -19,6 +21,10 @@ class HistoryController extends AbstractController
     public function index(): Response
     {
         $user = $this->getUser();
+
+        if (! $user instanceof User) {
+            throw new AccessDeniedException('User Access Denied');
+        }
 
         return $this->render('frontend/history/index.html.twig', [
             'items' => $this->historyService->getPermissionTestingResults(

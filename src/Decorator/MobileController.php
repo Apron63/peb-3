@@ -16,7 +16,12 @@ class MobileController extends AbstractController
 
         if ($detector->isMobile()) {
             $position = strpos($view, self::VIEW_EXTENSION);
-            $view = substr($view, 0, $position) . '_mobile' . self::VIEW_EXTENSION;
+
+            $mobileView =  $this->getParameter('view_directory') . '/' . substr($view, 0, $position) . '_mobile' . self::VIEW_EXTENSION;
+
+            if (file_exists($mobileView)) {
+                $view = substr($view, 0, $position) . '_mobile' . self::VIEW_EXTENSION;
+            }
         }
 
          return $this->render($view, $parameters, $response);

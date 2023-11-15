@@ -1,20 +1,4 @@
 import $ from 'jquery'
-import AirDatepicker from 'air-datepicker'
-import 'air-datepicker/air-datepicker.css'
-
-const createdDatepickerElem = document.getElementById('permission_edit_createdAt')
-const createdDatepicker = new AirDatepicker(createdDatepickerElem, {
-    format: 'dd.MM.yyyy',
-    language: 'ru',
-    autohide: true
-})
-
-const activatedDatepickerElem = document.getElementById('permission_edit_activatedAt')
-const activatedDatepicker = new AirDatepicker(activatedDatepickerElem, {
-    format: 'dd.MM.yyyy',
-    language: 'ru',
-    autohide: true
-})
 
 $('#permission_edit_lifeSearch').on('keyup', function () {
     applyFilter()

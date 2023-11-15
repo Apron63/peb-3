@@ -30,7 +30,13 @@ class StorageController extends AbstractController
     #[Route('/view/report/{filename}/', name: 'view_report')]
     public function reportViewAction(string $filename): Response
     {
-        return new BinaryFileResponse($this->getParameter('report_upload_directory') . '/' . $filename);
+        $viewedFileName = $this->getParameter('report_upload_directory') . '/' . $filename;
+
+        if (! file_exists($viewedFileName)) {
+            throw new NotFoundHttpException('File not found');
+        }
+
+        return new BinaryFileResponse($viewedFileName);
     }
 
     private function getViewedFileName(Course $course, string $filename): string
@@ -49,7 +55,7 @@ class StorageController extends AbstractController
             . '/'
             . $filename;
 
-        if (!file_exists($viewedFileName)) {
+        if (! file_exists($viewedFileName)) {
             throw new NotFoundHttpException('File not found');
         }
 

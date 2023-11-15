@@ -17,14 +17,6 @@
     <div class="row">
 
         <div class="mb-3 row">
-            {{ form_label(form.createdAt) }}
-            <div class="col-sm-10">
-                <span class="text-danger">{{ form_errors(form.createdAt) }}</span>
-                {{ form_widget(form.createdAt) }}
-            </div>
-        </div>
-
-        <div class="mb-3 row">
             {{ form_label(form.duration) }}
             <div class="col-sm-10">
                 <span class="text-danger">{{ form_errors(form.duration) }}</span>
@@ -46,16 +38,16 @@
                 <span class="text-danger">{{ form_errors(form.course) }}</span>
                 {{ form_widget(form.course) }}
             </div>
-        </div> 
-        
+        </div>
+
         <div class="mb-3 row">
             {{ form_label(form.lifeSearch) }}
             <div class="col-sm-10">
                 <span class="text-danger">{{ form_errors(form.lifeSearch) }}</span>
                 {{ form_widget(form.lifeSearch) }}
             </div>
-        </div> 
-        
+        </div>
+
         <div class="mb-3 row">
             {{ form_label(form.profile) }}
             <div class="col-sm-10">

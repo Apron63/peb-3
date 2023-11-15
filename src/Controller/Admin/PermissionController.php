@@ -12,7 +12,6 @@ use App\Repository\PermissionRepository;
 use App\Repository\UserRepository;
 use App\Service\BatchCreatePermissionService;
 use App\Service\TestingService;
-use DateTime;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -33,13 +32,11 @@ class PermissionController extends MobileController
     public function adminPermissionCreate(Request $request, User $user): Response
     {
         $permission = new Permission();
-        if (null === $permission->getCreatedAt()) {
-            $permission->setCreatedAt(new DateTime());
-        }
+
         $permission
             ->setUser($user)
             ->setCreatedBy($this->getUser());
-            
+
         $form = $this->createForm(PermissionEditType::class, $permission);
         $form->handleRequest($request);
 
@@ -55,22 +52,16 @@ class PermissionController extends MobileController
             'form' => $form->createView(),
         ]);
     }
-    
+
     #[Route('/admin/permission/batch_create/{id<\d+>}/', name: 'admin_permission_batch_create')]
     public function adminPermissionBatchCreate(Request $request, User $user): Response
     {
         $form = $this->createForm(PermissionBatchCreateType::class);
-
-        $data['createdAt'] = $form->get('createdAt')->getData();
-        if (null === $data['createdAt']) {
-            $data['createdAt'] = $form->get('createdAt')->setData(new DateTime());
-        }
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
 
             $data = [
-                'createdAt' => $form->get('createdAt')->getData(),
                 'duration' => $form->get('duration')->getData(),
                 'orderNom' => $form->get('orderNom')->getData(),
                 'course' => $form->get('course')->getData(),
@@ -81,7 +72,7 @@ class PermissionController extends MobileController
             $this->batchCreatePermissionService->batchCreatePermission($data);
 
             $this->addFlash('success', 'Доступы успешно созданы');
-            
+
             return $this->redirect(
                 $this->generateUrl('admin_user_edit', ['id' => $user->getId()])
             );
@@ -142,8 +133,8 @@ class PermissionController extends MobileController
         } else {
             throw new NotFoundHttpException('Logger with success not found');
         }
-    } 
-    
+    }
+
     #[Route('/admin/permission/add-duration/', name: 'admin_permission_add_duration', condition: 'request.isXmlHttpRequest()'), IsGranted('ROLE_ADMIN')]
     public function addDuration(Request $request): JsonResponse
     {

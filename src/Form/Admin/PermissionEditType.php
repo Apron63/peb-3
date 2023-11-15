@@ -20,21 +20,6 @@ class PermissionEditType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('createdAt', DateTimeType::class, [
-                'widget' => 'single_text',
-                'label' => 'Создано',
-                'format' => 'dd.MM.yyyy',
-                'html5' => false,
-                'attr' => [
-                    'class' => 'form-control',
-                    'placeholder' => 'Создано',
-                    'onfocus' => 'this.placeholder = ""',
-                    'onblur' => 'this.placeholder = "Создано"',
-                ],
-                'label_attr' => [
-                    'class' => 'col-sm-2 col-form-label'
-                ],
-            ])
             ->add('duration', TextType::class, [
                 'label' => 'Длительность',
                 'attr' => [

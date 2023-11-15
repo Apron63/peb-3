@@ -8,7 +8,6 @@ use App\Entity\Profile;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -20,22 +19,6 @@ class PermissionBatchCreateType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('createdAt', DateTimeType::class, [
-                'mapped' => false,
-                'widget' => 'single_text',
-                'label' => 'Создано',
-                'format' => 'dd.MM.yyyy',
-                'html5' => false,
-                'attr' => [
-                    'class' => 'form-control',
-                    'placeholder' => 'Создано',
-                    'onfocus' => 'this.placeholder = ""',
-                    'onblur' => 'this.placeholder = "Создано"',
-                ],
-                'label_attr' => [
-                    'class' => 'col-sm-2 col-form-label'
-                ],
-            ])
             ->add('duration', TextType::class, [
                 'mapped' => false,
                 'label' => 'Длительность',

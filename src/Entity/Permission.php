@@ -45,7 +45,7 @@ class Permission
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
     private ?DateTimeInterface $lastAccess = null;
-    
+
     #[ORM\Column(type: Types::INTEGER, nullable: true)]
     private ?int $timeSpent = null;
 
@@ -115,7 +115,7 @@ class Permission
 
         return $this;
     }
-    
+
     public function getTimeSpent(): ?int
     {
         return $this->timeSpent;
@@ -217,7 +217,7 @@ class Permission
 
         return $this;
     }
-    
+
     public function getEndDate(): DateTimeInterface
     {
         return $this

@@ -4,6 +4,7 @@ parameters:
     course_upload_directory: '%kernel.project_dir%/public/storage/course'
     report_upload_directory: '%kernel.project_dir%/public/storage/report'
     exchange_1c_upload_directory: '%kernel.project_dir%/public/storage/exchange1c'
+    view_directory: '%kernel.project_dir%/templates'
 
 services:
     # default configuration for services in *this* file

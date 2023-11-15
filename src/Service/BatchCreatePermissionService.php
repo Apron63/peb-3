@@ -32,7 +32,6 @@ class BatchCreatePermissionService
                 ->setCourse($course)
                 ->setOrderNom($data['orderNom'])
                 ->setDuration($data['duration'])
-                ->setCreatedAt($data['createdAt'])
                 ->setCreatedBy($data['creator']);
 
             $this->permissionRepository->save($permission, true);
