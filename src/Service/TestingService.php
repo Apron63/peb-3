@@ -2,20 +2,20 @@
 
 namespace App\Service;
 
-use DateTime;
 use App\Entity\Course;
 use App\Entity\Logger;
-use App\Entity\Ticket;
-use App\Entity\Questions;
 use App\Entity\Permission;
+use App\Entity\Questions;
+use App\Entity\Ticket;
 use App\Repository\AnswerRepository;
 use App\Repository\LoggerRepository;
-use App\Repository\TicketRepository;
-use App\Repository\QuestionsRepository;
 use App\Repository\PermissionRepository;
-use Symfony\Component\Security\Core\User\UserInterface;
-use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use App\Repository\QuestionsRepository;
+use App\Repository\TicketRepository;
+use DateTime;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 class TestingService
 {
@@ -190,7 +190,7 @@ class TestingService
             'nom' => $ticketNom,
         ]);
 
-        if (!$ticket instanceof Ticket) {
+        if (! $ticket instanceof Ticket) {
             throw new NotFoundHttpException('Ticket Not Found');
         }
 
@@ -217,7 +217,7 @@ class TestingService
         $timeLeft = null === $ticket->getTimeLeft()
             ? Logger::DEFAULT_TIME_LEFT_IN_SECONDS
             : $ticket->getTimeLeft() * 60;
-        
+
         $logger
             ->setUser($user)
             ->setTicket($ticket)
@@ -272,7 +272,7 @@ class TestingService
             'answers' => $dataAnswers,
         ];
     }
-    
+
     private function getDataClassic(Logger $logger, Permission $permission): array
     {
         $ticketId = $this->getTicketId(
@@ -338,7 +338,7 @@ class TestingService
                 $result[$index++] = $questionId;
             }
         }
-        
+
         return $result;
     }
 }

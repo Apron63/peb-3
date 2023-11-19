@@ -4,17 +4,18 @@ namespace App\Controller\Frontend;
 
 use App\Entity\Logger;
 use App\Entity\Permission;
-use App\Service\TestingService;
-use App\Service\TestingReportService;
-use App\Service\UserPermissionService;
+use App\Entity\User;
 use App\Repository\PermissionRepository;
+use App\Service\TestingReportService;
+use App\Service\TestingService;
+use App\Service\UserPermissionService;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
-use Symfony\Component\HttpFoundation\BinaryFileResponse;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException as ExceptionAccessDeniedException;
 
 class TestingController extends AbstractController
@@ -31,7 +32,11 @@ class TestingController extends AbstractController
     {
         $user = $this->getUser();
 
-        if (!$this->userPermissionService->checkPermissionForUser($permission, $user, true)) {
+        if (! $user instanceof User) {
+            throw new ExceptionAccessDeniedException();
+        }
+
+        if (! $this->userPermissionService->checkPermissionForUser($permission, $user, true)) {
             throw new ExceptionAccessDeniedException();
         }
 
@@ -47,14 +52,14 @@ class TestingController extends AbstractController
                 'data' =>  $this->testingService->getData($logger, $permission),
             ]);
         }
-    } 
-    
+    }
+
     #[Route('/frontend/testing-next-step/{id<\d+>}/', name: 'app_frontend_testing_next_step',  condition: 'request.isXmlHttpRequest()')]
     public function nextStep(Permission $permission, Request $request): JsonResponse
     {
         return new JsonResponse([
             'redirectUrl' => $this->testingService->ticketProcessing(
-                $request->request->all(), 
+                $request->request->all(),
                 $permission->getCourse()->getType()
             )
         ]);
@@ -68,7 +73,7 @@ class TestingController extends AbstractController
             'skipped' => $this->testingService->getSkippedQuestion($logger),
         ]);
     }
-    
+
     #[Route('/frontend/testing/print/{id<\d+>}/', name: 'app_frontend_testing_print')]
     public function printTesting(Logger $logger): BinaryFileResponse
     {

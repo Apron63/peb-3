@@ -3,6 +3,7 @@
 namespace App\Controller\Frontend;
 
 use App\Entity\Permission;
+use App\Entity\User;
 use App\Service\PermissionService;
 use App\Service\UserPermissionService;
 use App\Repository\PermissionRepository;
@@ -11,6 +12,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\File\Exception\AccessDeniedException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException as ExceptionAccessDeniedException;
 
@@ -36,6 +38,10 @@ class TimeControlController extends AbstractController
 
         $user = $this->getUser();
 
+        if (! $user instanceof User) {
+            throw new ExceptionAccessDeniedException();
+        }
+
         if (!$this->userPermissionService->checkPermissionForUser($permission, $user, false)) {
             throw new ExceptionAccessDeniedException();
         }
@@ -44,11 +50,11 @@ class TimeControlController extends AbstractController
         $this->permissionService->setTimeSpent($permission, $startTime);
 
         $needRestart = $request->get('logout', 'false');
-        
+
         if ($needRestart === strtolower('true')) {
             $this->security->logout(false);
         }
 
         return new Response();
-    } 
+    }
 }

@@ -14,7 +14,7 @@
             <form class="auth-form" form-elem="form" action="{{ path('app_login') }}" method="POST">
 
                 <label class="auth-form_label" form-elem="label">
-                    <input class="auth-form_input" name="login" type="text" autocomplete="off" form-elem="input-text">
+                    <input class="auth-form_input" name="login" type="text" autocomplete="off" form-elem="input-text" value="{{ lastUsername }}">
                     <div class="auth-form_name">Логин</div>
                 </label>
 
@@ -30,7 +30,7 @@
                 {% endif %}
 
                 <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
-                
+
                 <div class="auth-form_submit_wrapper">
                     <button class="auth-form_submit red_button" type="submit">Войти в систему</button>
                 </div>
