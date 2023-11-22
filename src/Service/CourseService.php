@@ -48,16 +48,18 @@ class CourseService
 
         return $result;
     }
-    
+
     public function checkForCourseStage(Permission $permission, bool $enableChangeStage = false): array
     {
         $courseProgress = [];
 
         if (Course::INTERACTIVE === $permission->getCourse()->getType()) {
             $courseProgress = $this->synchronizeWithPermission(
-                $this->getModuleSectionByCourse($permission->getCourse()), 
+                $this->getModuleSectionByCourse($permission->getCourse()),
                 $permission
             );
+        } else if (Course::CLASSC === $permission->getCourse()->getType()) {
+            $courseProgress = $permission->getHistory();
         }
 
         return $courseProgress;

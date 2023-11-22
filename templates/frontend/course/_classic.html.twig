@@ -1,6 +1,6 @@
 <div class="modules">
     <div class="modules_item">
-        <div class="modules_item_check"></div>
+        <div class="modules_item_check" {% if courseProgress.0 is defined and courseProgress.0 == 'active' %}status="passed"{% endif %}></div>
         <div class="modules_item_composition">
             {% if hasMultipleThemes %}
                 <a href="{{ path('app_frontend_preparation_many', {id: permission.id}) }}" class="modules_item_name" status="passed">Подготовка к аттестации</a>
@@ -10,7 +10,7 @@
         </div>
     </div>
     <div class="modules_item">
-        <div class="modules_item_check"></div>
+        <div class="modules_item_check" {% if permission.stage == 3 %}status="passed"{% endif %}></div>
         <div class="modules_item_composition">
             {% if permission.stage == 1 %}
                 <a href="javascript:void(0);" class="modules_item_name" content-elem="final-testing" status="not-passed">Итоговое тестирование</a>

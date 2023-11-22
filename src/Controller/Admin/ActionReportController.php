@@ -12,13 +12,10 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class ActionReportController extends MobileController
 {
-    public function __construct(readonly ActionService $actionService)
-    { }
+    public function __construct(
+        private readonly ActionService $actionService
+    ) {}
 
-    /**
-     * @Route("/admin/action/report", name="admin_action_report")
-     * @throws Exception
-     */
     #[Route('/admin/action/report', name: 'admin_action_report')]
     public function actionReportAction(Request $request): Response
     {

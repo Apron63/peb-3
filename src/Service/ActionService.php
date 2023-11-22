@@ -10,8 +10,9 @@ use DateTime;
 
 class ActionService
 {
-    public function __construct(readonly ActionRepository $actionRepository)
-    { }
+    public function __construct(
+        private readonly ActionRepository $actionRepository
+    ) {}
 
     public function addToActionLog(User $user, Course $course, string $note): int
     {
@@ -42,38 +43,38 @@ class ActionService
     public function generateReportData(DateTime $start, DateTime $end): array
     {
         $result = [];
-        $firstBreak = true;
-        $courseName = '';
-        $courseId = 0;
-        $startInterval = new DateTime('00:00:00');
-        $endInterval = clone $startInterval;
-        /** @var Action $row */
-        foreach($this->actionRepository->getActionsForUser($start, $end) as $row) {
-            if ($firstBreak) {
-                $firstBreak = false;
-                $courseId = $row->getCourse()->getId();
-                $courseName = $row->getCourse()->getShortName();
-            }
-            if ($row->getCourse()->getId() !== $courseId) {
-                $result[] = [
-                    'courseName' => $courseName,
-                    'totalTime' => ($endInterval->diff($startInterval))->format('%H часов %I минут %S секунд'),
-                ];
-                $courseId = $row->getCourse()->getId();
-                $startInterval = new DateTime('00:00:00');
-                $endInterval = clone $startInterval;
-                $courseName = $row->getCourse()->getShortName();
-            }
+        // $firstBreak = true;
+        // $courseName = '';
+        // $courseId = 0;
+        // $startInterval = new DateTime('00:00:00');
+        // $endInterval = clone $startInterval;
+        // /** @var Action $row */
+        // foreach($this->actionRepository->getActionsForUser($start, $end) as $row) {
+        //     if ($firstBreak) {
+        //         $firstBreak = false;
+        //         $courseId = $row->getCourse()->getId();
+        //         $courseName = $row->getCourse()->getShortName();
+        //     }
+        //     if ($row->getCourse()->getId() !== $courseId) {
+        //         $result[] = [
+        //             'courseName' => $courseName,
+        //             'totalTime' => ($endInterval->diff($startInterval))->format('%H часов %I минут %S секунд'),
+        //         ];
+        //         $courseId = $row->getCourse()->getId();
+        //         $startInterval = new DateTime('00:00:00');
+        //         $endInterval = clone $startInterval;
+        //         $courseName = $row->getCourse()->getShortName();
+        //     }
 
-            $startInterval->add($row->getStartAt()->diff($row->getEndAt()));
+        //     $startInterval->add($row->getStartAt()->diff($row->getEndAt()));
 
-        }
-        if (!$firstBreak) {
-            $result[] = [
-                'courseName' => $courseName,
-                'totalTime' => ($endInterval->diff($startInterval))->format('%H часов %I минут %S секунд'),
-            ];
-        }
+        // }
+        // if (!$firstBreak) {
+        //     $result[] = [
+        //         'courseName' => $courseName,
+        //         'totalTime' => ($endInterval->diff($startInterval))->format('%H часов %I минут %S секунд'),
+        //     ];
+        // }
 
         return $result;
     }

@@ -24,16 +24,16 @@ class PreparationController extends AbstractController
         private readonly PreparationService $preparationService,
         private readonly PermissionRepository $permissionRepository,
     ) {}
-    
+
     #[Route('/preparation-one/{id<\d+>}/{themeId<\d+>}/', name: 'app_frontend_preparation_one')]
     public function preparationOne(Permission $permission, int $themeId = null, Request $request): Response
     {
-        if (!$this->userPermissionService->checkPermissionForUser($permission, $this->getUser(), true)) {
+        if (! $this->userPermissionService->checkPermissionForUser($permission, $this->getUser(), true)) {
             throw new ExceptionAccessDeniedException();
         }
 
         $courseTheme = $this->courseThemeRepository->find($themeId);
-        if (!$courseTheme instanceof CourseTheme) {
+        if (! $courseTheme instanceof CourseTheme) {
             throw new NotFoundHttpException('Course theme not found');
         }
 
@@ -44,15 +44,21 @@ class PreparationController extends AbstractController
             $request->get('perPage', 20),
         );
 
+        if (empty($permission->getHistory())) {
+            $permission->setHistory(['active']);
+
+            $this->permissionRepository->save($permission, true);
+        }
+
         return $this->render('frontend/preparation/index.html.twig', [
             'data' => $data,
         ]);
     }
-    
+
     #[Route('/preparation-many/{id<\d+>}/', name: 'app_frontend_preparation_many')]
     public function preparationMany(Permission $permission): Response
     {
-        if (!$this->userPermissionService->checkPermissionForUser($permission, $this->getUser(), false)) {
+        if (! $this->userPermissionService->checkPermissionForUser($permission, $this->getUser(), false)) {
             throw new ExceptionAccessDeniedException();
         }
 
@@ -68,7 +74,7 @@ class PreparationController extends AbstractController
     #[Route('/preparation-interactive/{id<\d+>}/', name: 'app_frontend_preparation_interactive')]
     public function preparationInteractive(Permission $permission, Request $request): Response
     {
-        if (!$this->userPermissionService->checkPermissionForUser($permission, $this->getUser(), true)) {
+        if (! $this->userPermissionService->checkPermissionForUser($permission, $this->getUser(), true)) {
             throw new ExceptionAccessDeniedException();
         }
 
@@ -103,7 +109,7 @@ class PreparationController extends AbstractController
         if (! $this->userPermissionService->checkPermissionForUser($permission, $this->getUser(), false)) {
             throw new ExceptionAccessDeniedException();
         }
-    
+
         $data = $this->preparationService->getQuestionData(
             $permission,
             $themeId,
