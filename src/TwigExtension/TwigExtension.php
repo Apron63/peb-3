@@ -32,7 +32,7 @@ class TwigExtension extends AbstractExtension
         if ($description === '') {
             $description = $nom . '.';
         }
-        
+
         return $shortDescription;
     }
 

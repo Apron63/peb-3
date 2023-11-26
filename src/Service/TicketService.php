@@ -24,9 +24,10 @@ class TicketService
 
     public function createTickets(int $courseId, int $ticketsCnt, int $errorsCnt, int $timeLeft, array $themes): void
     {
-        $themesIds = array_map(static function ($e) {
-            return $e['id'];
-        }, $themes);
+        $themesIds = array_map(
+            static fn ($theme) => $theme['id'],
+            $themes
+        );
 
         $course = $this->courseRepository->findOneBy(['id' => $courseId]);
 
@@ -41,6 +42,7 @@ class TicketService
         for ($i = 1; $i <= $ticketsCnt; $i++) {
             foreach ($themesIds as $themeId) {
                 $tmp = $questionArray[$themeId];
+                
                 shuffle($tmp);
                 $index = array_search($themeId, array_column($themes, 'id'));
                 $arr[$themeId] = array_slice($tmp, 0, $themes[$index]['inputValue']);
@@ -61,8 +63,8 @@ class TicketService
     }
 
     public function createModuleTickets(
-        Course $course, 
-        int $ticketCount, 
+        Course $course,
+        int $ticketCount,
         int $questionCount,
         int $timeLeft,
         int $errorsCount
@@ -150,7 +152,7 @@ class TicketService
             'id' => $ticket['id'],
         ];
     }
-    
+
     public function renderModuleTicket(array $ticket, bool $allAnswers = false): array
     {
         $items = json_decode($ticket['text'][0], JSON_FORCE_OBJECT);

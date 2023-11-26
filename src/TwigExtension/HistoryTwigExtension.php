@@ -12,9 +12,6 @@ use Twig\TwigFunction;
 class HistoryTwigExtension extends AbstractExtension
 {
 
-    /**
-     * TwigExtension constructor.
-     */
     public function __construct(
         private readonly LoggerRepository $loggerRepository,
         private readonly PermissionRepository $permissionRepository,
@@ -52,7 +49,7 @@ class HistoryTwigExtension extends AbstractExtension
             if ($spentHours > 0) {
                 $testingDuration .= $spentHours . ' ч. ';
             }
-            
+
             if ($spentMinutes > 0) {
                 $testingDuration .= $spentMinutes . ' м.';
             }

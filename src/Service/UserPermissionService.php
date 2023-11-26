@@ -2,13 +2,13 @@
 
 namespace App\Service;
 
-use DateTime;
-use App\Entity\User;
-use App\Entity\Permission;
 use App\Entity\MailingQueue;
 use App\Entity\ModuleSection;
-use App\Repository\PermissionRepository;
+use App\Entity\Permission;
+use App\Entity\User;
 use App\Repository\MailingQueueRepository;
+use App\Repository\PermissionRepository;
+use DateTime;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class UserPermissionService
@@ -30,7 +30,7 @@ class UserPermissionService
         $timeNow = new DateTime();
 
         $permissions = $this->permissionRepository->getPermissionQuery($user)->getResult();
-        
+
         $courseIds = array_map(
             fn($permission) => $permission['courseId'],
             array_filter($permissions, fn($permission) => $permission['isActive'])
@@ -64,7 +64,7 @@ class UserPermissionService
                         ->setUser($permission->getUser())
                         ->setSubject('Активирован учебный курс')
                         ->setContent($content);
-    
+
                     $this->mailingQueueRepository->save($mailingQueue, true);
                 }
             }
@@ -77,11 +77,11 @@ class UserPermissionService
         return $result;
     }
 
-    public function checkPermissionHistory(Permission $permission, ModuleSection $moduleSection)
+    public function checkPermissionHistory(Permission $permission, ModuleSection $moduleSection): void
     {
         if ($moduleSection->getType() === ModuleSection::TYPE_INTERMEDIATE) {
             $history = $permission->getHistory();
-            
+
             $moduleId = $moduleSection->getModule()->getId();
 
             foreach ($permission->getHistory() as $moduleKey => $module) {
@@ -116,7 +116,7 @@ class UserPermissionService
                 'moduleId' => $module['id'],
                 'sections' => $sections,
                 'active' => false,
-            ];    
+            ];
         }
 
         return $history;

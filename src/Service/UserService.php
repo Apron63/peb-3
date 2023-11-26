@@ -16,7 +16,7 @@ class UserService
         private readonly UserPasswordHasherInterface $passwordEncoder,
         private readonly TokenStorageInterface $token,
         private readonly UserRepository $userRepository
-    ) { }
+    ) {}
 
     public function checkUserExist(array $criteria): ?User
     {
@@ -109,7 +109,7 @@ class UserService
                 $newPassword[0] = chr(rand(ord('A'), ord('Z')));
             }
         }
-        
+
         $user->setPassword($this->passwordEncoder->hashPassword($user, $newPassword));
         $user->setPlainPassword($newPassword);
         return $user;
