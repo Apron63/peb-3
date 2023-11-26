@@ -34,6 +34,15 @@
             </div>
         </div>
 
+        {% if (form.vars.value.fileName is defined) %}
+            <div class="mb-3 row">
+                <div class="col-sm-2 col-form-label">Загружено</div>
+                <div class="col-sm-10">
+                    <span>{{ form.vars.value.fileName }}</span>
+                </div>
+            </div>
+        {% endif %}
+
         <div class="mb-3 row">
             {{ form_label(form.fileName) }}
             <div class="col-sm-10">

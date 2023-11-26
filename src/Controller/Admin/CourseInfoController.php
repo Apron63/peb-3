@@ -21,8 +21,7 @@ class CourseInfoController extends MobileController
     public function __construct(
         private readonly SluggerInterface $slugger,
         private readonly CourseInfoRepository $courseInfoRepository
-    ) {
-    }
+    ) {}
 
     #[Route('/admin/course_info/create/{id<\d+>}/', name: 'admin_course_info_create')]
     #[IsGranted('ROLE_SUPER_ADMIN')]
