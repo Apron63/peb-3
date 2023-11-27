@@ -14,17 +14,13 @@
                 <div class="express-test">
                     <div class="express-test_header">
                         <h1>Итоговое тестирование</h1>
-                        <!--в end-time передаём timestamp в формате php (в секундах)-->
-                        <div class="express-test_header_timer" test-elem="timer" end-time="{{ data['timeLeftTotal'] }}">
+                        <div class="express-test_header_timer" test-elem="timer" end-time="{{ data['timeLeftTotal'] }}" back-timer-url="{{ path('app_frontend_get_server_time') }}">
                             <div class="express-test_header_timer_minutes" test-elem="minutes">{{ data['timeLeftMinutes'] }}</div>
                             <div class="express-test_header_timer_seconds" test-elem="seconds">{{ data['timeLeftSeconds'] }}</div>
                         </div>
                     </div>
-                    {# <div class="express-test_description">
-                        <strong>Тема:</strong> Эксплуатация опасных производственных объектов, на которых используются трубопроводы пара и горячей воды.
-                    </div> #}
                     <form class="test_form express-test_form" test-form-elem="form">
-                        
+
                         <div class="test_form_question_wrapper">
                             <div class="test_form_question_number">
                                 {{ data['nom'] }}.
@@ -40,7 +36,7 @@
                                     <input class="test_form_radio" type="radio" name="answer1" value="{{ answer['nom'] }}">
                                     <div class="test_form_custom_radio"></div>
                                     <div class="test_form_answer">{{ answer['text'] | raw }}</div>
-                                </label>    
+                                </label>
                             {% endfor %}
 
                         {% else %}
@@ -57,9 +53,9 @@
                         <div class="express-test_form_error"></div>
 
                         <div class="express-test_form_buttons_wrapper">
-                            <button 
-                                type="button" 
-                                class="blue_button express-test_form_button_next" 
+                            <button
+                                type="button"
+                                class="blue_button express-test_form_button_next"
                                 data-url="{{ data['url'] }}"
                                 data-final-url="{{ data['finalUrl'] }}"
                                 data-logger-id="{{ data['loggerId'] }}"
@@ -80,10 +76,10 @@
 
     <div class="overlay" popup-element="overlay"></div>
 
-    <input 
-        type="hidden" 
-        class="time-control" 
-        data-url="{{ getTimingControlUrl() }}" 
+    <input
+        type="hidden"
+        class="time-control"
+        data-url="{{ getTimingControlUrl() }}"
         data-permission-id="{{ data.permissionId }}"
         data-permission-start="{{ data.permissionLastAccess }}"
     >
