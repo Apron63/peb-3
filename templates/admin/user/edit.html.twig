@@ -22,14 +22,14 @@
                 <button class="nav-link" id="nav-permission-tab" data-bs-toggle="tab" data-bs-target="#nav-permission"
                         type="button" role="tab" aria-controls="nav-permission" aria-selected="false">Доступы
                 </button>
-                <button class="nav-link" id="nav-result-tab" data-bs-toggle="tab" data-bs-target="#nav-result"
+                {# <button class="nav-link" id="nav-result-tab" data-bs-toggle="tab" data-bs-target="#nav-result"
                         type="button"
                         role="tab" aria-controls="nav-result" aria-selected="false">Результаты
                 </button>
                 <button class="nav-link" id="nav-action-tab" data-bs-toggle="tab" data-bs-target="#nav-action"
                         type="button"
                         role="tab" aria-controls="nav-action" aria-selected="false">Действия
-                </button>
+                </button> #}
             {% endif %}
 
         </div>
@@ -47,12 +47,12 @@
             <div class="tab-pane fade" id="nav-permission" role="tabpanel" aria-labelledby="nav-permission-tab">
                 {% include 'admin/user/_permission.html.twig' %}
             </div>
-            <div class="tab-pane fade" id="nav-result" role="tabpanel" aria-labelledby="nav-result-tab">
+            {# <div class="tab-pane fade" id="nav-result" role="tabpanel" aria-labelledby="nav-result-tab">
                 {% include 'admin/user/_result.html.twig' %}
             </div>
             <div class="tab-pane fade" id="nav-action" role="tabpanel" aria-labelledby="nav-action-tab">
                 {% include 'admin/user/_action.html.twig' %}
-            </div>
+            </div> #}
         {% endif %}
 
     </div>
