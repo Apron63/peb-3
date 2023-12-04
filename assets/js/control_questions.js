@@ -50,7 +50,8 @@ function loadControlQuestions(wrapper, trigger) {
                         isLoading = true
                     }
                 }
-            });
+            })
+            .catch(error => location.replace('/'))
     }
 }
 
