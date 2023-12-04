@@ -6,8 +6,8 @@ use App\Entity\User;
 use App\Repository\PermissionRepository;
 use App\Service\HistoryService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\Finder\Exception\AccessDeniedException;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 
 class HistoryController extends AbstractController
@@ -23,7 +23,7 @@ class HistoryController extends AbstractController
         $user = $this->getUser();
 
         if (! $user instanceof User) {
-            throw new AccessDeniedException('User Access Denied');
+            throw new NotFoundHttpException('User Not Found');
         }
 
         return $this->render('frontend/history/index.html.twig', [

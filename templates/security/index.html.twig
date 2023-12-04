@@ -5,45 +5,50 @@
 {% block body %}
 
     <div class="global-content">
-         {% include('frontend/components/background.html.twig') %}
+        {% include('frontend/components/background.html.twig') %}
 
-        <div class="auth-form_wrapper">
-            <div class="auth-form_logo">
-                <img src="{{ asset('img/peb_logo_auth.png') }}" alt="logo">
-            </div>
-            <form class="auth-form" form-elem="form" action="{{ path('app_login') }}" method="POST">
+        <div class="auth-form_content">
+            <div class="auth-form_wrapper">
 
-                <label class="auth-form_label" form-elem="label">
-                    <input class="auth-form_input" name="login" type="text" autocomplete="off" form-elem="input-text" value="{{ lastUsername }}">
-                    <div class="auth-form_name">Логин</div>
-                </label>
+                <div class="auth-form_logo">
+                    <img src="{{ asset('img/peb_logo_auth.png') }}" alt="logo">
+                </div>
 
-                <label class="auth-form_label" form-elem="label">
-                    <input class="auth-form_input" name="password" type="password" form-elem="input-text">
-                    <div class="auth-form_name">Пароль</div>
-                </label>
+                <form class="auth-form" form-elem="form" action="{{ path('app_login') }}" method="POST">
+                    <label class="auth-form_label" form-elem="label">
+                        <input class="auth-form_input" name="login" type="text" autocomplete="off" form-elem="input-text" value="{{ lastUsername }}">
+                        <div class="auth-form_name">Логин</div>
+                    </label>
 
-                {% if error %}
-                    <div class="auth-form_error">
-                        {{ error.messageKey | trans(error.messageData, 'my_security') }}
+                    <label class="auth-form_label" form-elem="label">
+                        <input class="auth-form_input" name="password" type="password" form-elem="input-text">
+                        <div class="auth-form_name">Пароль</div>
+                    </label>
+
+                    {% if error %}
+                        <div class="auth-form_error">
+                            {{ error.messageKey | trans(error.messageData, 'my_security') }}
+                        </div>
+                    {% endif %}
+
+                    <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+
+                    <div class="auth-form_submit_wrapper">
+                        <button class="auth-form_submit red_button" type="submit">Войти в систему</button>
                     </div>
-                {% endif %}
 
-                <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+                    <div class="auth-form_difficulties_wrapper">
+                        <a href="javascript:void(0)" class="auth-form_difficulties" element-action="open-popup">Возникли трудности?</a>
+                    </div>
+                </form>
+            </div>
 
-                <div class="auth-form_submit_wrapper">
-                    <button class="auth-form_submit red_button" type="submit">Войти в систему</button>
-                </div>
+            <div class="demo-link_wrapper">
+                <a href="{{ path('app_demo') }}" class="demo-link">Демо-версия</a>
+            </div>
 
-                <div class="auth-form_difficulties_wrapper">
-                    <a href="javascript:void(0)" class="auth-form_difficulties" element-action="open-popup">Возникли трудности?</a>
-                </div>
-
-            </form>
         </div>
-        <div class="demo-link_wrapper">
-            <a href="{{ path('app_demo') }}" class="demo-link">Демо-версия</a>
-        </div>
+
         <div class="overlay" popup-element="overlay">
             <div class="popup" popup-element="popup">
                 <p>Если не получается войти в систему:</p>

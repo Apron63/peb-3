@@ -189,6 +189,18 @@
         overflow: hidden;
     }
 
+        .demo-link_wrapper {
+        position: relative;
+        text-align: center;
+        width: 100%;
+        right: 0;
+        bottom: 0;
+        margin-top: 50px;
+        margin-left: auto;
+        margin-right: auto;
+        margin-bottom: 30px;
+    }
+
     .express-test_form_button_next {
         width: 100%;
     }
@@ -280,14 +292,6 @@
     h2 {
         font-size: 16px;
         margin-bottom: 15px;
-    }
-
-    .demo-link_wrapper {
-        text-align: center;
-        right: 0;
-        width: 100%;
-        margin-left: auto;
-        margin-right: auto;
     }
 
     .demo-programs_item {
