@@ -14,6 +14,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\LessThanOrEqual;
+use Symfony\Component\Validator\Constraints\NotBlank;
 
 class PermissionEditType extends AbstractType
 {
@@ -57,6 +58,7 @@ class PermissionEditType extends AbstractType
                     'onfocus' => 'this.placeholder = ""',
                     'onblur' => 'this.placeholder = "Курс"',
                     'multiple' => 'multiple',
+                    'required' => 'required',
                 ],
                 'label_attr' => [
                     'class' => 'col-sm-2 col-form-label'
@@ -68,6 +70,9 @@ class PermissionEditType extends AbstractType
                             : null,
                     ];
                 },
+                'constraints' => [
+                    new NotBlank(),
+                ],
             ])
             ->add('lifeSearch', TextType::class, [
                 'required' => false,
