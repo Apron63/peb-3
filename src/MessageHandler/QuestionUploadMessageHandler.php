@@ -19,7 +19,7 @@ class QuestionUploadMessageHandler
     /**
      * @throws Exception
      */
-    public function __invoke(QuestionUploadMessage $message)
+    public function __invoke(QuestionUploadMessage $message): void
     {
         $job = $this->jobService->createJob(
             'Загрузка вопросов для курса ' . $message->getContent()['filename'],

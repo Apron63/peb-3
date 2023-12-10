@@ -41,7 +41,7 @@ class CourseController extends AbstractController
             'courseProgress' => $this->courseService->checkForCourseStage($permission, true),
         ];
 
-        if (Course::CLASSC === $permission->getCourse()->getType()) {
+        if (Course::CLASSIC === $permission->getCourse()->getType()) {
             $themeId = $this->courseService->getClassicCourseTheme($permission->getCourse());
 
             if (null !== $themeId) {

@@ -15,7 +15,7 @@ class CourseUploadMessageHandler
         private readonly JobService $jobService,
     ) {}
 
-    public function __invoke(CourseUploadMessage $message)
+    public function __invoke(CourseUploadMessage $message): void
     {
         $job = $this->jobService->createJob(
             'Загрузка курса ' . $message->getContent()['filename'],

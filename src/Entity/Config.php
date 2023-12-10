@@ -14,19 +14,19 @@ class Config
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(type: Types::TEXT, nullable: true, length: 50000)]
+    #[ORM\Column(type: Types::TEXT, length: 50000, nullable: true)]
     private ?string $emailAttachmentStatisticText = null;
     
-    #[ORM\Column(type: Types::TEXT, nullable: true, length: 50000)]
+    #[ORM\Column(type: Types::TEXT, length: 50000, nullable: true)]
     private ?string $emailAttachmentResultText = null;
 
-    #[ORM\Column(type: Types::TEXT, nullable: true, length: 50000)]
+    #[ORM\Column(type: Types::TEXT, length: 50000, nullable: true)]
     private ?string $userHasNewPermission = null;
 
-    #[ORM\Column(type: Types::TEXT, nullable: true, length: 50000)]
+    #[ORM\Column(type: Types::TEXT, length: 50000, nullable: true)]
     private ?string $userHasActivatedPermission = null;
 
-    #[ORM\Column(type: Types::TEXT, nullable: true, length: 50000)]
+    #[ORM\Column(type: Types::TEXT, length: 50000, nullable: true)]
     private ?string $permissionWillEndSoon = null;
 
     public function getId(): ?int
@@ -34,7 +34,7 @@ class Config
         return $this->id;
     }
 
-    public function getEmailAttachmentStatisticText()
+    public function getEmailAttachmentStatisticText(): ?string
     {
         return $this->emailAttachmentStatisticText;
     }
@@ -46,7 +46,7 @@ class Config
         return $this;
     }
 
-    public function getEmailAttachmentResultText()
+    public function getEmailAttachmentResultText(): ?string
     {
         return $this->emailAttachmentResultText;
     }

@@ -78,7 +78,7 @@ class DemoService
 
         $ticketsArray = json_decode($ticket->getText()[0]);
 
-        if ($logger->getCourse()->getType() === Course::CLASSC) {
+        if ($logger->getCourse()->getType() === Course::CLASSIC) {
             $ticketsArray = $this->transformTicketArray($ticketsArray);
         }
 
@@ -191,7 +191,7 @@ class DemoService
 
         $questionArray = json_decode($ticket->getText()[0]);
 
-        if ($course->getType() === Course::CLASSC) {
+        if ($course->getType() === Course::CLASSIC) {
             $questionArray = $this->transformTicketArray($questionArray);
         }
 

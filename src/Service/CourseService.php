@@ -40,7 +40,7 @@ class CourseService
     {
         $result = false;
 
-        if ($course->getType() === Course::CLASSC) {
+        if ($course->getType() === Course::CLASSIC) {
             if (count($this->courseThemeRepository->getCourseThemes($course)) > 1) {
                 $result = true;
             }
@@ -58,7 +58,7 @@ class CourseService
                 $this->getModuleSectionByCourse($permission->getCourse()),
                 $permission
             );
-        } else if (Course::CLASSC === $permission->getCourse()->getType()) {
+        } else if (Course::CLASSIC === $permission->getCourse()->getType()) {
             $courseProgress = $permission->getHistory();
         }
 

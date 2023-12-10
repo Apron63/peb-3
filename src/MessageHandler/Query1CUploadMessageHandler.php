@@ -5,7 +5,6 @@ namespace App\MessageHandler;
 use App\Message\Query1CUploadMessage;
 use App\Service\JobService;
 use App\Service\LoaderService;
-use Doctrine\ORM\NonUniqueResultException;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 
 #[AsMessageHandler]
@@ -16,9 +15,6 @@ class Query1CUploadMessageHandler
         private readonly JobService $jobService,
     ) {}
 
-    /**
-     * @throws NonUniqueResultException
-     */
     public function __invoke(Query1CUploadMessage $message): void
     {
         $job = $this->jobService->createJob(

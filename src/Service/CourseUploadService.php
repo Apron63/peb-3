@@ -34,7 +34,7 @@ class CourseUploadService
             $course = (new Course())
                 ->setShortName($this->originalFilename)
                 ->setName($this->originalFilename)
-                ->setType(Course::CLASSC);
+                ->setType(Course::CLASSIC);
 
             $this->courseRepository->save($course, true);
         }

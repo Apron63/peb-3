@@ -7,7 +7,6 @@ use App\Entity\Questions;
 use App\Repository\AnswerRepository;
 use App\Repository\CourseRepository;
 use App\Repository\CourseThemeRepository;
-use App\Repository\ModuleTicketRepository;
 use App\Repository\QuestionsRepository;
 use App\Repository\TicketRepository;
 
@@ -39,7 +38,7 @@ class ModuleTicketService
         $questionsArray = [];
         $items = json_decode($ticket['text'][0], JSON_FORCE_OBJECT);
 
-        if (!empty($items)) {
+        if (! empty($items)) {
             foreach ($items as $questionNom => $questionId) {
                 $question = $this->questionsRepository->find($questionId);
 
@@ -48,7 +47,7 @@ class ModuleTicketService
 
                     $trueAnswers = $this->answerRepository->getAnswers($question, $allAnswers);
 
-                    if (!empty($trueAnswers)) {
+                    if (! empty($trueAnswers)) {
                         foreach($trueAnswers as $answer) {
                             $answers[] = $answer['description'];
                         }
@@ -64,12 +63,10 @@ class ModuleTicketService
             }
         }
 
-        $result = [
+        return [
             'ticketNom' => $ticket['nom'],
             'data' => $questionsArray,
             'id' => $ticket['id'],
         ];
-
-        return $result;
     }
 }

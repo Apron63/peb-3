@@ -90,7 +90,7 @@ class CourseEditType extends AbstractType
             $builder->add('type', ChoiceType::class, [
                 'label' => 'Тип курсов',
                 'choices'  => [
-                    'Вопрос-ответ' => Course::CLASSC,
+                    'Вопрос-ответ' => Course::CLASSIC,
                     'Интерактивные' => Course::INTERACTIVE,
                 ],
                 'attr' => [

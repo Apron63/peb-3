@@ -57,7 +57,7 @@ class DemoController extends AbstractController
 
         $courseInfo = $this->courseInfoRepository->getCourseInfos($course);
 
-        if (Course::CLASSC === $course->getType()) {
+        if (Course::CLASSIC === $course->getType()) {
             $themeId = $this->courseService->getClassicCourseTheme($course);
 
             $hasMultipleThemes = false;

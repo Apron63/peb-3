@@ -12,7 +12,7 @@ use Symfony\Component\Validator\Constraints\Length;
 #[ORM\Entity(repositoryClass: CourseRepository::class)]
 class Course
 {
-    public const CLASSC = 1;
+    public const CLASSIC = 1;
     public const INTERACTIVE = 2;
     
     #[ORM\Id]
@@ -32,7 +32,7 @@ class Course
     private ?Profile $profile = null;
 
     #[ORM\Column(type: Types::SMALLINT)]
-    private ?int $type = self::CLASSC;
+    private ?int $type = self::CLASSIC;
 
     #[ORM\Column]
     private bool $forDemo = false;

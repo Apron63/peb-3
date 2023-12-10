@@ -46,7 +46,7 @@ class AnswerRepository extends ServiceEntityRepository
             ->where('a.question = :question')
             ->setParameter('question', $question->getId());
 
-        if (!$allAnswers) {
+        if (! $allAnswers) {
             $queryBuilder->andWhere('a.isCorrect = :trueValue')
                 ->setParameter('trueValue', true);
         }
