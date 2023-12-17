@@ -45,7 +45,7 @@ class StorageController extends AbstractController
             throw new NotFoundHttpException('Filename cannot be blank');
         }
 
-        if (!$course) {
+        if (! $course) {
             throw new NotFoundHttpException('Course not found');
         }
 

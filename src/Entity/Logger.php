@@ -2,10 +2,10 @@
 
 namespace App\Entity;
 
+use DateTime;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\LoggerRepository;
-use Doctrine\ORM\Mapping\JoinColumn;
 
 #[ORM\Entity(repositoryClass: LoggerRepository::class)]
 class Logger
@@ -28,10 +28,10 @@ class Logger
     private ?int $errorActually = null;
 
     #[ORM\Column(nullable: true)]
-    private ?\DateTime $beginAt = null;
+    private ?DateTime $beginAt = null;
 
     #[ORM\Column(nullable: true)]
-    private ?\DateTime $endAt = null;
+    private ?DateTime $endAt = null;
 
     #[ORM\Column(type: Types::SMALLINT, nullable: true)]
     private ?int $result = null;
@@ -53,7 +53,7 @@ class Logger
     private ?Permission $permission = null;
 
     #[ORM\Column(nullable: true)]
-    private ?\DateTime $timeLastQuestion = null;
+    private ?DateTime $timeLastQuestion = null;
 
     public function getId(): ?int
     {
@@ -96,24 +96,24 @@ class Logger
         return $this;
     }
 
-    public function getBeginAt(): ?\DateTime
+    public function getBeginAt(): ?DateTime
     {
         return $this->beginAt;
     }
 
-    public function setBeginAt(?\DateTime $beginAt): self
+    public function setBeginAt(?DateTime $beginAt): self
     {
         $this->beginAt = $beginAt;
 
         return $this;
     }
 
-    public function getEndAt(): ?\DateTime
+    public function getEndAt(): ?DateTime
     {
         return $this->endAt;
     }
 
-    public function setEndAt(?\DateTime $endAt): self
+    public function setEndAt(?DateTime $endAt): self
     {
         $this->endAt = $endAt;
 
@@ -192,12 +192,12 @@ class Logger
         return $this;
     }
 
-    public function getTimeLastQuestion(): ?\DateTime
+    public function getTimeLastQuestion(): ?DateTime
     {
         return $this->timeLastQuestion;
     }
 
-    public function setTimeLastQuestion(?\DateTime $timeLastQuestion): self
+    public function setTimeLastQuestion(?DateTime $timeLastQuestion): self
     {
         $this->timeLastQuestion = $timeLastQuestion;
 

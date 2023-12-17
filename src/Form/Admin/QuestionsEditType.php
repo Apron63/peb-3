@@ -26,7 +26,7 @@ class QuestionsEditType extends AbstractType
                     'onblur' => 'this.placeholder = "Номер"',
                 ],
             ])
-            ->add('description', TypeCkeditorType::class, [])
+            ->add('description', TypeCkeditorType::class)
             ->add('type', ChoiceType::class, [
                 'choices' => Questions::getAnswerType(),
                 'attr' => [
@@ -38,7 +38,7 @@ class QuestionsEditType extends AbstractType
                     'rows' => 6,
                 ],
             ])
-            ->add('help', TypeCkeditorType::class, [])
+            ->add('help', TypeCkeditorType::class)
             ->add('submit', SubmitType::class, [
                 'label' => 'Сохранить',
                 'attr' => [

@@ -24,7 +24,7 @@ class TimeControlController extends AbstractController
         private readonly Security $security,
     ) {}
 
-    #[Route('/frontend/timing/', name: 'app_frontend_timing', condition: 'request.isXmlHttpRequest()', methods: 'POST')]
+    #[Route('/frontend/timing/', name: 'app_frontend_timing', methods: 'POST', condition: 'request.isXmlHttpRequest()')]
     public function index(Request $request): Response
     {
         $permissionId = $request->get('permissionId');
@@ -41,7 +41,7 @@ class TimeControlController extends AbstractController
             throw new ExceptionAccessDeniedException();
         }
 
-        if (!$this->userPermissionService->checkPermissionForUser($permission, $user, false)) {
+        if (! $this->userPermissionService->checkPermissionForUser($permission, $user, false)) {
             throw new ExceptionAccessDeniedException();
         }
 

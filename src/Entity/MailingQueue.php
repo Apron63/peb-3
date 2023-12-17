@@ -19,13 +19,13 @@ class MailingQueue
     private ?int $id = null;
 
     #[ORM\ManyToOne]
-    #[ORM\JoinColumn()]
+    #[ORM\JoinColumn]
     private ?User $user = null;
 
     #[ORM\Column(nullable: true)]
     private ?string $reciever = null;
 
-    #[ORM\Column()]
+    #[ORM\Column]
     private ?string $subject = null;
 
     #[ORM\Column(type: Types::TEXT)]

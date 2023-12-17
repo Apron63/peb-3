@@ -3,6 +3,7 @@
 namespace App\Controller\Admin;
 
 use App\Decorator\MobileController;
+use App\Entity\User;
 use App\Repository\QueryUserRepository;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -18,7 +19,10 @@ class Query1CLoadController extends MobileController
     #[Route('/admin/query/1cload/', name: 'admin_query_1cload')]
     public function index(Request $request, PaginatorInterface $paginator): Response
     {
-        $query = $this->queryUserRepository->getQueryUser($this->getUser());
+        /** @var User $user */
+        $user = $this->getUser();
+
+        $query = $this->queryUserRepository->getQueryUser($user);
 
         $pagination = $paginator->paginate(
             $query,

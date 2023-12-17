@@ -20,7 +20,7 @@ class Loader
     private ?User $user = null;
     
     #[ORM\ManyToOne]
-    #[ORM\JoinColumn(nullable: false, name: 'created_by')]
+    #[ORM\JoinColumn(name: 'created_by', nullable: false)]
     private ?User $createdBy = null;
 
     #[ORM\Column(length: 255)]

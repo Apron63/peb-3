@@ -41,9 +41,9 @@ class ModuleSectionPageRepository extends ServiceEntityRepository
     }
 
     /***
-     * @return ModuSectionPage[]
+     * @return ModuleSectionPage[]
      */
-    public function getmoduleSectionPages(ModuleSection $moduleSection): array
+    public function getModuleSectionPages(ModuleSection $moduleSection): array
     {
         return $this->createQueryBuilder('p')
             ->where('p.section = :moduleSection')

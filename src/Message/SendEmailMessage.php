@@ -4,9 +4,9 @@ namespace App\Message;
 
 class SendEmailMessage
 {
-    private ?string $to = null;
-    private ?string $subject = null;
-    private ?string $content = null;
+    private ?string $to;
+    private ?string $subject;
+    private ?string $content;
 
     public function __construct(?string $to, ?string $subject, ?string $content)
     {

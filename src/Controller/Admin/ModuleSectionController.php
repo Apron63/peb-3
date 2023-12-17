@@ -6,7 +6,6 @@ use App\Entity\Module;
 use App\Entity\ModuleSection;
 use App\Decorator\MobileController;
 use App\Form\Admin\ModuleSectionEditType;
-use App\Service\InteractiveUploadService;
 use App\Repository\ModuleSectionRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -18,7 +17,6 @@ class ModuleSectionController extends MobileController
 {
     public function __construct(
         private readonly ModuleSectionRepository $moduleSectionRepository,
-        private readonly InteractiveUploadService $interactiveUploadService,
         private readonly ModuleSectionPageRepository $moduleSectionPageRepository,
     ) {}
 
@@ -60,7 +58,7 @@ class ModuleSectionController extends MobileController
         return $this->mobileRender('admin/module-section/index.html.twig', [
             'form' => $form->createView(),
             'moduleSection' => $moduleSection,
-            'moduleSectionPages' => $this->moduleSectionPageRepository->getmoduleSectionPages($moduleSection),
+            'moduleSectionPages' => $this->moduleSectionPageRepository->getModuleSectionPages($moduleSection),
         ]);
     }
 

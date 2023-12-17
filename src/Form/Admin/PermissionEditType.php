@@ -65,9 +65,7 @@ class PermissionEditType extends AbstractType
                 ],
                 'choice_attr' => function (Course $course) {
                     return [
-                        'data-profile' => $course->getProfile()
-                            ? $course->getProfile()->getId()
-                            : null,
+                        'data-profile' => $course->getProfile()?->getId(),
                     ];
                 },
                 'constraints' => [

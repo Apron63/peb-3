@@ -60,8 +60,9 @@ class Profile
 
     public function addCourse(Course $course): self
     {
-        if (!$this->course->contains($$course)) {
-            $this->course->add($type);
+        if (!$this->course->contains($course)) {
+            $this->course->add($course);
+
             $course->setProfile($this);
         }
 

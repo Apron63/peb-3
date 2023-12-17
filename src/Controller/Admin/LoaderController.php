@@ -4,6 +4,7 @@ namespace App\Controller\Admin;
 
 use App\Decorator\MobileController;
 use App\Entity\Permission;
+use App\Entity\User;
 use App\Form\Admin\Load1CType;
 use App\Repository\CourseRepository;
 use App\Repository\LoaderRepository;
@@ -26,6 +27,9 @@ class LoaderController extends MobileController
     #[Route('/admin/import_1C/', name: 'admin_import_1C')]
     public function import1C(Request $request): Response
     {
+        /** @var User $user */
+        $user = $this->getUser();
+
         $form = $this->createForm(Load1CType::class);
         $form->handleRequest($request);
 
@@ -34,7 +38,7 @@ class LoaderController extends MobileController
             && $form->isValid()
             && $form->get('filename')->getData() !== null
         ) {
-            $this->loaderService->loadDataFrom1C($form->get('filename')->getData(), $this->getUser());
+            $this->loaderService->loadDataFrom1C($form->get('filename')->getData(), $user);
 
             return $this->redirectToRoute('admin_loader');
         }
@@ -47,7 +51,10 @@ class LoaderController extends MobileController
     #[Route('/admin/loader/', name: 'admin_loader')]
     public function index(): Response
     {
-        $data = $this->loaderRepository->getLoaderforUser($this->getUser());
+        /** @var User $user */
+        $user = $this->getUser();
+
+        $data = $this->loaderRepository->getLoaderForUser($user);
         $emptyData = count($data) > 0 ? 0 : 1;
 
         return $this->render('admin/loader/index.html.twig', [
@@ -70,9 +77,12 @@ class LoaderController extends MobileController
     #[Route('/admin/loader/setAllCheckBox/', name: 'admin_loader_set_all_check_box', condition: 'request.isXmlHttpRequest()')]
     public function setAllCheckBoxValue(Request $request): JsonResponse
     {
+        /** @var User $user */
+        $user = $this->getUser();
+
         $action = strtolower($request->get('action', 'select'));
 
-        $this->loaderRepository->setAllCheckBoxValue($this->getUser(), $action);
+        $this->loaderRepository->setAllCheckBoxValue($user, $action);
 
         return new JsonResponse();
     }
@@ -80,8 +90,11 @@ class LoaderController extends MobileController
     #[Route('/admin/loader/checkIfLoaderIsEmpty/', name: 'admin_loader_check_empty', condition: 'request.isXmlHttpRequest()')]
     public function checkIfLoaderIsEmpty(): JsonResponse
     {
+        /** @var User $user */
+        $user = $this->getUser();
+
         return new JsonResponse([
-            'empty' => $this->loaderRepository->checkIfLoaderIsEmpty($this->getUser()),
+            'empty' => $this->loaderRepository->checkIfLoaderIsEmpty($user),
         ]);
     }
     
@@ -99,7 +112,9 @@ class LoaderController extends MobileController
     #[Route('/admin/loader/sendToQuery/', name: 'admin_loader_send_to_query', condition: 'request.isXmlHttpRequest()')]
     public function sendToQuery(Request $request): JsonResponse
     {
+        /** @var User $user */
         $user = $this->getUser();
+
         $courseIds = $request->get('course');
         $duration = $request->get('duration');
 
@@ -118,8 +133,11 @@ class LoaderController extends MobileController
     #[Route('/admin/loader/checkQuery/', name: 'admin_loader_check_query', condition: 'request.isXmlHttpRequest()')]
     public function checkQuery(): JsonResponse
     {
+        /** @var User $user */
+        $user = $this->getUser();
+
         return new JsonResponse([
-            'result' => $this->loaderService->checkUserQueryIsEmpty($this->getUser())
+            'result' => $this->loaderService->checkUserQueryIsEmpty($user)
         ]);
     }
 }

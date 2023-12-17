@@ -80,9 +80,9 @@ class CourseInfoController extends MobileController
                     . $courseInfo->getCourse()->getId();
 
                 if (
-                    !file_exists($catalogName)
-                    && !mkdir($catalogName, 0777, true)
-                    && !is_dir($catalogName)
+                    ! file_exists($catalogName)
+                    && ! mkdir($catalogName, 0777, true)
+                    && ! is_dir($catalogName)
                 ) {
                     throw new RuntimeException(sprintf('Directory "%s" was not created', $catalogName));
                 }
@@ -95,7 +95,7 @@ class CourseInfoController extends MobileController
                         $catalogName,
                         $newFilename
                     );
-                } catch (FileException $e) {
+                } catch (FileException) {
                 }
 
                 $courseInfo->setFileName($newFilename);

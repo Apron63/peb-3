@@ -3,7 +3,6 @@
 namespace App\Service;
 
 use App\Entity\User;
-use App\Repository\LoggerRepository;
 use App\Repository\MailingQueueRepository;
 use App\Repository\QueryUserRepository;
 use Symfony\Bundle\SecurityBundle\Security;
@@ -13,7 +12,6 @@ class DashboardService
     private const FREE_DISK_SPACE_MIN = 2_150_000_000;
 
     public function __construct(
-        private readonly LoggerRepository $loggerRepository,
         private readonly MailingQueueRepository $mailingQueueRepository,
         private readonly QueryUserRepository $queryUserRepository,
         private readonly Security $security,

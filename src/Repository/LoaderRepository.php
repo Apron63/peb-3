@@ -40,7 +40,7 @@ class LoaderRepository extends ServiceEntityRepository
         }
     }
 
-    public function getLoaderforUser(User $user): array
+    public function getLoaderForUser(User $user): array
     {
         $queryBuilder = 
             $this->createQueryBuilder('l')

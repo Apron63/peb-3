@@ -17,10 +17,10 @@ class QueryUser
     private ?int $id = null;
 
     #[ORM\ManyToOne]
-    #[ORM\JoinColumn(nullable: false, name: "created_by")]
+    #[ORM\JoinColumn(name: "created_by", nullable: false)]
     private ?User $createdBy = null;
 
-    #[ORM\Column()]
+    #[ORM\Column]
     private ?string $courseIds = null;
 
     #[ORM\Column]

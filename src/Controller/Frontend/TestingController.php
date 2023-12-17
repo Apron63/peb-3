@@ -5,7 +5,6 @@ namespace App\Controller\Frontend;
 use App\Entity\Logger;
 use App\Entity\Permission;
 use App\Entity\User;
-use App\Repository\PermissionRepository;
 use App\Service\TestingReportService;
 use App\Service\TestingService;
 use App\Service\UserPermissionService;
@@ -21,7 +20,6 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException as Exception
 class TestingController extends AbstractController
 {
     public function __construct(
-        private readonly PermissionRepository $permissionRepository,
         private readonly TestingService $testingService,
         private readonly UserPermissionService $userPermissionService,
         private readonly TestingReportService $reportService,
@@ -82,7 +80,6 @@ class TestingController extends AbstractController
         if (!$this->userPermissionService->checkPermissionForUser($permission, $user, false)) {
             throw new ExceptionAccessDeniedException();
         }
-
 
         $fileName = $this->reportService->generateTestingPdf($logger);
         $response = new BinaryFileResponse($fileName);

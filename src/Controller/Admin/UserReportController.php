@@ -17,12 +17,12 @@ class UserReportController extends AbstractController
         private readonly UserRepository $userRepository,
     ) {}
 
-    #[Route('/admin/user/report/statistic/to_pdf/', name: 'admin_user_report_stattistic_to_pdf')]
+    #[Route('/admin/user/report/statistic/to_pdf/', name: 'admin_user_report_statistic_to_pdf')]
     public function adminUserReportStatisticToPdf(Request $request): BinaryFileResponse
     {
         $criteria = $request->get('criteria');
 
-        if (!empty($criteria)) {
+        if (! empty($criteria)) {
             $data = $this->userRepository->getUserSearchQuery($criteria['user_search'], true)->getResult();
         }
 
@@ -36,12 +36,12 @@ class UserReportController extends AbstractController
         return $response;
     }
     
-    #[Route('/admin/user/report/statistic/to_docx/', name: 'admin_user_report_stattistic_to_docx')]
+    #[Route('/admin/user/report/statistic/to_docx/', name: 'admin_user_report_statistic_to_docx')]
     public function adminUserReportStatisticToDocx(Request $request): BinaryFileResponse
     {
         $criteria = $request->get('criteria');
 
-        if (!empty($criteria)) {
+        if (! empty($criteria)) {
             $data = $this->userRepository->getUserSearchQuery($criteria['user_search'], true)->getResult();
         }
 
@@ -55,12 +55,12 @@ class UserReportController extends AbstractController
         return $response;
     }
 
-    #[Route('/admin/user/report/statistic/to_xlsx/', name: 'admin_user_report_stattistic_to_xlsx')]
+    #[Route('/admin/user/report/statistic/to_xlsx/', name: 'admin_user_report_statistic_to_xlsx')]
     public function adminUserReportStatisticToXlsx(Request $request): BinaryFileResponse
     {
         $criteria = $request->get('criteria');
 
-        if (!empty($criteria)) {
+        if (! empty($criteria)) {
             $data = $this->userRepository->getUserSearchQuery($criteria['user_search'], true)->getResult();
         }
 
@@ -79,7 +79,7 @@ class UserReportController extends AbstractController
     {
         $criteria = $request->get('criteria');
 
-        if (!empty($criteria)) {
+        if (! empty($criteria)) {
             $data = $this->userRepository->getUserSearchQuery($criteria['user_search'])->getResult();
         }
 
@@ -98,7 +98,7 @@ class UserReportController extends AbstractController
     {
         $criteria = $request->get('criteria');
 
-        if (!empty($criteria)) {
+        if (! empty($criteria)) {
             $data = $this->userRepository->getUserSearchQuery($criteria['user_search'], true)->getResult();
         }
 
@@ -117,7 +117,7 @@ class UserReportController extends AbstractController
     {
         $criteria = $request->get('criteria');
 
-        if (!empty($criteria)) {
+        if (! empty($criteria)) {
             $data = $this->userRepository->getUserSearchQuery($criteria['user_search'])->getResult();
         }
         $fileName = $this->reportService->generateListTXT($data);
@@ -135,7 +135,7 @@ class UserReportController extends AbstractController
     {
         $criteria = $request->get('criteria');
 
-        if (!empty($criteria)) {
+        if (! empty($criteria)) {
             $data = $this->userRepository->getUserSearchQuery($criteria['user_search'], true)->getResult();
         }
 

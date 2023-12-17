@@ -4,7 +4,8 @@ namespace App\Entity;
 
 use App\Repository\CourseInfoRepository;
 use Doctrine\ORM\Mapping as ORM;
-use Exception;
+use Symfony\Component\Filesystem\Exception\IOException;
+use Symfony\Component\Filesystem\Filesystem;
 
 #[ORM\Entity(repositoryClass: CourseInfoRepository::class)]
 class CourseInfo
@@ -65,16 +66,14 @@ class CourseInfo
         return $this;
     }
 
-    #[ORM\PreRemove()]
-    public function removeAttachedFile(): void
+    #[ORM\PreRemove]
+    public function removeAttachedFile(Filesystem $filesystem, string $courseUploadPath): void
     {
         try {
-            unlink(
-                getcwd() . '/storage/course/'
-                . $this->getCourse()->getId()
-                . '/' . $this->fileName
+            $filesystem->remove(
+                $courseUploadPath . $this->getCourse()->getId() . DIRECTORY_SEPARATOR . $this->fileName
             );
-        } catch (Exception $e) {
+        } catch (IOException) {
         }
     }
 }

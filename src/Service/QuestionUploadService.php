@@ -39,7 +39,6 @@ class QuestionUploadService
         string $courseUploadPath,
         private readonly CourseRepository $courseRepository,
         private readonly QuestionsRepository $questionsRepository,
-        private readonly PermissionRepository $permissionRepository,
         private readonly TicketRepository $ticketRepository,
     ) {
         $this->em = $em;

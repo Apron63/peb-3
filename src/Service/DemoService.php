@@ -14,7 +14,6 @@ use App\Repository\DemoLoggerRepository;
 use App\Repository\LoggerRepository;
 use App\Repository\TicketRepository;
 use App\Repository\QuestionsRepository;
-use App\Repository\PermissionRepository;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -26,7 +25,6 @@ class DemoService
         private readonly TicketRepository $ticketRepository,
         private readonly QuestionsRepository $questionsRepository,
         private readonly AnswerRepository $answerRepository,
-        private readonly PermissionRepository $permissionRepository,
         private readonly UrlGeneratorInterface $router,
         private readonly DemoLoggerRepository $demoLoggerRepository,
     ) {}
@@ -270,7 +268,6 @@ class DemoService
             'url' => $this->router->generate('app_demo_testing_next_step', ['id' => $logger->getCourse()->getId()]),
             'finalUrl' => $this->router->generate('app_demo_final_testing_end', ['id' => $logger->getCourse()->getId()]),
             'loggerId' => $logger->getId(),
-            'loggerId' => '',
             'nom' => $logger->getQuestionNom(),
             'text' => $question->getDescription(),
             'timeLeftTotal' => (new DateTime())->getTimestamp() + $timeLeft,

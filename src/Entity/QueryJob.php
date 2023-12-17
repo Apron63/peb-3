@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\QueryJobRepository;
+use DateTimeInterface;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -18,10 +19,10 @@ class QueryJob
     private ?string $description = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
-    private ?\DateTimeInterface $startAt = null;
+    private ?DateTimeInterface $startAt = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
-    private ?\DateTimeInterface $endAt = null;
+    private ?DateTimeInterface $endAt = null;
 
     #[ORM\ManyToOne]
     #[ORM\JoinColumn(nullable: false)]
@@ -47,24 +48,24 @@ class QueryJob
         return $this;
     }
 
-    public function getStartAt(): ?\DateTimeInterface
+    public function getStartAt(): ?DateTimeInterface
     {
         return $this->startAt;
     }
 
-    public function setStartAt(\DateTimeInterface $startAt): self
+    public function setStartAt(DateTimeInterface $startAt): self
     {
         $this->startAt = $startAt;
 
         return $this;
     }
 
-    public function getEndAt(): ?\DateTimeInterface
+    public function getEndAt(): ?DateTimeInterface
     {
         return $this->endAt;
     }
 
-    public function setEndAt(?\DateTimeInterface $endAt): self
+    public function setEndAt(?DateTimeInterface $endAt): self
     {
         $this->endAt = $endAt;
 

@@ -8,8 +8,6 @@ use App\Service\TicketService;
 use App\Form\Admin\ModuleEditType;
 use App\Decorator\MobileController;
 use App\Repository\ModuleRepository;
-use App\Service\ModuleTicketService;
-use App\Repository\QuestionsRepository;
 use App\Repository\ModuleSectionRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -22,9 +20,7 @@ class ModuleController extends MobileController
     public function __construct(
         private readonly ModuleRepository $moduleRepository,
         private readonly ModuleSectionRepository $moduleSectionRepository,
-        private readonly QuestionsRepository $questionsRepository,
         private readonly TicketService $ticketService,
-        private readonly ModuleTicketService $moduleTicketservice
     ) {}
 
     #[Route('/admin/module/add/{id<\d+>}/', name: 'admin_module_create')]

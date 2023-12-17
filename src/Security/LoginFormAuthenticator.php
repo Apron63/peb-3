@@ -45,7 +45,7 @@ class LoginFormAuthenticator extends AbstractLoginFormAuthenticator
             && $request->isMethod('POST');
     }
 
-    public function getCredentials(Request $request)
+    public function getCredentials(Request $request): array
     {
         $credentials = [
             'login' => $request->request->get('login'),
@@ -108,7 +108,7 @@ class LoginFormAuthenticator extends AbstractLoginFormAuthenticator
         );
     }
 
-    public function onAuthenticationSuccess(Request $request, TokenInterface $token, $providerKey): ?Response
+    public function onAuthenticationSuccess(Request $request, TokenInterface $token, $firewallName): ?Response
     {
         if ($this->security->isGranted(User::ROLE_ADMIN)) {
             return new RedirectResponse($this->urlGenerator->generate('admin_homepage'));
@@ -118,7 +118,7 @@ class LoginFormAuthenticator extends AbstractLoginFormAuthenticator
             return new RedirectResponse($this->urlGenerator->generate('homepage'));
         }
 
-        if ($targetPath = $this->getTargetPath($request->getSession(), $providerKey)) {
+        if ($targetPath = $this->getTargetPath($request->getSession(), $firewallName)) {
             return new RedirectResponse($targetPath);
         }
 

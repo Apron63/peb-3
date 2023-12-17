@@ -4,6 +4,7 @@ namespace App\Controller\Admin;
 
 use App\Entity\Ticket;
 use App\Service\TicketService;
+use JsonException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -17,6 +18,9 @@ class TicketController extends AbstractController
         private readonly TicketService $ticketService
     ) {}
 
+    /**
+     * @throws JsonException
+     */
     #[Route('/admin/tickets/create/', name: 'admin_tickets_create', condition: 'request.isXmlHttpRequest()')]
     #[IsGranted('ROLE_SUPER_ADMIN')]
     public function createTickets(Request $request): Response
@@ -37,7 +41,7 @@ class TicketController extends AbstractController
 
     #[Route('/admin/tickets/print/{id<\d+>}/', name: 'admin_tickets_print')]
     #[IsGranted('ROLE_SUPER_ADMIN')]
-    public function printTicket(Ticket $ticket)
+    public function printTicket(Ticket $ticket): Response
     {
         $arTicket = [
             'id' => $ticket->getId(),
@@ -54,7 +58,7 @@ class TicketController extends AbstractController
     
     #[Route('/admin/module-tickets/print/{id<\d+>}/', name: 'admin_module_tickets_print')]
     #[IsGranted('ROLE_SUPER_ADMIN')]
-    public function printModuleTicket(Ticket $ticket)
+    public function printModuleTicket(Ticket $ticket): Response
     {
         $arTicket = [
             'id' => $ticket->getId(),

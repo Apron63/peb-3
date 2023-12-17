@@ -3,7 +3,6 @@
 namespace App\EventListener;
 
 use App\Entity\Course;
-use App\Repository\ActionRepository;
 use App\Repository\CourseInfoRepository;
 use App\Repository\CourseThemeRepository;
 use App\Repository\ModuleRepository;
@@ -15,7 +14,6 @@ use Doctrine\Persistence\Event\LifecycleEventArgs;
 class CourseRemoveEventListener
 {
     public function __construct(
-        private readonly ActionRepository $actionRepository,
         private readonly CourseInfoRepository $courseInfoRepository,
         private readonly CourseThemeRepository $courseThemeRepository,
         private readonly QuestionsRepository $questionsRepository,
@@ -37,7 +35,6 @@ class CourseRemoveEventListener
             $this->moduleRepository->removeModuleFromCourse($entity);
         }
 
-        $this->actionRepository->removeActionForCourse($entity);
         $this->courseInfoRepository->removeCourseInfoForCourse($entity);
         $this->courseThemeRepository->removeCourseThemeForCourse($entity);
         $this->questionsRepository->removeQuestionsForCourse($entity);
@@ -47,7 +44,7 @@ class CourseRemoveEventListener
         $this->removeCourseDirectory($entity);
     }
 
-    private function removeCourseDirectory(Course $course)
+    private function removeCourseDirectory(Course $course): void
     {
         $path = $this->courseUploadPath . DIRECTORY_SEPARATOR . $course->getId();
 

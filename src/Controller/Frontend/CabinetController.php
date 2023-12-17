@@ -18,6 +18,7 @@ class CabinetController extends AbstractController
     #[Route('/', name: 'homepage')]
     public function index(): Response
     {
+        /** @var User $user */
         $user = $this->getUser();
 
         if (! $user instanceof User) {
@@ -28,7 +29,7 @@ class CabinetController extends AbstractController
             return $this->redirectToRoute('admin_homepage');
         }
 
-        $permissions = $this->permissionRepository->getPermissionLeftMenu($this->getUser());
+        $permissions = $this->permissionRepository->getPermissionLeftMenu($user);
 
         return $this->render('frontend/my-programs/index.html.twig', [
             'permissions' => $permissions,

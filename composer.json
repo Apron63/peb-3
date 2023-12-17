@@ -5,8 +5,6 @@
     "prefer-stable": true,
     "require": {
         "php": ">=8.1",
-        "ext-ctype": "*",
-        "ext-iconv": "*",
         "beberlei/doctrineextensions": "dev-master",
         "doctrine/annotations": "^2.0",
         "doctrine/doctrine-bundle": "^2.7",
@@ -58,7 +56,12 @@
         "tattali/mobile-detect-bundle": "*",
         "trsteel/ckeditor-bundle": "^1.18",
         "twig/extra-bundle": "^3.0",
-        "twig/twig": "^3.0"
+        "twig/twig": "^3.0",
+        "ext-zip": "*",
+        "ext-xmlreader": "*",
+        "ext-dom": "*",
+        "ext-ctype": "*",
+        "ext-iconv": "*"
     },
     "config": {
         "allow-plugins": {
@@ -104,7 +107,7 @@
     "extra": {
         "symfony": {
             "allow-contrib": false,
-            "require": "6.2.*"
+            "require": "6.3.*"
         }
     },
     "require-dev": {

@@ -2,6 +2,7 @@
 
 namespace App\Controller\Admin;
 
+use App\Entity\User;
 use App\Service\ConfigService;
 use App\Service\DashboardService;
 use App\Repository\UserRepository;
@@ -56,14 +57,16 @@ class UserReportAndSendController extends AbstractController
     #[Route('/admin/user/report/send_letter_to_client/', name: 'admin_user_report_send_letter_to_client', condition: 'request.isXmlHttpRequest()')]
     public function adminSendLetterToClient(Request $request):JsonResponse
     {
+        /** @var User $user */
+        $user = $this->getUser();
+
         $recipient = $request->get('recipient');
         $subject = $request->get('subject');
         $comment = $request->get('comment');
         $type = $request->get('type');
-        $user = $this->getUser();
         $criteria = $request->get('criteria');
 
-        if (!empty($criteria)) {
+        if ( !empty($criteria)) {
             $data = $this->userRepository->getUserSearchQuery($criteria['user_search'], true)->getResult();
         }
 
@@ -75,12 +78,14 @@ class UserReportAndSendController extends AbstractController
     #[Route('/admin/user/report/send_statistic_to_client/', name: 'admin_user_report_send_statistic_to_client', condition: 'request.isXmlHttpRequest()')]
     public function adminSendStatisticToClient(Request $request):JsonResponse
     {
+        /** @var User $user */
+        $user = $this->getUser();
+
         $recipient = $request->get('recipient');
         $subject = $request->get('subject');
         $comment = $request->get('comment');
         $type = $request->get('type');
         $criteria = $request->get('criteria');
-        $user = $this->getUser();
 
         if (!empty($criteria)) {
             $data = $this->userRepository->getUserSearchQuery($criteria['user_search'], true)->getResult();

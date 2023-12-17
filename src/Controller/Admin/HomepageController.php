@@ -18,7 +18,6 @@ class HomepageController extends MobileController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-
             return $this->redirectToRoute('admin_homepage');
         }
 

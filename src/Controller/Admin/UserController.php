@@ -4,7 +4,6 @@ namespace App\Controller\Admin;
 
 use App\Decorator\MobileController;
 use App\Entity\User;
-use App\Form\Admin\ActionIntervalType;
 use App\Form\Admin\UserEditType;
 use App\Repository\PermissionRepository;
 use App\Repository\UserRepository;
@@ -97,7 +96,6 @@ class UserController extends MobileController
             'form' => $form->createView(),
             'user' => $user,
             'pagination' => $pagination,
-            'actionForm' => $this->createForm(ActionIntervalType::class)->createView(),
         ]);
     }
 

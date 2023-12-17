@@ -3,7 +3,6 @@
 namespace App\Controller\Frontend;
 
 use App\Entity\User;
-use App\Repository\PermissionRepository;
 use App\Service\MyProgramsService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -14,7 +13,6 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 class LeftMenuController extends AbstractController
 {
     public function __construct(
-        private readonly PermissionRepository $permissionRepository,
         private readonly MyProgramsService $myProgramsService
     ) {}
 

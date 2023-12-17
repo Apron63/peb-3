@@ -41,13 +41,13 @@ class ProfileService
 
             $uploadFullPath = $this->avatarUploadPath . DIRECTORY_SEPARATOR . $uploadDirectory;
 
-            if (!file_exists($uploadFullPath) && !mkdir($uploadFullPath, 0777, true) && !is_dir($uploadFullPath)) {
+            if (! file_exists($uploadFullPath) && ! mkdir($uploadFullPath, 0777, true) && ! is_dir($uploadFullPath)) {
                 throw new RuntimeException(sprintf('Directory "%s" was not created', $uploadFullPath));
             }
 
             try {
                 $image->move($uploadFullPath, $image->getClientOriginalName());
-            } catch (FileException $e) {
+            } catch (FileException) {
                 throw new RuntimeException('Невозможно переместить файл в каталог загрузки');
             }
 

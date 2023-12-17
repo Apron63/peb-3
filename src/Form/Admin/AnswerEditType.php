@@ -25,7 +25,7 @@ class AnswerEditType extends AbstractType
                     'onblur' => 'this.placeholder = "Номер"',
                 ],
             ])
-            ->add('description', TypeCkeditorType::class, [])
+            ->add('description', TypeCkeditorType::class)
             ->add('isCorrect', CheckboxType::class, [
                 'label' => 'Правильный ответ',
                 'required' => false,

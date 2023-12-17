@@ -30,7 +30,7 @@ class TwigExtension extends AbstractExtension
     {
         $shortDescription = strip_tags(u($description)->truncate(1000));
         if ($description === '') {
-            $description = $nom . '.';
+            $shortDescription = $nom . '.';
         }
 
         return $shortDescription;

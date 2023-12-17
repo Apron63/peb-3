@@ -16,7 +16,7 @@ class ReportController extends MobileController
     {
         $fileName = $request->get('fileName');
         
-        if (!file_exists($fileName)) {
+        if (! file_exists($fileName)) {
             throw new NotFoundHttpException('Отчет не найден');
         }
 

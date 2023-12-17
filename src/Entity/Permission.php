@@ -184,14 +184,20 @@ class Permission
 
     public function getStageDescription(): string
     {
+        $description = '';
+
         switch($this->stage) {
             case self::STAGE_NOT_STARTED:
-                return 'Неактивно';
+                $description = 'Неактивно';
+                break;
             case self::STAGE_IN_PROGRESS:
-                return 'В процессе';
+                $description = 'В процессе';
+                break;
             case self::STAGE_FINISHED:
-                return 'Окончено';
+                $description = 'Окончено';
         }
+
+        return $description;
     }
 
     public function getLoader(): ?Loader

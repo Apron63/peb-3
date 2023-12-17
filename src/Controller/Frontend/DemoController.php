@@ -102,7 +102,7 @@ class DemoController extends AbstractController
         $response = new Response();
         $response->headers->setCookie(new Cookie('init', md5($sessionId), time() + 3600));
 
-        $moduleSectionPages = $this->moduleSectionPageRepository->getmoduleSectionPages($section);
+        $moduleSectionPages = $this->moduleSectionPageRepository->getModuleSectionPages($section);
 
         return $this->render('frontend/demo/_info-file.html.twig', [
             'moduleSection' => $section,

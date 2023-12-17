@@ -3,7 +3,6 @@
 namespace App\Entity;
 
 use DateTime;
-use App\Entity\Course;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\DemoLoggerRepository;
@@ -193,12 +192,12 @@ class DemoLogger
         return $this;
     }
 
-    public function getTimeLastQuestion(): ?\DateTime
+    public function getTimeLastQuestion(): ?DateTime
     {
         return $this->timeLastQuestion;
     }
 
-    public function setTimeLastQuestion(?\DateTime $timeLastQuestion): self
+    public function setTimeLastQuestion(?DateTime $timeLastQuestion): self
     {
         $this->timeLastQuestion = $timeLastQuestion;
 

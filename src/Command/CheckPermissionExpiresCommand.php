@@ -7,7 +7,6 @@ use App\Service\ConfigService;
 use App\Service\DashboardService;
 use App\Repository\PermissionRepository;
 use App\Repository\MailingQueueRepository;
-use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Input\InputInterface;
@@ -19,7 +18,6 @@ class CheckPermissionExpiresCommand extends Command
     public function __construct (
         private readonly PermissionRepository $permissionRepository,
         private readonly MailingQueueRepository $mailingQueueRepository,
-        private readonly MailerInterface $mailer,
         private readonly DashboardService $dashboardService,
         private readonly ConfigService $configService,
     ) {

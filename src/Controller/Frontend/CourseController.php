@@ -116,7 +116,7 @@ class CourseController extends AbstractController
         if (ModuleSection::TYPE_TESTING === $moduleSection->getType()) {
             return $this->redirectToRoute('app_frontend_preparation_interactive', ['id' => $permission->getId()]);
         } else {
-            $moduleSectionPages = $this->moduleSectionPageRepository->getmoduleSectionPages($moduleSection);
+            $moduleSectionPages = $this->moduleSectionPageRepository->getModuleSectionPages($moduleSection);
         }
 
         return $this->render('frontend/course/_file.html.twig', [

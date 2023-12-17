@@ -71,7 +71,7 @@ class AdminReportService
         $phpWord->setDefaultFontSize(8);
 
         $section = $phpWord->addSection();
-        $section->addText();
+        $section->addText('');
 
         $table = $section->addTable();
 

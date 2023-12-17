@@ -35,13 +35,10 @@ class SupportService
 
     private function composeMail(Support $support): string
     {
-        $result =
-            'ФИО полностью : ' . $support->getName() . '<br>'
-            . 'E-Mail : ' . $support->getEmail() . '<br>'
-            . 'Телефон : ' . $support->getPhone() . '<br>'
-            . 'Курс : ' . $support->getCourse() . '<br>'
-            . 'Вопрос : ' . $support->getQuestion() . '<br>';
-
-        return $result;
+        return 'ФИО полностью : ' . $support->getName() . '<br>'
+        . 'E-Mail : ' . $support->getEmail() . '<br>'
+        . 'Телефон : ' . $support->getPhone() . '<br>'
+        . 'Курс : ' . $support->getCourse() . '<br>'
+        . 'Вопрос : ' . $support->getQuestion() . '<br>';
     }
 }

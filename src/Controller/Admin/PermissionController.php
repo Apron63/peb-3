@@ -60,7 +60,6 @@ class PermissionController extends MobileController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-
             $data = [
                 'duration' => $form->get('duration')->getData(),
                 'orderNom' => $form->get('orderNom')->getData(),
@@ -123,7 +122,7 @@ class PermissionController extends MobileController
             throw new NotFoundHttpException('User Not Found');
         }
 
-        $logger = $this->testingService->getFirstSuccesfullyLogger($permission, $user);
+        $logger = $this->testingService->getFirstSuccessfullyLogger($permission, $user);
 
         if ($logger instanceof Logger) {
             return $this->render('admin/testing/protocol.html.twig', [

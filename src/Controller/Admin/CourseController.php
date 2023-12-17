@@ -109,7 +109,7 @@ class CourseController extends MobileController
 
                 try {
                     $image->move($imgPath, $newFilename);
-                } catch (FileException $e) {
+                } catch (FileException) {
                 }
 
                 $course->setImage($newFilename);

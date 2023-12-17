@@ -2,6 +2,7 @@
 
 namespace App\Controller\Admin;
 
+use App\Entity\User;
 use App\Form\Admin\LoadCourseType;
 use App\Decorator\MobileController;
 use App\Message\CourseUploadMessage;

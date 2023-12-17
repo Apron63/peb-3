@@ -31,7 +31,7 @@ class ConfigService
         return $result;
     }
 
-    public function setConfigValue(string $attribute, $value)
+    public function setConfigValue(string $attribute, $value): void
     {
         $config = $this->configRepository->findOneBy([]);
 

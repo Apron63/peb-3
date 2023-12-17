@@ -22,7 +22,7 @@ class ProfileController extends AbstractController
     {
         $user = $this->getUser();
 
-        if (!$user instanceof User) {
+        if (! $user instanceof User) {
             return $this->redirectToRoute('homepage');
         }
 
@@ -31,11 +31,9 @@ class ProfileController extends AbstractController
         ]);
     }
     
-    #[Route('/profile/upload_image/', name: 'profile_upload_image', condition: 'request.isXmlHttpRequest()', methods: 'POST')]
+    #[Route('/profile/upload_image/', name: 'profile_upload_image', methods: 'POST', condition: 'request.isXmlHttpRequest()')]
     public function profileUploadImageAction(Request $request): JsonResponse
     {
-        $result = [];
-
         $user = $this->getUser();
 
         if (! $user instanceof User) {

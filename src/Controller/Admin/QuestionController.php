@@ -8,7 +8,6 @@ use App\Decorator\MobileController;
 use App\Repository\AnswerRepository;
 use App\Form\Admin\QuestionsEditType;
 use App\Repository\QuestionsRepository;
-use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;

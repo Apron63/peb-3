@@ -8,14 +8,12 @@ use App\Entity\Permission;
 use App\Entity\CourseTheme;
 use App\Entity\ModuleSection;
 use App\Repository\ModuleRepository;
-use App\Repository\PermissionRepository;
 use App\Repository\CourseThemeRepository;
 use App\Repository\ModuleSectionRepository;
 
 class CourseService
 {
     public function __construct(
-        private readonly PermissionRepository $permissionRepository,
         private readonly ModuleSectionRepository $moduleSectionRepository,
         private readonly ModuleRepository $moduleRepository,
         private readonly CourseThemeRepository $courseThemeRepository,

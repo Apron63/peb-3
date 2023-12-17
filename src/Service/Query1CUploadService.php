@@ -2,15 +2,10 @@
 
 namespace App\Service;
 
-use App\Entity\Course;
-use App\Entity\Permission;
 use App\Entity\QueryUser;
 use App\Entity\User;
 use App\Message\Query1CUploadMessage;
-use App\Repository\CourseRepository;
-use App\Repository\PermissionRepository;
 use App\Repository\QueryUserRepository;
-use App\Repository\UserRepository;
 use RuntimeException;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
@@ -19,20 +14,13 @@ use Symfony\Component\Messenger\MessageBusInterface;
 class Query1CUploadService
 {
     private string $originalFilename;
-    private string $reportUploadPath;
     private string $exchange1cUploadDirectory;
 
     public function __construct(
         private readonly MessageBusInterface $bus,
         private readonly QueryUserRepository $queryUserRepository,
-        private readonly UserRepository $userRepository,
-        private readonly UserService $userService,
-        private readonly CourseRepository $courseRepository,
-        private readonly PermissionRepository $permissionRepository,
-        string $reportUploadPath,
         string $exchange1cUploadDirectory
     ) {
-        $this->reportUploadPath = $reportUploadPath;
         $this->exchange1cUploadDirectory = $exchange1cUploadDirectory;
     }
    
