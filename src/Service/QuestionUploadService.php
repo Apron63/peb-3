@@ -4,13 +4,14 @@ namespace App\Service;
 
 use App\Entity\Course;
 use App\Repository\CourseRepository;
-use App\Repository\PermissionRepository;
 use App\Repository\QuestionsRepository;
 use App\Repository\TicketRepository;
 use Doctrine\DBAL\Exception;
+use Doctrine\DBAL\Logging\Middleware;
 use Doctrine\ORM\EntityManagerInterface;
 use DOMElement;
 use DOMNodeList;
+use Psr\Log\NullLogger;
 use RuntimeException;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
@@ -42,7 +43,9 @@ class QuestionUploadService
         private readonly TicketRepository $ticketRepository,
     ) {
         $this->em = $em;
-        $this->em->getConnection()->getConfiguration()->setSQLLogger();
+        $this->em->getConnection()->getConfiguration()->setMiddlewares([
+            new Middleware(new NullLogger())
+        ]);
         $this->courseUploadPath = $courseUploadPath;
     }
 
@@ -55,7 +58,7 @@ class QuestionUploadService
         $path = $this->courseUploadPath . DIRECTORY_SEPARATOR . $course->getId();
 
         // Проверить что каталог существует, при необходимости создать.
-        if (!file_exists($path) && !mkdir($path, 0777, true) && !is_dir($path)) {
+        if (! file_exists($path) && ! mkdir($path, 0777, true) && ! is_dir($path)) {
             throw new RuntimeException(sprintf('Directory "%s" was not created', $path));
         }
 
@@ -68,7 +71,7 @@ class QuestionUploadService
 
         // Распаковать архив
         $zip = new ZipArchive;
-        $res = $zip->open($path . '/' . $this->originalFilename . '.zip');
+        $res = $zip->open($path . DIRECTORY_SEPARATOR . $this->originalFilename . '.zip');
         if (true === $res) {
             $zip->extractTo($path);
             $zip->close();
