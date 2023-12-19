@@ -2,25 +2,26 @@
 
 namespace App\Controller\Admin;
 
-use RuntimeException;
+use App\Service\FileUploadService;
 use App\Entity\Course;
 use App\Entity\CourseInfo;
 use App\Decorator\MobileController;
 use App\Form\Admin\CourseInfoEditType;
 use App\Repository\CourseInfoRepository;
+use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\String\Slugger\SluggerInterface;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
-use Symfony\Component\HttpFoundation\File\Exception\FileException;
 
 class CourseInfoController extends MobileController
 {
     public function __construct(
-        private readonly SluggerInterface $slugger,
-        private readonly CourseInfoRepository $courseInfoRepository
+        private readonly CourseInfoRepository $courseInfoRepository,
+        private readonly FileUploadService $fileUploadService,
+        private readonly Filesystem $filesystem,
+        private readonly string $courseUploadPath,
     ) {}
 
     #[Route('/admin/course_info/create/{id<\d+>}/', name: 'admin_course_info_create')]
@@ -33,21 +34,11 @@ class CourseInfoController extends MobileController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            // TODO Вынести в сервис
-            /** @var UploadedFile $file */
             $file = $form->get('fileName')->getData();
 
             if ($file instanceof UploadedFile) {
-                $originalFilename = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
-                $safeFilename = $this->slugger->slug($originalFilename);
-                $newFilename = $safeFilename . '-' . uniqid('', true) . '.' . $file->guessExtension();
-                try {
-                    $file->move(
-                        $this->getParameter('course_upload_directory') . '/' . $course->getId(),
-                        $newFilename
-                    );
-                } catch (FileException $e) {
-                }
+                $path = $this->courseUploadPath . DIRECTORY_SEPARATOR . $course->getId();
+                $newFilename = $this->fileUploadService->uploadFile($file, $path);
 
                 $courseInfo->setFileName($newFilename);
             }
@@ -69,34 +60,11 @@ class CourseInfoController extends MobileController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            // TODO Вынести в сервис
-            /** @var UploadedFile $file */
             $file = $form->get('fileName')->getData();
 
-            if ($file) {
-                // Проверить что каталог существует, при необходимости создать.
-                $catalogName = $this->getParameter('course_upload_directory')
-                    . '/'
-                    . $courseInfo->getCourse()->getId();
-
-                if (
-                    ! file_exists($catalogName)
-                    && ! mkdir($catalogName, 0777, true)
-                    && ! is_dir($catalogName)
-                ) {
-                    throw new RuntimeException(sprintf('Directory "%s" was not created', $catalogName));
-                }
-                $originalFilename = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
-                $safeFilename = $this->slugger->slug($originalFilename);
-                $newFilename = $safeFilename . '-' . uniqid('', true) . '.' . $file->guessExtension();
-
-                try {
-                    $file->move(
-                        $catalogName,
-                        $newFilename
-                    );
-                } catch (FileException) {
-                }
+            if ($file instanceof UploadedFile) {
+                $path = $this->courseUploadPath . DIRECTORY_SEPARATOR . $courseInfo->getCourse()->getId();
+                $newFilename = $this->fileUploadService->uploadFile($file, $path, $courseInfo->getFileName());
 
                 $courseInfo->setFileName($newFilename);
             }
@@ -117,10 +85,13 @@ class CourseInfoController extends MobileController
     {
         $courseId = $courseInfo->getCourse()?->getId();
 
-        $fileName = $this->getParameter('course_upload_directory') . '/' . $courseInfo->getCourse()->getId() . '/' . $courseInfo->getFileName();
-        if (file_exists($fileName)) {
-            unlink($fileName);
+        $path = $this->courseUploadPath . DIRECTORY_SEPARATOR . $courseInfo->getCourse()->getId();
+        $fileName = $path . DIRECTORY_SEPARATOR . $courseInfo->getFileName();
+
+        if ($this->filesystem->exists($fileName)) {
+            $this->filesystem->remove($fileName);
         }
+
         $this->courseInfoRepository->remove($courseInfo, true);
 
         return $this->redirect('/admin/course/' . $courseId . '/');
