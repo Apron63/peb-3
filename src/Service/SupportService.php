@@ -15,7 +15,7 @@ class SupportService
     public function sendSupportMailMessage(Support $support): void
     {
         $this->bus->dispatch(new SendEmailMessage(
-            'support@safety63.ru',
+            'uc@safety63.ru',
             'Запрос технической поддержки СДО PROобучение',
             $this->composeMail($support)
         ));
