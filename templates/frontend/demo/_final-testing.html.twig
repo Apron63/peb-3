@@ -13,7 +13,7 @@
                 <div class="express-test">
                     <div class="express-test_header">
                         <h1>Итоговое тестирование</h1>
-                        <div class="express-test_header_timer" test-elem="timer" end-time="{{ data['timeLeftTotal'] }}">
+                        <div class="express-test_header_timer" test-elem="timer" end-time="{{ data['timeLeftTotal'] }}" back-timer-url="{{ path('app_frontend_demo_get_server_time') }}">
                             <div class="express-test_header_timer_minutes" test-elem="minutes">{{ data['timeLeftMinutes'] }}</div>
                             <div class="express-test_header_timer_seconds" test-elem="seconds">{{ data['timeLeftSeconds'] }}</div>
                         </div>
@@ -35,7 +35,7 @@
                                     <input class="test_form_radio" type="radio" name="answer1" value="{{ answer['nom'] }}">
                                     <div class="test_form_custom_radio"></div>
                                     <div class="test_form_answer">{{ answer['text'] | raw }}</div>
-                                </label>    
+                                </label>
                             {% endfor %}
                         {% else %}
                             {% for answer in data['answers'] %}
@@ -50,9 +50,9 @@
                         <div class="express-test_form_error"></div>
 
                         <div class="express-test_form_buttons_wrapper">
-                            <button 
-                                type="button" 
-                                class="blue_button express-test_form_button_next" 
+                            <button
+                                type="button"
+                                class="blue_button express-test_form_button_next"
                                 data-url="{{ data['url'] }}"
                                 data-final-url="{{ data['finalUrl'] }}"
                                 data-logger-id="{{ data['loggerId'] }}"
