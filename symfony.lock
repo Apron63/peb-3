@@ -289,13 +289,13 @@
             "webpack.config.js"
         ]
     },
-    "tattali/mobile-detect-bundle": {
-        "version": "v2.2.6"
-    },
     "trsteel/ckeditor-bundle": {
         "version": "1.18.0"
     },
     "twig/extra-bundle": {
         "version": "v3.4.0"
+    },
+    "xpanel/mobile-detect-bundle": {
+        "version": "dev-main"
     }
 }

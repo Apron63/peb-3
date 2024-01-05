@@ -2,7 +2,7 @@
 
 namespace App\Decorator;
 
-use Mobile_Detect;
+use MobileDetectBundle\DeviceDetector\MobileDetector;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -12,7 +12,7 @@ class MobileController extends AbstractController
 
     public function mobileRender(string $view, array $parameters = [], Response $response = null): Response
     {
-        $detector = new Mobile_Detect();
+        $detector = new MobileDetector();
 
         if ($detector->isMobile()) {
             $position = strpos($view, self::VIEW_EXTENSION);
