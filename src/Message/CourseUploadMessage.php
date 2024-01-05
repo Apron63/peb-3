@@ -2,12 +2,12 @@
 
 namespace App\Message;
 
-class CourseUploadMessage
+readonly class CourseUploadMessage
 {
     public function __construct(
-        private readonly string $fileName, 
-        private readonly int $userId, 
-        private readonly int $courseId,
+        private string $fileName,
+        private int $userId,
+        private int $courseId,
     ) {}
 
     public function getContent(): array

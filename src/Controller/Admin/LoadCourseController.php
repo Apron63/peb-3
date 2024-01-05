@@ -6,7 +6,7 @@ use App\Entity\User;
 use App\Form\Admin\LoadCourseType;
 use App\Decorator\MobileController;
 use App\Message\CourseUploadMessage;
-use App\Service\CourseUploadService;
+use App\Service\CourseDownloadService;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -16,7 +16,7 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 class LoadCourseController extends MobileController
 {
     public function __construct(
-        private readonly CourseUploadService $courseUploadService,
+        private readonly CourseDownloadService $courseDownloadService,
         private readonly MessageBusInterface $messageBus
     ) {}
     
@@ -35,7 +35,7 @@ class LoadCourseController extends MobileController
             && $form->isValid()
             && $form->get('filename')->getData() !== null
         ) {
-            $course = $this->courseUploadService->fileCourseUpload($form->get('filename')->getData());
+            $course = $this->courseDownloadService->downloadCourse($form->get('filename')->getData());
 
             $this->messageBus->dispatch(
                 new CourseUploadMessage(

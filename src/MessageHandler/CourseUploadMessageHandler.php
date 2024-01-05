@@ -3,16 +3,20 @@
 namespace App\MessageHandler;
 
 use App\Message\CourseUploadMessage;
-use App\Service\CourseUploadService;
+use App\Repository\CourseRepository;
+use App\Service\CourseDownloadService;
 use App\Service\JobService;
+use App\Service\XmlCourseDownload\XmlDownloader;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 
 #[AsMessageHandler]
-class CourseUploadMessageHandler
+readonly class CourseUploadMessageHandler
 {
     public function __construct(
-        private readonly CourseUploadService $courseUploadService,
-        private readonly JobService $jobService,
+        private XmlDownloader $xmlDownloader,
+        private CourseDownloadService $courseDownloadService,
+        private CourseRepository $courseRepository,
+        private JobService $jobService,
     ) {}
 
     public function __invoke(CourseUploadMessage $message): void
@@ -22,7 +26,10 @@ class CourseUploadMessageHandler
             $message->getContent()['userId'],
         );
         
-        $this->courseUploadService->readCourseIntoDb($message->getContent());
+        $data = $this->xmlDownloader->downloadXml($message->getContent());
+        $this->courseDownloadService->checkIfCourseExistsInDatabase($message->getContent()['courseId'], $data['courseName']);
+        $this->courseRepository->saveCourseToDb($message->getContent()['courseId'], $data['themes']);
+
         $this->jobService->finishJob($job);
     }
 }

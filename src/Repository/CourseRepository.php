@@ -2,8 +2,9 @@
 
 namespace App\Repository;
 
+use App\Service\XmlCourseDownload\CourseThemeDTO;
+use Doctrine\DBAL\Logging\Middleware;
 use Exception;
-use RuntimeException;
 use App\Entity\Answer;
 use App\Entity\Course;
 use App\Entity\Ticket;
@@ -14,6 +15,7 @@ use App\Entity\CourseTheme;
 use Doctrine\ORM\AbstractQuery;
 use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\Persistence\ManagerRegistry;
+use Psr\Log\NullLogger;
 use Symfony\Component\String\UnicodeString;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 
@@ -117,17 +119,18 @@ class CourseRepository extends ServiceEntityRepository
 
     public function prepareCourseClear(Course $course): void
     {
-        $queryBuilder = $this->getEntityManager()->createQueryBuilder();
-        $queryBuilder->delete(CourseInfo::class, 'i')
-            ->where('i.course = :course')
+        $this
+            ->getEntityManager()
+            ->createQueryBuilder()
+            ->delete(CourseInfo::class, 'ci')
+            ->where('ci.course = :course')
             ->setParameter('course', $course)
             ->getQuery()
             ->getResult();
-        unset($queryBuilder);
 
-        $themesQueryBuilder = $this->getEntityManager()->createQueryBuilder();
-
-        $themes = $themesQueryBuilder
+        $themes = $this
+            ->getEntityManager()
+            ->createQueryBuilder()
             ->select('ct')
             ->from(CourseTheme::class, 'ct')
             ->where('ct.course = :course')
@@ -135,118 +138,111 @@ class CourseRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult();
 
-        foreach($themes as $theme) {
-            $questionQueryBuilder = $this->getEntityManager()->createQueryBuilder();
-
-            $questions = $questionQueryBuilder
-                ->select('q')
+        foreach ($themes as $theme) {
+            $questions = $this
+                ->getEntityManager()
+                ->createQueryBuilder()
+                ->select('q.id')
                 ->from(Questions::class, 'q')
                 ->where('q.course = :course')
                 ->andWhere('q.parentId = :parentId')
                 ->setParameter('course', $course)
                 ->setParameter('parentId', $theme->getId())
                 ->getQuery()
-                ->getResult();
-            
-            foreach($questions as $question) {
-                $answerQueryBuilder = $this->getEntityManager()->createQueryBuilder();
+                ->getScalarResult();
 
-                $answerQueryBuilder->delete(Answer::class, 'a')
-                    ->where('a.question = :question')
-                    ->setParameter('question', $question)
-                    ->getQuery()
-                    ->getResult();
+            $questionsIds = array_map(
+                fn(array $question) => $question['id'],
+                $questions,
+            );
 
-                unset($answerQueryBuilder);
-            }
-
-            $questionQueryBuilder->delete(Questions::class, 'q')
-                ->where('q.course = :course')
-                ->andWhere('q.parentId = :parentId')
-                ->setParameter('course', $course)
-                ->setParameter('parentId', $theme->getId())
+            $this
+                ->getEntityManager()
+                ->createQueryBuilder()
+                ->delete(Answer::class, 'a')
+                ->where('a.question in (:questionsIds)')
+                ->setParameter('questionsIds', $questionsIds)
                 ->getQuery()
                 ->getResult();
 
-            unset($questionQueryBuilder);
+            $this
+                ->getEntityManager()
+                ->createQueryBuilder()
+                ->delete(Questions::class, 'q')
+                ->where('q.id in (:questionsIds)')
+                ->setParameter('questionsIds', $questionsIds)
+                ->getQuery()
+                ->getResult();
         }
 
-        $themesQueryBuilder->delete(CourseTheme::class, 't')
-            ->where('t.course = :course')
+        $this
+            ->getEntityManager()
+            ->createQueryBuilder()
+            ->delete(CourseTheme::class, 'theme')
+            ->where('theme.course = :course')
             ->setParameter('course', $course)
             ->getQuery()
             ->getResult();
 
-        unset($themesQueryBuilder);
-
-        $queryBuilder = $this->getEntityManager()->createQueryBuilder();
-        $queryBuilder->delete(Ticket::class, 'tk')
-            ->where('tk.course = :course')
+        $this
+            ->getEntityManager()
+            ->createQueryBuilder()
+            ->delete(Ticket::class, 'ticket')
+            ->where('ticket.course = :course')
             ->setParameter('course', $course)
             ->getQuery()
             ->getResult();
-
-        unset($queryBuilder);
     }
 
-    public function saveDataToDb(array $data, array $materials, int $courseId): void
+    /**
+     * @param CourseThemeDTO[] $themes
+     */
+    public function saveCourseToDb(int $courseId, array $themes): void
     {
-        $themeNom = 1;
+        $this->getEntityManager()->getConnection()->getConfiguration()->setMiddlewares([
+            new Middleware(new NullLogger())
+        ]);
 
         $this->getEntityManager()->beginTransaction();
 
         try {
-            foreach ($data as $theme) {
+            foreach ($themes as $theme) {
                 $this->getEntityManager()->getConnection()->executeQuery("
                     INSERT INTO course_theme (id, course_id, name, description)
-                    VALUES (NULL, '{$courseId}', '{$themeNom}', '{$theme['theme']['name']}')
+                    VALUES (NULL, '{$courseId}', '{$theme->name}', '{$theme->description}')
                 ");
+
                 $themeId = $this->getEntityManager()->getConnection()->lastInsertId();
-                $themeNom++;
-    
+
                 // Вопросы
-                $cnt = 1;
-                foreach ($theme['questions'] as $item) {
-                    try {
-                        $this->getEntityManager()->getConnection()->executeQuery("
-                            INSERT INTO questions (id, course_id, parent_id , description, type, help, nom)
-                            VALUES (NULL, {$courseId}, {$themeId}, '{$item['qText']}', {$item['type']}, '{$item['hText']}', {$cnt})
-                        ");
-                    } catch (Exception $e) {
-                        throw new RuntimeException($e->getMessage());
-                    }
-    
+                foreach ($theme->questions as $question) {
+                    $this->getEntityManager()->getConnection()->executeQuery("
+                        INSERT INTO questions (id, course_id, parent_id , description, type, help, nom)
+                        VALUES (NULL, {$courseId}, {$themeId}, '{$question->description}', {$question->type}, '{$question->help}', {$question->nom})
+                    ");
+
                     $questionId = $this->getEntityManager()->getConnection()->lastInsertId();
     
                     // Ответы
-                    $aCnt = 1;
-                    foreach ($item['answer'] as $row) {
-                        $status = (int) $row['aStatus'];
+                    foreach ($question->answers as $answer) {
+                        $status = (int) $answer->isCorrect;
     
-                        try {
-                            $this->getEntityManager()->getConnection()->executeQuery("
-                                INSERT INTO answer (id, question_id , description, is_correct, nom)
-                                VALUES (NULL, {$questionId}, '{$row['aText']}', {$status}, {$aCnt})
-                            ");
-                        } catch (Exception $e) {
-                            throw new RuntimeException($e->getMessage());
-                        }
-                        
-                        $aCnt ++;
+                        $this->getEntityManager()->getConnection()->executeQuery("
+                            INSERT INTO answer (id, question_id , description, is_correct, nom)
+                            VALUES (NULL, {$questionId}, '{$answer->description}', {$status}, {$answer->nom})
+                        ");
                     }
-    
-                    $cnt ++;
                 }
             }
     
             // Материалы
-            foreach ($materials as $material) {
-
-                $shortMaterialName = $this->shrinkMaterialName($material['name']);
+            $firstTheme = current($themes);
+            foreach ($firstTheme->materials as $material) {
+                $shortMaterialName = $this->shrinkMaterialName($material->name);
 
                 $this->getEntityManager()->getConnection()->executeQuery("
                     INSERT INTO course_info (id, course_id, name, file_name)
-                    VALUES (NULL, {$courseId}, '{$shortMaterialName}', '{$material['file']}')
+                    VALUES (NULL, {$courseId}, '{$shortMaterialName}', '{$material->filename}')
                 ");
             }
 
@@ -255,6 +251,36 @@ class CourseRepository extends ServiceEntityRepository
             $this->getEntityManager()->rollback();
 
             throw($e);
+        }
+    }
+
+    /**
+     * @param CourseThemeDTO[] $themes
+     */
+    public function saveQuestionsToDb(int $courseId, array $themes): void
+    {
+        $this->getEntityManager()->getConnection()->getConfiguration()->setMiddlewares([
+            new Middleware(new NullLogger())
+        ]);
+
+        $theme = current($themes);
+
+        foreach ($theme->questions as $question) {
+            $this->getEntityManager()->getConnection()->executeQuery("
+                INSERT INTO questions (id, course_id, parent_id , description, type, help, nom)
+                VALUES (NULL, {$courseId}, NULL, '{$question->description}', {$question->type}, '{$question->help}', {$question->nom})
+            ");
+            $questionId = $this->getEntityManager()->getConnection()->lastInsertId();
+
+            // Ответы
+            foreach ($question->answers as $answer) {
+                $status = (int) $answer->isCorrect;
+
+                $this->getEntityManager()->getConnection()->executeQuery("
+                    INSERT INTO answer (id, question_id , description, is_correct, nom)
+                    VALUES (NULL, {$questionId}, '{$answer->description}', {$status}, {$answer->nom})
+                ");
+            }
         }
     }
 

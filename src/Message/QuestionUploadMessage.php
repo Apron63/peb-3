@@ -2,18 +2,13 @@
 
 namespace App\Message;
 
-class QuestionUploadMessage
+readonly class QuestionUploadMessage
 {
-    private string $fileName;
-    private int $userId;
-    private int $courseId;
-
-    public function __construct(string $fileName, int $userId, int $courseId)
-    {
-        $this->fileName = $fileName;
-        $this->userId = $userId;
-        $this->courseId = $courseId;
-    }
+    public function __construct(
+        private string $fileName,
+        private int $userId,
+        private int $courseId
+    ) {}
 
     public function getContent(): array
     {

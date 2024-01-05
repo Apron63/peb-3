@@ -2,19 +2,26 @@
 
 namespace App\MessageHandler;
 
+use App\Entity\Course;
 use App\Message\QuestionUploadMessage;
+use App\Repository\CourseRepository;
+use App\Repository\QuestionsRepository;
+use App\Repository\TicketRepository;
 use App\Service\JobService;
-use App\Service\QuestionUploadService;
-use Doctrine\DBAL\Exception;
+use App\Service\XmlCourseDownload\XmlDownloader;
+use Exception;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 
 #[AsMessageHandler]
-class QuestionUploadMessageHandler
+readonly class QuestionUploadMessageHandler
 {
     public function __construct(
-        private readonly QuestionUploadService $questionUploadService,
-        private readonly JobService $jobService
-    ) { }
+        private XmlDownloader $xmlDownloader,
+        private QuestionsRepository $questionsRepository,
+        private TicketRepository $ticketRepository,
+        private CourseRepository $courseRepository,
+        private JobService $jobService
+    ) {}
 
     /**
      * @throws Exception
@@ -25,11 +32,16 @@ class QuestionUploadMessageHandler
             'Загрузка вопросов для курса ' . $message->getContent()['filename'],
             $message->getContent()['userId'],
         );
-        
-        $this->questionUploadService->readCourseIntoDb(
-            $message->getContent()['filename'],
-            $message->getContent()['courseId'],
-        );
+
+        $course = $this->courseRepository->find($message->getContent()['courseId']);
+        if (! $course instanceof Course) {
+            throw new Exception('Course with id not found');
+        }
+
+        $data = $this->xmlDownloader->downloadXml($message->getContent());
+        $this->questionsRepository->removeQuestionsForCourse($course);
+        $this->ticketRepository->deleteOldTickets($course);
+        $this->courseRepository->saveQuestionsToDb($message->getContent()['courseId'], $data['themes']);
 
         $this->jobService->finishJob($job);
     }
