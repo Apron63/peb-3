@@ -31,18 +31,11 @@ services:
     App\TwigExtension\TwigExtension:
         tags:
         - { name: twig.extension }
+
     # Расширение TWIG для результата тестирования
     App\TwigExtension\HistoryTwigExtension:
         tags:
         - { name: twig.extension }
-
-    # Gedmo Timestampable services
-    gedmo.listener.timestampable:
-        class: Gedmo\Timestampable\TimestampableListener
-        tags:
-        - { name: doctrine.event_subscriber, connection: default }
-        calls:
-        - [ setAnnotationReader, [ "@annotation_reader" ] ]
 
     # Модификация стандартного логгера для логирования ip адресов
     monolog.processor.web:
