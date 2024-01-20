@@ -10,7 +10,9 @@ use App\Repository\PermissionRepository;
 use App\Repository\QuestionsRepository;
 use App\Repository\TicketRepository;
 use Doctrine\Persistence\Event\LifecycleEventArgs;
-use Symfony\Component\Filesystem\Filesystem;
+use FilesystemIterator;
+use RecursiveIteratorIterator;
+use Symfony\Component\Finder\Iterator\RecursiveDirectoryIterator;
 
 readonly class CourseRemoveEventListener
 {
@@ -21,7 +23,6 @@ readonly class CourseRemoveEventListener
         private PermissionRepository $permissionRepository,
         private TicketRepository $ticketRepository,
         private ModuleRepository $moduleRepository,
-        private Filesystem $filesystem,
         private string $courseUploadPath,
     ) {}
 
@@ -50,6 +51,18 @@ readonly class CourseRemoveEventListener
     {
         $path = $this->courseUploadPath . DIRECTORY_SEPARATOR . $course->getId();
 
-        $this->filesystem->remove($path);
+        $directoryIterator = new RecursiveDirectoryIterator($path, FilesystemIterator::SKIP_DOTS);
+
+        $files = new RecursiveIteratorIterator($directoryIterator, RecursiveIteratorIterator::CHILD_FIRST);
+
+        foreach ($files as $file) {
+            if ($file->isDir()){
+                rmdir($file->getRealPath());
+            } else {
+                unlink($file->getRealPath());
+            }
+        }
+
+        rmdir($path);
     }
 }
