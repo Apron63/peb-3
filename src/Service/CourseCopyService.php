@@ -180,7 +180,7 @@ readonly class CourseCopyService
             && $this->filesystem->exists($sourceImage)
         ) {
             $targetImage = $this->courseUploadPath . DIRECTORY_SEPARATOR . $newCourse->getId() . DIRECTORY_SEPARATOR . $newCourse->getImage();
-            $this->filesystem->copy($sourceImage, $targetImage);
+            copy($sourceImage, $targetImage);
         }
 
         return $newCourse;
@@ -203,7 +203,7 @@ readonly class CourseCopyService
             $sourceName = $this->courseUploadPath . DIRECTORY_SEPARATOR . $course->getId() . DIRECTORY_SEPARATOR . $courseInfo->getFileName();
             if ($this->filesystem->exists($sourceName)) {
                 $targetName = $this->courseUploadPath . DIRECTORY_SEPARATOR . $newCourse->getId() . DIRECTORY_SEPARATOR . $newCourseInfo->getFileName();
-                $this->filesystem->copy($sourceName, $targetName);
+                copy($sourceName, $targetName);
             }
         }
     }
