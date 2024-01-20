@@ -10,13 +10,15 @@ framework:
                     use_notify: true
                     check_delayed_interval: 60000
                 retry_strategy:
-                    max_retries: 3
+                    max_retries: 1
                     multiplier: 2
             failed: 'doctrine://default?queue_name=failed'
             # sync: 'sync://'
 
         routing:
             'Symfony\Component\Mailer\Messenger\SendEmailMessage': async
+            'App\Message\SendEmailMessage': async
             'App\Message\CourseUploadMessage': async
             'App\Message\Query1CUploadMessage': async
-            
+            'App\Message\QuestionUploadMessage': async
+            'App\Message\CourseCopyMessage': async

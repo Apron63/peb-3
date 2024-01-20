@@ -10,28 +10,30 @@ use App\Repository\PermissionRepository;
 use App\Repository\QuestionsRepository;
 use App\Repository\TicketRepository;
 use Doctrine\Persistence\Event\LifecycleEventArgs;
+use Symfony\Component\Filesystem\Filesystem;
 
-class CourseRemoveEventListener
+readonly class CourseRemoveEventListener
 {
     public function __construct(
-        private readonly CourseInfoRepository $courseInfoRepository,
-        private readonly CourseThemeRepository $courseThemeRepository,
-        private readonly QuestionsRepository $questionsRepository,
-        private readonly PermissionRepository $permissionRepository,
-        private readonly TicketRepository $ticketRepository,
-        private readonly ModuleRepository $moduleRepository,
-        private readonly string $courseUploadPath,
+        private CourseInfoRepository $courseInfoRepository,
+        private CourseThemeRepository $courseThemeRepository,
+        private QuestionsRepository $questionsRepository,
+        private PermissionRepository $permissionRepository,
+        private TicketRepository $ticketRepository,
+        private ModuleRepository $moduleRepository,
+        private Filesystem $filesystem,
+        private string $courseUploadPath,
     ) {}
 
     public function preRemove(LifecycleEventArgs $args): void
     {
         $entity = $args->getObject();
 
-        if (!$entity instanceof Course) {
+        if (! $entity instanceof Course) {
             return;
         }
 
-        if ($entity->getType() === Course::INTERACTIVE) {
+        if (Course::INTERACTIVE === $entity->getType()) {
             $this->moduleRepository->removeModuleFromCourse($entity);
         }
 
@@ -48,13 +50,6 @@ class CourseRemoveEventListener
     {
         $path = $this->courseUploadPath . DIRECTORY_SEPARATOR . $course->getId();
 
-        $files = glob($path . '/*');
-        foreach ($files as $file) {
-            if (is_file($file)) {
-                unlink($file);
-            }
-        }
-
-        rmdir($path);
+        $this->filesystem->remove($path);
     }
 }

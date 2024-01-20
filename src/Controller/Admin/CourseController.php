@@ -3,6 +3,8 @@
 namespace App\Controller\Admin;
 
 use App\Entity\Course;
+use App\Entity\User;
+use App\Message\CourseCopyMessage;
 use App\Service\CourseService;
 use App\Service\FileUploadService;
 use App\Service\TicketService;
@@ -21,7 +23,8 @@ use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Messenger\MessageBusInterface;
+use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 class CourseController extends MobileController
@@ -40,6 +43,7 @@ class CourseController extends MobileController
         private readonly ModuleTicketService $moduleTicketService,
         private readonly CourseService $courseService,
         private readonly FileUploadService $fileUploadService,
+        private readonly MessageBusInterface $messageBus,
         private readonly string $courseUploadPath,
     ) {}
 
@@ -145,6 +149,28 @@ class CourseController extends MobileController
     public function adminCourseDelete(Course $course): Response
     {
         $this->courseRepository->remove($course, true);
+
+        $this->addFlash('success', 'Курс удален');
+
+        return $this->redirectToRoute('admin_course_list');
+    }
+
+    #[Route('/admin/course/copy/{id<\d+>}/', name: 'admin_course_copy')]
+    #[IsGranted('ROLE_SUPER_ADMIN')]
+    public function adminCourseCopy(Course $course): Response
+    {
+        /** @var User $user */
+        $user = $this->getUser();
+
+        $this->messageBus->dispatch(
+            new CourseCopyMessage(
+                $course->getShortName(),
+                $user->getId(),
+                $course->getId()
+            )
+        );
+
+        $this->addFlash('success', 'Задача на копирование курса поставлена в очередь');
 
         return $this->redirectToRoute('admin_course_list');
     }

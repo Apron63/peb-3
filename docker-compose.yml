@@ -25,7 +25,7 @@ services:
     depends_on:
       - php
     ports:
-      - 80:80
+      - "80:80"
     volumes:
       - .:/var/www/html:delegated
       - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
@@ -43,7 +43,7 @@ services:
       - MYSQL_PASSWORD=${MYSQL_PASSWORD}
       - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
     ports:
-      - 3306:3306
+      - "3306:3306"
     volumes:
       - ./docker/mysql:/var/lib/mysql
     networks:
@@ -51,3 +51,5 @@ services:
 
 networks:
   default:
+    name: nginx-proxy
+    external: true

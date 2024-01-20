@@ -78,13 +78,33 @@
                     </td>
                     <td>
                         {% if is_granted('ROLE_SUPER_ADMIN') %}
-                            <a
-                                href="{{ path('admin_course_delete', {'id': course.id}) }}"
-                                class="btn btn-sm btn-outline-danger"
-                                onclick="return window.confirm('Подтвердите действие');"
-                            >
-                                Удалить
-                            </a>
+                            <div class="dropstart">
+                                <button type="button" class="btn btn-outline-secondary" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <img src="{{ asset('svg/more.svg') }}">
+                                </button>
+                                <ul class="dropdown-menu">
+                                    <li>
+                                        <a
+                                            class="dropdown-item color-item"
+                                            href="{{ path('admin_course_copy', {'id': course.id}) }}"
+                                            onclick="return window.confirm('Подтвердите действие');"
+                                        >
+                                            <img src="{{ asset('svg/layers.svg') }}">
+                                            Копировать
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a
+                                            class="dropdown-item color-item"
+                                            href="{{ path('admin_course_delete', {'id': course.id}) }}"
+                                            onclick="return window.confirm('Подтвердите действие');"
+                                        >
+                                            <img src="{{ asset('svg/trash.svg') }}">
+                                            Удалить
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
                         {% endif %}
                     </td>
                 </tr>
