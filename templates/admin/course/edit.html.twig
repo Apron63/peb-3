@@ -24,6 +24,15 @@
 
     <div class="row">
 
+        <div class="row">
+            <div class="col-12">
+                Создано: {{ form.vars.value.createdAt | date('d.m.Y H:i:s') }},
+                Изменено: {{ form.vars.value.updatedAt | date('d.m.Y H:i:s') }}
+            </div>
+        </div>
+
+        <p></p>
+
         <div class="col-12 mb-3">
             <div class="form-group">
                 <span class="text-danger">{{ form_errors(form.shortName) }}</span>

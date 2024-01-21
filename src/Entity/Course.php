@@ -7,11 +7,14 @@ use Doctrine\ORM\Mapping as ORM;
 use App\Repository\CourseRepository;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
+use Gedmo\Timestampable\Traits\TimestampableEntity;
 use Symfony\Component\Validator\Constraints\Length;
 
 #[ORM\Entity(repositoryClass: CourseRepository::class)]
 class Course
 {
+    use TimestampableEntity;
+
     public const CLASSIC = 1;
     public const INTERACTIVE = 2;
     
