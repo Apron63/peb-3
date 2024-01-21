@@ -34,10 +34,17 @@ class ProfileService
         }
 
         if ($success) {
-            $uploadDirectory = 
-                    ByteString::fromRandom(3, self::ALPHABET)->toString() . DIRECTORY_SEPARATOR
-                    . ByteString::fromRandom(3, self::ALPHABET)->toString() . DIRECTORY_SEPARATOR
-                    . ByteString::fromRandom(3, self::ALPHABET)->toString() . DIRECTORY_SEPARATOR;
+            if (null !== $user->getImage()) {
+                $usingPath = explode('/', $user->getImage());
+
+                if (4 === count($usingPath)) {
+                    $uploadDirectory = $usingPath[0] . DIRECTORY_SEPARATOR . $usingPath[1] . DIRECTORY_SEPARATOR . $usingPath[2] . DIRECTORY_SEPARATOR;
+                } else {
+                    $uploadDirectory = $this->getUploadDirectory();
+                }
+            } else {
+                $uploadDirectory = $this->getUploadDirectory();
+            }
 
             $uploadFullPath = $this->avatarUploadPath . DIRECTORY_SEPARATOR . $uploadDirectory;
 
@@ -59,5 +66,12 @@ class ProfileService
             'success' => $success,
             'message' => $message,
         ];
+   }
+
+   private function getUploadDirectory(): string
+   {
+       return ByteString::fromRandom(3, self::ALPHABET)->toString() . DIRECTORY_SEPARATOR
+           . ByteString::fromRandom(3, self::ALPHABET)->toString() . DIRECTORY_SEPARATOR
+           . ByteString::fromRandom(3, self::ALPHABET)->toString() . DIRECTORY_SEPARATOR;
    }
 }

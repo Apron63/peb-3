@@ -6,7 +6,7 @@ use App\Decorator\MobileController;
 use App\Form\Admin\UserSearchType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 
 class HomepageController extends MobileController
 {
