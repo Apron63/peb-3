@@ -10,7 +10,7 @@ use App\Form\Admin\ModuleSectionPageEditType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use App\Repository\ModuleSectionPageRepository;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 class ModuleSectionPageController extends MobileController
@@ -40,7 +40,9 @@ class ModuleSectionPageController extends MobileController
                 );
             }
 
-           return $this->redirectToRoute('admin_module_section_edit', ['id' => $moduleSection->getId()]);
+            $this->addFlash('success', 'Шаблон для курса успешно добавлен');
+
+            return $this->redirectToRoute('admin_module_section_edit', ['id' => $moduleSection->getId()]);
         }
 
         return $this->mobileRender('admin/module-section/edit.html.twig', [
@@ -70,6 +72,8 @@ class ModuleSectionPageController extends MobileController
 
             $this->moduleSectionPageRepository->save($moduleSectionPage, true);
 
+            $this->addFlash('success', 'Шаблон для курса успешно изменен');
+
             return $this->redirectToRoute('admin_module_section_edit', ['id' => $moduleSectionPage->getSection()->getId()]);
         }
 
@@ -85,6 +89,8 @@ class ModuleSectionPageController extends MobileController
     {
         $moduleSectionId = $moduleSectionPage->getSection()->getId();
         $this->moduleSectionPageRepository->remove($moduleSectionPage, true);
+
+        $this->addFlash('success', 'Шаблон для курса удален');
         
         return $this->redirectToRoute('admin_module_section_edit', ['id' => $moduleSectionId]);
     }

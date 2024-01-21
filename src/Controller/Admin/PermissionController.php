@@ -16,7 +16,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 class PermissionController extends MobileController
@@ -42,6 +42,8 @@ class PermissionController extends MobileController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $this->permissionRepository->save($permission, true);
+
+            $this->addFlash('success', 'Доступ добавлен');
 
             return $this->redirect(
                 $this->generateUrl('admin_user_edit', ['id' => $user->getId()])
@@ -92,6 +94,8 @@ class PermissionController extends MobileController
         if ($form->isSubmitted() && $form->isValid()) {
             $this->permissionRepository->save($permission, true);
 
+            $this->addFlash('success', 'Доступ обновлен');
+
             return $this->redirect(
                 $this->generateUrl('admin_user_edit', ['id' => $permission->getUser()->getId()])
             );
@@ -108,6 +112,8 @@ class PermissionController extends MobileController
         $userId = $permission->getUser()->getId();
 
         $this->permissionRepository->remove($permission, true);
+
+        $this->addFlash('success', 'Доступ удален');
 
         return $this->redirect(
             $this->generateUrl('admin_user_edit', ['id' => $userId])

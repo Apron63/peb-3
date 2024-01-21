@@ -10,6 +10,7 @@ use App\Repository\PermissionRepository;
 use App\Repository\QuestionsRepository;
 use App\Repository\TicketRepository;
 use Doctrine\Persistence\Event\LifecycleEventArgs;
+use Exception;
 use FilesystemIterator;
 use RecursiveIteratorIterator;
 use Symfony\Component\Finder\Iterator\RecursiveDirectoryIterator;
@@ -51,7 +52,11 @@ readonly class CourseRemoveEventListener
     {
         $path = $this->courseUploadPath . DIRECTORY_SEPARATOR . $course->getId();
 
-        $directoryIterator = new RecursiveDirectoryIterator($path, FilesystemIterator::SKIP_DOTS);
+        try {
+            $directoryIterator = new RecursiveDirectoryIterator($path, FilesystemIterator::SKIP_DOTS);
+        } catch (Exception) {
+            return;
+        }
 
         $files = new RecursiveIteratorIterator($directoryIterator, RecursiveIteratorIterator::CHILD_FIRST);
 

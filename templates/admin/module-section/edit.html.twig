@@ -15,7 +15,11 @@
 {% block content %}
 
     <h3>
-        Редактирование страницы
+        {% if form.vars.value.id is null %}
+            Добавление шаблона
+        {% else %}
+            Редактирование шаблона
+        {% endif %}
     </h3>
 
     {{ form_start(form, {'attr':{'class': 'form-contact contact_form'}}) }}

@@ -77,6 +77,8 @@ class CourseController extends MobileController
         if ($form->isSubmitted() && $form->isValid()) {
             $this->courseRepository->save($course, true);
 
+            $this->addFlash('success', 'Курс добавлен');
+
             return $this->redirectToRoute('admin_course_list');
         }
 
@@ -109,6 +111,8 @@ class CourseController extends MobileController
             }
             
             $this->courseRepository->save($course, true);
+
+            $this->addFlash('success', 'Курс обновлен');
 
             return $this->redirectToRoute('admin_course_list');
         }

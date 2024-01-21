@@ -11,8 +11,8 @@ use App\Repository\CourseInfoRepository;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 class CourseInfoController extends MobileController
@@ -44,6 +44,8 @@ class CourseInfoController extends MobileController
             }
             $this->courseInfoRepository->save($courseInfo, true);
 
+            $this->addFlash('success', 'Добавлен новый материал');
+
             return $this->redirect('/admin/course/' . $courseInfo->getCourse()->getId() . '/');
         }
 
@@ -71,6 +73,8 @@ class CourseInfoController extends MobileController
 
             $this->courseInfoRepository->save($courseInfo, true);
 
+            $this->addFlash('success', 'Материал обновлен');
+
             return $this->redirect('/admin/course/' . $courseInfo->getCourse()->getId() . '/');
         }
 
@@ -93,6 +97,8 @@ class CourseInfoController extends MobileController
         }
 
         $this->courseInfoRepository->remove($courseInfo, true);
+
+        $this->addFlash('success', 'Материал удален');
 
         return $this->redirect('/admin/course/' . $courseId . '/');
     }

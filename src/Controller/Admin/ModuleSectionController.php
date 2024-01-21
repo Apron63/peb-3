@@ -10,7 +10,7 @@ use App\Repository\ModuleSectionRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use App\Repository\ModuleSectionPageRepository;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 class ModuleSectionController extends MobileController
@@ -33,6 +33,8 @@ class ModuleSectionController extends MobileController
         if ($form->isSubmitted() && $form->isValid()) {
             $this->moduleSectionRepository->save($moduleSection, true);
 
+            $this->addFlash('success', 'Добавлена новая страница');
+
             return $this->redirectToRoute('admin_module_edit', ['id' => $module->getId()]);
         }
 
@@ -52,6 +54,8 @@ class ModuleSectionController extends MobileController
         if ($form->isSubmitted() && $form->isValid()) {
             $this->moduleSectionRepository->save($moduleSection, true);
 
+            $this->addFlash('success', 'Страница обновлена');
+
             return $this->redirectToRoute('admin_module_edit', ['id' => $moduleSection->getModule()->getId()]);
         }
 
@@ -68,6 +72,8 @@ class ModuleSectionController extends MobileController
     {
         $moduleId = $moduleSection->getModule()->getId();
         $this->moduleSectionRepository->remove($moduleSection, true);
+
+        $this->addFlash('success', 'Страница удалена');
         
         return $this->redirectToRoute('admin_module_edit', ['id' => $moduleId]);
     }

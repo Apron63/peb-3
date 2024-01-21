@@ -35,6 +35,8 @@ class ModuleController extends MobileController
         if ($form->isSubmitted() && $form->isValid()) {
             $this->moduleRepository->save($module, true);
 
+            $this->addFlash('success', 'Модуль добавлен');
+
             return $this->redirectToRoute('admin_course_edit', ['id' => $course->getId()]);
         }
 
@@ -55,6 +57,8 @@ class ModuleController extends MobileController
         if ($form->isSubmitted() && $form->isValid()) {
             $this->moduleRepository->save($module, true);
 
+            $this->addFlash('success', 'Модуль обновлен');
+
             return $this->redirectToRoute('admin_course_edit', ['id' => $module->getCourse()->getId()]);
         }
 
@@ -72,6 +76,7 @@ class ModuleController extends MobileController
     {
         $courseId = $module->getCourse()->getId();
         $this->moduleRepository->remove($module, true);
+        $this->addFlash('success', 'Модуль удален');
         return $this->redirectToRoute('admin_course_edit', ['id' => $courseId]);
     }
     

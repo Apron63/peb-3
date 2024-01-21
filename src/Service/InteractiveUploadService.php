@@ -8,6 +8,7 @@ use RuntimeException;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use ZipArchive;
+use function dirname;
 
 class InteractiveUploadService
 {
@@ -32,7 +33,7 @@ class InteractiveUploadService
         // TODO Вынести методы работы с файлами в отдельный сервис
         
             // Проверить что каталог существует, при необходимости создать.
-        if (!file_exists($path) && !mkdir($path, 0777, true) && !is_dir($path)) {
+        if (! file_exists($path) && ! mkdir($path, 0777, true) && ! is_dir($path)) {
             throw new RuntimeException(sprintf('Directory "%s" was not created', $path));
         }
 
@@ -47,13 +48,13 @@ class InteractiveUploadService
         // Переносим файл
         try {
             $data->move($path, $this->originalFilename . '.zip');
-        } catch (FileException $e) {
+        } catch (FileException) {
             throw new RuntimeException('Невозможно переместить файл в каталог загрузки');
         }
 
         // Распаковать архив
         $zip = new ZipArchive;
-        $res = $zip->open($path . '/' . $this->originalFilename . '.zip');
+        $res = $zip->open($path . DIRECTORY_SEPARATOR . $this->originalFilename . '.zip');
         if (true === $res) {
             $zip->extractTo($path);
             $zip->close();
@@ -63,17 +64,17 @@ class InteractiveUploadService
 
         // Дописать т.н."защиту от внешних ссылок"
         $indexFile = $path . 'res' . DIRECTORY_SEPARATOR . 'index.html';
-        if (!file_exists($indexFile)) {
+        if (! file_exists($indexFile)) {
             throw new RuntimeException('Невозможно открыть индексный файл');
         }
 
         $targetFile = $path . 'res' . DIRECTORY_SEPARATOR . 'index.php';
-        if (!rename($indexFile, $targetFile)) {
+        if (! rename($indexFile, $targetFile)) {
             throw new RuntimeException('Невозможно переименовать индексный файл');
         }
 
-        $templateFile = \dirname(__DIR__) . DIRECTORY_SEPARATOR . 'Security' . DIRECTORY_SEPARATOR . 'InteractiveProtection.php.template';
-        if (!file_exists($templateFile)) {
+        $templateFile = dirname(__DIR__) . DIRECTORY_SEPARATOR . 'Security' . DIRECTORY_SEPARATOR . 'InteractiveProtection.php.template';
+        if (! file_exists($templateFile)) {
             throw new RuntimeException('Невозможно открыть файл c шаблоном');
         }
 
