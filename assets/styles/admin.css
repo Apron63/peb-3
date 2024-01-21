@@ -70,3 +70,8 @@ body {
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
 }
+
+.toast-body {
+    font-size: 1.3rem!important;
+    opacity: 1!important;
+}
