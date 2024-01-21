@@ -7,6 +7,7 @@ use App\Repository\CourseRepository;
 use App\Service\CourseDownloadService;
 use App\Service\JobService;
 use App\Service\XmlCourseDownload\XmlDownloader;
+use Exception;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 
 #[AsMessageHandler]
@@ -19,6 +20,9 @@ readonly class CourseUploadMessageHandler
         private JobService $jobService,
     ) {}
 
+    /**
+     * @throws Exception
+     */
     public function __invoke(CourseUploadMessage $message): void
     {
         $job = $this->jobService->createJob(

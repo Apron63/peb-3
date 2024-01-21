@@ -196,6 +196,7 @@ class CourseRepository extends ServiceEntityRepository
 
     /**
      * @param CourseThemeDTO[] $themes
+     * @throws Exception
      */
     public function saveCourseToDb(int $courseId, array $themes): void
     {
