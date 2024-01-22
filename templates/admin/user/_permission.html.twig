@@ -66,23 +66,46 @@
                 {% endif %}
             </td>
             <td>
-                {% if permission.stage == 3 %}
-                    <a
-                        href="{{ path('admin_print_testing', {id: permission.id, userId: user.id}) }}"
-                        class="btn btn-sm btn-outline-primary"
-                        target="_blank"
-                    >
-                        Печать
-                    </a>
-                {% endif %}
-
-                <a
-                    href="{{ path('admin_permission_delete', {id: permission.id}) }}"
-                    class="btn btn-sm btn-outline-danger"
-                    onclick="return window.confirm('Подтвердите действие');"
-                >
-                    Удалить
-                </a>
+                <div class="dropstart">
+                    <button type="button" class="btn btn-outline-secondary" data-bs-toggle="dropdown" aria-expanded="false">
+                        <img src="{{ asset('svg/more.svg') }}">
+                    </button>
+                    <ul class="dropdown-menu">
+                        {% if permission.stage == 3 %}
+                            <li>
+                                <a
+                                    class="dropdown-item color-item"
+                                    href="{{ path('admin_print_testing', {id: permission.id, userId: user.id}) }}"
+                                >
+                                    <img src="{{ asset('svg/printer.svg') }}">
+                                    Печать
+                                </a>
+                            </li>
+                        {% endif %}
+                        <li>
+                            <a
+                                class="dropdown-item color-item"
+                                href="{{ path('admin_permission_delete', {id: permission.id}) }}"
+                                onclick="return window.confirm('Подтвердите действие');"
+                            >
+                                <img src="{{ asset('svg/trash.svg') }}">
+                                Удалить
+                            </a>
+                        </li>
+                        {% if permission.stage > 1 %}
+                            <li>
+                                <a
+                                    class="dropdown-item color-item"
+                                    href="{{ path('admin_permission_clear_history', {id: permission.id}) }}"
+                                    onclick="return window.confirm('Подтвердите действие');"
+                                >
+                                    <img src="{{ asset('svg/bell.svg') }}">
+                                    Очистить историю
+                                </a>
+                            </li>
+                        {% endif %}
+                    </ul>
+                </div>
             </td>
         </tr>
     {% endfor %}

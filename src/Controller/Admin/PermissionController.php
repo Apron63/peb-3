@@ -12,6 +12,7 @@ use App\Repository\PermissionRepository;
 use App\Repository\UserRepository;
 use App\Service\BatchCreatePermissionService;
 use App\Service\TestingService;
+use App\Service\UserPermissionService;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -26,6 +27,7 @@ class PermissionController extends MobileController
         private readonly TestingService $testingService,
         private readonly UserRepository $userRepository,
         private readonly BatchCreatePermissionService $batchCreatePermissionService,
+        private readonly UserPermissionService $userPermissionService,
     ) {}
 
     #[Route('/admin/permission/create/{id<\d+>}/', name: 'admin_permission_create')]
@@ -114,6 +116,22 @@ class PermissionController extends MobileController
         $this->permissionRepository->remove($permission, true);
 
         $this->addFlash('success', 'Доступ удален');
+
+        return $this->redirect(
+            $this->generateUrl('admin_user_edit', ['id' => $userId])
+        );
+    }
+
+    #[Route('/admin/permission/history/{id<\d+>}/', name: 'admin_permission_clear_history')]
+    public function adminPermissionClearHistory(Permission $permission): Response
+    {
+        $userId = $permission->getUser()->getId();
+
+        $permission->setHistory($this->userPermissionService->createHistory($permission));
+
+        $this->permissionRepository->save($permission, true);
+
+        $this->addFlash('success', 'История обучения сброшена');
 
         return $this->redirect(
             $this->generateUrl('admin_user_edit', ['id' => $userId])

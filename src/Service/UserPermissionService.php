@@ -96,7 +96,7 @@ class UserPermissionService
         }
     }
 
-    private function createHistory(Permission $permission): array
+    public function createHistory(Permission $permission): array
     {
         $courseProgress = $this->courseService->checkForCourseStage($permission);
 
