@@ -32,12 +32,12 @@ class CourseDownloadService
             $this->courseRepository->save($course, true);
         }
 
-        $this->downloadXmlFile($data, $course);
+        $this->downloadXmlFile($data, $course, true);
 
         return $course;
     }
 
-    public function downloadXmlFile(UploadedFile $data, Course $course): void
+    public function downloadXmlFile(UploadedFile $data, Course $course, bool $needClear = false): void
     {
         $originalFilename = pathinfo($data->getClientOriginalName(), PATHINFO_FILENAME);
         $path = $this->courseUploadPath . DIRECTORY_SEPARATOR . $course->getId();
@@ -47,8 +47,10 @@ class CourseDownloadService
         }
 
         // Очистим каталог
-        $files = glob($path . '/*');
-        $this->filesystem->remove($files);
+        if ($needClear) {
+            $files = glob($path . '/*');
+            $this->filesystem->remove($files);
+        }
 
         // Переносим файл
         try {

@@ -34,7 +34,7 @@ class LoadQuestionController extends MobileController
             && $form->isValid()
             && $form->get('filename')->getData() !== null
         ) {
-            $this->courseDownloadService->downloadXmlFile($form->get('filename')->getData(), $course);
+            $this->courseDownloadService->downloadXmlFile($form->get('filename')->getData(), $course, false);
 
             $this->messageBus->dispatch(
                 new QuestionUploadMessage(
