@@ -12,20 +12,15 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 class JobService
 {
     public function __construct(
-        private readonly QueryJobRepository $queryJobRepository, 
+        private readonly QueryJobRepository $queryJobRepository,
         private readonly UserRepository $userRepository
-    ) { }
+    ) {}
 
-    /**
-     * @param string $description
-     * @param int $userId
-     * @return QueryJob
-     */
     public function createJob(string $description, int $userId): QueryJob
     {
         $user = $this->userRepository->find($userId);
 
-        if (!$user instanceof User) {
+        if (! $user instanceof User) {
             throw new NotFoundHttpException('User not found');
         }
 
@@ -39,13 +34,9 @@ class JobService
         return $job;
     }
 
-    /**
-     * @param QueryJob $job
-     * @param string|null $documentLink
-     */
-    public function finishJob(QueryJob $job, ?string $documentLink = null): void
+    public function finishJob(QueryJob $job, ?string $errorMessage = null): void
     {
-        $job->setEndAt(new DateTime())->setDocumentLink($documentLink);
+        $job->setEndAt(new DateTime())->setDocumentLink($errorMessage);
         $this->queryJobRepository->save($job, true);
     }
 }

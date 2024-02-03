@@ -38,11 +38,17 @@ readonly class QuestionUploadMessageHandler
             throw new Exception('Course with id not found');
         }
 
-        $data = $this->xmlDownloader->downloadXml($message->getContent());
-        $this->questionsRepository->removeQuestionsForCourse($course);
-        $this->ticketRepository->deleteOldTickets($course);
-        $this->courseRepository->saveQuestionsToDb($message->getContent()['courseId'], $data['themes']);
+        $exceptionMessage = null;
 
-        $this->jobService->finishJob($job);
+        try {
+            $data = $this->xmlDownloader->downloadXml($message->getContent());
+            $this->questionsRepository->removeQuestionsForCourse($course);
+            $this->ticketRepository->deleteOldTickets($course);
+            $this->courseRepository->saveQuestionsToDb($message->getContent()['courseId'], $data['themes']);
+        } catch(Exception $e) {
+            $exceptionMessage = $e->getMessage();
+        }
+
+        $this->jobService->finishJob($job, $exceptionMessage);
     }
 }

@@ -25,9 +25,15 @@ readonly class CourseCopyMessageHandler
             'Копирование курса ' . $message->getContent()['courseName'],
             $message->getContent()['userId'],
         );
-        
-        $this->courseCopyService->copyCourse($message->getContent()['courseId']);
 
-        $this->jobService->finishJob($job);
+        $exceptionMessage = null;
+
+        try {
+            $this->courseCopyService->copyCourse($message->getContent()['courseId']);
+        } catch(Exception $e) {
+            $exceptionMessage = $e->getMessage();
+        }
+
+        $this->jobService->finishJob($job, $exceptionMessage);
     }
 }

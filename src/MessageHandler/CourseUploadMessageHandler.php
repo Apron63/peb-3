@@ -29,11 +29,17 @@ readonly class CourseUploadMessageHandler
             'Загрузка курса ' . $message->getContent()['filename'],
             $message->getContent()['userId'],
         );
-        
-        $data = $this->xmlDownloader->downloadXml($message->getContent());
-        $this->courseDownloadService->checkIfCourseExistsInDatabase($message->getContent()['courseId'], $data['courseName']);
-        $this->courseRepository->saveCourseToDb($message->getContent()['courseId'], $data['themes']);
 
-        $this->jobService->finishJob($job);
+        $exceptionMessage = null;
+
+        try {
+            $data = $this->xmlDownloader->downloadXml($message->getContent());
+            $this->courseDownloadService->checkIfCourseExistsInDatabase($message->getContent()['courseId'], $data['courseName']);
+            $this->courseRepository->saveCourseToDb($message->getContent()['courseId'], $data['themes']);
+        } catch(Exception $e) {
+            $exceptionMessage = $e->getMessage();
+        }
+
+        $this->jobService->finishJob($job, $exceptionMessage);
     }
 }

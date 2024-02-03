@@ -1,6 +1,9 @@
 {% extends 'admin/base.html.twig' %}
 
+{% trans_default_domain 'exceptions' %}
+
 {% block title %}Панель управления | Задачи{% endblock %}
+
 
 {% block content %}
 
@@ -9,18 +12,30 @@
     <table class="table">
         <thead>
         <tr>
+            <th></th>
             <th>Создано</th>
             <th>Завершено</th>
             <th>Содержание</th>
             <th>Автор</th>
-            <th>Вложение</th>
         </tr>
         </thead>
 
         <tbody>
         {% for job in pagination %}
             <tr>
-                <td>{{ job.startAt | date('d.m.Y H:i:s') }}</td>
+                <td>
+                    {% if job.documentLink is null %}
+                        <img src="{{ asset('svg/check.svg') }}">
+                    {% else %}
+                        <a href="javascript:void(0)" class="d-inline-block" onclick="alert('{{ job.documentLink | trans }}')">
+                            <img src="{{ asset('svg/redcross.svg') }}">
+                        </svg>
+                    </a>
+                    {% endif %}
+                </td>
+                <td>
+                    {{ job.startAt | date('d.m.Y H:i:s') }}
+                </td>
                 <td>
                     {% if job.endAt is defined and job.endAt is not null %}
                         {{ job.endAt | date('d.m.Y H:i:s') }}
@@ -30,13 +45,6 @@
                 </td>
                 <td>{{ job.description }}</td>
                 <td>{{ job.user.fullName }}</td>
-                <td>
-                    {% if job.documentLink is defined and job.documentLink is not empty %}
-                        <a href="{{ path('admin_load1C_report', {fileName: job.documentLink }) }}" title="Открыть вложение">
-                            <img src="{{ asset('svg/files.svg') }}"  data-path="{{ job.documentLink }}">
-                        </a>
-                    {% endif %}
-                </td>
             </tr>
         {% endfor %}
         </tbody>
