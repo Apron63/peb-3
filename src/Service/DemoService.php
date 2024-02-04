@@ -54,7 +54,7 @@ class DemoService
     {
         $ticket = $this->ticketRepository->find($logger->getTicket()->getId());
 
-        if (!$ticket instanceof Ticket) {
+        if (! $ticket instanceof Ticket) {
             throw new NotFoundHttpException('Ticket not Found');
         }
 
@@ -67,7 +67,7 @@ class DemoService
         return $data;
     }
 
-    public function ticketProcessing(DemoLogger $logger, array $data): string 
+    public function ticketProcessing(DemoLogger $logger, array $data): string
     {
         $ticket = $this->ticketRepository->find($logger->getTicket()->getId());
         if (! $ticket instanceof Ticket) {
@@ -234,7 +234,7 @@ class DemoService
         if (! $question instanceof Questions) {
             throw new NotFoundHttpException('Question not found');
         }
-        
+
         $timeSpentNow = (new DateTime)->getTimestamp() - $logger->getTimeLastQuestion()->getTimestamp();
 
         $timeShift = $logger->getTimeLeftInSeconds() - $timeSpentNow;
@@ -278,7 +278,7 @@ class DemoService
             'answers' => $dataAnswers,
         ];
     }
-    
+
     private function getDataClassic(DemoLogger $logger): array
     {
         $questionId = $this->getTicketId(
@@ -304,6 +304,21 @@ class DemoService
                 'isCorrect' => $answer->isCorrect(),
             ];
         }
+
+        $timeSpentNow = (new DateTime)->getTimestamp() - $logger->getTimeLastQuestion()->getTimestamp();
+
+        $timeShift = $logger->getTimeLeftInSeconds() - $timeSpentNow;
+        if ($timeShift < 0 ) {
+            $timeShift = 0;
+        }
+
+        $timeLeft = $timeShift;
+
+        $logger
+            ->setTimeLeftInSeconds($timeLeft)
+            ->setTimeLastQuestion(new DateTime());
+
+        $this->demoLoggerRepository->save($logger, true);
 
         return [
             'url' =>  $this->router->generate('app_demo_testing_next_step', ['id' => $logger->getCourse()->getId()]),
@@ -344,7 +359,7 @@ class DemoService
                 $result[$index++] = $questionId;
             }
         }
-        
+
         return $result;
     }
 }

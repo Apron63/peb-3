@@ -10,18 +10,22 @@
         {% include('frontend/components/background.html.twig') %}
         <div class="wrapper container">
             <div class="content">
-                <div class="control-questions">
+                <div class="control-questions" control-questions-elem="wrapper">
                     <h1>Подготовка к аттестации</h1>
                     {% include('frontend/preparation/_counters.html.twig') %}
-                    <div class="control-questions_wrapper">
-                        {% for item in data.questions %}
-                            {% if item.type ==1  %}
-                                {% include('frontend/preparation/_radio-question.html.twig') %}
-                            {%else %}
-                                {% include('frontend/preparation/_checkbox-question.html.twig') %}        
-                            {% endif %}
-                        {% endfor %}
-                    </div> 
+                    <div class="control-questions_wrapper" control-questions-elem="inner">
+                        {% include('frontend/demo/_partial.html.twig') %}
+                    </div>
+                    <div
+                        class="control-questions_mobile_ajax"
+                        control-questions-elem="ajax-trigger"
+                        data-url="{{ path('demo_frontend_preparation_one_next_page') }}"
+                        data-page="2"
+                        data-per-page="20"
+                        data-permission-id="{{ data.courseId }}"
+                        data-theme-id="{{ data.themeId }}"
+                    >
+                    </div>
                     {% include('frontend/preparation/_counters.html.twig') %}
                 </div>
             </div>

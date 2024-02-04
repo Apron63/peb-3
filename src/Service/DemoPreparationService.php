@@ -5,7 +5,9 @@ namespace App\Service;
 use App\Entity\Course;
 use App\Entity\Questions;
 use App\Repository\AnswerRepository;
+use App\Repository\CourseRepository;
 use App\Repository\QuestionsRepository;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class DemoPreparationService
@@ -17,9 +19,10 @@ class DemoPreparationService
     public function __construct(
         private readonly QuestionsRepository $questionsRepository,
         private readonly AnswerRepository $answerRepository,
+        private readonly CourseRepository $courseRepository,
         private readonly UrlGeneratorInterface $urlGenerator,
     ) {}
-    
+
     public function getQuestionDataForCourse(
         Course $course,
         ?int $themeId = null,
@@ -59,7 +62,7 @@ class DemoPreparationService
                     'description' => $answer['description'],
                     'right' => $answer['isCorrect'],
                     'nom' => $answer['nom'],
-                    
+
                 ];
             }
 
@@ -81,6 +84,7 @@ class DemoPreparationService
 
         return [
             'courseId' => $course->getId(),
+            'themeId' => $themeId,
             'questions' => $result,
             'page' => $page,
             'perPage' => $perPage,
@@ -99,8 +103,8 @@ class DemoPreparationService
                 for ($index = 1; $index <= self::PAGES_AT_ONCE; $index ++) {
                     $paginator[] = [
                         'url' => $this->urlGenerator->generate('app_demo_preparation_course_one', [
-                            'id' => $course->getId(), 
-                            'themeId' => $themeId, 
+                            'id' => $course->getId(),
+                            'themeId' => $themeId,
                             'page' => $index,
                             'perPage' => $perPage,
                         ]),
@@ -114,23 +118,23 @@ class DemoPreparationService
                     'title' => '...',
                     'isActive' => true,
                 ];
-                
+
                 $paginator[] = [
                     'url' => $this->urlGenerator->generate('app_demo_preparation_course_one', [
-                        'id' => $course->getId(), 
-                        'themeId' => $themeId, 
+                        'id' => $course->getId(),
+                        'themeId' => $themeId,
                         'page' => $maxPages,
                         'perPage' => $perPage,
                     ]),
                     'title' => $maxPages,
                     'isActive' => false,
                 ];
-                
+
             } elseif ($maxPages - $page < self::PAGES_CHANGE_PAGINATOR) {
                 $paginator[] = [
                     'url' => $this->urlGenerator->generate('app_demo_preparation_course_one', [
-                        'id' => $course->getId(), 
-                        'themeId' => $themeId, 
+                        'id' => $course->getId(),
+                        'themeId' => $themeId,
                         'page' => 1,
                         'perPage' => $perPage,
                     ]),
@@ -147,8 +151,8 @@ class DemoPreparationService
                 for ($index = $maxPages - self::PAGES_AT_ONCE + 1; $index <= $maxPages; $index ++) {
                     $paginator[] = [
                         'url' => $this->urlGenerator->generate('app_demo_preparation_course_one', [
-                            'id' => $course->getId(), 
-                            'themeId' => $themeId, 
+                            'id' => $course->getId(),
+                            'themeId' => $themeId,
                             'page' => $index,
                             'perPage' => $perPage,
                         ]),
@@ -160,8 +164,8 @@ class DemoPreparationService
             } else {
                 $paginator[] = [
                     'url' => $this->urlGenerator->generate('app_demo_preparation_course_one', [
-                        'id' => $course->getId(), 
-                        'themeId' => $themeId, 
+                        'id' => $course->getId(),
+                        'themeId' => $themeId,
                         'page' => 1,
                         'perPage' => $perPage,
                     ]),
@@ -178,8 +182,8 @@ class DemoPreparationService
                 for ($index = $page - self::PAGES_CHANGE_PAGINATOR + 2; $index <=  $page + self::PAGES_CHANGE_PAGINATOR - 2; $index ++) {
                     $paginator[] = [
                         'url' => $this->urlGenerator->generate('app_demo_preparation_course_one', [
-                            'id' => $course->getId(), 
-                            'themeId' => $themeId, 
+                            'id' => $course->getId(),
+                            'themeId' => $themeId,
                             'page' => $index,
                             'perPage' => $perPage,
                         ]),
@@ -187,7 +191,7 @@ class DemoPreparationService
                         'isActive' => $page === $index,
                     ];
                 }
-                
+
                 $paginator[] = [
                     'url' => null,
                     'title' => '...',
@@ -196,8 +200,8 @@ class DemoPreparationService
 
                 $paginator[] = [
                     'url' => $this->urlGenerator->generate('app_demo_preparation_course_one', [
-                        'id' => $course->getId(), 
-                        'themeId' => $themeId, 
+                        'id' => $course->getId(),
+                        'themeId' => $themeId,
                         'page' => $maxPages,
                         'perPage' => $perPage,
                     ]),
@@ -210,8 +214,8 @@ class DemoPreparationService
             for ($index = 1; $index <= $maxPages; $index ++) {
                 $paginator[] = [
                     'url' => $this->urlGenerator->generate('app_demo_preparation_course_one', [
-                        'id' => $course->getId(), 
-                        'themeId' => $themeId, 
+                        'id' => $course->getId(),
+                        'themeId' => $themeId,
                         'page' => $index,
                         'perPage' => $perPage,
                     ]),
@@ -222,5 +226,82 @@ class DemoPreparationService
         }
 
         return $paginator;
+    }
+
+    public function getQuestionData(
+        int $courseId,
+        ?int $themeId = null,
+        int $page = 1,
+        int $perPage = 20,
+    ): array {
+        $result = [];
+
+        $course = $this->courseRepository->find($courseId);
+        if (! $course instanceof Course) {
+            throw new NotFoundHttpException('Cannot found course with id: ' . $courseId);
+        }
+
+        $totalQuestions  = $this->questionsRepository->getQuestionsCount($course, $themeId);
+
+        if (! in_array($perPage, [20, 50, 100])) {
+            $perPage = 20;
+        }
+
+        $maxPages = intdiv($totalQuestions, $perPage);
+        if ($totalQuestions % $perPage > 0 ) {
+            $maxPages ++;
+        }
+
+        if ($page > $maxPages) {
+            $page = $maxPages;
+        }
+
+        $questions = $this->questionsRepository
+            ->getQuestionQuery($course, $themeId)
+            ->setFirstResult(($page - 1) * $perPage)
+            ->setMaxResults($perPage)
+            ->getResult();
+
+        /** @var Questions $question */
+        foreach ($questions as $question) {
+            $answers = $this->answerRepository->getAnswers($question, true);
+            $answerData = [];
+
+            foreach ($answers as $answer) {
+                $answerData[] = [
+                    'description' => $answer['description'],
+                    'right' => $answer['isCorrect'],
+                    'nom' => $answer['nom'],
+
+                ];
+            }
+
+            $result[] = [
+                'id' => $question->getId(),
+                'nom' =>$question->getNom(),
+                'type' => $question->getType(),
+                'description' => $question->getDescription(),
+                'help' => $question->getHelp(),
+                'answers' => $answerData,
+            ];
+        }
+
+        // if ($course->getType() === Course::INTERACTIVE) {
+        //     $url = $this->urlGenerator->generate('app_frontend_preparation_interactive', ['id' => $permission->getId()]);
+        // } else {
+        //     $url = $this->urlGenerator->generate('app_frontend_preparation_one', ['id' => $permission->getId(), 'themeId' => $themeId]);
+        // }
+
+        return [
+            //'permissionId' => $permission->getId(),
+            //'permissionLastAccess' => $permission->getLastAccess()->getTimestamp(),
+            'questions' => $result,
+            'perPage' => $perPage,
+            'maxPages' => $maxPages,
+            'total' => $totalQuestions,
+            //'url' => $url,
+            'themeId' => $themeId,
+            'paginator' => $this->preparePaginator($course, $page, $perPage, $maxPages, $themeId),
+        ];
     }
 }

@@ -17,7 +17,7 @@
                     <div class="control-questions_wrapper" control-questions-elem="inner">
                         {% include('frontend/preparation/_partial.html.twig') %}
                     </div>
-                    <div 
+                    <div
                         class="control-questions_mobile_ajax"
                         control-questions-elem="ajax-trigger"
                         data-url="{{ path('app_frontend_preparation_one_next_page') }}"
@@ -37,10 +37,10 @@
 
     <div class="overlay" popup-element="overlay"></div>
 
-    <input 
-        type="hidden" 
-        class="time-control" 
-        data-url="{{ getTimingControlUrl() }}" 
+    <input
+        type="hidden"
+        class="time-control"
+        data-url="{{ getTimingControlUrl() }}"
         data-permission-id="{{ data.permissionId }}"
         data-permission-start="{{ data.permissionLastAccess }}"
     >

@@ -78,7 +78,7 @@ class DemoController extends AbstractController
             ]);
         }
     }
-    
+
     #[Route('/demo/section/{id<\d+>}/', name: 'app_demo_module_section')]
     public function getSection(ModuleSection $section, Request $request): Response
     {
@@ -109,7 +109,7 @@ class DemoController extends AbstractController
             'moduleSectionPages' => $moduleSectionPages,
         ], $response);
     }
-    
+
     #[Route('/demo/final-testing/{id<\d+>}/', name: 'app_demo_final_testing')]
     public function finalTesting(Course $course, Request $request): Response
     {
@@ -188,7 +188,7 @@ class DemoController extends AbstractController
             'skipped' => $this->demoService->getSkippedQuestion($logger),
         ]);
     }
-    
+
     #[Route('/demo/info-list/{id<\d+>}/', name: 'app_demo_info_list')]
     public function getInfoList(Course $course): Response
     {
@@ -201,7 +201,7 @@ class DemoController extends AbstractController
             'courseInfo' => $this->courseInfoRepository->getCourseInfos($course),
         ]);
     }
-    
+
     #[Route('/demo/info-view/{fileName}/{moduleTitle}/{id<\d+>}/', name: 'app_demo_info_view')]
     public function getInfoView(string $fileName, string $moduleTitle, Course $course): Response
     {
@@ -257,7 +257,7 @@ class DemoController extends AbstractController
             'themeInfo' =>$this->courseThemeRepository->getCourseThemes($course),
         ]);
     }
-    
+
     #[Route('demo/preparation_one/{id<\d+>}/{themeId}', name: 'app_demo_preparation_course_one')]
     public function preparationOne(Course $course, ?int $themeId, Request $request): Response
     {
@@ -301,6 +301,35 @@ class DemoController extends AbstractController
 
         return $this->render('frontend/demo/_preparation.html.twig', [
             'data' => $data,
+        ]);
+    }
+
+    #[Route('/demo/preparation-one/next-page/', name: 'demo_frontend_preparation_one_next_page')]
+    public function preparationOneNextPage(Request $request): JsonResponse
+    {
+        $requestContent = json_decode($request->getContent(), true);
+
+        $page = $requestContent['page'];
+        $perPage = $requestContent['per_page'];
+        $themeId = $requestContent['theme_id'];
+        $courseId = $requestContent['permission_id'];
+
+
+        $data = $this->demoPreparationService->getQuestionData(
+            $courseId,
+            $themeId,
+            $page,
+            $perPage,
+        );
+
+        return new JsonResponse([
+            'status' => 'success',
+            'page' => $page + 1,
+            'per_page' => $perPage,
+            'total' => $data['total'],
+            'content' => $this->renderView('frontend/demo/_partial.html.twig', [
+                'data' => $data,
+            ]),
         ]);
     }
 }
