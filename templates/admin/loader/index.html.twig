@@ -10,22 +10,22 @@
         <button class="btn btn-outline-dark" id="load1C" data-url="{{ path('admin_import_1C') }}">Загрузить из 1С</button>
         <button class="btn btn-outline-dark" id="selectAll" data-url="{{ path('admin_loader_set_all_check_box') }}">Выбрать всех</button>
         <button class="btn btn-outline-dark" id="unselectAll" data-url="{{ path('admin_loader_set_all_check_box') }}">Снять отметку</button>
-        <button 
-            class="btn btn-outline-dark" 
-            id ="assignCourse" 
-            data-check="{{ path('admin_loader_check_empty') }}" 
+        <button
+            class="btn btn-outline-dark"
+            id ="assignCourse"
+            data-check="{{ path('admin_loader_check_empty') }}"
             data-prepare="{{ path('admin_loader_prepare_data') }}"
             data-query={{ path('admin_loader_check_query') }}
         >
             Назначить курс
         </button>
         <div class="dropdown">
-            <button 
-                class="btn btn-outline-dark dropdown-toggle" 
-                type="button" 
-                id="dropdownMenuButton1" 
-                data-bs-toggle="dropdown" 
-                aria-expanded="false" 
+            <button
+                class="btn btn-outline-dark dropdown-toggle"
+                type="button"
+                id="dropdownMenuButton1"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
             >
                 Скачать
             </button>
@@ -54,27 +54,24 @@
         <tr>
             <th></th>
             <th>Заказ</th>
-            <th>Фамилия</th>
-            <th>Имя</th>
-            <th>Отчество</th>
-            <th>Должность</th>
-            <th>Организация</th>
+            <th>Фамилия, имя, отчество, email</th>
+            <th>Организация, должность</th>
             <th>Курс</th>
         </tr>
         </thead>
 
         <tbody>
             {% for item in data %}
-                <tr> 
+                <tr>
                     <td>
                         <div>
-                            <input 
-                                class="form-check-input loader-checkbox" 
-                                type="checkbox" 
+                            <input
+                                class="form-check-input loader-checkbox"
+                                type="checkbox"
                                 id="check_{{ item.id }}"
                                 data-loader-id="{{ item.id }}"
-                                value="" 
-                                aria-label="..." 
+                                value=""
+                                aria-label="..."
                                 {% if item.checked %}
                                     checked
                                 {% endif %}
@@ -82,12 +79,18 @@
                         </div>
                     </td>
                     <td>{{ item.orderNo}}</td>
-                    <td>{{ item.lastName}}</td>   
-                    <td>{{ item.firstName}}</td>   
-                    <td>{{ item.patronymic }}</td>   
-                    <td>{{ item.position }}</td>   
-                    <td>{{ item.organization }}</td>   
-                    <td>{{ item.courseName }}</td>   
+                    <td>
+                        {{ item.lastName}} {{ item.firstName}} {{ item.patronymic }} <br>
+                        {% if item.emailChecked %}
+                            {{ item.email }}
+                        {% else %}
+                            <span class="text-danger-emphasis">{{ item.email }}</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        {{ item.organization }} <br> {{ item.position }}
+                    </td>
+                    <td>{{ item.courseName }}</td>
                 </tr>
             {% endfor %}
         </tbody>
@@ -96,14 +99,5 @@
     <input type="hidden" id="checkbox-change-url" data-url="{{ path('admin_loader_change_check_box') }}">
     <input type="hidden" id="empty-data" data-empty="{{ emptyData }}">
     <div id="loading-content"></div>
-
-    {# <script>
-        function getEmail(type)
-        {
-            alert('В работе!')
-            //https://www.rapidtables.com/web/html/mailto.html#what
-            return false;
-        }
-    </script> #}
 
 {% endblock %}

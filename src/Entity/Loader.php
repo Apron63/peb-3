@@ -18,7 +18,7 @@ class Loader
     #[ORM\ManyToOne]
     #[ORM\JoinColumn(onDelete: 'SET NULL')]
     private ?User $user = null;
-    
+
     #[ORM\ManyToOne]
     #[ORM\JoinColumn(name: 'created_by', nullable: false)]
     private ?User $createdBy = null;
@@ -46,6 +46,12 @@ class Loader
 
     #[ORM\Column]
     private ?bool $checked = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?string $email = null;
+
+    #[ORM\Column]
+    private bool $emailChecked = false;
 
     #[ORM\OneToMany(mappedBy: 'loader', targetEntity: Permission::class)]
     private Collection $permissions;
@@ -176,6 +182,30 @@ class Loader
     public function setChecked(bool $checked): self
     {
         $this->checked = $checked;
+
+        return $this;
+    }
+
+    public function getEmail(): ?string
+    {
+        return $this->email;
+    }
+
+    public function setEmail(string $email): self
+    {
+        $this->email = $email;
+
+        return $this;
+    }
+
+    public function isEmailChecked(): ?bool
+    {
+        return $this->emailChecked;
+    }
+
+    public function setEmailChecked(bool $emailChecked): self
+    {
+        $this->emailChecked = $emailChecked;
 
         return $this;
     }

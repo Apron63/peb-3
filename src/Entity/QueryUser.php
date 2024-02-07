@@ -34,7 +34,7 @@ class QueryUser
 
     #[ORM\Column(length: 50, nullable: true)]
     private ?string $patronymic = null;
-    
+
     #[ORM\Column(length: 500, nullable: true)]
     private ?string $position = null;
 
@@ -47,10 +47,13 @@ class QueryUser
     #[ORM\Column(length: 50)]
     private ?string $orderNom = null;
 
+    #[ORM\Column(nullable: true)]
+    private ?string $email = null;
+
     #[ORM\ManyToOne]
     #[ORM\JoinColumn(onDelete: 'SET NULL')]
     private ?Loader $loader = null;
-    
+
     public function getId(): ?int
     {
         return $this->id;
@@ -127,7 +130,7 @@ class QueryUser
 
         return $this;
     }
-    
+
     public function getPosition(): ?string
     {
         return $this->position;
@@ -184,6 +187,18 @@ class QueryUser
     public function setLoader(?Loader $loader): self
     {
         $this->loader = $loader;
+
+        return $this;
+    }
+
+    public function getEmail(): ?string
+    {
+        return $this->email;
+    }
+
+    public function setEmail(string $email): self
+    {
+        $this->email = $email;
 
         return $this;
     }

@@ -52,7 +52,7 @@ class LoaderService
 
         $this->loaderRepository->save($loader, true);
     }
-    
+
     public function loadDataFrom1C(UploadedFile $file, User $user): void
     {
         $this->loaderRepository->clearLoaderForUser($user);
@@ -82,13 +82,17 @@ class LoaderService
                 ->setLoader($loader)
                 ->setResult('new');
 
+                if ($loader->isEmailChecked()) {
+                    $queryUser->setEmail($loader->getEmail());
+                }
+
             $this->queryUserRepository->save($queryUser, true);
         }
 
         $this->bus->dispatch(new Query1CUploadMessage($loader->getOrderNo(), $user->getId()));
 
         return [
-            'success' => true, 
+            'success' => true,
             'message' => 'Пользователи успешно добавлены в очередь'
         ];
     }
@@ -119,7 +123,7 @@ class LoaderService
                 ]);
 
             // Создадим нового если не нашлось.
-            if (!$user instanceof User) {
+            if (! $user instanceof User) {
                 $user = (new User())
                     ->setOrganization($queryUser->getOrganization())
                     ->setLastName($queryUser->getLastName())
@@ -128,12 +132,15 @@ class LoaderService
                     ->setPosition($queryUser->getPosition())
                     ->setPatronymic($queryUser->getPatronymic())
                     ->setCreatedAt($queryUser->getCreatedAt())
+                    ->setEmail($queryUser->getEmail())
                     ->setCreatedBy($createdBy);
-                    
+
                 $user = $this->userService->setNewUser($user);
-                
-                $this->userRepository->save($user, true);
+            } else {
+                $user->setEmail($queryUser->getEmail());
             }
+
+            $this->userRepository->save($user, true);
 
             // Проверяем доступы.
             $courseName = '';
@@ -160,7 +167,7 @@ class LoaderService
                         if('' !== $courseName) {
                             $courseName .= ', ';
                         }
-        
+
                         $courseName.= $course->getShortName();
                     }
                 }
@@ -199,7 +206,7 @@ class LoaderService
     {
         return $this->queryUserRepository->checkUserQueryIsEmpty($user);
     }
-    
+
     private function getUsersList(UploadedFile $data): array
     {
         $userData = [];
@@ -222,15 +229,30 @@ class LoaderService
                 $firstLine = false;
             }
 
-            $tmp['orderNo'] =  $str[0];
-            $tmp['lastName'] =  $str[1];
-            $tmp['firstName'] =  $str[2];
-            $tmp['patronymic'] =  $str[3];
-            $tmp['x3'] =  $str[4];
-            $tmp['position'] =  $str[5];
-            $tmp['organization'] =  $str[6];
-            $tmp['x3_3'] =  $str[7];
-            $tmp['courseName'] =  $str[8];
+            if (count($str) === 11) {
+                // Формат с email
+                $tmp['orderNo'] =  $str[0];
+                $tmp['lastName'] =  $str[1];
+                $tmp['firstName'] =  $str[2];
+                $tmp['patronymic'] =  $str[3];
+                $tmp['x3'] =  $str[4];
+                $tmp['position'] =  $str[5];
+                $tmp['email'] =  $str[6];
+                $tmp['organization'] =  $str[7];
+                $tmp['courseName'] =  $str[8];
+            } else {
+                // формат без email
+                $tmp['orderNo'] =  $str[0];
+                $tmp['lastName'] =  $str[1];
+                $tmp['firstName'] =  $str[2];
+                $tmp['patronymic'] =  $str[3];
+                $tmp['x3'] =  $str[4];
+                $tmp['position'] =  $str[5];
+                $tmp['organization'] =  $str[6];
+                $tmp['x3_3'] =  $str[7];
+                $tmp['courseName'] =  $str[8];
+                $tmp['email'] = '';
+            }
 
             $userData[] = $tmp;
         }
@@ -242,6 +264,16 @@ class LoaderService
     private function saveToLoader(array $userList, User $user): void
     {
         foreach($userList as $item) {
+            $email = trim($item['email']);
+            $emailChecked = false;
+
+            if (
+                $email !== ''
+                && filter_var($email, FILTER_VALIDATE_EMAIL) !== false
+            ) {
+                $emailChecked = true;
+            }
+
             $loader = new Loader();
 
             $loader
@@ -253,7 +285,9 @@ class LoaderService
                 ->setPatronymic($item['patronymic'])
                 ->setPosition($item['position'])
                 ->setOrganization($item['organization'])
-                ->setChecked(false);
+                ->setChecked(false)
+                ->setEmail($email)
+                ->setEmailChecked($emailChecked);
 
             $this->loaderRepository->save($loader, true);
         }
