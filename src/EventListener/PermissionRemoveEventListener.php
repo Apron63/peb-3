@@ -18,18 +18,18 @@ class PermissionRemoveEventListener
     {
         $entity = $args->getObject();
 
-        if (!$entity instanceof Permission) {
+        if (! $entity instanceof Permission) {
             return;
         }
 
         $this->loggerRepository->removeLoggerForPermission($entity);
-    } 
-    
+    }
+
     public function prePersist(LifecycleEventArgs $args): void
     {
         $entity = $args->getObject();
 
-        if (!$entity instanceof Permission) {
+        if (! $entity instanceof Permission) {
             return;
         }
 

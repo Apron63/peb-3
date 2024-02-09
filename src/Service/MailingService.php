@@ -12,7 +12,7 @@ class MailingService
         private readonly MailingQueueRepository $mailingQueueRepository,
         private readonly DashboardService $dashboardService,
         private readonly ConfigService $configService,
-    ) { }
+    ) {}
 
     public function addNewPermissionToMailQueue(Permission $permission): void
     {
@@ -33,7 +33,8 @@ class MailingService
                     $permission->getUser()->getPlainPassword(),
                     $permission->getDuration(),
                     $permission->getCourse()->getName(),
-                ]
+                ],
+                $permission->getUser()
             );
 
             $mail = (new MailingQueue())
