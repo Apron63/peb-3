@@ -3,7 +3,10 @@
     {% if is_granted('ROLE_SUPER_ADMIN') %}
         <div>
             <a class="btn btn-outline-success" href="{{ path('admin_course_info_create', {id: course.id}) }}">
-                Добавить новый документ
+                Добавить материалы
+            </a>
+            <a class="btn btn-outline-danger" href="{{ path('admin_course_info_batch_create', {id: course.id}) }}">
+                Пакетная загрузка
             </a>
         </div>
     {% endif %}

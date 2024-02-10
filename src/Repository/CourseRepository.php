@@ -114,7 +114,7 @@ class CourseRepository extends ServiceEntityRepository
     public function deleteOldTickets(Course $course): void
     {
         $sql = "DELETE FROM ticket WHERE course_id = {$course->getId()}";
-        $this->getEntityManager()->getConnection()->executeQuery($sql);        
+        $this->getEntityManager()->getConnection()->executeQuery($sql);
     }
 
     public function prepareCourseClear(Course $course): void
@@ -223,11 +223,11 @@ class CourseRepository extends ServiceEntityRepository
                     ");
 
                     $questionId = $this->getEntityManager()->getConnection()->lastInsertId();
-    
+
                     // Ответы
                     foreach ($question->answers as $answer) {
                         $status = (int) $answer->isCorrect;
-    
+
                         $this->getEntityManager()->getConnection()->executeQuery("
                             INSERT INTO answer (id, question_id , description, is_correct, nom)
                             VALUES (NULL, {$questionId}, '{$answer->description}', {$status}, {$answer->nom})
@@ -235,7 +235,7 @@ class CourseRepository extends ServiceEntityRepository
                     }
                 }
             }
-    
+
             // Материалы
             $firstTheme = current($themes);
             foreach ($firstTheme->materials as $material) {
@@ -286,7 +286,7 @@ class CourseRepository extends ServiceEntityRepository
     }
 
     // TODO Вынести в сервис запись данных
-    private function shrinkMaterialName(string $longName): string
+    public function shrinkMaterialName(string $longName): string
     {
         $result = $longName;
 

@@ -2,16 +2,19 @@
 
 namespace App\Controller\Admin;
 
-use App\Service\FileUploadService;
+use App\Decorator\MobileController;
 use App\Entity\Course;
 use App\Entity\CourseInfo;
-use App\Decorator\MobileController;
+use App\Form\Admin\CourseInfoBatchCreateType;
 use App\Form\Admin\CourseInfoEditType;
 use App\Repository\CourseInfoRepository;
+use App\Service\CourseInfoService;
+use App\Service\FileUploadService;
+use Exception;
 use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
@@ -22,6 +25,7 @@ class CourseInfoController extends MobileController
         private readonly FileUploadService $fileUploadService,
         private readonly Filesystem $filesystem,
         private readonly string $courseUploadPath,
+        private readonly CourseInfoService $courseInfoService,
     ) {}
 
     #[Route('/admin/course_info/create/{id<\d+>}/', name: 'admin_course_info_create')]
@@ -101,5 +105,32 @@ class CourseInfoController extends MobileController
         $this->addFlash('success', 'Материал удален');
 
         return $this->redirect('/admin/course/' . $courseId . '/');
+    }
+
+    #[Route('/admin/course_info/batch-create/{id<\d+>}/', name: 'admin_course_info_batch_create')]
+    #[IsGranted('ROLE_SUPER_ADMIN')]
+    public function adminCourseThemeBatchCreate(Request $request, Course $course): Response
+    {
+        $courseInfo = new CourseInfo();
+        $courseInfo->setCourse($course);
+        $form = $this->createForm(CourseInfoBatchCreateType::class, $courseInfo);
+        $form->handleRequest($request);
+
+        //if ($form->isSubmitted() && $form->isValid()) { //TODO Рвзобраться с валидацией
+        if ($form->isSubmitted()) {
+            try {
+                $this->courseInfoService->batchUploadCourseInfo($form->get('fileName')->getData(), $course);
+                $this->addFlash('success', 'Пакетная загрузка завершена');
+
+            } catch(Exception $e) {
+                $this->addFlash('error', $e->getMessage());
+            }
+
+            return $this->redirect('/admin/course/' . $course->getId() . '/');
+        }
+
+        return $this->mobileRender('admin/course-info/edit-multiple.html.twig', [
+            'form' => $form->createView(),
+        ]);
     }
 }

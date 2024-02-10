@@ -44,8 +44,8 @@ class CourseThemeController extends MobileController
     #[Route('/admin/course_theme/{id<\d+>}/', name: 'admin_course_theme_edit')]
     #[IsGranted('ROLE_SUPER_ADMIN')]
     public function adminCourseThemeEdit(
-        Request $request, 
-        PaginatorInterface $paginator, 
+        Request $request,
+        PaginatorInterface $paginator,
         CourseTheme $courseTheme
     ): Response {
         $pagination = $paginator->paginate(

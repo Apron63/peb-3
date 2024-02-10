@@ -3,6 +3,9 @@
 <a href="{{ path('admin_course_info_create', {id: course.id}) }}" class="btn btn-outline-success">
     Добавить материалы
 </a>
+<a class="btn btn-outline-danger" href="{{ path('admin_course_info_batch_create', {id: course.id}) }}">
+    Пакетная загрузка
+</a>
 
 <table class="table">
     <thead>
