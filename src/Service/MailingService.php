@@ -2,8 +2,8 @@
 
 namespace App\Service;
 
-use App\Entity\Permission;
 use App\Entity\MailingQueue;
+use App\Entity\Permission;
 use App\Repository\MailingQueueRepository;
 
 class MailingService
@@ -34,7 +34,7 @@ class MailingService
                     $permission->getDuration(),
                     $permission->getCourse()->getName(),
                 ],
-                $permission->getUser()
+                $permission->getCreatedBy(),
             );
 
             $mail = (new MailingQueue())
