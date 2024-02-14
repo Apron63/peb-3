@@ -20,8 +20,14 @@
                         <div class="auth-form_name">Логин</div>
                     </label>
 
-                    <label class="auth-form_label" form-elem="label">
-                        <input class="auth-form_input" name="password" type="password" form-elem="input-text">
+                    <label class="auth-form_label password_label" form-elem="label">
+                        <div title="Скрыть пароль" class="eye_password_container eye_hide_container">
+                            <img src="{{ asset('img/eye_hide.png') }}" alt="img" />
+                        </div>
+                        <div title="Показать пароль" class="eye_password_container eye_show_container">
+                            <img src="{{ asset('img/eye_show.png') }}" alt="img" />
+                        </div>
+                        <input class="auth-form_input password_input" name="password" type="password" form-elem="input-text">
                         <div class="auth-form_name">Пароль</div>
                     </label>
 
