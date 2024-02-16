@@ -4,11 +4,13 @@ namespace App\Controller\Admin;
 
 use App\Repository\UserRepository;
 use App\Service\AdminReportService;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Routing\Attribute\Route;
-use Symfony\Component\HttpFoundation\ResponseHeaderBag;
-use Symfony\Component\HttpFoundation\BinaryFileResponse;
+use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\ResponseHeaderBag;
+use Symfony\Component\Routing\Attribute\Route;
 
 class UserReportController extends AbstractController
 {
@@ -18,7 +20,7 @@ class UserReportController extends AbstractController
     ) {}
 
     #[Route('/admin/user/report/statistic/to_pdf/', name: 'admin_user_report_statistic_to_pdf')]
-    public function adminUserReportStatisticToPdf(Request $request): BinaryFileResponse
+    public function adminUserReportStatisticToPdf(Request $request): Response
     {
         $criteria = $request->get('criteria');
 
@@ -26,7 +28,15 @@ class UserReportController extends AbstractController
             $data = $this->userRepository->getUserSearchQuery($criteria['user_search'], true)->getResult();
         }
 
-        $fileName = $this->reportService->generateStatisticPdf($data);
+        try {
+            $fileName = $this->reportService->generateStatisticPdf($data);
+
+        } catch (Exception) {
+            $this->addFlash('error', 'Файл не был сформирован, т.к. в выгрузке присутствуют слушатели, у которых не назначены доступы');
+
+            return $this->redirectToRoute('admin_user_list', $criteria);
+        }
+
         $response = new BinaryFileResponse($fileName);
         $response->headers->set('Content-Type', 'application/pdf');
         $response
@@ -35,9 +45,9 @@ class UserReportController extends AbstractController
 
         return $response;
     }
-    
+
     #[Route('/admin/user/report/statistic/to_docx/', name: 'admin_user_report_statistic_to_docx')]
-    public function adminUserReportStatisticToDocx(Request $request): BinaryFileResponse
+    public function adminUserReportStatisticToDocx(Request $request): Response
     {
         $criteria = $request->get('criteria');
 
@@ -45,7 +55,15 @@ class UserReportController extends AbstractController
             $data = $this->userRepository->getUserSearchQuery($criteria['user_search'], true)->getResult();
         }
 
-        $fileName = $this->reportService->generateStatisticDocx($data);
+        try {
+            $fileName = $this->reportService->generateStatisticDocx($data);
+
+        } catch (Exception) {
+            $this->addFlash('error', 'Файл не был сформирован, т.к. в выгрузке присутствуют слушатели, у которых не назначены доступы');
+
+            return $this->redirectToRoute('admin_user_list', $criteria);
+        }
+
         $response = new BinaryFileResponse($fileName);
         $response->headers->set('Content-Type', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document');
         $response
@@ -56,7 +74,7 @@ class UserReportController extends AbstractController
     }
 
     #[Route('/admin/user/report/statistic/to_xlsx/', name: 'admin_user_report_statistic_to_xlsx')]
-    public function adminUserReportStatisticToXlsx(Request $request): BinaryFileResponse
+    public function adminUserReportStatisticToXlsx(Request $request): Response
     {
         $criteria = $request->get('criteria');
 
@@ -64,7 +82,15 @@ class UserReportController extends AbstractController
             $data = $this->userRepository->getUserSearchQuery($criteria['user_search'], true)->getResult();
         }
 
-        $fileName = $this->reportService->generateStatisticXlsx($data);
+        try {
+            $fileName = $this->reportService->generateStatisticXlsx($data);
+
+        } catch (Exception) {
+            $this->addFlash('error', 'Файл не был сформирован, т.к. в выгрузке присутствуют слушатели, у которых не назначены доступы');
+
+            return $this->redirectToRoute('admin_user_list', $criteria);
+        }
+
         $response = new BinaryFileResponse($fileName);
         $response->headers->set('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
         $response

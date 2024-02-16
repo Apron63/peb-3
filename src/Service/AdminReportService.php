@@ -535,11 +535,15 @@ class AdminReportService
     {
         foreach($data as $key => $value) {
             $user = $this->userRepository->find($value['userId']);
+            
             if (! $user instanceof $user) {
                 throw new NotFoundHttpException('User Not found: ' . $value['userId']);
             }
 
-            $permission = $this->permissionRepository->find($value['permissionId']);
+            $permission = $this->permissionRepository->findOneBy([
+                'id' => $value['permissionId']
+            ]);
+
             if (! $permission instanceof Permission) {
                 throw new NotFoundHttpException('Permission not found: ' . $value['permissionId']);
             }
