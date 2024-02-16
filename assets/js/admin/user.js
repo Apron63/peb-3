@@ -11,7 +11,7 @@ $('.button-add-duration').on('click', function(e) {
 
     if (duration != '') {
         let permissionId = $(e.target).data('permission-id')
-        
+
         $.ajax({
             url: url,
             data: {permissionId: permissionId, duration: Number(duration)}
@@ -26,7 +26,7 @@ $('.button-add-duration').on('click', function(e) {
 
 $('.send-user-list').on('click', function(e) {
     sendReportType = $(e.target).data('type')
-    
+
     const myModal = new bootstrap.Modal($('#myModal'), {
         keyboard: false
     })
@@ -76,7 +76,7 @@ $('.send-user-list').on('click', function(e) {
 
 $('.send-user-statistic').on('click', function(e) {
     sendReportType = $(e.target).data('type')
-    
+
     const myModal = new bootstrap.Modal($('#myModal'), {
         keyboard: false
     })
@@ -122,4 +122,22 @@ $('.send-user-statistic').on('click', function(e) {
             })
         }
     )
+})
+
+$('#change-user-password').on('click', function() {
+    let url = $('#change-user-password').data('url')
+
+    $.ajax({
+        url: url
+    }).done(function (data) {
+        $('#user_edit_plainPassword').val(data.password)
+
+        $('#toast-message').html('Пароль слушателя был обновлен')
+        $('.toast-header').css('background-color', 'green')
+        let toast = new bootstrap.Toast(toastLiveExample)
+        toast.show()
+
+    }).fail(function (data) {
+       console.log(data)
+    })
 })

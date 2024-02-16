@@ -15,7 +15,17 @@
             {{ form_label(form.plainPassword) }}
             <div class="col-sm-10">
                 <span class="text-danger">{{ form_errors(form.plainPassword) }}</span>
-                {{ form_widget(form.plainPassword) }}
+                <div class="input-group">
+                    {{ form_widget(form.plainPassword) }}
+                    <span
+                        class="input-group-text"
+                        id="change-user-password"
+                        data-url="{{ path('admin_user_change_password', {id: form.vars.value.id}) }}"
+                        title="Сменить пароль"
+                    >
+                        <img src="{{ asset('svg/key.svg') }}">
+                    </span>
+                </div>
             </div>
         </div>
     {% endif %}

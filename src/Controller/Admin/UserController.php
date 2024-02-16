@@ -9,6 +9,7 @@ use App\Repository\PermissionRepository;
 use App\Repository\UserRepository;
 use App\Service\UserService;
 use Knp\Component\Pager\PaginatorInterface;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -104,6 +105,17 @@ class UserController extends MobileController
     {
         return $this->mobileRender('admin/user/info.html.twig', [
             'user' => $user,
+        ]);
+    }
+
+    #[Route('/admin/user/change-password/{id<\d+>}/', name: 'admin_user_change_password', condition: 'request.isXmlHttpRequest()')]
+    public function adminUserChangePassword(User $user): JsonResponse
+    {
+        $changedUser = $this->userService->getNewPasswordForUser($user->setPlainPassword(null));
+        $this->userRepository->save($changedUser, true);
+
+        return new JsonResponse([
+            'password' => $changedUser->getPlainPassword(),
         ]);
     }
 }

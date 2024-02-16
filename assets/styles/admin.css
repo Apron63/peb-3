@@ -65,7 +65,7 @@ body {
     left:50%;
     animation: spin 2s linear infinite;
     }
-      
+
 @keyframes spin {
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
@@ -74,4 +74,8 @@ body {
 .toast-body {
     font-size: 1.3rem!important;
     opacity: 1!important;
+}
+
+#change-user-password :hover {
+    cursor: pointer;
 }
