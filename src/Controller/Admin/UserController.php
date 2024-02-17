@@ -6,6 +6,7 @@ use App\Decorator\MobileController;
 use App\Entity\User;
 use App\Form\Admin\UserEditType;
 use App\Repository\PermissionRepository;
+use App\Repository\UserHistoryRepository;
 use App\Repository\UserRepository;
 use App\Service\UserService;
 use Knp\Component\Pager\PaginatorInterface;
@@ -20,6 +21,7 @@ class UserController extends MobileController
         private readonly UserService $userService,
         private readonly UserRepository $userRepository,
         private readonly PermissionRepository $permissionRepository,
+        private readonly UserHistoryRepository $userHistoryRepository,
         private readonly PaginatorInterface $paginator,
     ) {}
 
@@ -90,13 +92,23 @@ class UserController extends MobileController
         $pagination = $this->paginator->paginate(
             $query,
             $request->query->getInt('page', 1),
-            10
+            10,
+            ['pageParameterName' => 'page'],
+        );
+
+        $userHistoryQuery = $this->userHistoryRepository->getHistoryQuery($user);
+        $userHistory = $this->paginator->paginate(
+            $userHistoryQuery,
+            $request->query->getInt('history', 1),
+            10,
+            ['pageParameterName' => 'history'],
         );
 
         return $this->mobileRender('admin/user/edit.html.twig', [
             'form' => $form->createView(),
             'user' => $user,
             'pagination' => $pagination,
+            'userHistories' => $userHistory,
         ]);
     }
 

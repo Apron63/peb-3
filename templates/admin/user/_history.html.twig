@@ -1,0 +1,30 @@
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Время</th>
+            <th>IP адрес</th>
+            <th>Информация о браузере</th>
+        </tr>
+    </thead>
+
+    <tbody>
+    {% for history in userHistories %}
+        <tr>
+            <td>
+                {{ history.createdAt | date('d.m.Y H:i:s') }}
+            </td>
+            <td>
+                {{ history.ip }}
+            </td>
+            <td>
+                {{ history.userAgent }}
+            </td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+
+<nav aria-label="navigator">
+    {{ knp_pagination_render(userHistories) }}
+</nav>

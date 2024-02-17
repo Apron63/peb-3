@@ -19,7 +19,7 @@ class UserChangePasswordEventListener
     {
         $entity = $args->getObject();
 
-        if (!$entity instanceof User) {
+        if (! $entity instanceof User) {
             return;
         }
 

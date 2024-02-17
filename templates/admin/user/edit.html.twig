@@ -22,6 +22,9 @@
                 <button class="nav-link" id="nav-permission-tab" data-bs-toggle="tab" data-bs-target="#nav-permission"
                         type="button" role="tab" aria-controls="nav-permission" aria-selected="false">Доступы
                 </button>
+                <button class="nav-link" id="nav-history-tab" data-bs-toggle="tab" data-bs-target="#nav-history"
+                        type="button" role="tab" aria-controls="nav-history" aria-selected="false">Авторизация
+                </button>
             {% endif %}
 
         </div>
@@ -38,6 +41,9 @@
         {% if user.id is not null %}
             <div class="tab-pane fade" id="nav-permission" role="tabpanel" aria-labelledby="nav-permission-tab">
                 {% include 'admin/user/_permission.html.twig' %}
+            </div>
+            <div class="tab-pane fade" id="nav-history" role="tabpanel" aria-labelledby="nav-history-tab">
+                {% include 'admin/user/_history.html.twig' %}
             </div>
         {% endif %}
 
