@@ -16,7 +16,6 @@
                 <tr>
                     <th>Наименование</th>
                     <th></th>
-                    <th></th>
                 </tr>
             </thead>
 
@@ -27,26 +26,35 @@
                             <a href="{{ path('admin_course_info_edit', {id: info.id}) }}">{{ info.name }}</a>
                         </td>
                         <td>
-                            {% if info.fileName is not empty %}
-                                <a
-                                        href="{{ path('view', {filename: info.fileName, courseId: info.course.id}) }}"
-                                        target="_blank"
-                                        class="btn btn-sm btn-outline-info"
-                                >
-                                    Просмотр
-                                </a>
-                            {% endif %}
-                        </td>
-                        <td>
-                            {% if is_granted('ROLE_SUPER_ADMIN') %}
-                                <a
-                                        href="{{ path('admin_course_info_delete', {'id': info.id}) }}"
-                                        class="btn btn-sm btn-outline-danger"
-                                        onclick="return window.confirm('Подтвердите действие');"
-                                >
-                                    Удалить
-                                </a>
-                            {% endif %}
+                            <div class="dropstart">
+                                <button type="button" class="btn btn-outline-secondary" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <img src="{{ asset('svg/more.svg') }}">
+                                </button>
+                                <ul class="dropdown-menu">
+                                    <li>
+                                        <a
+                                            class="dropdown-item color-item"
+                                            href="{{ path('view', {filename: info.fileName, courseId: info.course.id}) }}"
+                                            target="_blank"
+                                        >
+                                            <img src="{{ asset('svg/eye.svg') }}">
+                                            Просмотр
+                                        </a>
+                                    </li>
+                                    {% if is_granted('ROLE_SUPER_ADMIN') %}
+                                        <li>
+                                            <a
+                                                class="dropdown-item color-item"
+                                                href="{{ path('admin_course_info_delete', {'id': info.id}) }}"
+                                                onclick="return window.confirm('Подтвердите действие');"
+                                            >
+                                                <img src="{{ asset('svg/trash.svg') }}">
+                                                Удалить
+                                            </a>
+                                        </li>
+                                    {% endif %}
+                                </ul>
+                            </div>
                         </td>
                     </tr>
                 {% endfor %}
