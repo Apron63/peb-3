@@ -10,7 +10,7 @@
         </div>
     </div>
 
-    {% if is_granted('ROLE_SUPER_ADMIN') %}
+    {% if passwordVisible %}
         <div class="mb-3 row">
             {{ form_label(form.plainPassword) }}
             <div class="col-sm-10">

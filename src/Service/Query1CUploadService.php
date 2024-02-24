@@ -23,7 +23,7 @@ class Query1CUploadService
     ) {
         $this->exchange1cUploadDirectory = $exchange1cUploadDirectory;
     }
-   
+
     public function getUsersList(UploadedFile $data): array
     {
         $userData = [];
@@ -98,99 +98,4 @@ class Query1CUploadService
 
         return ['success' => true, 'message' => 'Пользователи успешно добавлены в очередь'];
     }
-
-    // public function createUsersAndPermissions(): ?string
-    // {
-    //     $userData = $this->queryUserRepository->getUserQueryNew();
-
-    //     $fileName = $this->reportUploadPath . '/' . (new DateTime())->format('d-m-Y_H_i_s') . '_' . uniqid() . '.csv';
-    //     $file = fopen($fileName, 'w');
-    //     // BOM для корректной работы с кодировкой
-    //     fputs($file, chr(0xEF) . chr(0xBB) . chr(0xBF));
-
-    //     $fileData = 'Номер заказа;'
-    //         . 'ФИО;'
-    //         . 'Должность;'
-    //         . 'Организация;'
-    //         . 'Логин;'
-    //         . 'Пароль;'
-    //         . 'Курсы;'
-    //         . 'Дней' . PHP_EOL;
-
-    //     fputs($file, $fileData);
-
-    //     foreach ($userData as $row) {
-    //         $createdByUser = $this->userRepository->find($row->getCreatedBy()->getId());
-
-    //         // Ищем пользователя по логину и организации.
-    //         $user = $this->userRepository
-    //             ->findOneBy([
-    //                 'fullName' => implode(
-    //                     ' ',
-    //                     [
-    //                         $row->getLastName(),
-    //                         $row->getFirstName(),
-    //                         $row->getPatronymic()
-    //                     ]
-    //                 ),
-    //                 'organization' => $row->getOrganization()
-    //             ]);
-
-    //         // Создадим нового если не нашлось.
-    //         if (!$user instanceof User) {
-    //             $user = (new User())
-    //                 ->setOrganization($row->getOrganization())
-    //                 ->setLastName($row->getLastName())
-    //                 ->setFirstName($row->getFirstName())
-    //                 ->setPatronymic($row->getPatronymic())
-    //                 ->setPosition($row->getPosition())
-    //                 ->setPatronymic($row->getPatronymic())
-    //                 ->setCreatedAt($row->getCreatedAt())
-    //                 ->setCreatedBy($createdByUser);
-                    
-    //             $user = $this->userService->setNewUser($user);
-    //             $this->userRepository->save($user, true);
-    //         }
-
-    //         // Проверяем доступы.
-    //         foreach (explode(',', $row->getCourseIds()) as $courseId) {
-    //             $course = $this->courseRepository->find($courseId);
-    //             if ($course instanceof Course) {
-    //                 $permission = $this->permissionRepository
-    //                     ->getLastActivePermission($course, $user);
-
-    //                 // Создаем новый доступ если нет активного.
-    //                 if (!$permission instanceof Permission) {
-    //                     $permission = (new Permission())
-    //                         ->setCreatedAt(new DateTime())
-    //                         ->setOrderNom($row->getOrderNom())
-    //                         ->setDuration($row->getDuration())
-    //                         ->setCourse($course)
-    //                         ->setUser($user);
-
-    //                     $this->permissionRepository->save($permission, true);
-    //                 }
-
-    //                 $fileData = $row->getOrderNom() . ';'
-    //                     . $user->getFullName() . ';'
-    //                     . $user->getPosition() . ';'
-    //                     . $user->getOrganization() . ';'
-    //                     . $user->getLogin() . ';'
-    //                     . $user->getPlainPassword() . ';'
-    //                     . $course->getShortName() . ';'
-    //                     . $permission->getDuration() . PHP_EOL;
-
-    //                 fputs($file, $fileData);
-    //             }
-    //         }
-
-    //         // Очередь.
-    //         $row->setResult('success');
-    //         $this->queryUserRepository->save($row, true);
-    //     }
-
-    //     fclose($file);
-
-    //     return $fileName;
-    // }
 }

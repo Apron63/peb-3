@@ -132,11 +132,12 @@ class LoaderService
                     ->setPosition($queryUser->getPosition())
                     ->setPatronymic($queryUser->getPatronymic())
                     ->setCreatedAt($queryUser->getCreatedAt())
-                    ->setEmail($queryUser->getEmail())
                     ->setCreatedBy($createdBy);
 
                 $user = $this->userService->setNewUser($user);
-            } else {
+            }
+            
+            if (null !== $queryUser->getEmail()) {
                 $user->setEmail($queryUser->getEmail());
             }
 

@@ -26,6 +26,7 @@ class UserEditType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $systemUser = $this->token->getToken()->getUser();
+        $userRoles = $options['data']->getRoles();
 
         $builder
             ->add('login', TextType::class, [
@@ -151,6 +152,30 @@ class UserEditType extends AbstractType
                 ],
             ]);
 
+        if (
+            null !== $options['data']->getId()
+            && (
+                in_array('ROLE_SUPER_ADMIN', $systemUser->getRoles())
+                || ! (in_array('ROLE_ADMIN', $userRoles) || in_array('ROLE_SUPER_ADMIN', $userRoles))
+
+            )
+        ) {
+            $builder
+                ->add('plainPassword', TextType::class, [
+                    'label' => 'Пароль',
+                    'required' => false,
+                    'attr' => [
+                        'class' => 'form-control',
+                        'placeholder' => 'Пароль',
+                        'onfocus' => 'this.placeholder = ""',
+                        'onblur' => 'this.placeholder = "Пароль"',
+                    ],
+                    'label_attr' => [
+                        'class' => 'col-sm-2 col-form-label'
+                    ],
+                ]);
+        }
+
         if (in_array(User::ROLE_SUPER_ADMIN, array_values($systemUser->getRoles()), true)) {
             $builder
                 ->add('roles', ChoiceType::class, [
@@ -166,19 +191,6 @@ class UserEditType extends AbstractType
                         'placeholder' => 'Доступ',
                         'onfocus' => 'this.placeholder = ""',
                         'onblur' => 'this.placeholder = "Доступ"',
-                    ],
-                    'label_attr' => [
-                        'class' => 'col-sm-2 col-form-label'
-                    ],
-                ])
-                ->add('plainPassword', TextType::class, [
-                    'label' => 'Пароль',
-                    'required' => false,
-                    'attr' => [
-                        'class' => 'form-control',
-                        'placeholder' => 'Пароль',
-                        'onfocus' => 'this.placeholder = ""',
-                        'onblur' => 'this.placeholder = "Пароль"',
                     ],
                     'label_attr' => [
                         'class' => 'col-sm-2 col-form-label'

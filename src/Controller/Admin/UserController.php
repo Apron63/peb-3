@@ -72,7 +72,8 @@ class UserController extends MobileController
         return $this->mobileRender('admin/user/edit.html.twig', [
             'form' => $form->createView(),
             'user' => $user,
-            'pagination' => $pagination
+            'pagination' => $pagination,
+            'passwordVisible' => false,
         ]);
     }
 
@@ -104,11 +105,22 @@ class UserController extends MobileController
             ['pageParameterName' => 'history'],
         );
 
+        $passwordVisible = false;
+        $roles = $this->getUser()->getRoles();
+
+        if (
+            in_array('ROLE_SUPER_ADMIN', $roles)
+            || ! (in_array('ROLE_ADMIN', $user->getRoles()) || in_array('ROLE_SUPER_ADMIN', $user->getRoles()))
+        ) {
+            $passwordVisible = true;
+        }
+
         return $this->mobileRender('admin/user/edit.html.twig', [
             'form' => $form->createView(),
             'user' => $user,
             'pagination' => $pagination,
             'userHistories' => $userHistory,
+            'passwordVisible' => $passwordVisible,
         ]);
     }
 
