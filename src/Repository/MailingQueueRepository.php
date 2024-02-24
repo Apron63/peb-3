@@ -78,13 +78,9 @@ class MailingQueueRepository extends ServiceEntityRepository
             ->getSingleScalarResult();
     }
 
-    public function getMailQuery(?User $mailUser): Query
+    public function getMailQuery(): Query
     {
         $queryBuilder = $this->createQueryBuilder('mq');
-
-        if ($mailUser instanceof User) {
-            $queryBuilder->where('mq.createdBy = :user')->setParameter('user', $mailUser);
-        }
 
         return $queryBuilder
             ->orderBy('mq.createdAt', 'desc')

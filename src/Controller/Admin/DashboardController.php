@@ -4,7 +4,6 @@ namespace App\Controller\Admin;
 
 use App\Decorator\MobileController;
 use App\Entity\MailingQueue;
-use App\Entity\User;
 use App\Form\Admin\DashboardType;
 use App\Repository\MailingQueueRepository;
 use App\Service\ConfigService;
@@ -65,17 +64,8 @@ class DashboardController extends MobileController
     #[IsGranted('ROLE_ADMIN')]
     public function mailList(Request $request): Response
     {
-        $mailUser = null;
-        $currentUser = $this->getUser();
-
-        $userRoles = $currentUser->getRoles();
-
-        if (! in_array(User::ROLE_SUPER_ADMIN, $userRoles)) {
-            $mailUser = $currentUser;
-        }
-
         $pagination = $this->paginator->paginate(
-            $this->mailingQueueRepository->getMailQuery($mailUser),
+            $this->mailingQueueRepository->getMailQuery(),
             $request->query->getInt('page', 1),
             10
         );
@@ -89,18 +79,6 @@ class DashboardController extends MobileController
     #[IsGranted('ROLE_ADMIN')]
     public function mailListDetail(MailingQueue $mail): Response
     {
-        /** @var User $currentUser */
-        $currentUser = $this->getUser();
-
-        $userRoles = $currentUser->getRoles();
-
-        if (
-            ! in_array(User::ROLE_SUPER_ADMIN, $userRoles)
-            && (null === $mail->getCreatedBy() || $mail->getCreatedBy()->getId() !== $currentUser->getId())
-        ) {
-            return $this->redirectToRoute('admin_dashboard_mail_list');
-        }
-
         return $this->mobileRender('admin/dashboard/mail-detail.html.twig', [
             'mail' => $mail,
         ]);

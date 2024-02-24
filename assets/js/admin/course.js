@@ -4,7 +4,7 @@ import 'jquery-ui-bundle'
 const parsedUrl = new URL(window.location)
 
 $('#course-type-select').on('change', function () {
-    const value = $('#course-type-select').val() 
+    const value = $('#course-type-select').val()
 
     if (value === '0') {
         parsedUrl.searchParams.delete('type')
@@ -18,7 +18,7 @@ $('#course-type-select').on('change', function () {
 
 $('#profile-type-select').on('change', function () {
     const value = $('#profile-type-select').val()
-    
+
     if (value === '0') {
         parsedUrl.searchParams.delete('profile')
     } else {
@@ -28,6 +28,20 @@ $('#profile-type-select').on('change', function () {
     parsedUrl.searchParams.delete('page')
     window.location = parsedUrl.href
 })
+
+$('#course-life-search-button').on('click', function (e) {
+    let value = $('#course-life-search').val()
+
+    if (value === '') {
+        parsedUrl.searchParams.delete('name')
+    } else {
+        parsedUrl.searchParams.set('name', value)
+    }
+
+    parsedUrl.searchParams.delete('page')
+    window.location = parsedUrl.href
+})
+
 
 $(function($) {
     $('#draggable-module-container').sortable()

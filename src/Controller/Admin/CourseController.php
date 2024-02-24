@@ -53,9 +53,10 @@ class CourseController extends MobileController
     {
         $type = $request->get('type');
         $profile = $request->get('profile');
+        $name = $request->get('name');
 
         $pagination = $paginator->paginate(
-            $this->courseRepository->getAllCoursesQuery($type, $profile),
+            $this->courseRepository->getAllCoursesQuery($type, $profile, $name),
             $request->query->getInt('page', 1),
             10
         );
@@ -63,9 +64,10 @@ class CourseController extends MobileController
         return $this->mobileRender('admin/course/index.html.twig', [
             'pagination' => $pagination,
             'profiles' => $this->profileRepository->getAllProfiles(),
+            'name' => $name,
         ]);
     }
-    
+
     #[Route('/admin/course/create/', name: 'admin_course_create')]
     #[IsGranted('ROLE_SUPER_ADMIN')]
     public function create(Request $request): Response
@@ -109,7 +111,7 @@ class CourseController extends MobileController
 
                 $this->courseService->saveModuleOrder($course, $sortOrder);
             }
-            
+
             $this->courseRepository->save($course, true);
 
             $this->addFlash('success', 'Курс обновлен');

@@ -2,22 +2,22 @@
 
 namespace App\Repository;
 
-use App\Service\XmlCourseDownload\CourseThemeDTO;
-use Doctrine\DBAL\Logging\Middleware;
-use Exception;
 use App\Entity\Answer;
 use App\Entity\Course;
-use App\Entity\Ticket;
-use App\Entity\Profile;
-use App\Entity\Questions;
 use App\Entity\CourseInfo;
 use App\Entity\CourseTheme;
+use App\Entity\Profile;
+use App\Entity\Questions;
+use App\Entity\Ticket;
+use App\Service\XmlCourseDownload\CourseThemeDTO;
+use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\DBAL\Logging\Middleware;
 use Doctrine\ORM\AbstractQuery;
 use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\Persistence\ManagerRegistry;
+use Exception;
 use Psr\Log\NullLogger;
 use Symfony\Component\String\UnicodeString;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 
 /**
  * @extends ServiceEntityRepository<Course>
@@ -52,15 +52,10 @@ class CourseRepository extends ServiceEntityRepository
         }
     }
 
-    /**
-     * @param string|null $type
-     * @param string|null $profile
-     * @param bool $demoOnly
-     * @return AbstractQuery
-     */
     public function getAllCoursesQuery(
         ?string $type,
         ?string $profile,
+        ?string $name,
         bool $demoOnly = false
     ): AbstractQuery {
         $queryBuilder = $this->createQueryBuilder('c')
@@ -85,6 +80,11 @@ class CourseRepository extends ServiceEntityRepository
         if (null !== $profile) {
             $queryBuilder->andWhere('c.profile = :profile')
                 ->setParameter('profile', $profile);
+        }
+
+        if (null !== $name) {
+            $queryBuilder->andWhere('c.name LIKE :name')
+                ->setParameter('name', '%' . $name . '%');
         }
 
         $queryBuilder
