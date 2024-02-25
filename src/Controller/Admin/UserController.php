@@ -8,6 +8,7 @@ use App\Form\Admin\UserEditType;
 use App\Repository\PermissionRepository;
 use App\Repository\UserHistoryRepository;
 use App\Repository\UserRepository;
+use App\Repository\UserStateRepository;
 use App\Service\UserService;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -22,6 +23,7 @@ class UserController extends MobileController
         private readonly UserRepository $userRepository,
         private readonly PermissionRepository $permissionRepository,
         private readonly UserHistoryRepository $userHistoryRepository,
+        private readonly UserStateRepository $userStateRepository,
         private readonly PaginatorInterface $paginator,
     ) {}
 
@@ -105,6 +107,14 @@ class UserController extends MobileController
             ['pageParameterName' => 'history'],
         );
 
+        $userStateQuery = $this->userStateRepository->getStateQuery($user);
+        $userState = $this->paginator->paginate(
+            $userStateQuery,
+            $request->query->getInt('state', 1),
+            10,
+            ['pageParameterName' => 'state'],
+        );
+
         $passwordVisible = false;
         $roles = $this->getUser()->getRoles();
 
@@ -121,6 +131,7 @@ class UserController extends MobileController
             'pagination' => $pagination,
             'userHistories' => $userHistory,
             'passwordVisible' => $passwordVisible,
+            'userStates' => $userState,
         ]);
     }
 

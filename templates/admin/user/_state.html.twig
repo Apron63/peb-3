@@ -1,0 +1,56 @@
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Время</th>
+            <th>Кем изменено</th>
+            <th>Что изменено</th>
+        </tr>
+    </thead>
+
+    <tbody>
+    {% for state in userStates %}
+        <tr>
+            <td>
+                {{ state.createdAt | date('d.m.Y H:i:s') }}
+            </td>
+            <td>
+                {{ state.createdBy.fullName }}
+            </td>
+            <td>
+                {% for change in state.changes %}
+                    <code>Свойство:</code>
+                    {% if change.field == "login" %}
+                        Логин
+                    {% elseif change.field == "plainPassword" %}
+                        Пароль
+                    {% elseif change.field == "firstName" %}
+                        Имя
+                    {% elseif change.field == "lastName" %}
+                        Фамилия
+                    {% elseif change.field == "patronymic" %}
+                        Отчество
+                    {% elseif change.field == "organization" %}
+                        Организация
+                    {% elseif change.field == "position" %}
+                        Должность
+                    {% elseif change.field == "email" %}
+                        Email
+                    {% elseif change.field == "contact" %}
+                        Контактный номер
+                    {% else %}
+                        {{ change.field }}
+                    {% endif %}
+                    <code>Старое значение:</code> {{ change.oldValue}}
+                    <code>Новое значение:</code> {{ change.newValue}}
+                    <br>
+                {% endfor %}
+            </td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+
+<nav aria-label="navigator">
+    {{ knp_pagination_render(userStates) }}
+</nav>
