@@ -80,14 +80,18 @@ class UserStateEventListener
 
     private function formatChangedData(mixed $data): string
     {
+        $result = $data;
+
         if ($data instanceof DateTime) {
-            return $data->format('d.m.Y H:i:s');
+            $result = $data->format('d.m.Y H:i:s');
         } else if ($data instanceof int) {
-            return (string) $data;
+            $result = (string) $data;
         } else if (null === $data) {
-            return 'не задано';
-        } else {
-            return $data;
+            $result = 'не задано';
+        } else if (is_array($data)) {
+            $result = implode(',', $data);
         }
+
+        return $result;
     }
 }

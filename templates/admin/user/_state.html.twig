@@ -38,6 +38,8 @@
                         Email
                     {% elseif change.field == "contact" %}
                         Контактный номер
+                    {% elseif change.field == "roles" %}
+                        Роль
                     {% else %}
                         {{ change.field }}
                     {% endif %}
