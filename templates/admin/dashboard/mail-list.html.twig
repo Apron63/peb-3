@@ -16,6 +16,30 @@
 
     <h3>Рассылки</h3>
 
+    {{ form_start(form, {'attr':{'class': 'form-contact contact_form'}}) }}
+        <div class ="row">
+
+            <div class="col-4">
+                {{ form_widget(form.sender) }}
+            </div>
+
+            <div class="col-4">
+                {{ form_widget(form.userName) }}
+            </div>
+
+            <div class="col-3">
+                {{ form_widget(form.email) }}
+            </div>
+
+            <div class="col-1 float-end">
+                {{ form_widget(form.submit) }}
+            </div>
+
+        </div>
+    {{ form_end(form) }}
+
+    <p></p>
+
     <div class="row">
         <table class="table">
             <thead>
@@ -42,10 +66,14 @@
                             {% endif %}
                         </td>
                         <td>
-                            {% if page.user is null %}
+                            {% if page.user is not empty %}
+                                {{ page.user.fullName }},
+                            {% endif %}
+
+                            {% if page.reciever is not empty %}
                                 {{ page.reciever }}
-                            {% else%}
-                                {{ page.user.fullName }}, {{ page.user.email }}
+                            {% else %}
+                                {{ page.user.email }}
                             {% endif %}
                         </td>
                         <td>

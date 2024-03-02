@@ -2,19 +2,20 @@
 
 namespace App\Repository;
 
-use DateTime;
-use DateInterval;
-use App\Entity\User;
 use App\Entity\Permission;
+use App\Entity\User;
+use DateInterval;
+use DateTime;
+use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\AbstractQuery;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\Query\Expr\Join;
+use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bridge\Doctrine\Security\User\UserLoaderInterface;
-use Symfony\Component\Security\Core\User\PasswordUpgraderInterface;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
+use Symfony\Component\Security\Core\User\PasswordUpgraderInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
@@ -104,8 +105,18 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
             ->setParameter('organization', $organization)
             ->setMaxResults(1)
             ->getOneOrNullResult();
-            
+
         return $result !== null;
+    }
+
+    public function getAdmins(): QueryBuilder
+    {
+        return $this->createQueryBuilder('u')
+            ->where('JSON_CONTAINS(u.roles, :roleAdmin) > 0')
+            ->orWhere('JSON_CONTAINS(u.roles, :roleSuperAdmin) > 0')
+            ->setParameter('roleAdmin', '"ROLE_ADMIN"')
+            ->setParameter('roleSuperAdmin', '"ROLE_SUPER_ADMIN"')
+            ->orderBy('u.fullName');
     }
 
     public function getUserSearchQuery(?array $criteria, bool $forReport = false): AbstractQuery

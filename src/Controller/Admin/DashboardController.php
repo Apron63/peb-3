@@ -5,6 +5,7 @@ namespace App\Controller\Admin;
 use App\Decorator\MobileController;
 use App\Entity\MailingQueue;
 use App\Form\Admin\DashboardType;
+use App\Form\Admin\MainlingQueueSearchType;
 use App\Repository\MailingQueueRepository;
 use App\Service\ConfigService;
 use App\Service\DashboardService;
@@ -64,13 +65,21 @@ class DashboardController extends MobileController
     #[IsGranted('ROLE_ADMIN')]
     public function mailList(Request $request): Response
     {
+        $form = $this->createForm(MainlingQueueSearchType::class);
+        $form->handleRequest($request);
+
+        $sender = $form->get('sender')->getData();
+        $userName = $form->get('userName')->getData();
+        $email = $form->get('email')->getData();
+
         $pagination = $this->paginator->paginate(
-            $this->mailingQueueRepository->getMailQuery(),
+            $this->mailingQueueRepository->getMailQuery($sender, $userName, $email),
             $request->query->getInt('page', 1),
             10
         );
 
         return $this->mobileRender('admin/dashboard/mail-list.html.twig', [
+            'form' => $form->createView(),
             'pagination' => $pagination,
         ]);
     }

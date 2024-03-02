@@ -37,7 +37,7 @@ class CheckPermissionExpiresCommand extends Command
             if (null === $permission->getCreatedBy()) {
                 continue;
             }
-            
+
             $output->writeln('Найден пользователь: ' . $permission->getUser()->getEmail());
 
             $mailingQueue = new MailingQueue;
@@ -52,17 +52,19 @@ class CheckPermissionExpiresCommand extends Command
                     $permission->getCourse()->getName(),
                     $permission->getEndDate()->format('d.m.Y'),
                 ],
-                $permission->getCreatedBy()
+                $permission->getCreatedBy(),
             );
 
             $mailingQueue
                 ->setUser($permission->getUser())
+                ->setCreatedBy($permission->getCreatedBy())
+                ->setReciever($permission->getUser()->getEmail())
                 ->setSubject('Доступ скоро истекает')
                 ->setContent($content);
 
             $this->mailingQueueRepository->save($mailingQueue, true);
         }
-        
+
         $output->writeln('Отправка завершена.');
         return Command::SUCCESS;
     }

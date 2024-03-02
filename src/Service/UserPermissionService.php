@@ -63,6 +63,8 @@ class UserPermissionService
                     $mailingQueue
                         ->setUser($permission->getUser())
                         ->setSubject('Активирован учебный курс')
+                        ->setCreatedBy($permission->getCreatedBy())
+                        ->setReciever($permission->getUser()->getEmail())
                         ->setContent($content);
 
                     $this->mailingQueueRepository->save($mailingQueue, true);
