@@ -152,6 +152,8 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
             $orders = explode(',', $criteria['orderNumber']);
 
             if (false !== $orders) {
+                $orders = array_map(fn($order) => trim($order), $orders);
+
                 $queryBuilder->andWhere('p.orderNom IN (:orders)')
                     ->setParameter('orders', $orders);
             }
