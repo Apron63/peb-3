@@ -47,7 +47,7 @@ class LoaderController extends MobileController
             'form' => $form->createView(),
         ]);
     }
-    
+
     #[Route('/admin/loader/', name: 'admin_loader')]
     public function index(): Response
     {
@@ -62,7 +62,7 @@ class LoaderController extends MobileController
             'emptyData' => $emptyData,
         ]);
     }
-    
+
     #[Route('/admin/loader/changeCheckBox/', name: 'admin_loader_change_check_box', condition: 'request.isXmlHttpRequest()')]
     public function changeCheckBoxValue(Request $request): JsonResponse
     {
@@ -73,7 +73,7 @@ class LoaderController extends MobileController
 
         return new JsonResponse();
     }
-    
+
     #[Route('/admin/loader/setAllCheckBox/', name: 'admin_loader_set_all_check_box', condition: 'request.isXmlHttpRequest()')]
     public function setAllCheckBoxValue(Request $request): JsonResponse
     {
@@ -86,7 +86,7 @@ class LoaderController extends MobileController
 
         return new JsonResponse();
     }
-    
+
     #[Route('/admin/loader/checkIfLoaderIsEmpty/', name: 'admin_loader_check_empty', condition: 'request.isXmlHttpRequest()')]
     public function checkIfLoaderIsEmpty(): JsonResponse
     {
@@ -97,7 +97,7 @@ class LoaderController extends MobileController
             'empty' => $this->loaderRepository->checkIfLoaderIsEmpty($user),
         ]);
     }
-    
+
     #[Route('/admin/loader/prepareData/', name: 'admin_loader_prepare_data', condition: 'request.isXmlHttpRequest()')]
     public function prepareData(): Response
     {
@@ -108,7 +108,7 @@ class LoaderController extends MobileController
             ])
         );
     }
-    
+
     #[Route('/admin/loader/sendToQuery/', name: 'admin_loader_send_to_query', condition: 'request.isXmlHttpRequest()')]
     public function sendToQuery(Request $request): JsonResponse
     {
@@ -129,7 +129,7 @@ class LoaderController extends MobileController
             'message' => $result['message'] ?? '',
         ]);
     }
-    
+
     #[Route('/admin/loader/checkQuery/', name: 'admin_loader_check_query', condition: 'request.isXmlHttpRequest()')]
     public function checkQuery(): JsonResponse
     {

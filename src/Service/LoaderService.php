@@ -82,9 +82,9 @@ class LoaderService
                 ->setLoader($loader)
                 ->setResult('new');
 
-                if ($loader->isEmailChecked()) {
-                    $queryUser->setEmail($loader->getEmail());
-                }
+            if ($loader->isEmailChecked()) {
+                $queryUser->setEmail($loader->getEmail());
+            }
 
             $this->queryUserRepository->save($queryUser, true);
         }
@@ -136,7 +136,7 @@ class LoaderService
 
                 $user = $this->userService->setNewUser($user);
             }
-            
+
             if (null !== $queryUser->getEmail()) {
                 $user->setEmail($queryUser->getEmail());
             }
@@ -165,11 +165,11 @@ class LoaderService
 
                         $this->permissionRepository->save($permission, true);
 
-                        if('' !== $courseName) {
+                        if ('' !== $courseName) {
                             $courseName .= ', ';
                         }
 
-                        $courseName.= $course->getShortName();
+                        $courseName .= $course->getShortName();
                     }
                 }
             }
@@ -186,7 +186,7 @@ class LoaderService
             if ('' !== $courseName) {
                 $name = $loader->getCourseName();
 
-                if('' !== $name) {
+                if ('' !== $name) {
                     $name .= ', ';
                 }
 
@@ -264,7 +264,7 @@ class LoaderService
 
     private function saveToLoader(array $userList, User $user): void
     {
-        foreach($userList as $item) {
+        foreach ($userList as $item) {
             $email = trim($item['email']);
             $emailChecked = false;
 

@@ -31,7 +31,7 @@ class LoaderReportController extends AbstractController
 
         return $response;
     }
-    
+
     #[Route('/admin/loader/report/to_xlsx/', name: 'admin_loader_report_to_xlsx')]
     public function adminLoaderReportToXlsx(): BinaryFileResponse
     {

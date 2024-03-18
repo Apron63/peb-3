@@ -11,8 +11,8 @@ use Symfony\Component\Console\Output\OutputInterface;
 #[AsCommand(name: 'app:sort-modules')]
 class CreateSortOrderForModulesCommand extends Command
 {
-    public function __construct (
-        private readonly ModuleRepository $moduleRepository, 
+    public function __construct(
+        private readonly ModuleRepository $moduleRepository,
     ) {
         parent::__construct();
     }
@@ -33,7 +33,7 @@ class CreateSortOrderForModulesCommand extends Command
 
         $modules = $this->moduleRepository->findBy([], ['course' => 'asc', 'id' => 'asc']);
 
-        foreach($modules as $module) {
+        foreach ($modules as $module) {
             if ($courseId !== $module->getCourse()->getId()) {
                 $courseId = $module->getCourse()->getId();
 
@@ -43,9 +43,9 @@ class CreateSortOrderForModulesCommand extends Command
             $module->setSortOrder($moduleSortOrder);
             $this->moduleRepository->save($module, true);
 
-            $moduleSortOrder ++;
+            $moduleSortOrder++;
         }
-        
+
         $output->writeln('Задача завершена.');
         return Command::SUCCESS;
     }

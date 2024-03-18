@@ -74,7 +74,7 @@ class ModuleSectionController extends MobileController
         $this->moduleSectionRepository->remove($moduleSection, true);
 
         $this->addFlash('success', 'Страница удалена');
-        
+
         return $this->redirectToRoute('admin_module_edit', ['id' => $moduleId]);
     }
 }

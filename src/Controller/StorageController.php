@@ -50,9 +50,9 @@ class StorageController extends AbstractController
         }
 
         $viewedFileName = $this->getParameter('course_upload_directory')
-            . '/'
+            . DIRECTORY_SEPARATOR
             . $course->getId()
-            . '/'
+            . DIRECTORY_SEPARATOR
             . $filename;
 
         if (! file_exists($viewedFileName)) {

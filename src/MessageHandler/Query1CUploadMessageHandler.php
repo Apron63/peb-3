@@ -27,7 +27,7 @@ class Query1CUploadMessageHandler
 
         try {
             $this->loaderService->createUsersAndPermissions($message->getContent()['userId']);
-        } catch(Exception $e) {
+        } catch (Exception $e) {
             $exceptionMessage = $e->getMessage();
         }
 

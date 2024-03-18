@@ -121,8 +121,7 @@ class CourseInfoController extends MobileController
             try {
                 $this->courseInfoService->batchUploadCourseInfo($form->get('fileName')->getData(), $course);
                 $this->addFlash('success', 'Пакетная загрузка завершена');
-
-            } catch(Exception $e) {
+            } catch (Exception $e) {
                 $this->addFlash('error', $e->getMessage());
             }
 

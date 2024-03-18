@@ -30,7 +30,7 @@ class ProfileController extends AbstractController
             'user' => $user,
         ]);
     }
-    
+
     #[Route('/profile/upload_image/', name: 'profile_upload_image', methods: 'POST', condition: 'request.isXmlHttpRequest()')]
     public function profileUploadImageAction(Request $request): JsonResponse
     {

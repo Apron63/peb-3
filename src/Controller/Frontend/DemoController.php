@@ -211,7 +211,7 @@ class DemoController extends AbstractController
 
         $infoName = $this->getParameter('course_upload_directory') . '/' . $course->getId() . '/' . $fileName;
 
-        if(! file_exists($infoName)) {
+        if (! file_exists($infoName)) {
             throw new NotFoundHttpException();
         }
 
@@ -254,7 +254,7 @@ class DemoController extends AbstractController
 
         return $this->render('frontend/demo/_info-theme.html.twig', [
             'course' => $course,
-            'themeInfo' =>$this->courseThemeRepository->getCourseThemes($course),
+            'themeInfo' => $this->courseThemeRepository->getCourseThemes($course),
         ]);
     }
 

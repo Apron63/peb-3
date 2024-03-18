@@ -13,8 +13,8 @@ use Symfony\Component\Routing\Attribute\Route;
 class Query1CLoadController extends MobileController
 {
     public function __construct(
-        private readonly QueryUserRepository $queryUserRepository)
-    {}
+        private readonly QueryUserRepository $queryUserRepository
+    ) {}
 
     #[Route('/admin/query/1cload/', name: 'admin_query_1cload')]
     public function index(Request $request, PaginatorInterface $paginator): Response
@@ -29,7 +29,7 @@ class Query1CLoadController extends MobileController
             $request->query->getInt('page', 1),
             10
         );
-        
+
         return $this->render('admin/query-1cload/index.html.twig', [
             'pagination' => $pagination,
         ]);

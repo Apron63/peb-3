@@ -15,7 +15,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 #[AsCommand(name: 'app:check-expired-permission')]
 class CheckPermissionExpiresCommand extends Command
 {
-    public function __construct (
+    public function __construct(
         private readonly PermissionRepository $permissionRepository,
         private readonly MailingQueueRepository $mailingQueueRepository,
         private readonly DashboardService $dashboardService,
@@ -33,7 +33,7 @@ class CheckPermissionExpiresCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        foreach($this->permissionRepository->getExpiredPermissionsList() as $permission) {
+        foreach ($this->permissionRepository->getExpiredPermissionsList() as $permission) {
             if (null === $permission->getCreatedBy()) {
                 continue;
             }

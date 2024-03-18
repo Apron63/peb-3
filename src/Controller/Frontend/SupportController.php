@@ -15,7 +15,7 @@ class SupportController extends AbstractController
     public function __construct(
         private readonly SupportService $supportService,
     ) {}
-    
+
     #[Route('/support/', name: 'app_frontend_support')]
     public function index(Request $request): Response
     {

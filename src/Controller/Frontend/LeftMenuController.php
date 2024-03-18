@@ -27,7 +27,7 @@ class LeftMenuController extends AbstractController
 
         return $this->render('frontend/left-menu/index.html.twig', [
             'activeItem' => $request->get('activeItem'),
-            'activeCourse' => (int)$request->get('activeCourse'),
+            'activeCourse' => (int) $request->get('activeCourse'),
             'permissions' => $this->myProgramsService->createSideMenuForUser($user),
         ]);
     }

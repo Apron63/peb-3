@@ -23,7 +23,7 @@ class UserReportAndSendController extends AbstractController
     ) {}
 
     #[Route('/admin/user/report/send/get_content/', name: 'admin_user_report_send_get_content', condition: 'request.isXmlHttpRequest()')]
-    public function adminGetModalContent():JsonResponse
+    public function adminGetModalContent(): JsonResponse
     {
         $data = [
             'emails' => '',
@@ -39,7 +39,7 @@ class UserReportAndSendController extends AbstractController
     }
 
     #[Route('/admin/user/report/send/get_content_statistic/', name: 'admin_user_report_send_get_content_statistic', condition: 'request.isXmlHttpRequest()')]
-    public function adminGetModalContentStatictic():JsonResponse
+    public function adminGetModalContentStatictic(): JsonResponse
     {
         $data = [
             'emails' => '',
@@ -55,7 +55,7 @@ class UserReportAndSendController extends AbstractController
     }
 
     #[Route('/admin/user/report/send_letter_to_client/', name: 'admin_user_report_send_letter_to_client', condition: 'request.isXmlHttpRequest()')]
-    public function adminSendLetterToClient(Request $request):JsonResponse
+    public function adminSendLetterToClient(Request $request): JsonResponse
     {
         /** @var User $user */
         $user = $this->getUser();
@@ -66,7 +66,7 @@ class UserReportAndSendController extends AbstractController
         $type = $request->get('type');
         $criteria = $request->get('criteria');
 
-        if ( !empty($criteria)) {
+        if (! empty($criteria)) {
             $data = $this->userRepository->getUserSearchQuery($criteria['user_search'], true)->getResult();
         }
 
@@ -76,7 +76,7 @@ class UserReportAndSendController extends AbstractController
     }
 
     #[Route('/admin/user/report/send_statistic_to_client/', name: 'admin_user_report_send_statistic_to_client', condition: 'request.isXmlHttpRequest()')]
-    public function adminSendStatisticToClient(Request $request):JsonResponse
+    public function adminSendStatisticToClient(Request $request): JsonResponse
     {
         /** @var User $user */
         $user = $this->getUser();

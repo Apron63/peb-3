@@ -19,13 +19,13 @@ class LoadQuestionController extends MobileController
         private readonly MessageBusInterface $messageBus,
         private readonly CourseDownloadService $courseDownloadService,
     ) {}
-    
+
     #[Route('/admin/load/question/{id<\d+>}/', name: 'admin_load_question')]
     public function actionLoadCourse(Request $request, Course $course): Response
     {
         /** @var User $user */
         $user = $this->getUser();
-        
+
         $form = $this->createForm(LoadCourseType::class);
         $form->handleRequest($request);
 
@@ -38,7 +38,7 @@ class LoadQuestionController extends MobileController
 
             $this->messageBus->dispatch(
                 new QuestionUploadMessage(
-                    $form->get('filename')->getData()->getClientOriginalName(), 
+                    $form->get('filename')->getData()->getClientOriginalName(),
                     $user->getId(),
                     $course->getId()
                 )

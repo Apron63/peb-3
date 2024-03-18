@@ -14,8 +14,8 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 #[AsCommand(name: 'app:create-admin')]
 class CreateAdminCommand extends Command
 {
-    public function __construct (
-        private readonly UserRepository $userRepository, 
+    public function __construct(
+        private readonly UserRepository $userRepository,
         private readonly UserPasswordHasherInterface $passwordEncoder
     ) {
         parent::__construct();
@@ -44,7 +44,7 @@ class CreateAdminCommand extends Command
 
         $output->writeln('Создаем пользователя...');
         $admin = new User();
-        
+
         $admin
             ->setLogin('admin')
             ->setFirstName('admin')

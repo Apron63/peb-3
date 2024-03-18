@@ -30,7 +30,6 @@ class UserReportController extends AbstractController
 
         try {
             $fileName = $this->reportService->generateStatisticPdf($data);
-
         } catch (Exception) {
             $this->addFlash('error', 'Файл не был сформирован, т.к. в выгрузке присутствуют слушатели, у которых не назначены доступы');
 
@@ -57,7 +56,6 @@ class UserReportController extends AbstractController
 
         try {
             $fileName = $this->reportService->generateStatisticDocx($data);
-
         } catch (Exception) {
             $this->addFlash('error', 'Файл не был сформирован, т.к. в выгрузке присутствуют слушатели, у которых не назначены доступы');
 
@@ -84,7 +82,6 @@ class UserReportController extends AbstractController
 
         try {
             $fileName = $this->reportService->generateStatisticXlsx($data);
-
         } catch (Exception) {
             $this->addFlash('error', 'Файл не был сформирован, т.к. в выгрузке присутствуют слушатели, у которых не назначены доступы');
 

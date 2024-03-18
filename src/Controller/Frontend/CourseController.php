@@ -54,7 +54,7 @@ class CourseController extends AbstractController
 
         return $this->render('frontend/course/index.html.twig', $options);
     }
-    
+
     #[Route('/course/view-list/{id<\d+>}/', name: 'app_frontend_course_view_list')]
     public function viewList(Permission $permission): Response
     {
@@ -70,7 +70,7 @@ class CourseController extends AbstractController
             ]),
         ]);
     }
-    
+
     #[Route('/course/view-file/{id<\d+>}/{fileName}/', name: 'app_frontend_course_view_file')]
     public function viewFile(Permission $permission, Request $request, string $fileName): Response
     {
@@ -82,7 +82,7 @@ class CourseController extends AbstractController
 
         $infoName = $this->getParameter('course_upload_directory') . '/' . $permission->getCourse()->getId() . '/' . $fileName;
 
-        if(! file_exists($infoName)) {
+        if (! file_exists($infoName)) {
             throw new NotFoundHttpException();
         }
 

@@ -49,7 +49,7 @@ class ModuleController extends MobileController
 
     #[Route('/admin/module/edit/{id<\d+>}/', name: 'admin_module_edit')]
     #[IsGranted('ROLE_SUPER_ADMIN')]
-    public function adminEditModule(Module $module, Request $request): Response 
+    public function adminEditModule(Module $module, Request $request): Response
     {
         $form = $this->createForm(ModuleEditType::class, $module);
         $form->handleRequest($request);
@@ -79,7 +79,7 @@ class ModuleController extends MobileController
         $this->addFlash('success', 'Модуль удален');
         return $this->redirectToRoute('admin_course_edit', ['id' => $courseId]);
     }
-    
+
     #[Route('/admin/module/create-tickets/{id<\d+>}/', name: 'admin_module_create_tickets', condition: 'request.isXmlHttpRequest()')]
     #[IsGranted('ROLE_SUPER_ADMIN')]
     public function adminCreateTickets(Request $request, Course $course): JsonResponse
@@ -90,7 +90,7 @@ class ModuleController extends MobileController
         $errorsCount = (int)$request->get('errorsCount');
 
         $this->ticketService->createModuleTickets($course, $ticketCount, $questionCount, $timeLeft, $errorsCount);
-        
+
         return new JsonResponse([
             'result' => true,
         ]);

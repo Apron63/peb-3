@@ -22,7 +22,7 @@ class AnswerController extends MobileController
     #[IsGranted('ROLE_SUPER_ADMIN')]
     public function adminAnswerCreate(Request $request, Questions $question): Response
     {
-        $answer = new Answer ();
+        $answer = new Answer();
         $answer->setQuestion($question);
         $nom = $this->answerRepository->getNextNom($question);
         $answer->setNom($nom);

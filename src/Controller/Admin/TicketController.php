@@ -35,7 +35,7 @@ class TicketController extends AbstractController
 
         $response = new JsonResponse();
         $response->setContent(json_encode(['result' => 'success'], JSON_THROW_ON_ERROR));
-        
+
         return $response;
     }
 
@@ -55,7 +55,7 @@ class TicketController extends AbstractController
             'data' => $data,
         ]);
     }
-    
+
     #[Route('/admin/module-tickets/print/{id<\d+>}/', name: 'admin_module_tickets_print')]
     #[IsGranted('ROLE_SUPER_ADMIN')]
     public function printModuleTicket(Ticket $ticket): Response

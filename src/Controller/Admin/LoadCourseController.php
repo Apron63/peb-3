@@ -19,7 +19,7 @@ class LoadCourseController extends MobileController
         private readonly CourseDownloadService $courseDownloadService,
         private readonly MessageBusInterface $messageBus
     ) {}
-    
+
     #[Route('/admin/load/course/', name: 'admin_load_course')]
     #[IsGranted('ROLE_SUPER_ADMIN')]
     public function actionLoadCourse(Request $request): Response
@@ -39,7 +39,7 @@ class LoadCourseController extends MobileController
 
             $this->messageBus->dispatch(
                 new CourseUploadMessage(
-                    $form->get('filename')->getData()->getClientOriginalName(), 
+                    $form->get('filename')->getData()->getClientOriginalName(),
                     $user->getId(),
                     $course->getId(),
                 )

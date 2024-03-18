@@ -91,7 +91,7 @@ class ModuleSectionPageController extends MobileController
         $this->moduleSectionPageRepository->remove($moduleSectionPage, true);
 
         $this->addFlash('success', 'Шаблон для курса удален');
-        
+
         return $this->redirectToRoute('admin_module_section_edit', ['id' => $moduleSectionId]);
     }
 }

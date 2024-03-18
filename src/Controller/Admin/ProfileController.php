@@ -25,7 +25,7 @@ class ProfileController extends MobileController
             'profileQuery' => $this->profileRepository->getAllProfiles(),
         ]);
     }
-    
+
     #[Route('/admin/profile/create/', name: 'admin_profile_create')]
     #[IsGranted('ROLE_SUPER_ADMIN')]
     public function create(Request $request): Response
@@ -44,7 +44,7 @@ class ProfileController extends MobileController
             'form' => $form->createView(),
         ]);
     }
-    
+
     #[Route('/admin/profile/edit/{id<\d+>}/', name: 'admin_profile_edit')]
     #[IsGranted('ROLE_SUPER_ADMIN')]
     public function edit(Request $request, Profile $profile): Response
@@ -63,7 +63,7 @@ class ProfileController extends MobileController
             'profile' => $profile,
         ]);
     }
-    
+
     #[Route('/admin/profile/delete/{id<\d+>}/', name: 'admin_profile_delete')]
     #[IsGranted('ROLE_SUPER_ADMIN')]
     public function delete(Profile $profile): Response
