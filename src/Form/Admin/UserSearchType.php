@@ -95,6 +95,7 @@ class UserSearchType extends AbstractType
                     'onfocus' => 'this.placeholder = ""',
                     'onblur' => 'this.placeholder = "Начало"',
                     'autocomplete' => 'off',
+                    'readonly' => true,
                 ],
                 'label_attr' => [
                     'class' => 'col-sm-2 col-form-label'
@@ -113,6 +114,7 @@ class UserSearchType extends AbstractType
                     'onfocus' => 'this.placeholder = ""',
                     'onblur' => 'this.placeholder = "Окончание"',
                     'autocomplete' => 'off',
+                    'readonly' => true,
                 ],
                 'label_attr' => [
                     'class' => 'col-sm-2 col-form-label'
