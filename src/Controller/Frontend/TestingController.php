@@ -14,6 +14,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException as ExceptionAccessDeniedException;
 
@@ -66,9 +67,15 @@ class TestingController extends AbstractController
     #[Route('/frontend/testing/end/{id<\d+>}/', name: 'app_frontend_testing_end')]
     public function endTesting(Logger $logger): Response
     {
+        $firstSuccessfullyLogger = $this->testingService->getFirstSuccessfullyLogger(
+            $logger->getPermission(),
+            $this->getUser(),
+        );
+
         return $this->render('frontend/testing/protocol.html.twig', [
             'logger' => $this->testingService->closeLogger($logger),
             'skipped' => $this->testingService->getSkippedQuestion($logger),
+            'hasSuccess' => $firstSuccessfullyLogger instanceof Logger,
         ]);
     }
 
@@ -77,8 +84,32 @@ class TestingController extends AbstractController
     {
         $permission = $logger->getPermission();
         $user = $this->getUser();
-        if (!$this->userPermissionService->checkPermissionForUser($permission, $user, false)) {
+        if (! $this->userPermissionService->checkPermissionForUser($permission, $user, false)) {
             throw new ExceptionAccessDeniedException();
+        }
+
+        $fileName = $this->reportService->generateTestingPdf($logger);
+        $response = new BinaryFileResponse($fileName);
+        $response->headers->set('Content-Type', 'application/pdf');
+        $response
+            ->setContentDisposition(ResponseHeaderBag::DISPOSITION_ATTACHMENT, 'protocol.pdf')
+            ->deleteFileAfterSend(true);
+
+        return $response;
+    }
+
+    #[Route('/frontend/testing/success/print/{id<\d+>}/', name: 'app_frontend_testing_success_print')]
+    public function printSuccessTesting(Permission $permission): BinaryFileResponse
+    {
+        $user = $this->getUser();
+        if (! $this->userPermissionService->checkPermissionForUser($permission, $user, false)) {
+            throw new ExceptionAccessDeniedException();
+        }
+
+        $logger = $this->testingService->getFirstSuccessfullyLogger($permission, $user);
+
+        if (null === $logger) {
+            throw new NotFoundHttpException('Не найден протокол с успешным результатом');
         }
 
         $fileName = $this->reportService->generateTestingPdf($logger);

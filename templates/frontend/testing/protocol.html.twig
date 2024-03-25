@@ -58,6 +58,11 @@
                         </div>
                     </div>
                     <a href="{{ path('app_frontend_testing_print', {id: logger.id}) }}">Скачать протокол</a>
+                    {# <a href="{{ path('app_frontend_testing_print', {id: logger.id}) }}">Скачать протокол крайней попытки</a> #}
+                    {# {% if hasSuccess %}
+                        <br>
+                        <a href="{{ path('app_frontend_testing_success_print', {id: logger.permission.id}) }}">Скачать протокол первой успешной попытки</a>
+                    {% endif %} #}
                     <div class="results_table">
                         <div class="results_table_header">
                             <div class="results_table_row">
