@@ -26,5 +26,7 @@ class UserChangePasswordEventListener
         if ($args->hasChangedField('plainPassword')) {
             $entity->setPassword($this->passwordEncoder->hashPassword($entity, $entity->getPlainPassword()));
         }
+
+        $entity->setFullName($entity->getLastName() . ' ' . $entity->getFirstName() . ' ' . $entity->getPatronymic());
     }
 }
