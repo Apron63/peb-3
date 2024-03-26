@@ -20,6 +20,7 @@ class SendListToEmailType extends AbstractType
                     'placeholder' => 'Укажите один или несколько адресов email, через запятую',
                     'onfocus' => 'this.placeholder = ""',
                     'onblur' => 'this.placeholder = "Укажите один или несколько адресов email, через запятую"',
+                    'maxlength' => 254,
                 ],
                 'label_attr' => [
                     'class' => 'form-label',
@@ -35,6 +36,7 @@ class SendListToEmailType extends AbstractType
                     'placeholder' => 'Укажите тему письма',
                     'onfocus' => 'this.placeholder = ""',
                     'onblur' => 'this.placeholder = "Укажите тему письма"',
+                    'maxlength' => 254,
                 ],
                 'label_attr' => [
                     'class' => 'form-label',
