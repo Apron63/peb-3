@@ -49,14 +49,12 @@
                                     <div class="results">
                                         <span class="header">результат: </span>
                                         {{ getResultDescription(item.permission.id).result }}
-                                        {% if item.logger is not empty %}
-                                            <a href="{{ path('app_frontend_testing_print', {id: item.logger.id}) }}">(Скачать протокол)</a>
-                                            {# <a href="{{ path('app_frontend_testing_print', {id: item.logger.id}) }}">(Скачать протокол крайней попытки)</a> #}
-                                        {% endif %}
-                                        {# {% if item.permission.stage == 3 %}
-                                            <br>
+                                        {% if item.permission.stage == 3 %}
                                             <a href="{{ path('app_frontend_testing_success_print', {id: item.permission.id}) }}">(Скачать протокол первой успешной попытки)</a>
-                                        {% endif %} #}
+                                        {% endif %}
+                                        {% if item.logger is not empty %}
+                                            <a href="{{ path('app_frontend_testing_print', {id: item.logger.id}) }}">(Скачать протокол крайней попытки)</a>
+                                        {% endif %}
                                     </div>
                                     <div class="duration">
                                         <span class="header">длительность: </span>{{ getResultDescription(item.permission.id).duration }}
