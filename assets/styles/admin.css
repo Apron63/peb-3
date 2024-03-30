@@ -79,3 +79,8 @@ body {
 #change-user-password :hover {
     cursor: pointer;
 }
+
+/* Добавлено при обновлении версии bootstrap */
+.table {
+    --bs-table-bg: transparent;
+}
