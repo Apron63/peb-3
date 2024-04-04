@@ -19,11 +19,12 @@ class Load1CType extends AbstractType
                 'required' => false,
                 'constraints' => [
                     new File([
-                       'maxSize' => '100m',
-                       'mimeTypes' => [
-                           'text/plain',
-                       ],
-                       'mimeTypesMessage' => 'Выбранный файл не является TXT файлом',
+                        'maxSize' => '100M',
+                        'mimeTypes' => [
+                            'text/plain',
+                            'text/csv',
+                        ],
+                        'mimeTypesMessage' => 'Выбранный файл не является TXT файлом',
                     ])
                 ],
             ])
