@@ -2,6 +2,7 @@
 
 namespace App\Service;
 
+use App\Entity\Course;
 use App\Entity\MailingQueue;
 use App\Entity\ModuleSection;
 use App\Entity\Permission;
@@ -32,8 +33,8 @@ class UserPermissionService
         $permissions = $this->permissionRepository->getPermissionQuery($user)->getResult();
 
         $courseIds = array_map(
-            fn($permission) => $permission['courseId'],
-            array_filter($permissions, fn($permission) => $permission['isActive'])
+            fn ($permission) => $permission['courseId'],
+            array_filter($permissions, fn ($permission) => $permission['isActive'])
         );
 
         $result = in_array($permission->getCourse()->getId(), $courseIds);
@@ -100,25 +101,27 @@ class UserPermissionService
 
     public function createHistory(Permission $permission): array
     {
-        $courseProgress = $this->courseService->checkForCourseStage($permission);
-
         $history = [];
 
-        foreach ($courseProgress as $module) {
-            $sections = [];
+        if (Course::INTERACTIVE === $permission->getCourse()->getType()) {
+            $courseProgress = $this->courseService->checkForCourseStage($permission);
 
-            foreach ($module['sections'] as $section) {
-                $sections[] = [
-                    'id' => $section['id'],
-                    'time' => 0,
+            foreach ($courseProgress as $module) {
+                $sections = [];
+
+                foreach ($module['sections'] as $section) {
+                    $sections[] = [
+                        'id' => $section['id'],
+                        'time' => 0,
+                    ];
+                }
+
+                $history[] = [
+                    'moduleId' => $module['id'],
+                    'sections' => $sections,
+                    'active' => false,
                 ];
             }
-
-            $history[] = [
-                'moduleId' => $module['id'],
-                'sections' => $sections,
-                'active' => false,
-            ];
         }
 
         return $history;
