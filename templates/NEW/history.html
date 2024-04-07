@@ -176,8 +176,34 @@
                     </nav>
                 </div>
                 <div class="content">
-                    <div class="history">
+                    <div class="history" history-elem="wrapper">
                         <h1>История обучения</h1>
+                        <div class="history_display">
+                            <div class="history_display_count_wrapper">
+                                <div class="history_display_count_header">отображать по: </div>
+                                <div class="history_display_count">
+                                    <a href="javascript:void(0)" class="history_display_count_item active">20</a>
+                                    <div class="history_display_separator">|</div>
+                                    <a href="javascript:void(0)" class="history_display_count_item">50</a>
+                                    <div class="history_display_separator">|</div>
+                                    <a href="javascript:void(0)" class="history_display_count_item">100</a>
+                                </div>
+                            </div>
+                            <div class="history_display_pages_wrapper">
+                                <!--отображаем если не на 1 странице-->
+                                <!--<a href="javascript:void(0)" class="history_display_pages_item">в начало</a>
+                                <div class="history_display_separator">|</div>-->
+                                <a href="javascript:void(0)" class="history_display_pages_item active">1</a>
+                                <div class="history_display_separator">|</div>
+                                <a href="javascript:void(0)" class="history_display_pages_item">2</a>
+                                <div class="history_display_separator">|</div>
+                                <a href="javascript:void(0)" class="history_display_pages_item">3</a>
+                                <div class="history_display_separator">|</div>
+                                <a href="javascript:void(0)" class="history_display_pages_item">4</a>
+                                <div class="history_display_separator">|</div>
+                                <a href="javascript:void(0)" class="history_display_pages_item">в конец</a>
+                            </div>
+                        </div>
                         <div class="history_table">
                             <div class="history_table_header">
                                 <div class="history_table_row">
@@ -189,7 +215,7 @@
                                     <div class="duration">Длительность<br>обучения</div>
                                 </div>
                             </div>
-                            <div class="history_table_content">
+                            <div class="history_table_content" history-elem="inner">
                                 <div class="history_table_row">
                                     <div class="course">Оказание помощи пострадавшим</div>
                                     <div class="status">обучение завершено</div>
@@ -244,6 +270,38 @@
                                 </div>
                             </div>
                         </div>
+                        <div class="history_mobile_ajax"
+                             history-elem="ajax-trigger"
+                             data-url="{{ path('app_frontend_preparation_one_next_page') }}"
+                             data-page="2"
+                             data-per-page="4"></div>
+                        <!-- /Элемент для загрузки -->
+                        <div class="history_display">
+                            <div class="history_display_count_wrapper">
+                                <div class="history_display_count_header">отображать по: </div>
+                                <div class="history_display_count">
+                                    <a href="javascript:void(0)" class="history_display_count_item active">20</a>
+                                    <div class="history_display_separator">|</div>
+                                    <a href="javascript:void(0)" class="history_display_count_item">50</a>
+                                    <div class="history_display_separator">|</div>
+                                    <a href="javascript:void(0)" class="history_display_count_item">100</a>
+                                </div>
+                            </div>
+                            <div class="history_display_pages_wrapper">
+                                <!--отображаем если не на 1 транице-->
+                                <!--<a href="javascript:void(0)" class="history_display_pages_item">в начало</a>
+                                <div class="history_display_separator">|</div>-->
+                                <a href="javascript:void(0)" class="history_display_pages_item active">1</a>
+                                <div class="history_display_separator">|</div>
+                                <a href="javascript:void(0)" class="history_display_pages_item">2</a>
+                                <div class="history_display_separator">|</div>
+                                <a href="javascript:void(0)" class="history_display_pages_item">3</a>
+                                <div class="history_display_separator">|</div>
+                                <a href="javascript:void(0)" class="history_display_pages_item">4</a>
+                                <div class="history_display_separator">|</div>
+                                <a href="javascript:void(0)" class="history_display_pages_item">в конец</a>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -252,7 +310,7 @@
             <div class="footer-content container">
                 <div class="copyright">
                     <!--Выводим текущий год-->
-                    2022, Группа компаний <a href="https://safety63.ru">Промэнергобезопасность</a> 
+                    2022, Группа компаний <a href="https://safety63.ru">Промэнергобезопасность</a>
                 </div>
                 <div class="support">Служба технической поддержки: <a href="tel:+78462691526">+7 (846) 26-915-26</a> (с 8:00 до 22:00 без перерывов и выходных)</div>
             </div>
@@ -261,5 +319,6 @@
         </div>
     </div>
     <script src="js/scripts.js"></script>
+    <script src="js/history.js"></script>
 </body>
 </html>

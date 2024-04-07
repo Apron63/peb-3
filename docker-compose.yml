@@ -11,9 +11,6 @@ services:
     working_dir: /var/www/html
     environment:
       PHP_IDE_CONFIG: "serverName=Docker"
-#    expose:
-#      - 9003
-    # x-debug on WSL
     extra_hosts:
       - "host.docker.internal:host-gateway"
     networks:
@@ -34,7 +31,7 @@ services:
 
   mysql:
     image: mysql:latest
-    command: 'mysqld --innodb-flush-method=fsync' # --innodb-use-native-aio=0
+    command: 'mysqld --innodb-flush-method=fsync --sort_buffer_size=1M'
     restart: unless-stopped
     container_name: peb_mysql
     environment:

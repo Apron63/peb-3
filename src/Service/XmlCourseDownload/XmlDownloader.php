@@ -192,7 +192,7 @@ class XmlDownloader
         }
 
         $correctAnswers = 0;
-        
+
         foreach ($answers as $answer) {
             if ($answer->isCorrect) {
                 $correctAnswers ++;
@@ -303,18 +303,18 @@ class XmlDownloader
             foreach ($childs as $child) {
                 if (isset($child->tagName)) {
                     $tag = $child->tagName;
-    
+
                     if ($tag === 'img') {
                         foreach($child->attributes as $attribute) {
                             if (
-                                $attribute->name === 'src' 
+                                $attribute->name === 'src'
                                 && false === strpos($attribute->value, 'msoinline')
                             ) {
                                 $image = '<br><img src="' . $attribute->value . '">';
 
                                 break;
                             } elseif ($attribute->name === 'inline') {
-                                $image = '<br><img src="data:image.jpeg;base64,' . $attribute->value . '">';
+                                $image = '<br><img src="data:image/jpeg;base64,' . $attribute->value . '">';
 
                                 break;
                             }
@@ -322,7 +322,7 @@ class XmlDownloader
                     } else {
                         $image = $this->searchImage($child);
                     }
-    
+
                     if (null !== $image) {
                         return $image;
                     }

@@ -46,7 +46,7 @@ class PermissionRepository extends ServiceEntityRepository
     public function getPermissionQuery(User $user): AbstractQuery
     {
         return $this->getEntityManager()->createQuery(
-            "SELECT 
+            "SELECT
                 p.id,
                 p.createdAt,
                 p.activatedAt,
@@ -65,7 +65,8 @@ class PermissionRepository extends ServiceEntityRepository
                 FROM App\Entity\Permission p
                 JOIN App\Entity\Course c WITH c.id = p.course
                 WHERE p.user = :user
-                ORDER BY isActive DESC, p.createdAt DESC")
+                ORDER BY isActive DESC, p.createdAt DESC"
+            )
             ->setParameter('user', $user->getId());
     }
 
@@ -138,6 +139,31 @@ class PermissionRepository extends ServiceEntityRepository
             ->getResult();
     }
 
+    /**
+     * @return Permission[]
+     */
+    public function getPermissionForHistory(User $user, int $page, int $perPage): array
+    {
+        return $this->createQueryBuilder('p')
+            ->where('p.user = :user')
+            ->setParameter('user', $user)
+            ->setFirstResult(($page - 1) * $perPage)
+            ->setMaxResults($perPage)
+            ->orderBy('p.createdAt', 'desc')
+            ->getQuery()
+            ->getResult();
+    }
+
+    public function getTotalPermissionsForUser(User $user): int
+    {
+        return $this->createQueryBuilder('p')
+            ->select('count(p)')
+            ->where('p.user = :user')
+            ->setParameter('user', $user)
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
+
     public function removePermissionForCourse(Course $course): void
     {
         $query = $this->getEntityManager()
@@ -145,10 +171,10 @@ class PermissionRepository extends ServiceEntityRepository
             ->setParameter('courseId', $course->getId());
 
         $qIds = $query->execute();
-        $qIds = array_map(function($e) {
-                return $e['id'];
-            }, $qIds);
-        
+        $qIds = array_map(function ($e) {
+            return $e['id'];
+        }, $qIds);
+
         $query = $this->getEntityManager()
             ->createQuery('DELETE FROM App\Entity\Logger l WHERE l.permission IN (:qIds)')
             ->setParameter('qIds', $qIds);

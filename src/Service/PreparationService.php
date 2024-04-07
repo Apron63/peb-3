@@ -30,15 +30,15 @@ class PreparationService
     ): array {
         $result = [];
 
-        $totalQuestions  = $this->questionsRepository->getQuestionsCount($permission->getCourse(), $themeId);
+        $totalQuestions = $this->questionsRepository->getQuestionsCount($permission->getCourse(), $themeId);
 
         if (! in_array($perPage, [20, 50, 100])) {
             $perPage = 20;
         }
 
         $maxPages = intdiv($totalQuestions, $perPage);
-        if ($totalQuestions % $perPage > 0 ) {
-            $maxPages ++;
+        if ($totalQuestions % $perPage > 0) {
+            $maxPages++;
         }
 
         if ($page > $maxPages) {
@@ -67,7 +67,7 @@ class PreparationService
 
             $result[] = [
                 'id' => $question->getId(),
-                'nom' =>$question->getNom(),
+                'nom' => $question->getNom(),
                 'type' => $question->getType(),
                 'description' => $question->getDescription(),
                 'help' => $question->getHelp(),
@@ -100,7 +100,7 @@ class PreparationService
 
         if ($maxPages > self::MAX_PAGES_IN_LINE) {
             if ($page <= self::PAGES_CHANGE_PAGINATOR) {
-                for ($index = 1; $index <= self::PAGES_AT_ONCE; $index ++) {
+                for ($index = 1; $index <= self::PAGES_AT_ONCE; $index++) {
                     $paginator[] = [
                         'url' => $this->urlGenerator->generate('app_frontend_preparation_one', [
                             'id' => $permission->getId(),
@@ -129,7 +129,6 @@ class PreparationService
                     'title' => $maxPages,
                     'isActive' => false,
                 ];
-
             } elseif ($maxPages - $page < self::PAGES_CHANGE_PAGINATOR) {
                 $paginator[] = [
                     'url' => $this->urlGenerator->generate('app_frontend_preparation_one', [
@@ -148,7 +147,7 @@ class PreparationService
                     'isActive' => true,
                 ];
 
-                for ($index = $maxPages - self::PAGES_AT_ONCE + 1; $index <= $maxPages; $index ++) {
+                for ($index = $maxPages - self::PAGES_AT_ONCE + 1; $index <= $maxPages; $index++) {
                     $paginator[] = [
                         'url' => $this->urlGenerator->generate('app_frontend_preparation_one', [
                             'id' => $permission->getId(),
@@ -160,7 +159,6 @@ class PreparationService
                         'isActive' => $page === $index,
                     ];
                 }
-
             } else {
                 $paginator[] = [
                     'url' => $this->urlGenerator->generate('app_frontend_preparation_one', [
@@ -179,7 +177,7 @@ class PreparationService
                     'isActive' => true,
                 ];
 
-                for ($index = $page - self::PAGES_IN_INTERVAL_PART + 2; $index <=  $page + self::PAGES_IN_INTERVAL_PART - 2; $index ++) {
+                for ($index = $page - self::PAGES_IN_INTERVAL_PART + 2; $index <=  $page + self::PAGES_IN_INTERVAL_PART - 2; $index++) {
                     $paginator[] = [
                         'url' => $this->urlGenerator->generate('app_frontend_preparation_one', [
                             'id' => $permission->getId(),
@@ -208,10 +206,9 @@ class PreparationService
                     'title' => $maxPages,
                     'isActive' => false,
                 ];
-
             }
         } else {
-            for ($index = 1; $index <= $maxPages; $index ++) {
+            for ($index = 1; $index <= $maxPages; $index++) {
                 $paginator[] = [
                     'url' => $this->urlGenerator->generate('app_frontend_preparation_one', [
                         'id' => $permission->getId(),

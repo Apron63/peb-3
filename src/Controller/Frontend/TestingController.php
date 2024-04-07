@@ -84,7 +84,12 @@ class TestingController extends AbstractController
     {
         $permission = $logger->getPermission();
         $user = $this->getUser();
-        if (! $this->userPermissionService->checkPermissionForUser($permission, $user, false)) {
+
+        if (! $user instanceof User) {
+            throw new NotFoundHttpException('Не найден пользователь');
+        }
+
+        if ($permission->getUser()->getId() !== $user->getId()) {
             throw new ExceptionAccessDeniedException();
         }
 
@@ -102,7 +107,12 @@ class TestingController extends AbstractController
     public function printSuccessTesting(Permission $permission): BinaryFileResponse
     {
         $user = $this->getUser();
-        if (! $this->userPermissionService->checkPermissionForUser($permission, $user, false)) {
+
+        if (! $user instanceof User) {
+            throw new NotFoundHttpException('Не найден пользователь');
+        }
+
+        if ($permission->getUser()->getId() !== $user->getId()) {
             throw new ExceptionAccessDeniedException();
         }
 

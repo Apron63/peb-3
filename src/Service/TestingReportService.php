@@ -30,13 +30,13 @@ class TestingReportService
         $pdf->AddPage();
         $pdf->writeHTML($this->generateDataHtml($logger), false);
         $pdf->lastPage();
-        
+
         $fileName = $this->reportUploadPath . '/' . (new DateTime())->format('d-m-Y_H_i_s') . '_' . uniqid() . '.pdf';
         $pdf->Output($fileName, 'F');
         unset($pdf);
 
         return $fileName;
-    } 
+    }
 
     private function generateDataHtml(Logger $logger): string
     {
