@@ -1,1 +1,2 @@
 'Warning: XMLReader::open(): Unable to open source data': 'Не совпадает название файла курса с названием файла ZIP'
+'Data must be loaded before reading': 'Не совпадает название файла ZIP с названием файла внутри архива'

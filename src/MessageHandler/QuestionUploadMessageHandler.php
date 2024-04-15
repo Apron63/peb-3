@@ -11,6 +11,7 @@ use App\Service\JobService;
 use App\Service\XmlCourseDownload\XmlDownloader;
 use Exception;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
+use Throwable;
 
 #[AsMessageHandler]
 readonly class QuestionUploadMessageHandler
@@ -45,7 +46,7 @@ readonly class QuestionUploadMessageHandler
             $this->questionsRepository->removeQuestionsForCourse($course);
             $this->ticketRepository->deleteOldTickets($course);
             $this->courseRepository->saveQuestionsToDb($message->getContent()['courseId'], $data['themes']);
-        } catch(Exception $e) {
+        } catch(Throwable $e) {
             $exceptionMessage = $e->getMessage();
         }
 

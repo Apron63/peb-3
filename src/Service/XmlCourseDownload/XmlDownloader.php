@@ -4,6 +4,10 @@ namespace App\Service\XmlCourseDownload;
 
 use App\Entity\Course;
 use App\Repository\CourseRepository;
+use App\Service\XmlCourseDownload\AnswerDTO;
+use App\Service\XmlCourseDownload\CourseInfoDTO;
+use App\Service\XmlCourseDownload\CourseThemeDTO;
+use App\Service\XmlCourseDownload\QuestionDTO;
 use DOMElement;
 use DOMNodeList;
 use RuntimeException;
