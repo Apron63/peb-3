@@ -67,9 +67,15 @@ class TestingController extends AbstractController
     #[Route('/frontend/testing/end/{id<\d+>}/', name: 'app_frontend_testing_end')]
     public function endTesting(Logger $logger): Response
     {
+        $user = $this->getUser();
+
+        if (! $user instanceof User) {
+            throw new NotFoundHttpException('User not found');
+        }
+
         $firstSuccessfullyLogger = $this->testingService->getFirstSuccessfullyLogger(
             $logger->getPermission(),
-            $this->getUser(),
+            $user,
         );
 
         return $this->render('frontend/testing/protocol.html.twig', [
