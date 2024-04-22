@@ -2,6 +2,7 @@
 
 namespace App\Controller\Frontend;
 
+use App\Entity\Course;
 use App\Entity\CourseTheme;
 use App\Entity\Permission;
 use App\Repository\CourseThemeRepository;
@@ -30,6 +31,10 @@ class PreparationController extends AbstractController
     {
         if (! $this->userPermissionService->checkPermissionForUser($permission, $this->getUser(), true)) {
             throw new ExceptionAccessDeniedException();
+        }
+
+        if (Course::CLASSIC !== $permission->getCourse()->getType()) {
+            throw new ExceptionAccessDeniedException('Доступ возможен только для стандартных курсов!');
         }
 
         $courseTheme = $this->courseThemeRepository->find($themeId);
@@ -62,6 +67,10 @@ class PreparationController extends AbstractController
             throw new ExceptionAccessDeniedException();
         }
 
+        if (Course::CLASSIC !== $permission->getCourse()->getType()) {
+            throw new ExceptionAccessDeniedException('Доступ возможен только для стандартных курсов!');
+        }
+
         return $this->render('frontend/course/_detail.html.twig', [
             'permission' => $permission,
             'content' => $this->renderView('frontend/course/_theme-list.html.twig', [
@@ -76,6 +85,10 @@ class PreparationController extends AbstractController
     {
         if (! $this->userPermissionService->checkPermissionForUser($permission, $this->getUser(), true)) {
             throw new ExceptionAccessDeniedException();
+        }
+
+        if (Course::INTERACTIVE !== $permission->getCourse()->getType()) {
+            throw new ExceptionAccessDeniedException('Доступ возможен только для интерактивных курсов!');
         }
 
         $data = $this->preparationService->getQuestionData(
