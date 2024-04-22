@@ -34,6 +34,15 @@ class ModuleSection
     #[ORM\Column(type: Types::SMALLINT )]
     private int $type = self::TYPE_NORMAL;
 
+    #[ORM\Column(nullable: true)]
+    private ?int $prevMaterialId = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?int $nextMaterialId = null;
+
+    #[ORM\Column()]
+    private bool $finalTestingIsNext = false;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -62,7 +71,7 @@ class ModuleSection
 
         return $this;
     }
-    
+
     public function getType(): int
     {
         return $this->type;
@@ -71,6 +80,42 @@ class ModuleSection
     public function setType(int $type): self
     {
         $this->type = $type;
+
+        return $this;
+    }
+
+    public function getPrevMaterialId(): ?int
+    {
+        return $this->prevMaterialId;
+    }
+
+    public function setPrevMaterialId(?int $prevMaterialId): self
+    {
+        $this->prevMaterialId = $prevMaterialId;
+
+        return $this;
+    }
+
+    public function getNextMaterialId(): ?int
+    {
+        return $this->nextMaterialId;
+    }
+
+    public function setNextMaterialId(?int $nextMaterialId): self
+    {
+        $this->nextMaterialId = $nextMaterialId;
+
+        return $this;
+    }
+
+    public function isFinalTestingIsNext(): bool
+    {
+        return $this->finalTestingIsNext;
+    }
+
+    public function setFinalTestingIsNext(bool $finalTestingIsNext): self
+    {
+        $this->finalTestingIsNext = $finalTestingIsNext;
 
         return $this;
     }

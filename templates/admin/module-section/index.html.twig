@@ -23,18 +23,43 @@
         <div class="col-12 mb-3">
             <div class="form-group">
                 <span class="text-danger">{{ form_errors(form.name) }}</span>
+                {{ form_label(form.name) }}
                 {{ form_widget(form.name) }}
             </div>
         </div>
-        
+
         <div class="col-12 mb-3">
             <div class="form-group">
                 <span class="text-danger">{{ form_errors(form.type) }}</span>
+                {{ form_label(form.type) }}
                 {{ form_widget(form.type) }}
             </div>
         </div>
 
         {% if moduleSection.id is not null %}
+
+            <div class="col-12 mb-3">
+                <div class="form-group">
+                    <span class="text-danger">{{ form_errors(form.prevMaterialId) }}</span>
+                    {{ form_label(form.prevMaterialId) }}
+                    {{ form_widget(form.prevMaterialId) }}
+                </div>
+            </div>
+            <div class="col-12 mb-3">
+                <div class="form-group">
+                    <span class="text-danger">{{ form_errors(form.nextMaterialId) }}</span>
+                    {{ form_label(form.nextMaterialId) }}
+                    {{ form_widget(form.nextMaterialId) }}
+                </div>
+            </div>
+            <div class="col-12 mb-3">
+                <div class="form-group">
+                    <span class="text-danger">{{ form_errors(form.finalTestingIsNext) }}</span>
+                    {{ form_label(form.finalTestingIsNext) }}
+                    {{ form_widget(form.finalTestingIsNext) }}
+                </div>
+            </div>
+
             {% if is_granted('ROLE_SUPER_ADMIN')  %}
                 <a
                     href="{{ path('admin_module_section_page_add', {id: moduleSection.id}) }}"
@@ -52,7 +77,7 @@
                             </td>
                             {% if is_granted('ROLE_SUPER_ADMIN') %}
                                 <td>
-                                    <a 
+                                    <a
                                         href="{{ path('admin_module_section_page_delete', {id: page.id}) }}"
                                         class="btn btn-sm btn-outline-danger"
                                         onclick="return window.confirm('Подтвердите действие');"

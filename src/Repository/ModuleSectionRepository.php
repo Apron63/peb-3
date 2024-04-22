@@ -2,10 +2,12 @@
 
 namespace App\Repository;
 
+use App\Entity\Course;
 use App\Entity\Module;
 use App\Entity\ModuleSection;
-use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\Query\Expr\Join;
+use Doctrine\Persistence\ManagerRegistry;
 
 /**
  * @extends ServiceEntityRepository<ModuleSection>
@@ -40,6 +42,20 @@ class ModuleSectionRepository extends ServiceEntityRepository
         }
     }
 
+    /**
+     * @return ModuleSection[]
+     */
+    public function getModuleSectionsListByCourse(Course $course): array
+    {
+        return $this->createQueryBuilder('section')
+            ->join(Module::class, 'module', Join::WITH, 'module.id = section.module')
+            ->where('module.course = :course')
+            ->setParameter('course', $course)
+            ->orderBy('module.sortOrder, section.id')
+            ->getQuery()
+            ->getResult();
+    }
+
     public function removeModuleSection(Module $module): void
     {
         $query = $this->getEntityManager()
@@ -55,7 +71,7 @@ class ModuleSectionRepository extends ServiceEntityRepository
             ->createQuery("DELETE FROM App\Entity\ModuleSectionPage msp WHERE msp.section IN (:moduleSectionIds)")
             ->setParameter('moduleSectionIds', $moduleSectionIds);
         $moduleSectionIds = $query->execute();
-        
+
         $query = $this->getEntityManager()
             ->createQuery('DELETE FROM App\Entity\ModuleSection ms WHERE ms.module = :moduleId')
             ->setParameter('moduleId', $module->getId());

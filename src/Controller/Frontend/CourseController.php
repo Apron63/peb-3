@@ -9,6 +9,7 @@ use App\Repository\CourseInfoRepository;
 use App\Repository\ModuleSectionPageRepository;
 use App\Repository\ModuleSectionRepository;
 use App\Service\CourseService;
+use App\Service\ModuleSectionArrowsService;
 use App\Service\UserPermissionService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Cookie;
@@ -26,6 +27,7 @@ class CourseController extends AbstractController
         private readonly ModuleSectionPageRepository $moduleSectionPageRepository,
         private readonly UserPermissionService $userPermissionService,
         private readonly CourseService $courseService,
+        private readonly ModuleSectionArrowsService $moduleSectionArrowsService,
     ) {}
 
     #[Route('/course/{id<\d+>}/', name: 'app_frontend_course')]
@@ -108,6 +110,11 @@ class CourseController extends AbstractController
             throw new NotFoundHttpException('Section not found');
         }
 
+        $finalTestingEnabled = false;
+        if ($moduleSection->isFinalTestingIsNext()) {
+            $finalTestingEnabled = $this->moduleSectionArrowsService->isFinalTestingEnabled($permission);
+        }
+
         $this->userPermissionService->checkPermissionHistory($permission, $moduleSection);
 
         $response = new Response();
@@ -119,10 +126,11 @@ class CourseController extends AbstractController
             $moduleSectionPages = $this->moduleSectionPageRepository->getModuleSectionPages($moduleSection);
         }
 
-        return $this->render('frontend/course/_file.html.twig', [
+        return $this->render('frontend/course/_page.html.twig', [
             'permission' => $permission,
             'moduleSection' => $moduleSection,
             'moduleSectionPages' => $moduleSectionPages,
+            'finalTestingEnabled' => $finalTestingEnabled,
         ], $response);
     }
 }

@@ -60,7 +60,7 @@ class ModuleRepository extends ServiceEntityRepository
         $mIds = array_map(function($e) {
                 return $e['id'];
             }, $mIds);
-            
+
         $query = $this->getEntityManager()
             ->createQuery("SELECT ms.id FROM App\Entity\ModuleSection ms WHERE ms.module IN (:mIds)")
             ->setParameter('mIds', $mIds);
@@ -74,12 +74,12 @@ class ModuleRepository extends ServiceEntityRepository
             ->createQuery("DELETE FROM App\Entity\ModuleSectionPage msp WHERE msp.section IN (:moduleSectionIds)")
             ->setParameter('moduleSectionIds', $moduleSectionIds);
         $moduleSectionIds = $query->execute();
-        
+
         $query = $this->getEntityManager()
             ->createQuery('DELETE FROM App\Entity\ModuleSection ms WHERE ms.module IN (:mIds)')
             ->setParameter('mIds', $mIds);
         $query->execute();
-        
+
         $query = $this->getEntityManager()
             ->createQuery('DELETE FROM App\Entity\Module m WHERE m.id IN (:mIds)')
             ->setParameter('mIds', $mIds);
