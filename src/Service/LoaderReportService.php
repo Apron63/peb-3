@@ -26,27 +26,25 @@ class LoaderReportService
         // BOM для корректной работы с кодировкой
         fputs($file, chr(0xEF) . chr(0xBB) . chr(0xBF));
 
-        $fileData = 
+        $fileData =
             'ФИО;'
-            . 'Должность;'
             . 'Организация;'
             . 'Логин;'
             . 'Пароль;'
             . 'Курсы;'
-            . 'Дней' 
+            . 'Дней'
             . PHP_EOL;
 
         fputs($file, $fileData);
 
         foreach($this->permissionRepository->getLoaderByCourse($user) as $loader) {
-            $fileData = 
+            $fileData =
                 $loader['fullName'] . ';'
-                . $loader['position'] . ';'
                 . $loader['organization'] . ';'
                 . $loader['login'] . ';'
                 . $loader['plainPassword'] . ';'
                 . $loader['name'] . ';'
-                . $loader['duration'] 
+                . $loader['duration']
                 . PHP_EOL;
 
             fputs($file, $fileData);
@@ -56,7 +54,7 @@ class LoaderReportService
 
         return $fileName;
     }
-    
+
     public function generateXLSX(User $user): string
     {
         $spreadsheet = new Spreadsheet();
@@ -65,11 +63,10 @@ class LoaderReportService
 
         $workSheet->setCellValue('A1', 'Ном');
         $workSheet->setCellValue('B1', 'ФИО');
-        $workSheet->setCellValue('C1', 'Должность');
-        $workSheet->setCellValue('D1', 'Организация');
-        $workSheet->setCellValue('E1', 'Логин');
-        $workSheet->setCellValue('F1', 'Пароль');
-        $workSheet->setCellValue('G1', 'Дней');
+        $workSheet->setCellValue('C1', 'Организация');
+        $workSheet->setCellValue('D1', 'Логин');
+        $workSheet->setCellValue('E1', 'Пароль');
+        $workSheet->setCellValue('F1', 'Дней');
 
         $row = 2;
         $nom = 1;
@@ -79,10 +76,10 @@ class LoaderReportService
                 $workSheet->setCellValue('B' . $row, 'Курс : ' . $loader['name']);
                 $workSheet->getStyle('B' . $row)->getAlignment()->setWrapText(true);
                 $workSheet->getRowDimension($row)->setRowHeight(-1);
-                $workSheet->mergeCells('B' . $row . ':G' . $row);
+                $workSheet->mergeCells('B' . $row . ':F' . $row);
 
                 $workSheet
-                    ->getStyle('A' . $row . ':G' . $row)
+                    ->getStyle('A' . $row . ':F' . $row)
                     ->getFill()
                     ->setFillType(Fill::FILL_SOLID)
                     ->getStartColor()
@@ -95,11 +92,10 @@ class LoaderReportService
 
             $workSheet->setCellValue('A' . $row, $nom);
             $workSheet->setCellValue('B' . $row, $loader['fullName']);
-            $workSheet->setCellValue('C' . $row, $loader['position']);
-            $workSheet->setCellValue('D' . $row, $loader['organization']);
-            $workSheet->setCellValue('E' . $row, $loader['login']);
-            $workSheet->setCellValue('F' . $row, $loader['plainPassword']);
-            $workSheet->setCellValue('G' . $row, $loader['duration']);
+            $workSheet->setCellValue('C' . $row, $loader['organization']);
+            $workSheet->setCellValue('D' . $row, $loader['login']);
+            $workSheet->setCellValue('E' . $row, $loader['plainPassword']);
+            $workSheet->setCellValue('F' . $row, $loader['duration']);
 
             $row ++;
             $nom ++;
@@ -110,7 +106,7 @@ class LoaderReportService
                 'allBorders' => ['borderStyle' => Border::BORDER_THIN],
             ],
         ];
-        $workSheet->getStyle('A1:G' . $row - 1)->applyFromArray($styleArray, false);
+        $workSheet->getStyle('A1:F' . $row - 1)->applyFromArray($styleArray, false);
 
         $workSheet->getColumnDimension('A')->setAutoSize(true);
         $workSheet->getColumnDimension('B')->setAutoSize(true);
@@ -129,16 +125,15 @@ class LoaderReportService
 
         return $fileName;
     }
-    
+
     public function generateTXT(User $user): string
     {
         $fileName = $this->reportUploadPath . '/' . (new DateTime())->format('d-m-Y_H_i_s') . '_' . uniqid() . '.txt';
         $file = fopen($fileName, 'w');
 
         foreach($this->permissionRepository->getLoaderByCourse($user) as $loader) {
-            $fileData = 
+            $fileData =
                 $loader['fullName'] . PHP_EOL
-                . $loader['position'] . PHP_EOL
                 . $loader['organization'] . PHP_EOL
                 . $loader['login'] . PHP_EOL
                 . $loader['plainPassword'] . PHP_EOL
@@ -153,7 +148,7 @@ class LoaderReportService
 
         return $fileName;
     }
-    
+
     public function generateDOCX(User $user): string
     {
         $courseShortName = null;
@@ -168,9 +163,8 @@ class LoaderReportService
 
         $table->addRow();
         $table->addCell(700)->addText('Ном');
-        $table->addCell(2000)->addText('ФИО');
-        $table->addCell(1500)->addText('Должность');
-        $table->addCell(2500)->addText('Организация');
+        $table->addCell(2500)->addText('ФИО');
+        $table->addCell(3500)->addText('Организация');
         $table->addCell(1200)->addText('Логин');
         $table->addCell(1200)->addText('Пароль');
         $table->addCell(700)->addText('Дней');
@@ -190,9 +184,8 @@ class LoaderReportService
 
             $table->addRow();
             $table->addCell(700)->addText($nom);
-            $table->addCell(2000)->addText($loader['fullName']);
-            $table->addCell(1500)->addText($loader['position']);
-            $table->addCell(2500)->addText($loader['organization']);
+            $table->addCell(2500)->addText($loader['fullName']);
+            $table->addCell(3500)->addText($loader['organization']);
             $table->addCell(1200)->addText($loader['login']);
             $table->addCell(1200)->addText($loader['plainPassword']);
             $table->addCell(700)->addText($loader['duration']);

@@ -11,7 +11,7 @@
         {% include('frontend/components/background.html.twig') %}
 
         <div class="wrapper container">
-            {{ render(path('app_frontend_left_menu', {'activeItem': 'my-programs'})) }}            
+            {{ render(path('app_frontend_left_menu', {'activeItem': 'my-programs'})) }}
             <div class="content">
                 <div class="profile">
                     <div class="photo_block">
@@ -20,7 +20,7 @@
                                 {% if user.image is not null %}
                                     <img src="/storage/avatar/{{ user.image }}" alt="">
                                 {% else %}
-                                    <img class="photo" src="{{ asset('img/no_user_image.png') }}" alt="">    
+                                    <img class="photo" src="{{ asset('img/no_user_image.png') }}" alt="">
                                 {% endif %}
                             </div>
                         </div>
@@ -37,12 +37,12 @@
                         <div class="profile_row"><strong>{{ user.lastName }}</strong></div>
                         <div class="profile_row">{{ user.firstName }} {{ user.patronymic }}</div>
                         <div class="profile_row"><strong>Организация:</strong>{{ user.organization }}</div>
-                        <div class="profile_row"><strong>Должность:</strong>{{ user.position }}</div>
+                        {# <div class="profile_row"><strong>Должность:</strong>{{ user.position }}</div> #}
                         <div class="profile_row"><strong>Логин:</strong>{{ user.login }}</div>
                         <div class="profile_row"><strong>Пароль:</strong>{{ user.plainPassword }}</div>
                         <div class="profile_row"><a class="profile_exit_link" href="{{ path('app_logout')}}">Выйти из аккаунта</a></div>
                     </div>
-                </div> 
+                </div>
             </div>
         </div>
     </div>

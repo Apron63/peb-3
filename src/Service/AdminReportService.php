@@ -219,7 +219,6 @@ class AdminReportService
 
         $fileData =
             'ФИО;'
-            . 'Должность;'
             . 'Организация;'
             . 'Логин;'
             . 'Пароль;'
@@ -232,7 +231,6 @@ class AdminReportService
         foreach($data as $row) {
             $fileData =
                 $row['fullName'] . ';'
-                . $row['position'] . ';'
                 . $row['organization'] . ';'
                 . $row['login'] . ';'
                 . $row['plainPassword'] . ';'
@@ -256,11 +254,10 @@ class AdminReportService
 
         $workSheet->setCellValue('A1', 'Ном');
         $workSheet->setCellValue('B1', 'ФИО');
-        $workSheet->setCellValue('C1', 'Должность');
-        $workSheet->setCellValue('D1', 'Организация');
-        $workSheet->setCellValue('E1', 'Логин');
-        $workSheet->setCellValue('F1', 'Пароль');
-        $workSheet->setCellValue('G1', 'Дней');
+        $workSheet->setCellValue('C1', 'Организация');
+        $workSheet->setCellValue('D1', 'Логин');
+        $workSheet->setCellValue('E1', 'Пароль');
+        $workSheet->setCellValue('F1', 'Дней');
 
         $item = 2;
         foreach($data as $row) {
@@ -270,10 +267,10 @@ class AdminReportService
                 $workSheet->setCellValue('B' . $item, 'Курс : ' . $row['name']);
                 $workSheet->getStyle('B' . $item)->getAlignment()->setWrapText(true);
                 $workSheet->getRowDimension($item)->setRowHeight(-1);
-                $workSheet->mergeCells('B' . $item . ':G' . $item);
+                $workSheet->mergeCells('B' . $item . ':F' . $item);
 
                 $workSheet
-                    ->getStyle('A' . $item . ':G' . $item)
+                    ->getStyle('A' . $item . ':F' . $item)
                     ->getFill()
                     ->setFillType(Fill::FILL_SOLID)
                     ->getStartColor()
@@ -286,11 +283,10 @@ class AdminReportService
 
             $workSheet->setCellValue('A' . $item, $nom);
             $workSheet->setCellValue('B' . $item, $row['fullName']);
-            $workSheet->setCellValue('C' . $item, $row['position']);
-            $workSheet->setCellValue('D' . $item, $row['organization']);
-            $workSheet->setCellValue('E' . $item, $row['login']);
-            $workSheet->setCellValue('F' . $item, $row['plainPassword']);
-            $workSheet->setCellValue('G' . $item, $row['duration']);
+            $workSheet->setCellValue('C' . $item, $row['organization']);
+            $workSheet->setCellValue('D' . $item, $row['login']);
+            $workSheet->setCellValue('E' . $item, $row['plainPassword']);
+            $workSheet->setCellValue('F' . $item, $row['duration']);
 
             $item ++;
             $nom ++;
@@ -301,7 +297,7 @@ class AdminReportService
                 'allBorders' => ['borderStyle' => Border::BORDER_THIN],
             ],
         ];
-        $workSheet->getStyle('A1:G' . $item - 1)->applyFromArray($styleArray, false);
+        $workSheet->getStyle('A1:F' . $item - 1)->applyFromArray($styleArray, false);
 
         $workSheet->getColumnDimension('A')->setAutoSize(true);
         $workSheet->getColumnDimension('B')->setAutoSize(true);
@@ -309,7 +305,6 @@ class AdminReportService
         $workSheet->getColumnDimension('D')->setAutoSize(true);
         $workSheet->getColumnDimension('E')->setAutoSize(true);
         $workSheet->getColumnDimension('F')->setAutoSize(true);
-        $workSheet->getColumnDimension('G')->setAutoSize(true);
 
         $fileName = $this->reportUploadPath . '/' . (new DateTime())->format('d-m-Y_H_i_s') . '_' . uniqid() . '.xlsx';
         $writer = XlsxFactory::createWriter($spreadsheet, "Xlsx");
@@ -329,7 +324,6 @@ class AdminReportService
         foreach($data as $row) {
             $fileData =
                 $row['fullName'] . PHP_EOL
-                . $row['position'] . PHP_EOL
                 . $row['organization'] . PHP_EOL
                 . $row['login'] . PHP_EOL
                 . $row['plainPassword'] . PHP_EOL
@@ -357,9 +351,8 @@ class AdminReportService
 
         $table->addRow();
         $table->addCell(500)->addText('Ном');
-        $table->addCell(2000)->addText('ФИО');
-        $table->addCell(2000)->addText('Должность');
-        $table->addCell(2000)->addText('Организация');
+        $table->addCell(2500)->addText('ФИО');
+        $table->addCell(3000)->addText('Организация');
         $table->addCell(1300)->addText('Логин');
         $table->addCell(1300)->addText('Пароль');
         $table->addCell(500)->addText('Дней');
@@ -379,9 +372,8 @@ class AdminReportService
 
             $table->addRow();
             $table->addCell(500)->addText($nom);
-            $table->addCell(2000)->addText($row['fullName']);
-            $table->addCell(2000)->addText($row['position']);
-            $table->addCell(2000)->addText($row['organization']);
+            $table->addCell(2500)->addText($row['fullName']);
+            $table->addCell(3000)->addText($row['organization']);
             $table->addCell(1300)->addText($row['login']);
             $table->addCell(1300)->addText($row['plainPassword']);
             $table->addCell(500)->addText($row['duration']);
@@ -535,7 +527,7 @@ class AdminReportService
     {
         foreach($data as $key => $value) {
             $user = $this->userRepository->find($value['userId']);
-            
+
             if (! $user instanceof $user) {
                 throw new NotFoundHttpException('User Not found: ' . $value['userId']);
             }
