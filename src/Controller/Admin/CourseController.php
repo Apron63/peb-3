@@ -19,8 +19,10 @@ use App\Repository\QuestionsRepository;
 use App\Repository\CourseInfoRepository;
 use App\Repository\ModuleInfoRepository;
 use App\Repository\CourseThemeRepository;
+use App\Service\ModuleSectionArrowsService;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Messenger\MessageBusInterface;
@@ -44,6 +46,7 @@ class CourseController extends MobileController
         private readonly CourseService $courseService,
         private readonly FileUploadService $fileUploadService,
         private readonly MessageBusInterface $messageBus,
+        private readonly ModuleSectionArrowsService $moduleSectionArrowsService,
         private readonly string $courseUploadPath,
     ) {}
 
@@ -179,5 +182,15 @@ class CourseController extends MobileController
         $this->addFlash('success', 'Задача на копирование курса поставлена в очередь');
 
         return $this->redirectToRoute('admin_course_list');
+    }
+
+    #[Route('admin/course/autonumeration/{id<\d+>}/', name: 'admin_course_autonumeration')]
+    public function getInfoModule(Course $course, Request $request): RedirectResponse
+    {
+       $this->moduleSectionArrowsService->autonumerationCourse($course);
+
+        $this->addFlash('success', 'Автонумерация выполнена');
+
+        return $this->redirectToRoute('admin_course_edit', ['id' => $course->getId()]);
     }
 }

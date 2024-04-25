@@ -1,7 +1,17 @@
 <p></p>
 
-<a href="{{ path('admin_module_create', {id: course.id}) }}" class="btn btn-outline-success">
+<a
+    href="{{ path('admin_module_create', {id: course.id}) }}"
+    class="btn btn-outline-success"
+>
     Добавить модуль
+</a>
+<a
+    href="{{ path('admin_course_autonumeration', {id: course.id}) }}"
+    class="btn btn-outline-primary"
+    onclick="return window.confirm('Подтвердите действие');"
+>
+    Автонумерация переходов
 </a>
 
 <ul id="draggable-module-container" class="list-unstyled">
@@ -10,7 +20,7 @@
             <div>
                 {{ module.name }}
                 <span class="module-buttons">
-                    <a 
+                    <a
                         class="btn btn-outline-primary"
                         href="{{ path('admin_module_edit', {id: module.id}) }}"
                         title="Редактировать"

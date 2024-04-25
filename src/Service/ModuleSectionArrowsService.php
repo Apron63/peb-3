@@ -60,4 +60,40 @@ class ModuleSectionArrowsService
 
         return true;
     }
+
+    public function autonumerationCourse(Course $course): void
+    {
+        $moduleSections = $this->moduleSectionRepository->getModuleSectionsListByCourse($course);
+
+        $moduleSectionsByNom = [];
+        $nom = 0;
+
+        foreach ($moduleSections as $moduleSection) {
+            $moduleSectionsByNom[$nom++] = $moduleSection;
+        }
+
+        $first = array_key_first($moduleSectionsByNom);
+        $last = array_key_last($moduleSectionsByNom);
+
+        foreach ($moduleSectionsByNom as $key => $moduleSection) {
+            if ($key === $last) {
+                $moduleSection
+                    ->setPrevMaterialId(null)
+                    ->setNextMaterialId(null)
+                    ->setFinalTestingIsNext(true);
+            } else if ($key === $first) {
+                $moduleSection
+                    ->setPrevMaterialId(null)
+                    ->setNextMaterialId($moduleSectionsByNom[$key + 1]->getId())
+                    ->setFinalTestingIsNext(false);
+            } else {
+                $moduleSection
+                    ->setPrevMaterialId($moduleSectionsByNom[$key - 1]->getId())
+                    ->setNextMaterialId($moduleSectionsByNom[$key + 1]->getId())
+                    ->setFinalTestingIsNext(false);
+            }
+
+            $this->moduleSectionRepository->save($moduleSection, true);
+        }
+    }
 }
