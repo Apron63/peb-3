@@ -41,7 +41,8 @@ body {
 }
 
 .module-buttons {
-    float: right;
+    display: flex;
+    justify-content: right;
 }
 
 .loading {
