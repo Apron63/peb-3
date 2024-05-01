@@ -31,18 +31,18 @@ class TimeControlController extends AbstractController
 
         $permission = $this->permissionRepository->find($permissionId);
 
-        if (!$permission instanceof Permission) {
-            throw new NotFoundHttpException();
+        if (! $permission instanceof Permission) {
+            throw new NotFoundHttpException('Permission Not Found');
         }
 
         $user = $this->getUser();
 
         if (! $user instanceof User) {
-            throw new ExceptionAccessDeniedException();
+            throw new ExceptionAccessDeniedException('No Auth User');
         }
 
         if (! $this->userPermissionService->checkPermissionForUser($permission, $user, false)) {
-            throw new ExceptionAccessDeniedException();
+            throw new ExceptionAccessDeniedException('Permission not available for this user');
         }
 
         $startTime = (int) $request->get('startTime');

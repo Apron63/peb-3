@@ -30,11 +30,11 @@ class PreparationController extends AbstractController
     public function preparationOne(Permission $permission, int $themeId = null, Request $request): Response
     {
         if (! $this->userPermissionService->checkPermissionForUser($permission, $this->getUser(), true)) {
-            throw new ExceptionAccessDeniedException();
+            throw new ExceptionAccessDeniedException('Permission not available for this user');
         }
 
         if (Course::CLASSIC !== $permission->getCourse()->getType()) {
-            throw new ExceptionAccessDeniedException('Доступ возможен только для стандартных курсов!');
+            throw new ExceptionAccessDeniedException('This url enabled only for classic course');
         }
 
         $courseTheme = $this->courseThemeRepository->find($themeId);
@@ -64,11 +64,11 @@ class PreparationController extends AbstractController
     public function preparationMany(Permission $permission): Response
     {
         if (! $this->userPermissionService->checkPermissionForUser($permission, $this->getUser(), false)) {
-            throw new ExceptionAccessDeniedException();
+            throw new ExceptionAccessDeniedException('Permission not available for this user');
         }
 
         if (Course::CLASSIC !== $permission->getCourse()->getType()) {
-            throw new ExceptionAccessDeniedException('Доступ возможен только для стандартных курсов!');
+            throw new ExceptionAccessDeniedException('This url enabled only for classic course');
         }
 
         return $this->render('frontend/course/_detail.html.twig', [
@@ -84,11 +84,11 @@ class PreparationController extends AbstractController
     public function preparationInteractive(Permission $permission, Request $request): Response
     {
         if (! $this->userPermissionService->checkPermissionForUser($permission, $this->getUser(), true)) {
-            throw new ExceptionAccessDeniedException();
+            throw new ExceptionAccessDeniedException('Permission not available for this user');
         }
 
         if (Course::INTERACTIVE !== $permission->getCourse()->getType()) {
-            throw new ExceptionAccessDeniedException('Доступ возможен только для интерактивных курсов!');
+            throw new ExceptionAccessDeniedException('This url enabled only for interactive course');
         }
 
         $data = $this->preparationService->getQuestionData(
@@ -120,7 +120,7 @@ class PreparationController extends AbstractController
         }
 
         if (! $this->userPermissionService->checkPermissionForUser($permission, $this->getUser(), false)) {
-            throw new ExceptionAccessDeniedException();
+            throw new ExceptionAccessDeniedException('Permission not available for this user');
         }
 
         $data = $this->preparationService->getQuestionData(
