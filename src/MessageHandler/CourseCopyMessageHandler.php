@@ -5,8 +5,8 @@ namespace App\MessageHandler;
 use App\Message\CourseCopyMessage;
 use App\Service\CourseCopyService;
 use App\Service\JobService;
-use Exception;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
+use Throwable;
 
 #[AsMessageHandler]
 readonly class CourseCopyMessageHandler
@@ -16,9 +16,6 @@ readonly class CourseCopyMessageHandler
         private CourseCopyService $courseCopyService,
     ) {}
 
-    /**
-     * @throws Exception
-     */
     public function __invoke(CourseCopyMessage $message): void
     {
         $job = $this->jobService->createJob(
@@ -30,7 +27,7 @@ readonly class CourseCopyMessageHandler
 
         try {
             $this->courseCopyService->copyCourse($message->getContent()['courseId']);
-        } catch(Exception $e) {
+        } catch(Throwable $e) {
             $exceptionMessage = $e->getMessage();
         }
 

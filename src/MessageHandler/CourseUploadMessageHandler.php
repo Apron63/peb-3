@@ -7,8 +7,8 @@ use App\Repository\CourseRepository;
 use App\Service\CourseDownloadService;
 use App\Service\JobService;
 use App\Service\XmlCourseDownload\XmlDownloader;
-use Exception;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
+use Throwable;
 
 #[AsMessageHandler]
 readonly class CourseUploadMessageHandler
@@ -20,9 +20,6 @@ readonly class CourseUploadMessageHandler
         private JobService $jobService,
     ) {}
 
-    /**
-     * @throws Exception
-     */
     public function __invoke(CourseUploadMessage $message): void
     {
         $job = $this->jobService->createJob(
@@ -36,7 +33,7 @@ readonly class CourseUploadMessageHandler
             $data = $this->xmlDownloader->downloadXml($message->getContent());
             $this->courseDownloadService->checkIfCourseExistsInDatabase($message->getContent()['courseId'], $data['courseName']);
             $this->courseRepository->saveCourseToDb($message->getContent()['courseId'], $data['themes']);
-        } catch(Exception $e) {
+        } catch(Throwable $e) {
             $exceptionMessage = $e->getMessage();
         }
 

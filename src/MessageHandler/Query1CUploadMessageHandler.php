@@ -5,8 +5,8 @@ namespace App\MessageHandler;
 use App\Message\Query1CUploadMessage;
 use App\Service\JobService;
 use App\Service\LoaderService;
-use Exception;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
+use Throwable;
 
 #[AsMessageHandler]
 class Query1CUploadMessageHandler
@@ -27,7 +27,7 @@ class Query1CUploadMessageHandler
 
         try {
             $this->loaderService->createUsersAndPermissions($message->getContent()['userId']);
-        } catch (Exception $e) {
+        } catch (Throwable $e) {
             $exceptionMessage = $e->getMessage();
         }
 
