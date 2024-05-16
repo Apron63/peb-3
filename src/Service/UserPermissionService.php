@@ -25,7 +25,7 @@ class UserPermissionService
     public function checkPermissionForUser(Permission $permission, ?User $user, bool $canChangeStage): bool
     {
         if (! $user instanceof User) {
-            throw new NotFoundHttpException('User Not Found');
+            throw new NotFoundHttpException('User: ' . $user?->getId() . ' not Found');
         }
 
         $timeNow = new DateTime();

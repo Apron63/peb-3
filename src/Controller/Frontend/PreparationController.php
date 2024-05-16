@@ -5,6 +5,7 @@ namespace App\Controller\Frontend;
 use App\Entity\Course;
 use App\Entity\CourseTheme;
 use App\Entity\Permission;
+use App\Entity\User;
 use App\Repository\CourseThemeRepository;
 use App\Repository\PermissionRepository;
 use App\Service\PreparationService;
@@ -29,8 +30,11 @@ class PreparationController extends AbstractController
     #[Route('/preparation-one/{id<\d+>}/{themeId<\d+>}/', name: 'app_frontend_preparation_one')]
     public function preparationOne(Permission $permission, int $themeId = null, Request $request): Response
     {
-        if (! $this->userPermissionService->checkPermissionForUser($permission, $this->getUser(), true)) {
-            throw new ExceptionAccessDeniedException('Permission not available for this user');
+        /** @var User $user */
+        $user = $this->getUser();
+
+        if (! $this->userPermissionService->checkPermissionForUser($permission, $user, true)) {
+            throw new ExceptionAccessDeniedException('Permission: ' . $permission->getId() . ' not available for user: ' . $user->getId());
         }
 
         if (Course::CLASSIC !== $permission->getCourse()->getType()) {
@@ -63,8 +67,11 @@ class PreparationController extends AbstractController
     #[Route('/preparation-many/{id<\d+>}/', name: 'app_frontend_preparation_many')]
     public function preparationMany(Permission $permission): Response
     {
-        if (! $this->userPermissionService->checkPermissionForUser($permission, $this->getUser(), false)) {
-            throw new ExceptionAccessDeniedException('Permission not available for this user');
+        /** @var User $user */
+        $user = $this->getUser();
+
+        if (! $this->userPermissionService->checkPermissionForUser($permission, $user, false)) {
+            throw new ExceptionAccessDeniedException('Permission: ' . $permission->getId() . ' not available for user: ' . $user->getId());
         }
 
         if (Course::CLASSIC !== $permission->getCourse()->getType()) {
@@ -83,8 +90,11 @@ class PreparationController extends AbstractController
     #[Route('/preparation-interactive/{id<\d+>}/', name: 'app_frontend_preparation_interactive')]
     public function preparationInteractive(Permission $permission, Request $request): Response
     {
-        if (! $this->userPermissionService->checkPermissionForUser($permission, $this->getUser(), true)) {
-            throw new ExceptionAccessDeniedException('Permission not available for this user');
+        /** @var User $user */
+        $user = $this->getUser();
+
+        if (! $this->userPermissionService->checkPermissionForUser($permission, $user, true)) {
+            throw new ExceptionAccessDeniedException('Permission: ' . $permission->getId() . ' not available for user: ' . $user->getId());
         }
 
         if (Course::INTERACTIVE !== $permission->getCourse()->getType()) {
@@ -108,6 +118,9 @@ class PreparationController extends AbstractController
     {
         $requestContent = json_decode($request->getContent(), true);
 
+        /** @var User $user */
+        $user = $this->getUser();
+
         $page = $requestContent['page'];
         $perPage = $requestContent['per_page'];
         $themeId = $requestContent['theme_id'];
@@ -116,11 +129,11 @@ class PreparationController extends AbstractController
         $permission = $this->permissionRepository->find($permissionId);
 
         if (! $permission instanceof Permission) {
-            throw new NotFoundHttpException('Permission not found');
+            throw new NotFoundHttpException('Permission: ' . $permissionId . ' not found');
         }
 
-        if (! $this->userPermissionService->checkPermissionForUser($permission, $this->getUser(), false)) {
-            throw new ExceptionAccessDeniedException('Permission not available for this user');
+        if (! $this->userPermissionService->checkPermissionForUser($permission, $user, false)) {
+            throw new ExceptionAccessDeniedException('Permission: ' . $permission->getId() . ' not available for user: ' . $user->getId());
         }
 
         $data = $this->preparationService->getQuestionData(

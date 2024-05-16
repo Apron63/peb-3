@@ -5,6 +5,7 @@ namespace App\Controller\Frontend;
 use App\Entity\Course;
 use App\Entity\ModuleSection;
 use App\Entity\Permission;
+use App\Entity\User;
 use App\Repository\CourseInfoRepository;
 use App\Repository\ModuleSectionPageRepository;
 use App\Repository\ModuleSectionRepository;
@@ -33,8 +34,11 @@ class CourseController extends AbstractController
     #[Route('/course/{id<\d+>}/', name: 'app_frontend_course')]
     public function index(Permission $permission): Response
     {
-        if (! $this->userPermissionService->checkPermissionForUser($permission, $this->getUser(), true)) {
-            throw new ExceptionAccessDeniedException();
+        /** @var User $user */
+        $user = $this->getUser();
+
+        if (! $this->userPermissionService->checkPermissionForUser($permission, $user, true)) {
+            throw new ExceptionAccessDeniedException('Permission:' . $permission->getId() . ' not available for user: ' . $user->getId());
         }
 
         $options = [
@@ -60,8 +64,11 @@ class CourseController extends AbstractController
     #[Route('/course/view-list/{id<\d+>}/', name: 'app_frontend_course_view_list')]
     public function viewList(Permission $permission): Response
     {
-        if (! $this->userPermissionService->checkPermissionForUser($permission, $this->getUser(), false)) {
-            throw new ExceptionAccessDeniedException();
+        /** @var User $user */
+        $user = $this->getUser();
+
+        if (! $this->userPermissionService->checkPermissionForUser($permission, $user, false)) {
+            throw new ExceptionAccessDeniedException('Permission:' . $permission->getId() . ' not available for user: ' . $user->getId());
         }
 
         return $this->render('frontend/course/_detail.html.twig', [
@@ -76,8 +83,11 @@ class CourseController extends AbstractController
     #[Route('/course/view-file/{id<\d+>}/{fileName}/', name: 'app_frontend_course_view_file')]
     public function viewFile(Permission $permission, Request $request, string $fileName): Response
     {
-        if (! $this->userPermissionService->checkPermissionForUser($permission, $this->getUser(), true)) {
-            throw new ExceptionAccessDeniedException();
+        /** @var User $user */
+        $user = $this->getUser();
+
+        if (! $this->userPermissionService->checkPermissionForUser($permission, $user, true)) {
+            throw new ExceptionAccessDeniedException('Permission:' . $permission->getId() . ' not available for user: ' . $user->getId());
         }
 
         $url = '/view/' . $fileName . '/?courseId=' . $permission->getCourse()->getId();
@@ -99,8 +109,11 @@ class CourseController extends AbstractController
     #[Route('/course/interactive/{id<\d+>}/{moduleId<\d+>}/', name: 'user_get_info_module')]
     public function getInfoModule(Permission $permission, int $moduleId, Request $request): Response
     {
-        if (! $this->userPermissionService->checkPermissionForUser($permission, $this->getUser(), true)) {
-            throw new ExceptionAccessDeniedException();
+        /** @var User $user */
+        $user = $this->getUser();
+
+        if (! $this->userPermissionService->checkPermissionForUser($permission, $user, true)) {
+            throw new ExceptionAccessDeniedException('Permission:' . $permission->getId() . ' not available for user: ' . $user->getId());
         }
 
         $sessionId = $request->cookies->get('PHPSESSID');
