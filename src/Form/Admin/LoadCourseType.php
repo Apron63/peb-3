@@ -24,6 +24,7 @@ class LoadCourseType extends AbstractType
                             'application/zip',
                         ],
                         'mimeTypesMessage' => 'Выбранный файл не является ZIP архивом',
+                        'filenameMaxLength' => 150,
                     ])
                 ],
             ])

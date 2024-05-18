@@ -12,6 +12,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
+use Throwable;
 
 class LoadCourseController extends MobileController
 {
@@ -35,17 +36,21 @@ class LoadCourseController extends MobileController
             && $form->isValid()
             && $form->get('filename')->getData() !== null
         ) {
-            $course = $this->courseDownloadService->downloadCourse($form->get('filename')->getData());
+            try {
+                $course = $this->courseDownloadService->downloadCourse($form->get('filename')->getData());
 
-            $this->messageBus->dispatch(
-                new CourseUploadMessage(
-                    $form->get('filename')->getData()->getClientOriginalName(),
-                    $user->getId(),
-                    $course->getId(),
-                )
-            );
+                $this->messageBus->dispatch(
+                    new CourseUploadMessage(
+                        $form->get('filename')->getData()->getClientOriginalName(),
+                        $user->getId(),
+                        $course->getId(),
+                    )
+                );
 
-            $this->addFlash('success', 'Загрузка курса добавлена в очередь заданий');
+                $this->addFlash('success', 'Загрузка курса добавлена в очередь заданий');
+            } catch (Throwable $e) {
+                $this->addFlash('error', $e->getMessage());
+            }
 
             return $this->redirectToRoute('admin_load_course');
         }
