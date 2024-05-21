@@ -13,7 +13,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use Symfony\Component\Security\Core\Exception\AccessDeniedException as ExceptionAccessDeniedException;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 class TimeControlController extends AbstractController
 {
@@ -38,11 +38,11 @@ class TimeControlController extends AbstractController
         $user = $this->getUser();
 
         if (! $user instanceof User) {
-            throw new ExceptionAccessDeniedException('No Auth User');
+            throw new AccessDeniedException('No Auth User');
         }
 
         if (! $this->userPermissionService->checkPermissionForUser($permission, $user, false)) {
-            throw new ExceptionAccessDeniedException('Permission not available for this user');
+            throw new AccessDeniedException('Permission: ' . $permission->getId() . ' not available for user: ' . $user->getId());
         }
 
         $startTime = (int) $request->get('startTime');

@@ -16,7 +16,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Attribute\Route;
-use Symfony\Component\Security\Core\Exception\AccessDeniedException as ExceptionAccessDeniedException;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 class TestingController extends AbstractController
 {
@@ -32,11 +32,11 @@ class TestingController extends AbstractController
         $user = $this->getUser();
 
         if (! $user instanceof User) {
-            throw new ExceptionAccessDeniedException();
+            throw new AccessDeniedException('No Auth User');
         }
 
         if (! $this->userPermissionService->checkPermissionForUser($permission, $user, true)) {
-            throw new ExceptionAccessDeniedException();
+            throw new AccessDeniedException('Permission: ' . $permission->getId() . ' not available for user: ' . $user->getId());
         }
 
         $logger = $this->testingService->getLogger($permission, $user);
@@ -96,7 +96,7 @@ class TestingController extends AbstractController
         }
 
         if ($permission->getUser()->getId() !== $user->getId()) {
-            throw new ExceptionAccessDeniedException();
+            throw new AccessDeniedException('Permission: ' . $permission->getId() . ' not available for user: ' . $user->getId());
         }
 
         $fileName = $this->reportService->generateTestingPdf($logger);
@@ -119,7 +119,7 @@ class TestingController extends AbstractController
         }
 
         if ($permission->getUser()->getId() !== $user->getId()) {
-            throw new ExceptionAccessDeniedException();
+            throw new AccessDeniedException('Permission: ' . $permission->getId() . ' not available for user: ' . $user->getId());
         }
 
         $logger = $this->testingService->getFirstSuccessfullyLogger($permission, $user);
