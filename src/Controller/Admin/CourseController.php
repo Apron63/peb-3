@@ -185,7 +185,7 @@ class CourseController extends MobileController
     }
 
     #[Route('admin/course/autonumeration/{id<\d+>}/', name: 'admin_course_autonumeration')]
-    public function getInfoModule(Course $course, Request $request): RedirectResponse
+    public function getInfoModule(Course $course): RedirectResponse
     {
        $this->moduleSectionArrowsService->autonumerationCourse($course);
 

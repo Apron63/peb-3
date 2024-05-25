@@ -78,7 +78,7 @@ class ModuleSectionArrowsService
         foreach ($moduleSectionsByNom as $key => $moduleSection) {
             if ($key === $last) {
                 $moduleSection
-                    ->setPrevMaterialId(null)
+                    ->setPrevMaterialId($moduleSectionsByNom[$key - 1]->getId())
                     ->setNextMaterialId(null)
                     ->setFinalTestingIsNext(true);
             } else if ($key === $first) {
