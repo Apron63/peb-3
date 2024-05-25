@@ -101,6 +101,9 @@
     .history_table_content .history_table_row .header.hidden {
         display: none;
     }
+    .arrow_links {
+        width: 100%
+    }
 }
 
 @media screen and (max-width: 992px) {
@@ -238,7 +241,8 @@
         border-right: 2px solid #20478a;
         border-bottom: 2px solid transparent;
         border-radius: 50%;
-        animation: 1.5s linear 1s infinite loader;
+        -webkit-animation: 1.5s linear 1s infinite loader;
+                animation: 1.5s linear 1s infinite loader;
     }
     .history_mobile_ajax {
         display: block;
@@ -261,7 +265,8 @@
         border-right: 2px solid #20478a;
         border-bottom: 2px solid transparent;
         border-radius: 50%;
-        animation: 1.5s linear 1s infinite loader;
+        -webkit-animation: 1.5s linear 1s infinite loader;
+                animation: 1.5s linear 1s infinite loader;
     }
 
     .control-questions_errors {
@@ -270,6 +275,16 @@
     }
     .history_display {
         display: none;
+    }
+
+    @-webkit-keyframes loader {
+        from {
+            transform: rotate(0deg);
+        }
+
+        to {
+            transform: rotate(360deg);
+        }
     }
 
     @keyframes loader {

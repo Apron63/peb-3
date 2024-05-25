@@ -280,7 +280,8 @@ img {
 .header_profile_avatar img {
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  -o-object-fit: cover;
+     object-fit: cover;
 }
 
 .header_profile_noavatar {
@@ -474,7 +475,8 @@ img {
 }
 .eye_password_container {
   position: absolute;
-  object-fit: cover;
+  -o-object-fit: cover;
+     object-fit: cover;
   overflow: hidden;
   width: 15%;
   height: 70%;
@@ -599,7 +601,8 @@ img {
 .demo-programs_item_image_inner img {
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  -o-object-fit: cover;
+     object-fit: cover;
 }
 
 .demo-programs_item_header {
@@ -654,7 +657,8 @@ img {
 .programs_item_image_inner img {
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  -o-object-fit: cover;
+     object-fit: cover;
 }
 
 .programs_item_header {
@@ -715,7 +719,8 @@ img {
 .program_files_item_image img {
   width: 100%;
   height: 100%;
-  object-fit: contain;
+  -o-object-fit: contain;
+     object-fit: contain;
 }
 
 .program_files_item_name {
@@ -1367,7 +1372,8 @@ img {
 .photo {
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  -o-object-fit: cover;
+     object-fit: cover;
 }
 
 .photo_change_button_wrapper {
@@ -1517,4 +1523,16 @@ img {
   font-size: 25px;
   color: #20478a;
   font-weight: bold;
+}
+
+.arrow_links {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 35px;
+  text-transform: uppercase;
+  width: 75%
+}
+
+.arrow_links_max_width {
+  width: 100%
 }

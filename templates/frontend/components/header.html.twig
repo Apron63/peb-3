@@ -1,7 +1,13 @@
 <header class="header container">
 
     <div class="header_logo">
-        <img src="{{ asset('img/header-logo.png') }}" alt="logo">
+        {% if app.request.attributes.get('_route') != 'homepage' %}
+            <a href="/">
+                <img src="{{ asset('img/header-logo.png') }}" alt="logo">
+            </a>
+        {% else %}
+            <img src="{{ asset('img/header-logo.png') }}" alt="logo">
+        {% endif %}
     </div>
 
     {% if app.user is not empty %}
@@ -11,7 +17,7 @@
             {% else %}
                 {% include 'frontend/components/_active_profile.html.twig' %}
             {% endif %}
-        </div>    
+        </div>
     {% endif %}
-    
+
 </header>

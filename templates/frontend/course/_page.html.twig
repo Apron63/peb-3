@@ -40,18 +40,20 @@
                             </div>
                         {% endif %}
                     {% endfor %}
-                    {# <div>
-                        {% if moduleSection.prevMaterialId is not empty %}
-                            <a href="{{ path('user_get_info_module', {id: permission.id, moduleId: moduleSection.prevMaterialId}) }}">&lt; - Назад</a>
-                        {% endif %}
-                        {% if moduleSection.nextMaterialId is not empty %}
-                            <a href="{{ path('user_get_info_module', {id: permission.id, moduleId: moduleSection.nextMaterialId}) }}">Далее - &gt;</a>
-                        {% endif %}
-                        {% if finalTestingEnabled %}
-                            <a href="{{ path('app_frontend_testing', {id: permission.id}) }}">Далее - &gt;</a>
-                        {% endif %}
-                    </div> #}
                 </div>
+
+                <div class="arrow_links">
+                    {% if moduleSection.prevMaterialId is not empty %}
+                        <a href="{{ path('user_get_info_module', {id: permission.id, moduleId: moduleSection.prevMaterialId}) }}">Назад</a>
+                    {% endif %}
+                    {% if moduleSection.nextMaterialId is not empty %}
+                        <a href="{{ path('user_get_info_module', {id: permission.id, moduleId: moduleSection.nextMaterialId}) }}">Далее</a>
+                    {% endif %}
+                    {% if finalTestingEnabled %}
+                        <a href="{{ path('app_frontend_testing', {id: permission.id}) }}">Далее</a>
+                    {% endif %}
+                </div>
+
             </div>
         </div>
     </div>
