@@ -76,7 +76,6 @@ class LoaderReportService
                 $workSheet->setCellValue('B' . $row, 'Курс : ' . $loader['name']);
                 $workSheet->getStyle('B' . $row)->getAlignment()->setWrapText(true);
                 $workSheet->getRowDimension($row)->setRowHeight(-1);
-                $workSheet->mergeCells('B' . $row . ':F' . $row);
 
                 $workSheet
                     ->getStyle('A' . $row . ':F' . $row)
@@ -109,7 +108,7 @@ class LoaderReportService
         $workSheet->getStyle('A1:F' . $row - 1)->applyFromArray($styleArray, false);
 
         $workSheet->getColumnDimension('A')->setAutoSize(true);
-        $workSheet->getColumnDimension('B')->setAutoSize(true);
+        $workSheet->getColumnDimension('B')->setWidth(110);
         $workSheet->getColumnDimension('C')->setAutoSize(true);
         $workSheet->getColumnDimension('D')->setAutoSize(true);
         $workSheet->getColumnDimension('E')->setAutoSize(true);
