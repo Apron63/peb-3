@@ -267,7 +267,6 @@ class AdminReportService
                 $workSheet->setCellValue('B' . $item, 'Курс : ' . $row['name']);
                 $workSheet->getStyle('B' . $item)->getAlignment()->setWrapText(true);
                 $workSheet->getRowDimension($item)->setRowHeight(-1);
-                $workSheet->mergeCells('B' . $item . ':F' . $item);
 
                 $workSheet
                     ->getStyle('A' . $item . ':F' . $item)
@@ -300,7 +299,7 @@ class AdminReportService
         $workSheet->getStyle('A1:F' . $item - 1)->applyFromArray($styleArray, false);
 
         $workSheet->getColumnDimension('A')->setAutoSize(true);
-        $workSheet->getColumnDimension('B')->setAutoSize(true);
+        $workSheet->getColumnDimension('B')->setWidth(110);
         $workSheet->getColumnDimension('C')->setAutoSize(true);
         $workSheet->getColumnDimension('D')->setAutoSize(true);
         $workSheet->getColumnDimension('E')->setAutoSize(true);
