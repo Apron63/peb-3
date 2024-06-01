@@ -49,8 +49,12 @@
                     {% if moduleSection.nextMaterialId is not empty %}
                         <a href="{{ path('user_get_info_module', {id: permission.id, moduleId: moduleSection.nextMaterialId}) }}">Далее</a>
                     {% endif %}
-                    {% if finalTestingEnabled %}
-                        <a href="{{ path('app_frontend_testing', {id: permission.id}) }}">Далее</a>
+                    {% if isLastArrowButton %}
+                        {% if isFinalTestingEnabled %}
+                            <a href="{{ path('app_frontend_testing', {id: permission.id}) }}">Далее</a>
+                        {% else %}
+                            <a content-elem="final-testing" status="not-passed">Далее</a>
+                        {% endif %}
                     {% endif %}
                 </div>
 
@@ -60,7 +64,15 @@
 
     {% include('frontend/components/footer.html.twig') %}
 
-    <div class="overlay" popup-element="overlay"></div>
+    <div class="overlay" popup-element="overlay">
+        <div class="popup" popup-element="popup">
+            <p>Для прохождения итогового тестирования необходимо пройти все промежуточные тестирования каждого модуля.</p>
+            <p>Успешного обучения!</p>
+            <div class="popup_close_wrapper">
+                <a class="popup_close" popup-element="popup-close">закрыть</a>
+            </div>
+        </div>
+    </div>
 
     <input
         type="hidden"

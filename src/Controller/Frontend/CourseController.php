@@ -143,7 +143,8 @@ class CourseController extends AbstractController
             'permission' => $permission,
             'moduleSection' => $moduleSection,
             'moduleSectionPages' => $moduleSectionPages,
-            'finalTestingEnabled' => $finalTestingEnabled,
+            'isLastArrowButton' => $moduleSection->isFinalTestingIsNext(),
+            'isFinalTestingEnabled' => $finalTestingEnabled,
         ], $response);
     }
 }
