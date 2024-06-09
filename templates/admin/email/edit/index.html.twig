@@ -1,0 +1,89 @@
+{% extends 'admin/base.html.twig' %}
+
+{% block title %}Отправка email{% endblock %}
+
+{% block content %}
+    <h3>Отправка email</h3>
+
+    {{ form_start(formAttachment) }}
+
+        <div>Добавить вложение</div>
+        <div class="row align-items-center">
+            <div class="col-10">
+                {{ form_row(formAttachment.attachment) }}
+            </div>
+            {{ form_row(formAttachment.mailId) }}
+            <div class="col-2">
+                {{ form_row(formAttachment.submit) }}
+            </div>
+        </div
+
+    {{ form_end(formAttachment) }}
+
+    <hr>
+
+    <p></p>
+
+    {{ form_start(form) }}
+
+        {{ form_row(form.id) }}
+
+        <p></p>
+
+        <div class="col-12">
+            {{ form_row(form.reciever) }}
+        </div>
+
+        <p></p>
+
+        <div class="col-12">
+            {{ form_row(form.subject) }}
+        </div>
+
+        <p></p>
+
+        <div class="col-12">
+            {{ form_row(form.content) }}
+        </div>
+
+        <p></p>
+
+        <p></p>
+
+        <table class="table">
+            <thead>
+            <tr>
+                <th>Вложение</th>
+                <th>Действие</th>
+            </tr>
+            </thead>
+
+            <tbody>
+                {% for file in files %}
+                    <tr>
+                        <td>
+                            <a href="{{ path('admin_email_read_file', {filename: file}) }}" target="_blank">
+                                {{ file }}
+                            </a>
+                        </td>
+                        <td>
+                            <a
+                                href="{{ path('admin_email_delete_file', {filename: file, mailId: form.vars.value.id}) }}"
+                                class="btn btn-outline-danger"
+                                onclick="return window.confirm('Подтвердите действие');"
+                            >
+                                Удалить
+                            </a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <div class="col-12">
+            {{ form_row(form.submit) }}
+        </div>
+    {{ form_end(form) }}
+
+
+{% endblock %}

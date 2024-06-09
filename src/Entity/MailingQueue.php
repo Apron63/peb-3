@@ -31,7 +31,7 @@ class MailingQueue
     #[ORM\Column(type: Types::TEXT)]
     private ?string $content = null;
 
-    #[ORM\Column(type: Types::STRING, nullable: true)]
+    #[ORM\Column(type: Types::TEXT, nullable: true, length: 10000)]
     private ?string $attachment = null;
 
     #[ORM\Column(nullable: true)]
@@ -44,6 +44,12 @@ class MailingQueue
     public function getId(): ?int
     {
         return $this->id;
+    }
+
+    public function setId(int $id): self
+    {
+        // Fake method, do nothing
+        return $this;
     }
 
     public function getUser(): ?User

@@ -31,7 +31,7 @@ class SendEmailFromQueueCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         foreach ($this->mailingQueueRepository->getEmailPortion(1000) as $emailQueue) {
-            if (null !== $emailQueue->getUser()->getEmail()) {
+            if (null !== $emailQueue->getUser()?->getEmail()) {
                 $output->writeln('Отправляем почту для: ' . $emailQueue->getUser()->getEmail());
 
                 $email = (new Email())

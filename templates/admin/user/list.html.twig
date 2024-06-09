@@ -24,12 +24,12 @@
                     </ul>
                 </div>
                 <div class="dropdown">
-                    <button 
-                        class="btn btn-outline-dark dropdown-toggle" 
-                        type="button" 
-                        id="dropdownMenuButton2" 
-                        data-bs-toggle="dropdown" 
-                        aria-haspopup="true" 
+                    <button
+                        class="btn btn-outline-dark dropdown-toggle"
+                        type="button"
+                        id="dropdownMenuButton2"
+                        data-bs-toggle="dropdown"
+                        aria-haspopup="true"
                         aria-expanded="false"
                     >
                         Скачать данные
@@ -42,42 +42,38 @@
                     </ul>
                 </div>
                 <div class="dropdown">
-                    <button 
-                        class="btn btn-outline-dark dropdown-toggle" 
-                        type="button" 
-                        id="dropdownMenuButton3" 
-                        data-bs-toggle="dropdown" 
-                        aria-haspopup="true" 
+                    <button
+                        class="btn btn-outline-dark dropdown-toggle"
+                        type="button"
+                        id="dropdownMenuButton3"
+                        data-bs-toggle="dropdown"
+                        aria-haspopup="true"
                         aria-expanded="false"
-                        data-load-url="{{ path('admin_user_report_send_get_content') }}"
-                        data-criteria="{{ criteria | json_encode(constant('JSON_PRETTY_PRINT')) }}"
                     >
                         Скачать и отправить данные
                     </button>
                     <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton3">
-                        <li><a class="dropdown-item color-item send-user-list" href="javascript:void(0)" data-type="CSV">CSV</a></li>
-                        <li><a class="dropdown-item color-item send-user-list" href="javascript:void(0)" data-type="XLSX">XLSX</a></li>
-                        <li><a class="dropdown-item color-item send-user-list" href="javascript:void(0)" data-type="TXT">TXT</a></li>
-                        <li><a class="dropdown-item color-item send-user-list" href="javascript:void(0)" data-type="DOCX">DOCX</a></li>
+                        <li><a class="dropdown-item color-item" href="{{ path('admin_email_report_create', {type: 'CSV', criteria: criteria}) }}">CSV</a></li>
+                        <li><a class="dropdown-item color-item" href="{{ path('admin_email_report_create', {type: 'XLSX', criteria: criteria}) }}">XLSX</a></li>
+                        <li><a class="dropdown-item color-item" href="{{ path('admin_email_report_create', {type: 'TXT', criteria: criteria}) }}">TXT</a></li>
+                        <li><a class="dropdown-item color-item" href="{{ path('admin_email_report_create', {type: 'DOCX', criteria: criteria}) }}">DOCX</a></li>
                     </ul>
                 </div>
                 <div class="dropdown">
-                    <button 
-                        class="btn btn-outline-dark dropdown-toggle" 
-                        type="button" 
-                        id="dropdownMenuButton4" 
-                        data-bs-toggle="dropdown" 
-                        aria-haspopup="true" 
+                    <button
+                        class="btn btn-outline-dark dropdown-toggle"
+                        type="button"
+                        id="dropdownMenuButton4"
+                        data-bs-toggle="dropdown"
+                        aria-haspopup="true"
                         aria-expanded="false"
-                        data-load-url="{{ path('admin_user_report_send_get_content_statistic') }}"
-                        data-criteria="{{ criteria | json_encode(constant('JSON_PRETTY_PRINT')) }}"
                     >
                         Скачать и отправить статистику
                     </button>
                     <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton4">
-                        <li><a class="dropdown-item color-item send-user-statistic" href="javascript:void(0)" data-type="PDF">PDF</a></li>
-                        <li><a class="dropdown-item color-item send-user-statistic" href="javascript:void(0)" data-type="DOCX">DOCX</a></li>
-                        <li><a class="dropdown-item color-item send-user-statistic" href="javascript:void(0)" data-type="XLSX">XLSX</a></li>
+                        <li><a class="dropdown-item color-item" href="{{ path('admin_email_statistic_create', {type: 'PDF', criteria: criteria}) }}">PDF</a></li>
+                        <li><a class="dropdown-item color-item" href="{{ path('admin_email_statistic_create', {type: 'DOCX', criteria: criteria}) }}">DOCX</a></li>
+                        <li><a class="dropdown-item color-item" href="{{ path('admin_email_statistic_create', {type: 'XLSX', criteria: criteria}) }}">XLSX</a></li>
                     </ul>
                 </div>
             </div>
@@ -122,7 +118,7 @@
                             {% elseif permission.stage == 2 %}
                                 В процессе
                             {% elseif permission.stage == 3 %}
-                                <a 
+                                <a
                                     href="{{ path('admin_print_testing', {id: permission.permissionId, userId: permission.userId}) }}"
                                     target="_blank"
                                 >
