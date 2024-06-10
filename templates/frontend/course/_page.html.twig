@@ -42,7 +42,7 @@
                     {% endfor %}
                 </div>
 
-                <div class="arrow_links">
+                <div class="arrow_links {% if moduleSection.prevMaterialId is empty %}arrow-links-next{% endif %}">
                     {% if moduleSection.prevMaterialId is not empty %}
                         <a href="{{ path('user_get_info_module', {id: permission.id, moduleId: moduleSection.prevMaterialId}) }}">Назад</a>
                     {% endif %}

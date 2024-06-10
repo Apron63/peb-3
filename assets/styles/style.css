@@ -1530,9 +1530,11 @@ img {
   justify-content: space-between;
   margin-top: 35px;
   text-transform: uppercase;
-  width: 75%
+  width: 100%;
 }
-
-.arrow_links_max_width {
-  width: 100%
+.arrow-links-next{
+  justify-content: right;
+}
+.arrow-links-prev{
+  justify-content: left;
 }
