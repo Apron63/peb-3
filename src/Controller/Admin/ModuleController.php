@@ -84,12 +84,14 @@ class ModuleController extends MobileController
     #[IsGranted('ROLE_SUPER_ADMIN')]
     public function adminCreateTickets(Request $request, Course $course): JsonResponse
     {
+        $user = $this->getUser();
+
         $ticketCount = (int)$request->get('ticketCount');
         $questionCount = (int)$request->get('questionCount');
         $timeLeft = (int)$request->get('timeLeft');
         $errorsCount = (int)$request->get('errorsCount');
 
-        $this->ticketService->createModuleTickets($course, $ticketCount, $questionCount, $timeLeft, $errorsCount);
+        $this->ticketService->createModuleTickets($course, $ticketCount, $questionCount, $timeLeft, $errorsCount, $user);
 
         return new JsonResponse([
             'result' => true,

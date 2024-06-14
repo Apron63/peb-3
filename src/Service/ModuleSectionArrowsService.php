@@ -4,9 +4,12 @@ namespace App\Service;
 
 use App\Entity\Course;
 use App\Entity\Permission;
+use App\Entity\User;
+use App\Event\ActionLogEvent;
 use App\Repository\ModuleRepository;
 use App\Repository\ModuleSectionRepository;
 use App\Service\CourseService;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 class ModuleSectionArrowsService
 {
@@ -17,6 +20,7 @@ class ModuleSectionArrowsService
         private readonly ModuleSectionRepository $moduleSectionRepository,
         private readonly ModuleRepository $moduleRepository,
         private readonly CourseService $courseService,
+        private readonly EventDispatcherInterface $eventDispatcher,
     ) {}
 
     public function getModuleSectionList(Course $course): array
@@ -61,7 +65,7 @@ class ModuleSectionArrowsService
         return true;
     }
 
-    public function autonumerationCourse(Course $course): void
+    public function autonumerationCourse(Course $course, User $user): void
     {
         $moduleSections = $this->moduleSectionRepository->getModuleSectionsListByCourse($course);
 
@@ -95,5 +99,10 @@ class ModuleSectionArrowsService
 
             $this->moduleSectionRepository->save($moduleSection, true);
         }
+
+        $this->eventDispatcher->dispatch(new ActionLogEvent(
+            $user,
+            'Выполнена автонумерация курса: ' . $course->getShortName(),
+        ));
     }
 }

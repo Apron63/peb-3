@@ -72,8 +72,10 @@
 
                             {% if page.reciever is not empty %}
                                 {{ page.reciever }}
-                            {% else %}
+                            {% elseif page.user.email is defined %}
                                 {{ page.user.email }}
+                            {% else %}
+                                -
                             {% endif %}
                         </td>
                         <td>

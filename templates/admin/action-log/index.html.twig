@@ -1,0 +1,24 @@
+{% extends 'admin/base.html.twig' %}
+
+{% block title %}Панель управления | Действия{% endblock %}
+
+{% block content %}
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Время</th>
+                <th>Автор</th>
+                <th>Действие</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for row in pagination %}
+                <tr>
+                    <td>{{ row.createdAt | date('d.m.Y H:i:s') }}</td>
+                    <td>{{ row.createdBy.fullName }}</td>
+                    <td>{{ row.description }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

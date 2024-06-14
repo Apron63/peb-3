@@ -25,12 +25,15 @@ class TicketController extends AbstractController
     #[IsGranted('ROLE_SUPER_ADMIN')]
     public function createTickets(Request $request): Response
     {
+        $user = $this->getUser();
+
         $this->ticketService->createTickets(
             $request->get('course'),
             $request->get('ticketCnt', 1),
             $request->get('errCnt', 1),
             $request->get('timeLeft', 0),
-            $request->get('themes', [])
+            $request->get('themes', []),
+            $user,
         );
 
         $response = new JsonResponse();

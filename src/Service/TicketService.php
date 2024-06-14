@@ -6,11 +6,14 @@ use App\Entity\Course;
 use App\Entity\CourseTheme;
 use App\Entity\Questions;
 use App\Entity\Ticket;
+use App\Entity\User;
+use App\Event\ActionLogEvent;
 use App\Repository\AnswerRepository;
 use App\Repository\CourseRepository;
 use App\Repository\CourseThemeRepository;
 use App\Repository\QuestionsRepository;
 use App\Repository\TicketRepository;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 class TicketService
 {
@@ -19,10 +22,11 @@ class TicketService
         private readonly QuestionsRepository $questionsRepository,
         private readonly AnswerRepository $answerRepository,
         private readonly CourseRepository $courseRepository,
-        private readonly CourseThemeRepository $courseThemeRepository
+        private readonly CourseThemeRepository $courseThemeRepository,
+        private readonly EventDispatcherInterface $eventDispatcher,
     ) {}
 
-    public function createTickets(int $courseId, int $ticketsCnt, int $errorsCnt, int $timeLeft, array $themes): void
+    public function createTickets(int $courseId, int $ticketsCnt, int $errorsCnt, int $timeLeft, array $themes, User $user): void
     {
         $themesIds = array_map(
             static fn ($theme) => $theme['id'],
@@ -42,7 +46,7 @@ class TicketService
         for ($i = 1; $i <= $ticketsCnt; $i++) {
             foreach ($themesIds as $themeId) {
                 $tmp = $questionArray[$themeId];
-                
+
                 shuffle($tmp);
                 $index = array_search($themeId, array_column($themes, 'id'));
                 $arr[$themeId] = array_slice($tmp, 0, $themes[$index]['inputValue']);
@@ -60,6 +64,11 @@ class TicketService
 
             $this->ticketRepository->save($ticket, true);
         }
+
+        $this->eventDispatcher->dispatch(new ActionLogEvent(
+            $user,
+            'Созданы билеты для курса: ' . $course->getShortName(),
+        ));
     }
 
     public function createModuleTickets(
@@ -67,7 +76,8 @@ class TicketService
         int $ticketCount,
         int $questionCount,
         int $timeLeft,
-        int $errorsCount
+        int $errorsCount,
+        User $user,
     ): void {
         $this->ticketRepository->deleteOldTickets($course);
 
@@ -91,6 +101,11 @@ class TicketService
 
             $this->ticketRepository->save($ticket, true);
         }
+
+        $this->eventDispatcher->dispatch(new ActionLogEvent(
+            $user,
+            'Созданы билеты для курса: ' . $course->getShortName(),
+        ));
     }
 
     public function renderTickets(Course $course): array

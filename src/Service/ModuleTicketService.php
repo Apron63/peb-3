@@ -5,19 +5,15 @@ namespace App\Service;
 use App\Entity\Course;
 use App\Entity\Questions;
 use App\Repository\AnswerRepository;
-use App\Repository\CourseRepository;
-use App\Repository\CourseThemeRepository;
 use App\Repository\QuestionsRepository;
 use App\Repository\TicketRepository;
 
 class ModuleTicketService
 {
     public function __construct(
-        readonly TicketRepository $ticketRepository,
-        readonly QuestionsRepository $questionsRepository,
-        readonly AnswerRepository $answerRepository,
-        readonly CourseRepository $courseRepository,
-        readonly CourseThemeRepository $courseThemeRepository,
+        private readonly TicketRepository $ticketRepository,
+        private readonly QuestionsRepository $questionsRepository,
+        private readonly AnswerRepository $answerRepository,
     ) {}
 
     public function renderTickets(Course $course): array
