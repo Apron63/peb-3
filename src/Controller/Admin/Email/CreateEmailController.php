@@ -24,7 +24,13 @@ class CreateEmailController extends AbstractController
 
         $criteria = $request->get('criteria');
 
-        $email = $this->emailService->createEmailWithReportData($user, $type, $criteria);
+        try {
+            $email = $this->emailService->createEmailWithReportData($user, $type, $criteria);
+        } catch (Throwable $e) {
+            $this->addFlash('error', 'Ошибка при создании отчета: ' . $e->getMessage());
+
+            return $this->redirectToRoute('admin_user_list', $criteria);
+        }
 
         return $this->redirectToRoute('admin_email_report_edit', ['mailId' => $email->getId()]);
     }
