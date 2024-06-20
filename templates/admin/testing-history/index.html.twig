@@ -1,0 +1,26 @@
+{% extends 'admin/base.html.twig' %}
+
+{% block title %}Панель управления | Действия{% endblock %}
+
+{% block content %}
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Дата</th>
+                <th>Слушатель</th>
+                <th>Доступ Id</th>
+                <th>Слушатель из доступа</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for result in results %}
+                <tr>
+                    <td>{{ result.date | date('d.m.Y H:i:s') }}</td>
+                    <td>{{ result.user.fullName }}</td>
+                    <td>{{ result.permission.id }}</td>
+                    <td>{{ result.permissionUser.fullName }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}
