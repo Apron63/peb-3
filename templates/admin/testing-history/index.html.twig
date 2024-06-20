@@ -16,9 +16,9 @@
             {% for result in results %}
                 <tr>
                     <td>{{ result.date | date('d.m.Y H:i:s') }}</td>
-                    <td>{{ result.user.fullName }}</td>
-                    <td>{{ result.permission.id }}</td>
-                    <td>{{ result.permissionUser.fullName }}</td>
+                    <td>{{ result.fullName }}</td>
+                    <td>{{ result.permissionId }}</td>
+                    <td>{{ result.permissionUserFullName }}</td>
                 </tr>
             {% endfor %}
         </tbody>
