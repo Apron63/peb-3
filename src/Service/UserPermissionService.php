@@ -11,6 +11,7 @@ use App\Repository\MailingQueueRepository;
 use App\Repository\PermissionRepository;
 use DateTime;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 class UserPermissionService
 {
@@ -26,6 +27,10 @@ class UserPermissionService
     {
         if (! $user instanceof User) {
             throw new NotFoundHttpException('User: ' . $user?->getId() . ' not Found');
+        }
+
+        if ($permission->getUser() !== $user) {
+            throw new AccessDeniedException('Permission: ' . $permission->getId() . ' not available for user: ' . $user->getId());
         }
 
         $timeNow = new DateTime();
