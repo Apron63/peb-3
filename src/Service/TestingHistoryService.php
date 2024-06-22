@@ -20,38 +20,51 @@ class TestingHistoryService
         $offset = 0;
 
         $result = [];
-        $usersCount = 0;
-
 
         do {
             $usersPortion = $this->userRepository->getUserPortion($limit, $offset);
+            if (0 === count($usersPortion)) {
+                break;
+            }
 
-            $usersCount = count($usersPortion);
-            $offset += $limit;
+            $usersPortionIds = array_map(
+                fn($user) => $user['id'],
+                $usersPortion,
+            );
 
-            foreach ($usersPortion as $user) {
-                foreach ($this->loggerRepository->findBy(['user' => $user['id']]) as $logger) {
-                    $permissionUser = $logger->getPermission()->getUser();
+            $loggers = $this->loggerRepository->getLoggersByUsers(...$usersPortionIds);
 
-                    if ($permissionUser->getId() !== $user['id']) {
-                        $result[] = [
-                            'date' => $logger->getBeginAt(),
-                            'fullName' => $user['fullName'],
-                            'permissionId' => $logger->getPermission()->getId(),
-                            'permissionUserFullName' => $permissionUser->getFullName(),
-                        ];
-                    }
+            $permissionsIds = array_map(
+                fn($logger) => $logger['permission_id'],
+                $loggers,
+            );
+
+            $permissions = $this->permissionRepository->getPermissionsByIds(...$permissionsIds);
+
+            $permissionByIds = [];
+
+            foreach ($permissions as $permission) {
+                $permissionByIds[$permission['id']] = $permission;
+            }
+
+            foreach ($loggers as $logger) {
+                if ($logger['user_id'] !== $permissionByIds[$logger['permission_id']]['user_id']) {
+                    $result[] = [
+                        'logger_id' => $logger['id'],
+                        'date' => $logger['beginAt'],
+                        'logger_user_id' =>$logger['user_id'],
+                        'permission_id' => $logger['permission_id'],
+                        'permission_user_id' => $permissionByIds[$logger['permission_id']]['user_id'],
+                    ];
                 }
             }
 
+            $offset += $limit;
+
             unset($usersPortion);
             gc_collect_cycles();
-
-            if (count($result) > 10) {
-                break;
-            }
         }
-        while ($usersCount > 0);
+        while (true);
 
         return $result;
     }

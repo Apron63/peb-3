@@ -7,6 +7,7 @@
         <thead>
             <tr>
                 <th>Дата</th>
+                <th>Протокол Id</th>
                 <th>Слушатель</th>
                 <th>Доступ Id</th>
                 <th>Слушатель из доступа</th>
@@ -16,9 +17,10 @@
             {% for result in results %}
                 <tr>
                     <td>{{ result.date | date('d.m.Y H:i:s') }}</td>
-                    <td>{{ result.fullName }}</td>
-                    <td>{{ result.permissionId }}</td>
-                    <td>{{ result.permissionUserFullName }}</td>
+                    <td>{{ result.logger_id }}</td>
+                    <td>{{ result.logger_user_id }}</td>
+                    <td>{{ result.permission_id }}</td>
+                    <td>{{ result.permission_user_id }}</td>
                 </tr>
             {% endfor %}
         </tbody>

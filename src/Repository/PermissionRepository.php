@@ -187,4 +187,16 @@ class PermissionRepository extends ServiceEntityRepository
 
         $query->execute();
     }
+
+    public function getPermissionsByIds(int ...$permissionIds): array
+    {
+        $queryBuilder = $this->createQueryBuilder('p');
+
+        return $queryBuilder
+            ->select('p.id, identity(p.user) as user_id')
+            ->where('p.id IN (:permissionIds)')
+            ->setParameter('permissionIds', $permissionIds)
+            ->getQuery()
+            ->getArrayResult();
+    }
 }

@@ -99,6 +99,8 @@ class ReportGeneratorService
         $workSheet->setCellValue('F1', 'Дней');
 
         $item = 2;
+        $nom = 1;
+        
         foreach($data as $row) {
             if ($courseName !== $row['shortName']) {
                 $workSheet->setCellValue('A' . $item, '');

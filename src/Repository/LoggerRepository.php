@@ -58,7 +58,7 @@ class LoggerRepository extends ServiceEntityRepository
             ->getQuery()
             ->getOneOrNullResult();
     }
-    
+
     public function findFirstSuccessfullyLogger(Permission $permission, UserInterface $user): ?Logger
     {
         return $this->createQueryBuilder('l')
@@ -98,5 +98,17 @@ class LoggerRepository extends ServiceEntityRepository
         }
 
         return $result;
+    }
+
+    public function getLoggersByUsers(int ...$userIds): array
+    {
+        $queryBuilder = $this->createQueryBuilder('l');
+
+        return $queryBuilder
+            ->select('l.id, identity(l.user) as user_id, identity(l.permission) as permission_id, l.beginAt')
+            ->where('l.user IN (:userIds)')
+            ->setParameter('userIds', $userIds)
+            ->getQuery()
+            ->getArrayResult();
     }
 }
