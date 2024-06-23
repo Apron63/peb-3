@@ -55,6 +55,7 @@ class TestingHistoryService
                         'logger_user_id' =>$logger['user_id'],
                         'permission_id' => $logger['permission_id'],
                         'permission_user_id' => $permissionByIds[$logger['permission_id']]['user_id'],
+                        'result' => $logger['result'] ? 'Да' : 'Нет',
                     ];
                 }
             }
@@ -66,6 +67,7 @@ class TestingHistoryService
         }
         while (true);
 
+        usort($result, fn($left, $right) => $left['date'] <=> $right['date']);
         return $result;
     }
 }

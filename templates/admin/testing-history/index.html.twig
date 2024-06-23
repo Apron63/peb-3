@@ -3,6 +3,7 @@
 {% block title %}Панель управления | Действия{% endblock %}
 
 {% block content %}
+    <h3>Протоколы тестирования, у которых слушатель не совпадает со слушателем из доступа</h3>
     <table class="table">
         <thead>
             <tr>
@@ -11,6 +12,7 @@
                 <th>Слушатель</th>
                 <th>Доступ Id</th>
                 <th>Слушатель из доступа</th>
+                <th>Сдано</th>
             </tr>
         </thead>
         <tbody>
@@ -21,6 +23,7 @@
                     <td>{{ result.logger_user_id }}</td>
                     <td>{{ result.permission_id }}</td>
                     <td>{{ result.permission_user_id }}</td>
+                    <td>{{ result.result }}</td>
                 </tr>
             {% endfor %}
         </tbody>

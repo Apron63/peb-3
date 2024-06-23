@@ -105,7 +105,7 @@ class LoggerRepository extends ServiceEntityRepository
         $queryBuilder = $this->createQueryBuilder('l');
 
         return $queryBuilder
-            ->select('l.id, identity(l.user) as user_id, identity(l.permission) as permission_id, l.beginAt')
+            ->select('l.id, identity(l.user) as user_id, identity(l.permission) as permission_id, l.beginAt, l.result')
             ->where('l.user IN (:userIds)')
             ->setParameter('userIds', $userIds)
             ->getQuery()
