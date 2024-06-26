@@ -121,7 +121,7 @@ class EmailService
         );
 
         $sendedMail = (new Email())
-            ->from('ucoks@safety63.ru')
+            ->from($email->getCreatedBy()->getEmail())
             ->to(...$allRecievers)
             ->subject($email->getSubject())
             ->html($email->getContent());

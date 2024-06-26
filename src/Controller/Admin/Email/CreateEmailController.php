@@ -24,6 +24,12 @@ class CreateEmailController extends AbstractController
 
         $criteria = $request->get('criteria');
 
+        if (empty($user->getEmail())) {
+            $this->addFlash('error', 'Не заполнен email у пользователя');
+
+            return $this->redirectToRoute('admin_user_list', $criteria);
+        }
+
         try {
             $email = $this->emailService->createEmailWithReportData($user, $type, $criteria);
         } catch (Throwable $e) {
@@ -42,6 +48,12 @@ class CreateEmailController extends AbstractController
         $user = $this->getUser();
 
         $criteria = $request->get('criteria');
+
+        if (empty($user->getEmail())) {
+            $this->addFlash('error', 'Не заполнен email у пользователя');
+
+            return $this->redirectToRoute('admin_user_list', $criteria);
+        }
 
         try {
             $email = $this->emailService->createEmailWithStatisticData($user, $type, $criteria);
