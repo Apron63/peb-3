@@ -13,6 +13,7 @@ use DateTime;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Mailer\MailerInterface;
+use Symfony\Component\Mime\Address;
 use Symfony\Component\Mime\Email;
 use Symfony\Component\Mime\Part\DataPart;
 use Symfony\Component\Mime\Part\File;
@@ -121,7 +122,12 @@ class EmailService
         );
 
         $sendedMail = (new Email())
-            ->from($email->getCreatedBy()->getEmail())
+            ->from(
+                new Address(
+                    $email->getCreatedBy()->getEmail(),
+                    $email->getCreatedBy()->getFullName(),
+                )
+            )
             ->to(...$allRecievers)
             ->subject($email->getSubject())
             ->html($email->getContent());
