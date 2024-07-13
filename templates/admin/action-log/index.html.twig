@@ -2,6 +2,12 @@
 
 {% block title %}Панель управления | Действия{% endblock %}
 
+{% block breadcrumbs %}
+    <a href="{{ path('admin_homepage') }}">Панель управления</a>
+    <span>/</span>
+    <span>Действия</span>
+{% endblock %}
+
 {% block content %}
     <table class="table">
         <thead>
@@ -21,4 +27,8 @@
             {% endfor %}
         </tbody>
     </table>
+
+    <nav aria-label="navigator">
+        {{ knp_pagination_render(pagination) }}
+    </nav>
 {% endblock %}
