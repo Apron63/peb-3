@@ -2,14 +2,16 @@
 
 namespace App\Controller\Admin;
 
+use App\Decorator\MobileController;
 use App\Entity\ModuleSection;
 use App\Entity\ModuleSectionPage;
-use App\Decorator\MobileController;
-use App\Service\InteractiveUploadService;
+use App\Event\AutonumerationCancelledEvent;
 use App\Form\Admin\ModuleSectionPageEditType;
+use App\Repository\ModuleSectionPageRepository;
+use App\Service\InteractiveUploadService;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use App\Repository\ModuleSectionPageRepository;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
@@ -18,6 +20,7 @@ class ModuleSectionPageController extends MobileController
     public function __construct(
         private readonly ModuleSectionPageRepository $moduleSectionPageRepository,
         private readonly InteractiveUploadService $interactiveUploadService,
+        private readonly EventDispatcherInterface $eventDispatcher,
     ) {}
 
     #[Route('/admin/module_section_page/add/{id<\d+>}/', name: 'admin_module_section_page_add')]
@@ -32,6 +35,7 @@ class ModuleSectionPageController extends MobileController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $this->moduleSectionPageRepository->save($moduleSectionPage, true);
+            $this->eventDispatcher->dispatch(new AutonumerationCancelledEvent($moduleSection->getModule()->getCourse()->getId()));
 
             if (null !== $form->get('filename')->getData()) {
                 $this->interactiveUploadService->fileInteractiveUpload(
@@ -71,6 +75,7 @@ class ModuleSectionPageController extends MobileController
             }
 
             $this->moduleSectionPageRepository->save($moduleSectionPage, true);
+            $this->eventDispatcher->dispatch(new AutonumerationCancelledEvent($moduleSectionPage->getSection()->getModule()->getCourse()->getId()));
 
             $this->addFlash('success', 'Шаблон для курса успешно изменен');
 
@@ -88,6 +93,7 @@ class ModuleSectionPageController extends MobileController
     public function adminModuleSectionPageDelete(ModuleSectionPage $moduleSectionPage): Response
     {
         $moduleSectionId = $moduleSectionPage->getSection()->getId();
+        $this->eventDispatcher->dispatch(new AutonumerationCancelledEvent($moduleSectionPage->getSection()->getModule()->getCourse()->getId()));
         $this->moduleSectionPageRepository->remove($moduleSectionPage, true);
 
         $this->addFlash('success', 'Шаблон для курса удален');

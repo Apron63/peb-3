@@ -2,14 +2,16 @@
 
 namespace App\Controller\Admin;
 
+use App\Decorator\MobileController;
 use App\Entity\Module;
 use App\Entity\ModuleSection;
-use App\Decorator\MobileController;
+use App\Event\AutonumerationCancelledEvent;
 use App\Form\Admin\ModuleSectionEditType;
+use App\Repository\ModuleSectionPageRepository;
 use App\Repository\ModuleSectionRepository;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use App\Repository\ModuleSectionPageRepository;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
@@ -18,6 +20,7 @@ class ModuleSectionController extends MobileController
     public function __construct(
         private readonly ModuleSectionRepository $moduleSectionRepository,
         private readonly ModuleSectionPageRepository $moduleSectionPageRepository,
+        private readonly EventDispatcherInterface $eventDispatcher,
     ) {}
 
     #[Route('/admin/module_section/add/{id<\d+>}/', name: 'admin_module_section_add')]
@@ -32,6 +35,7 @@ class ModuleSectionController extends MobileController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $this->moduleSectionRepository->save($moduleSection, true);
+            $this->eventDispatcher->dispatch(new AutonumerationCancelledEvent($module->getCourse()->getId()));
 
             $this->addFlash('success', 'Добавлена новая страница');
 
@@ -53,6 +57,7 @@ class ModuleSectionController extends MobileController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $this->moduleSectionRepository->save($moduleSection, true);
+            $this->eventDispatcher->dispatch(new AutonumerationCancelledEvent($moduleSection->getModule()->getCourse()->getId()));
 
             $this->addFlash('success', 'Страница обновлена');
 
@@ -71,6 +76,7 @@ class ModuleSectionController extends MobileController
     public function adminDeleteModuleSection(ModuleSection $moduleSection): Response
     {
         $moduleId = $moduleSection->getModule()->getId();
+        $this->eventDispatcher->dispatch(new AutonumerationCancelledEvent($moduleSection->getModule()->getCourse()->getId()));
         $this->moduleSectionRepository->remove($moduleSection, true);
 
         $this->addFlash('success', 'Страница удалена');

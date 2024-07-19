@@ -57,6 +57,7 @@
         <tr>
             <th>Id</th>
             <th>Тип</th>
+            <th>Ном</th>
             <th>Наименование</th>
             <th>Описание</th>
             <th>Профиль</th>
@@ -76,6 +77,11 @@
                             <img src="{{ asset('svg/key.svg') }}">
                         {% elseif course.type == 2 %}
                             <img src="{{ asset('svg/game.svg') }}">
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if course.autonumerationCompleted %}
+                            <image src="{{ asset('svg/check-box.svg') }}">
                         {% endif %}
                     </td>
                     <td>

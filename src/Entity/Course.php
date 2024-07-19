@@ -17,7 +17,7 @@ class Course
 
     public const CLASSIC = 1;
     public const INTERACTIVE = 2;
-    
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
@@ -45,6 +45,9 @@ class Course
 
     #[ORM\OneToMany(mappedBy: 'course', targetEntity: Ticket::class, orphanRemoval: true)]
     private Collection $tickets;
+
+    #[ORM\Column(type: Types::SMALLINT, length: 1)]
+    private bool $autonumerationCompleted = false;
 
     public function __construct()
     {
@@ -159,6 +162,18 @@ class Course
                 $ticket->setCourse(null);
             }
         }
+
+        return $this;
+    }
+
+    public function isAutonumerationCompleted(): bool
+    {
+        return $this->autonumerationCompleted;
+    }
+
+    public function setAutonumerationCompleted(bool $autonumerationCompleted): self
+    {
+        $this->autonumerationCompleted = $autonumerationCompleted;
 
         return $this;
     }

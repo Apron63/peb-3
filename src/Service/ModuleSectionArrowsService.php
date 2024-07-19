@@ -6,6 +6,7 @@ use App\Entity\Course;
 use App\Entity\Permission;
 use App\Entity\User;
 use App\Event\ActionLogEvent;
+use App\Repository\CourseRepository;
 use App\Repository\ModuleRepository;
 use App\Repository\ModuleSectionRepository;
 use App\Service\CourseService;
@@ -19,6 +20,7 @@ class ModuleSectionArrowsService
     public function __construct(
         private readonly ModuleSectionRepository $moduleSectionRepository,
         private readonly ModuleRepository $moduleRepository,
+        private readonly CourseRepository $courseRepository,
         private readonly CourseService $courseService,
         private readonly EventDispatcherInterface $eventDispatcher,
     ) {}
@@ -99,6 +101,9 @@ class ModuleSectionArrowsService
 
             $this->moduleSectionRepository->save($moduleSection, true);
         }
+
+        $course->setAutonumerationCompleted(true);
+        $this->courseRepository->save($course, true);
 
         $this->eventDispatcher->dispatch(new ActionLogEvent(
             $user,

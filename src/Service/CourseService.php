@@ -3,13 +3,15 @@
 namespace App\Service;
 
 use App\Entity\Course;
-use App\Entity\Module;
-use App\Entity\Permission;
 use App\Entity\CourseTheme;
+use App\Entity\Module;
 use App\Entity\ModuleSection;
-use App\Repository\ModuleRepository;
+use App\Entity\Permission;
+use App\Event\AutonumerationCancelledEvent;
 use App\Repository\CourseThemeRepository;
+use App\Repository\ModuleRepository;
 use App\Repository\ModuleSectionRepository;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 class CourseService
 {
@@ -17,6 +19,7 @@ class CourseService
         private readonly ModuleSectionRepository $moduleSectionRepository,
         private readonly ModuleRepository $moduleRepository,
         private readonly CourseThemeRepository $courseThemeRepository,
+        private readonly EventDispatcherInterface $eventDispatcher,
     ) {}
 
     public function getClassicCourseTheme(Course $course): ?int
@@ -70,6 +73,8 @@ class CourseService
 
     public function saveModuleOrder(Course $course, string $sortOrder): void
     {
+        $sortOrderChanged = false;
+
         $moduleSortOrders = json_decode($sortOrder, true);
 
         foreach($this->moduleRepository->getModules($course) as $sortedModule) {
@@ -80,10 +85,21 @@ class CourseService
             }
 
             if (isset($moduleSortOrders[$module->getId()])) {
-                $module->setSortOrder($moduleSortOrders[$module->getId()]);
+                $oldSortOrder = $module->getSortOrder();
+                $newSortOrder = $moduleSortOrders[$module->getId()];
+
+                if ($oldSortOrder !== $newSortOrder) {
+                    $sortOrderChanged = true;
+                }
+
+                $module->setSortOrder($newSortOrder);
 
                 $this->moduleRepository->save($module, true);
             }
+        }
+
+        if ($sortOrderChanged) {
+            $this->eventDispatcher->dispatch(new AutonumerationCancelledEvent($course->getId()));
         }
     }
 

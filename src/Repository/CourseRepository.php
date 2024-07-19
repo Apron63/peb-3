@@ -69,6 +69,7 @@ class CourseRepository extends ServiceEntityRepository
                 '(SELECT count(t) FROM App\Entity\Ticket t WHERE t.course = c.id) AS ticketCnt',
                 'IDENTITY (c.profile) AS profileId',
                 'c.type',
+                'c.autonumerationCompleted',
             )
             ->leftJoin(Profile::class, 'p', Join::WITH, 'p.id = c.profile');
 

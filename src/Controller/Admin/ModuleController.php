@@ -2,16 +2,18 @@
 
 namespace App\Controller\Admin;
 
+use App\Decorator\MobileController;
 use App\Entity\Course;
 use App\Entity\Module;
-use App\Service\TicketService;
+use App\Event\AutonumerationCancelledEvent;
 use App\Form\Admin\ModuleEditType;
-use App\Decorator\MobileController;
 use App\Repository\ModuleRepository;
 use App\Repository\ModuleSectionRepository;
+use App\Service\TicketService;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
@@ -21,6 +23,7 @@ class ModuleController extends MobileController
         private readonly ModuleRepository $moduleRepository,
         private readonly ModuleSectionRepository $moduleSectionRepository,
         private readonly TicketService $ticketService,
+        private readonly EventDispatcherInterface $eventDispatcher,
     ) {}
 
     #[Route('/admin/module/add/{id<\d+>}/', name: 'admin_module_create')]
@@ -34,6 +37,7 @@ class ModuleController extends MobileController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $this->moduleRepository->save($module, true);
+            $this->eventDispatcher->dispatch(new AutonumerationCancelledEvent($course->getId()));
 
             $this->addFlash('success', 'Модуль добавлен');
 
@@ -56,6 +60,7 @@ class ModuleController extends MobileController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $this->moduleRepository->save($module, true);
+            $this->eventDispatcher->dispatch(new AutonumerationCancelledEvent($module->getCourse()->getId()));
 
             $this->addFlash('success', 'Модуль обновлен');
 
@@ -75,7 +80,9 @@ class ModuleController extends MobileController
     public function adminDeleteModule(Module $module): Response
     {
         $courseId = $module->getCourse()->getId();
+        $this->eventDispatcher->dispatch(new AutonumerationCancelledEvent($courseId));
         $this->moduleRepository->remove($module, true);
+
         $this->addFlash('success', 'Модуль удален');
         return $this->redirectToRoute('admin_course_edit', ['id' => $courseId]);
     }
