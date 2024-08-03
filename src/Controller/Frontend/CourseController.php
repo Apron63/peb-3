@@ -95,7 +95,7 @@ class CourseController extends AbstractController
         $infoName = $this->getParameter('course_upload_directory') . '/' . $permission->getCourse()->getId() . '/' . $fileName;
 
         if (! file_exists($infoName)) {
-            throw new NotFoundHttpException();
+            throw new NotFoundHttpException('File Not Found');
         }
 
         return $this->render('frontend/course/_storage.html.twig', [

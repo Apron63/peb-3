@@ -46,7 +46,7 @@ class Course
     #[ORM\OneToMany(mappedBy: 'course', targetEntity: Ticket::class, orphanRemoval: true)]
     private Collection $tickets;
 
-    #[ORM\Column(type: Types::SMALLINT, length: 1)]
+    #[ORM\Column]
     private bool $autonumerationCompleted = false;
 
     public function __construct()
