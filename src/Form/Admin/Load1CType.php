@@ -7,6 +7,7 @@ use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Validator\Constraints\File;
+use Symfony\Component\Validator\Constraints\NotBlank;
 
 class Load1CType extends AbstractType
 {
@@ -18,6 +19,7 @@ class Load1CType extends AbstractType
                 'mapped' => false,
                 'required' => false,
                 'constraints' => [
+                    new NotBlank(),
                     new File([
                         'maxSize' => '100M',
                         'mimeTypes' => [
