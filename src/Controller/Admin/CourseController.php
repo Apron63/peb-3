@@ -2,24 +2,25 @@
 
 namespace App\Controller\Admin;
 
+use App\Decorator\MobileController;
 use App\Entity\Course;
 use App\Entity\User;
-use App\Message\CourseCopyMessage;
-use App\Service\CourseService;
-use App\Service\FileUploadService;
-use App\Service\TicketService;
 use App\Form\Admin\CourseEditType;
-use App\Decorator\MobileController;
+use App\Message\CourseCopyMessage;
+use App\Repository\CourseInfoRepository;
 use App\Repository\CourseRepository;
+use App\Repository\CourseThemeRepository;
+use App\Repository\ModuleInfoRepository;
 use App\Repository\ModuleRepository;
-use App\Repository\TicketRepository;
-use App\Service\ModuleTicketService;
 use App\Repository\ProfileRepository;
 use App\Repository\QuestionsRepository;
-use App\Repository\CourseInfoRepository;
-use App\Repository\ModuleInfoRepository;
-use App\Repository\CourseThemeRepository;
+use App\Repository\TicketRepository;
+use App\Service\CourseService;
+use App\Service\FileUploadService;
 use App\Service\ModuleSectionArrowsService;
+use App\Service\ModuleTicketService;
+use App\Service\TicketService;
+use App\Trait\UrlSaveTrait;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -31,6 +32,8 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 class CourseController extends MobileController
 {
+    use UrlSaveTrait;
+
     public function __construct(
         private readonly CourseRepository $courseRepository,
         private readonly ProfileRepository $profileRepository,
@@ -75,6 +78,8 @@ class CourseController extends MobileController
     #[IsGranted('ROLE_SUPER_ADMIN')]
     public function create(Request $request): Response
     {
+        $this->saveUrl($request);
+
         $course = new Course();
         $form = $this->createForm(CourseEditType::class, $course);
         $form->handleRequest($request);
@@ -84,7 +89,7 @@ class CourseController extends MobileController
 
             $this->addFlash('success', 'Курс добавлен');
 
-            return $this->redirectToRoute('admin_course_list');
+            return $this->getRedirectUrl($request, 'admin_course_list');
         }
 
         return $this->render('admin/course/edit.html.twig', [
@@ -96,6 +101,8 @@ class CourseController extends MobileController
     #[IsGranted('ROLE_SUPER_ADMIN')]
     public function adminCourseEdit(Request $request, Course $course): Response
     {
+        $this->saveUrl($request);
+
         $form = $this->createForm(CourseEditType::class, $course);
         $form->handleRequest($request);
 
@@ -119,7 +126,7 @@ class CourseController extends MobileController
 
             $this->addFlash('success', 'Курс обновлен');
 
-            return $this->redirectToRoute('admin_course_list');
+            return $this->getRedirectUrl($request, 'admin_course_list');
         }
 
         if (Course::INTERACTIVE === $course->getType()) {
@@ -155,19 +162,23 @@ class CourseController extends MobileController
 
     #[Route('/admin/course/delete/{id<\d+>}/', name: 'admin_course_delete')]
     #[IsGranted('ROLE_SUPER_ADMIN')]
-    public function adminCourseDelete(Course $course): Response
+    public function adminCourseDelete(Request $request, Course $course): Response
     {
+        $this->saveUrl($request);
+
         $this->courseRepository->remove($course, true);
 
         $this->addFlash('success', 'Курс удален');
 
-        return $this->redirectToRoute('admin_course_list');
+        return $this->getRedirectUrl($request, 'admin_course_list');
     }
 
     #[Route('/admin/course/copy/{id<\d+>}/', name: 'admin_course_copy')]
     #[IsGranted('ROLE_SUPER_ADMIN')]
-    public function adminCourseCopy(Course $course): Response
+    public function adminCourseCopy(Request $request, Course $course): Response
     {
+        $this->saveUrl($request);
+
         /** @var User $user */
         $user = $this->getUser();
 
@@ -181,7 +192,7 @@ class CourseController extends MobileController
 
         $this->addFlash('success', 'Задача на копирование курса поставлена в очередь');
 
-        return $this->redirectToRoute('admin_course_list');
+        return $this->getRedirectUrl($request, 'admin_course_list');
     }
 
     #[Route('admin/course/autonumeration/{id<\d+>}/', name: 'admin_course_autonumeration')]
