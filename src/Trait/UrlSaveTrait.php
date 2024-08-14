@@ -16,9 +16,7 @@ trait UrlSaveTrait
         $session = $request->getSession();
         $this->returnUrl = $session->get('returnUrl');
 
-        if (null === $this->returnUrl) {
-            $session->set('returnUrl', $request->headers->get('referer'));
-        }
+        $session->set('returnUrl', $request->headers->get('referer'));
     }
 
     public function getRedirectUrl(Request $request, string $defaultRoute): RedirectResponse
