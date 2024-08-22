@@ -52,6 +52,11 @@ class PermissionBatchCreateType extends AbstractType
             ->add('course', EntityType::class, [
                 'mapped' => false,
                 'class' => Course::class,
+                'query_builder' => function (EntityRepository $er) {
+                    return $er->createQueryBuilder('c')
+                        ->where('c.forDemo = 0 AND c.hidden = 0')
+                        ->orderBy('c.shortName', 'ASC');
+                },
                 'label' => 'Курс',
                 'multiple' => true,
                 'attr' => [

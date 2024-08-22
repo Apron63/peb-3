@@ -52,6 +52,11 @@ class PermissionEditType extends AbstractType
             ])
             ->add('course', EntityType::class, [
                 'class' => Course::class,
+                'query_builder' => function (EntityRepository $er) {
+                    return $er->createQueryBuilder('c')
+                        ->where('c.forDemo = 0 AND c.hidden = 0')
+                        ->orderBy('c.shortName', 'ASC');
+                },
                 'label' => 'Курс',
                 'attr' => [
                     'class' => 'form-select',

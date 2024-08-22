@@ -72,19 +72,29 @@ class CourseEditType extends AbstractType
                     ])
                 ],
             ])
-           ->add('forDemo', CheckboxType::class, [
-               'label' => 'Демо-версия',
-               'required' => false,
-               'attr' => [
-                   'class' => 'form-check-input',
-               ],
-               'label_attr' => [
-                   'class' => 'form-check-label',
-               ],
-           ])
-           ->add('sortOrder', HiddenType::class, [
-               'mapped' => false,
-           ]);
+            ->add('forDemo', CheckboxType::class, [
+                'label' => 'Демо-версия',
+                'required' => false,
+                'attr' => [
+                    'class' => 'form-check-input',
+                ],
+                'label_attr' => [
+                    'class' => 'form-check-label',
+                ],
+            ])
+            ->add('hidden', CheckboxType::class, [
+                'label' => 'Скрыть',
+                'required' => false,
+                'attr' => [
+                    'class' => 'form-check-input',
+                ],
+                'label_attr' => [
+                    'class' => 'form-check-label',
+                ],
+            ])
+            ->add('sortOrder', HiddenType::class, [
+                'mapped' => false,
+            ]);
 
         if ($options['data']->getId() === null) {
             $builder->add('type', ChoiceType::class, [

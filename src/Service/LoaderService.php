@@ -230,6 +230,10 @@ class LoaderService
                 $firstLine = false;
             }
 
+            if (empty(current($str))) {
+                continue;
+            }
+
             if (count($str) === 11) {
                 // Формат с email
                 $tmp['orderNo'] =  $str[0];

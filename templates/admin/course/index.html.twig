@@ -57,7 +57,8 @@
         <tr>
             <th>Id</th>
             <th>Тип</th>
-            <th>Ном</th>
+            <th title="Автонумерация выполнена">Ном</th>
+            <th title="Скрытый - курс не будет показан в назначении курсов слушателям">Скр</th>
             <th>Наименование</th>
             <th>Описание</th>
             <th>Профиль</th>
@@ -81,6 +82,11 @@
                     </td>
                     <td>
                         {% if course.autonumerationCompleted %}
+                            <image src="{{ asset('svg/check-box.svg') }}">
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if course.hidden %}
                             <image src="{{ asset('svg/check-box.svg') }}">
                         {% endif %}
                     </td>

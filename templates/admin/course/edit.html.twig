@@ -61,7 +61,15 @@
                 {{ form_widget(form.forDemo) }}
             </div>
         </div>
-        
+
+        <div class="col-12 mb-3">
+            <div class="form-check form-switch">
+                <span class="text-danger">{{ form_errors(form.hidden) }}</span>
+                {{ form_label(form.hidden) }}
+                {{ form_widget(form.hidden) }}
+            </div>
+        </div>
+
         <div class=row>
             {% if form.vars['value'].image is not empty %}
                 <div class=col-3>

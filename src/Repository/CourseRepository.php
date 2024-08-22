@@ -70,6 +70,7 @@ class CourseRepository extends ServiceEntityRepository
                 'IDENTITY (c.profile) AS profileId',
                 'c.type',
                 'c.autonumerationCompleted',
+                'c.hidden',
             )
             ->leftJoin(Profile::class, 'p', Join::WITH, 'p.id = c.profile');
 
@@ -104,7 +105,7 @@ class CourseRepository extends ServiceEntityRepository
     {
         return $this->createQueryBuilder('c')
             ->select('c.id', 'c.shortName', 'IDENTITY (c.profile) AS profileId')
-            ->where('c.forDemo = 0')
+            ->where('c.forDemo = 0 AND c.hidden = 0')
             ->orderBy('c.name')
             ->setCacheable(true)
             ->getQuery()

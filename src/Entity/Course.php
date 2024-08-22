@@ -49,6 +49,9 @@ class Course
     #[ORM\Column]
     private bool $autonumerationCompleted = false;
 
+    #[ORM\Column]
+    private bool $hidden = false;
+
     public function __construct()
     {
         $this->tickets = new ArrayCollection();
@@ -174,6 +177,18 @@ class Course
     public function setAutonumerationCompleted(bool $autonumerationCompleted): self
     {
         $this->autonumerationCompleted = $autonumerationCompleted;
+
+        return $this;
+    }
+
+    public function isHidden(): bool
+    {
+        return $this->hidden;
+    }
+
+    public function setHidden(bool $hidden): self
+    {
+        $this->hidden = $hidden;
 
         return $this;
     }
