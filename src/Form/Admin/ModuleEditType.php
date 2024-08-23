@@ -8,6 +8,8 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\Length;
+use Symfony\Component\Validator\Constraints\NotBlank;
 
 class ModuleEditType extends AbstractType
 {
@@ -24,6 +26,12 @@ class ModuleEditType extends AbstractType
                 ],
                 'label_attr' => [
                     'class' => 'col-sm-2 col-form-label'
+                ],
+                'constraints' => [
+                    new Length([
+                        'max' => 255,
+                    ]),
+                    new NotBlank(),
                 ],
             ])
             ->add('submit', SubmitType::class, [

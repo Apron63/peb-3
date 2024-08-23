@@ -11,6 +11,8 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\File;
+use Symfony\Component\Validator\Constraints\Length;
+use Symfony\Component\Validator\Constraints\NotBlank;
 use Trsteel\CkeditorBundle\Form\Type\CkeditorType;
 
 class ModuleSectionPageEditType extends AbstractType
@@ -29,6 +31,12 @@ class ModuleSectionPageEditType extends AbstractType
                 'label_attr' => [
                     'class' => 'col-sm-2 col-form-label'
                 ],
+                'constraints' => [
+                    new Length([
+                        'max' => 255,
+                    ]),
+                    new NotBlank(),
+                ],
             ])
             ->add('url', TextType::class, [
                 'required' => false,
@@ -41,6 +49,12 @@ class ModuleSectionPageEditType extends AbstractType
                 ],
                 'label_attr' => [
                     'class' => 'col-sm-2 col-form-label'
+                ],
+                'constraints' => [
+                    new Length([
+                        'max' => 255,
+                    ]),
+                    new NotBlank(),
                 ],
             ])
             ->add('filename', FileType::class, [
