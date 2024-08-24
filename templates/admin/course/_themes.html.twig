@@ -5,6 +5,9 @@
             <a class="btn btn-outline-success" href="{{ path('admin_course_theme_create', {id: course.id}) }}">
                 Добавить новую тему
             </a>
+            <a class="btn btn-outline-danger" href="{{ path('admin_course_load_question', {id: course.id}) }}" onclick="return window.confirm('Подтвердите действие');">
+                Загрузить вопросы
+            </a>
         </div>
     {% endif %}
     <div class="row">

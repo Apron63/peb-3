@@ -6,7 +6,9 @@ use App\Decorator\MobileController;
 use App\Entity\Course;
 use App\Entity\User;
 use App\Form\Admin\CourseEditType;
+use App\Form\Admin\LoadCourseQuestionType;
 use App\Message\CourseCopyMessage;
+use App\Message\CourseUploadMessage;
 use App\Repository\CourseInfoRepository;
 use App\Repository\CourseRepository;
 use App\Repository\CourseThemeRepository;
@@ -15,6 +17,7 @@ use App\Repository\ModuleRepository;
 use App\Repository\ProfileRepository;
 use App\Repository\QuestionsRepository;
 use App\Repository\TicketRepository;
+use App\Service\CourseDownloadService;
 use App\Service\CourseService;
 use App\Service\FileUploadService;
 use App\Service\ModuleSectionArrowsService;
@@ -50,6 +53,7 @@ class CourseController extends MobileController
         private readonly FileUploadService $fileUploadService,
         private readonly MessageBusInterface $messageBus,
         private readonly ModuleSectionArrowsService $moduleSectionArrowsService,
+        private readonly CourseDownloadService $courseDownloadService,
         private readonly string $courseUploadPath,
     ) {}
 
@@ -196,6 +200,7 @@ class CourseController extends MobileController
     }
 
     #[Route('admin/course/autonumeration/{id<\d+>}/', name: 'admin_course_autonumeration')]
+    #[IsGranted('ROLE_SUPER_ADMIN')]
     public function getInfoModule(Course $course): RedirectResponse
     {
         $user = $this->getUser();
@@ -205,5 +210,41 @@ class CourseController extends MobileController
         $this->addFlash('success', 'Автонумерация выполнена');
 
         return $this->redirectToRoute('admin_course_edit', ['id' => $course->getId()]);
+    }
+
+    #[Route('admin/course/load_question/{id<\d+>}/', name: 'admin_course_load_question')]
+    #[IsGranted('ROLE_SUPER_ADMIN')]
+    public function loadQuestion(Course $course, Request $request): Response
+    {
+         /** @var User $user */
+         $user = $this->getUser();
+
+         $form = $this->createForm(LoadCourseQuestionType::class);
+         $form->handleRequest($request);
+
+         if (
+             $form->isSubmitted()
+             && $form->isValid()
+             && $form->get('filename')->getData() !== null
+         ) {
+             $this->courseDownloadService->downloadXmlFile($form->get('filename')->getData(), $course, false);
+
+             $this->messageBus->dispatch(
+                 new CourseUploadMessage(
+                     $form->get('filename')->getData()->getClientOriginalName(),
+                     $user->getId(),
+                     $course->getId(),
+                     true,
+                 )
+             );
+
+             $this->addFlash('success', 'Загрузка вопросов для курса добавлена в очередь заданий');
+
+             return $this->redirectToRoute('admin_course_edit', ['id' => $course->getId()]);
+         }
+
+         return $this->mobileRender('admin/load-question/index.html.twig', [
+             'form' => $form->createView(),
+         ]);
     }
 }

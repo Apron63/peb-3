@@ -49,7 +49,7 @@ class XmlDownloader
         $this->reader->close();
 
         return [
-            'courseName' => $this->courseName,
+            'courseName' => $content['useCurrentCourseName'] ? null : $this->courseName,
             'themes' => $this->themes,
         ];
     }

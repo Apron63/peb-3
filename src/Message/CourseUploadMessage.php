@@ -8,6 +8,7 @@ readonly class CourseUploadMessage
         private string $fileName,
         private int $userId,
         private int $courseId,
+        private bool $useCurrentCourseName = false,
     ) {}
 
     public function getContent(): array
@@ -16,6 +17,7 @@ readonly class CourseUploadMessage
             'filename' => $this->fileName,
             'userId' => $this->userId,
             'courseId' => $this->courseId,
+            'useCurrentCourseName' => $this->useCurrentCourseName,
         ];
     }
 }

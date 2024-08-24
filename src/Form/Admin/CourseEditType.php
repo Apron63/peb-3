@@ -5,17 +5,19 @@ namespace App\Form\Admin;
 use App\Entity\Course;
 use App\Entity\Profile;
 use App\Repository\ProfileRepository;
-use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
-use Symfony\Component\Validator\Constraints\File;
-use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Form\Extension\Core\Type\FileType;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
-use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\File;
+use Symfony\Component\Validator\Constraints\Length;
+use Symfony\Component\Validator\Constraints\NotBlank;
 
 class CourseEditType extends AbstractType
 {
@@ -35,6 +37,12 @@ class CourseEditType extends AbstractType
                     'onfocus' => 'this.placeholder = ""',
                     'onblur' => 'this.placeholder = "Наименование (для админки)"',
                 ],
+                'constraints' => [
+                    new Length([
+                        'max' => 150,
+                    ]),
+                    new NotBlank(),
+                ],
             ])
             ->add('name', TextType::class, [
                 'required' => false,
@@ -43,6 +51,12 @@ class CourseEditType extends AbstractType
                     'placeholder' => 'Обозначение (для слушателя)',
                     'onfocus' => 'this.placeholder = ""',
                     'onblur' => 'this.placeholder = "Обозначение (для слушателя)"',
+                ],
+                'constraints' => [
+                    new Length([
+                        'max' => 1000,
+                    ]),
+                    new NotBlank(),
                 ],
             ])
             ->add('profile', EntityType::class, [
