@@ -54,7 +54,6 @@ class ModuleSectionPageEditType extends AbstractType
                     new Length([
                         'max' => 255,
                     ]),
-                    new NotBlank(),
                 ],
             ])
             ->add('filename', FileType::class, [
