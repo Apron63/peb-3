@@ -85,7 +85,7 @@ class CourseRepository extends ServiceEntityRepository
         }
 
         if (null !== $name) {
-            $queryBuilder->andWhere('c.name LIKE :name')
+            $queryBuilder->andWhere('(c.name LIKE :name OR c.shortName LIKE :name)')
                 ->setParameter('name', '%' . $name . '%');
         }
 
