@@ -73,13 +73,13 @@ class UserService
             ? $this->slugger->slug($user->getPatronymic())->lower()->toString()
             : null;
 
-        if (null === $patronymic) {
+        if (empty($patronymic)) {
             $login = substr($lastName, 0, 9) . $firstName[0];
-            $user->setFullName($user->getLastName() . ' ' . $user->getFirstName());
         } else {
             $login = substr($lastName, 0, 8) . $firstName[0] . $patronymic[0];
-            $user->setFullName($user->getLastName() . ' ' . $user->getFirstName() . ' ' . $user->getPatronymic());
         }
+        
+        $user->setFullName($user->getLastName() . ' ' . $user->getFirstName() . ' ' . $user->getPatronymic());
 
         $attempt = 1;
         while ($attempt < 1000) {
