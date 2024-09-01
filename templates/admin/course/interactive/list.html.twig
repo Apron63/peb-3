@@ -74,9 +74,17 @@
                 </div>
             </div>
 
+        <div class="col-12 mb-3">
+            <div class="form-check form-switch">
+                <span class="text-danger">{{ form_errors(form.hidden) }}</span>
+                {{ form_label(form.hidden) }}
+                {{ form_widget(form.hidden) }}
+            </div>
+        </div>
+
         </div>
     {% endif %}
-    
+
     <nav>
         <div class="nav nav-tabs" id="nav-modules-tab" role="tablist">
             <button class="nav-link active" id="nav-modules-tab" data-bs-toggle="tab"
@@ -118,7 +126,7 @@
             <p></p>
         </div>
     </div>
-    
+
     {% if form.vars['value'].id is not null %}
         <div class="form-group mb-3">
             {{ form_widget(form.submit) }}
