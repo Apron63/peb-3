@@ -73,7 +73,13 @@ class TestingService
             throw new NotFoundHttpException('Logger not found');
         }
 
-        $ticketsArray = json_decode($logger->getTicket()->getText()[0]);
+        $ticket = $logger->getTicket();
+
+        if (null === $ticket) {
+            throw new NotFoundHttpException('Ticket not found for course: ' . $logger->getPermission()->getCourse()->getId());
+        }
+
+        $ticketsArray = json_decode($ticket->getText()[0]);
 
         if ($courseType === Course::CLASSIC) {
             $ticketsArray = $this->transformTicketArray($ticketsArray);
