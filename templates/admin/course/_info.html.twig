@@ -32,14 +32,16 @@
                                 </button>
                                 <ul class="dropdown-menu">
                                     <li>
-                                        <a
-                                            class="dropdown-item color-item"
-                                            href="{{ path('view', {filename: info.fileName, courseId: info.course.id}) }}"
-                                            target="_blank"
-                                        >
-                                            <img src="{{ asset('svg/eye.svg') }}">
-                                            Просмотр
-                                        </a>
+                                        {% if info.fileName is not empty %}
+                                            <a
+                                                class="dropdown-item color-item"
+                                                href="{{ path('view', {filename: info.fileName, courseId: info.course.id}) }}"
+                                                target="_blank"
+                                            >
+                                                <img src="{{ asset('svg/eye.svg') }}">
+                                                Просмотр
+                                            </a>
+                                        {% endif %}
                                     </li>
                                     {% if is_granted('ROLE_SUPER_ADMIN') %}
                                         <li>

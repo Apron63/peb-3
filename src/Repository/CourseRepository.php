@@ -221,7 +221,7 @@ class CourseRepository extends ServiceEntityRepository
                 foreach ($theme->questions as $question) {
                     $this->getEntityManager()->getConnection()->executeQuery("
                         INSERT INTO questions (id, course_id, parent_id , description, type, help, nom)
-                        VALUES (NULL, {$courseId}, {$themeId}, '{$question->description}', {$question->type}, '{$question->help}', {$question->nom})
+                        VALUES (NULL, {$courseId}, {$themeId}, '{$this->clearText($question->description)}', {$question->type}, '{$this->clearText($question->help)}', {$question->nom})
                     ");
 
                     $questionId = $this->getEntityManager()->getConnection()->lastInsertId();
@@ -232,7 +232,7 @@ class CourseRepository extends ServiceEntityRepository
 
                         $this->getEntityManager()->getConnection()->executeQuery("
                             INSERT INTO answer (id, question_id , description, is_correct, nom)
-                            VALUES (NULL, {$questionId}, '{$answer->description}', {$status}, {$answer->nom})
+                            VALUES (NULL, {$questionId}, '{$this->clearText($answer->description)}', {$status}, {$answer->nom})
                         ");
                     }
                 }
@@ -271,7 +271,7 @@ class CourseRepository extends ServiceEntityRepository
         foreach ($theme->questions as $question) {
             $this->getEntityManager()->getConnection()->executeQuery("
                 INSERT INTO questions (id, course_id, parent_id , description, type, help, nom)
-                VALUES (NULL, {$courseId}, NULL, '{$question->description}', {$question->type}, '{$question->help}', {$question->nom})
+                VALUES (NULL, {$courseId}, NULL, '{$this->clearText($question->description)}', {$question->type}, '{$this->clearText($question->help)}', {$question->nom})
             ");
             $questionId = $this->getEntityManager()->getConnection()->lastInsertId();
 
@@ -281,7 +281,7 @@ class CourseRepository extends ServiceEntityRepository
 
                 $this->getEntityManager()->getConnection()->executeQuery("
                     INSERT INTO answer (id, question_id , description, is_correct, nom)
-                    VALUES (NULL, {$questionId}, '{$answer->description}', {$status}, {$answer->nom})
+                    VALUES (NULL, {$questionId}, '{$this->clearText($answer->description)}', {$status}, {$answer->nom})
                 ");
             }
         }
@@ -301,5 +301,10 @@ class CourseRepository extends ServiceEntityRepository
         }
 
         return $result;
+    }
+
+    private function clearText(string $source): string
+    {
+        return str_replace('\'', '"', $source);
     }
 }

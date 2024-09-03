@@ -74,7 +74,7 @@ class CourseController extends AbstractController
         return $this->render('frontend/course/_detail.html.twig', [
             'permission' => $permission,
             'content' => $this->renderView('frontend/course/_info-list.html.twig', [
-                'courseInfo' => $this->courseInfoRepository->findBy(['course' => $permission->getCourse()]),
+                'courseInfo' => $this->courseInfoRepository->getCourseInfoWhereNotEmpty($permission->getCourse()),
                 'permission' => $permission,
             ]),
         ]);
