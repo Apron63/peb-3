@@ -2,13 +2,14 @@
 
 namespace App\Repository;
 
-use App\Entity\User;
 use App\Entity\Course;
 use App\Entity\Permission;
+use App\Entity\User;
+use DateTime;
+use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\AbstractQuery;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\Security\Core\User\UserInterface;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 
 /**
  * @extends ServiceEntityRepository<Permission>
@@ -198,5 +199,21 @@ class PermissionRepository extends ServiceEntityRepository
             ->setParameter('permissionIds', $permissionIds)
             ->getQuery()
             ->getArrayResult();
+    }
+
+    /**
+     * @return Permission[]
+     */
+    public function getPermissionForReport(): array
+    {
+        $queryBuilder = $this->createQueryBuilder('p');
+
+        return $queryBuilder
+            ->where('p.createdAt BETWEEN :startDate AND :endDate')
+            ->setParameter('startDate', new DateTime('2024-07-11'))
+            ->setParameter('endDate', new DateTime('2024-09-12'))
+            ->orderBy('p.createdAt')
+            ->getQuery()
+            ->getResult();
     }
 }
