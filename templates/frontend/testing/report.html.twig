@@ -10,10 +10,12 @@
                 </tr>
             </thead>
             <tbody>
-                <tr>
-                    <td>Тестируемый:</td>
-                    <td>{{ logger.user.fullname }}</td>
-                </tr>
+                {% if logger.user.nameLess != true %}
+                    <tr>
+                        <td>Тестируемый:</td>
+                        <td>{{ logger.user.fullname }}</td>
+                    </tr>
+                {% endif %}
                 <tr>
                     <td>Организация:</td>
                     <td>{{ logger.user.organization }}</td>

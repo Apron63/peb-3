@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Form\Admin;
 
 use App\Entity\User;
@@ -204,6 +206,19 @@ class UserEditType extends AbstractType
                         'placeholder' => 'Активный',
                         'onfocus' => 'this.placeholder = ""',
                         'onblur' => 'this.placeholder = "Активный"',
+                    ],
+                    'label_attr' => [
+                        'class' => 'form-check-label'
+                    ],
+                ])
+                ->add('nameLess', CheckboxType::class, [
+                    'label' => 'Безымянный',
+                    'required' => false,
+                    'attr' => [
+                        'class' => 'form-check-input',
+                        'placeholder' => 'Безымянный',
+                        'onfocus' => 'this.placeholder = ""',
+                        'onblur' => 'this.placeholder = "Безымянный"',
                     ],
                     'label_attr' => [
                         'class' => 'form-check-label'

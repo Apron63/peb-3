@@ -1,10 +1,13 @@
 <a href="{{ path('profilePage') }}" class="header_profile">
+
     <div class="header_profile_fullname">
-        <div class="header_profile_lastname">{{ app.user.lastName }}</div>
-        <div class="header_profile_name">
-            <div class="header_profile_firstname">{{ app.user.firstName }}</div>
-            <div class="header_profile_middlename">{{ app.user.patronymic }}</div>
-        </div>
+        {% if app.user.nameLess != true %}
+            <div class="header_profile_lastname">{{ app.user.lastName }}</div>
+            <div class="header_profile_name">
+                <div class="header_profile_firstname">{{ app.user.firstName }}</div>
+                <div class="header_profile_middlename">{{ app.user.patronymic }}</div>
+            </div>
+        {% endif %}
     </div>
 
     {% if app.user.image is not null%}
@@ -19,4 +22,5 @@
             </div>
         </div>
     {% endif %}
+    
 </a>

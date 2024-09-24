@@ -16,11 +16,15 @@
                     <div class="results_data">
                         <div class="results_data_row">
                             <div class="results_data_row_name">Тестируемый:</div>
-                            <div class="results_data_row_value">{{ logger.user.fullname}}</div>
+                            {% if logger.user.nameLess != true %}
+                                <div class="results_data_row_value">{{ logger.user.fullname}}</div>
+                            {% endif %}
                         </div>
                         <div class="results_data_row">
                             <div class="results_data_row_name">Организация:</div>
-                            <div class="results_data_row_value">{{ logger.user.organization}}</div>
+                            {% if logger.user.nameLess != true %}
+                                <div class="results_data_row_value">{{ logger.user.organization}}</div>
+                            {% endif %}
                         </div>
                         <div class="results_data_row">
                             <div class="results_data_row_name">Результат:</div>
@@ -107,7 +111,7 @@
     {% include('frontend/components/footer.html.twig') %}
 
     <div class="overlay{% if showGreetings %} show{% endif %}" popup-element="overlay">
-        <div class="popup show" popup-element="popup">
+        <div class="popup{% if showGreetings %} show{% endif %}" popup-element="popup">
             <div class="result_success_icon">
                 <img src="{{ asset('img/firework.png') }}" alt="">
             </div>

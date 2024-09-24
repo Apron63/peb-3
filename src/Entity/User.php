@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Entity;
 
 use DateTime;
@@ -62,6 +64,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column]
     private bool $active = true;
 
+    #[ORM\Column]
+    private bool $nameLess = false;
+
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $email = null;
 
@@ -72,8 +77,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?self $createdBy = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    private ?string $image = null; 
-    
+    private ?string $image = null;
+
     #[ORM\Column(length: 50, nullable: true)]
     private ?string $sessionId = null;
 
@@ -239,6 +244,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setActive(bool $active): self
     {
         $this->active = $active;
+
+        return $this;
+    }
+
+    public function isNameLess(): bool
+    {
+        return $this->nameLess;
+    }
+
+    public function setNameLess(bool $nameLess): self
+    {
+        $this->nameLess = $nameLess;
 
         return $this;
     }
