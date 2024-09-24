@@ -39,6 +39,14 @@
         width: 100%;
     }
 
+    .survey-test_description {
+        width: 100%;
+    }
+
+    .survey-test-form {
+        width: 100%;
+    }
+
     .results_data_row {
         width: 100%;
     }
@@ -101,6 +109,11 @@
     .history_table_content .history_table_row .header.hidden {
         display: none;
     }
+
+    .faq_item {
+        width: 100%;
+    }
+
     .arrow_links {
         width: 100%
     }
@@ -192,7 +205,7 @@
         overflow: hidden;
     }
 
-        .demo-link_wrapper {
+    .demo-link_wrapper {
         position: relative;
         text-align: center;
         width: 100%;
@@ -242,8 +255,9 @@
         border-bottom: 2px solid transparent;
         border-radius: 50%;
         -webkit-animation: 1.5s linear 1s infinite loader;
-                animation: 1.5s linear 1s infinite loader;
+        animation: 1.5s linear 1s infinite loader;
     }
+
     .history_mobile_ajax {
         display: block;
     }
@@ -266,13 +280,14 @@
         border-bottom: 2px solid transparent;
         border-radius: 50%;
         -webkit-animation: 1.5s linear 1s infinite loader;
-                animation: 1.5s linear 1s infinite loader;
+        animation: 1.5s linear 1s infinite loader;
     }
 
     .control-questions_errors {
         color: red;
         text-align: center;
     }
+
     .history_display {
         display: none;
     }
@@ -390,6 +405,14 @@
 
     .test_form_answer {
         font-size: 14px;
+    }
+
+    .survey-test_description {
+        font-size: 14px;
+    }
+
+    .survey-test_button {
+        width: 100%;
     }
 
     .control-questions_item_buttons_wrapper {

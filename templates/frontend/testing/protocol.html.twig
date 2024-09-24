@@ -57,10 +57,24 @@
                             <div class="results_data_row_value">{{ logger.beginAt | date('d.m.Y H:i:s') }}</div>
                         </div>
                     </div>
-                    {% if hasSuccess %}
-                        <a href="{{ path('app_frontend_testing_success_print', {id: logger.permission.id}) }}">Скачать протокол первой успешной попытки</a>
-                    {% endif %}
-                    <a href="{{ path('app_frontend_testing_print', {id: logger.id}) }}">Скачать протокол крайней попытки</a>
+                    <div class="results_protocols_wrapper">
+                        {% if hasSuccess %}
+                            <a
+                                href="{{ path('app_frontend_testing_success_print', {id: logger.permission.id}) }}"
+                                class="results_protocols_item"
+                                download
+                            >
+                                Скачать протокол первой успешной попытки
+                            </a>
+                        {% endif %}
+                        <a
+                            href="{{ path('app_frontend_testing_print', {id: logger.id}) }}"
+                            class="results_protocols_item"
+                            download
+                        >
+                            Скачать протокол крайней попытки
+                        </a>
+                    </div>
                     <div class="results_table">
                         <div class="results_table_header">
                             <div class="results_table_row">
@@ -77,7 +91,7 @@
                                     <div class="question">{{ question.qText | raw }}</div>
                                     <div class="answer">
                                         {% for answer in question.aText %}
-                                            <p>{{ answer |raw }}</p>
+                                            <p>{{ answer | raw }}</p>
                                         {% endfor %}
                                     </div>
                                     <div class="result">{% if question['isCorrect'] %}Правильно{% else %}Неправильно{% endif %}</div>
@@ -90,10 +104,27 @@
         </div>
     </div>
 
-
-
     {% include('frontend/components/footer.html.twig') %}
 
-    <div class="overlay" popup-element="overlay"></div>
+    <div class="overlay{% if showGreetings %} show{% endif %}" popup-element="overlay">
+        <div class="popup show" popup-element="popup">
+            <div class="result_success_icon">
+                <img src="{{ asset('img/firework.png') }}" alt="">
+            </div>
+            <div class="result_success_congratulation">Поздравляем!</div>
+            <div class="result_success_header">Вы успешно прошли итоговый тест!</div>
+            <div class="result_success_decription">
+                <p>Обучаться по курсу, проходить все задания и тесты повторно можно неограниченное количество раз,
+                    пока не закончится срок действия курса.</p>
+                <p>Нам будет приятно, если вы оставите отзыв о курсе. Спасибо ❤</p>
+            </div>
+            <div class="result_success_button">
+                <a class="red_button" href="{{ path('app_frontend_survey', {id: permissionId}) }}" target="_blank">Оставить отзыв</a>
+            </div>
+            <div class="popup_close_wrapper">
+                <a class="popup_close" popup-element="popup-close">закрыть</a>
+            </div>
+        </div>
+    </div>
 
 {% endblock %}

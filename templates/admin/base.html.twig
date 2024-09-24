@@ -85,6 +85,20 @@
                     >
                         Инструменты
                     </a>
+
+                    <a
+                        href="{{ path('admin_survey') }}"
+                        class="list-group-item list-group-item-action list-group-item-light"
+                    >
+                        Статистика по опросам
+                    </a>
+
+                    <a
+                        href="{{ path('admin_faq_list') }}"
+                        class="list-group-item list-group-item-action list-group-item-light"
+                    >
+                        Полезное
+                    </a>
                 {% else %}
                     <a
                         href="{{ path('admin_dashboard_mail_list') }}"

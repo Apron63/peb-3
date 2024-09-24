@@ -21,13 +21,19 @@
             {% endif %}
         </div>
         <div class="results">
-            <span class="header">результат: </span>
-            {{ getResultDescription(item.permission.id).result }}
+            <div class="results_row">
+                <span class="header">результат: </span>
+                {{ getResultDescription(item.permission.id).result }}
+            </div>
             {% if item.permission.stage == 3 %}
-                <a href="{{ path('app_frontend_testing_success_print', {id: item.permission.id}) }}">(Скачать протокол первой успешной попытки)</a>
+                <div class="results_row">
+                    <a href="{{ path('app_frontend_testing_success_print', {id: item.permission.id}) }}">Скачать протокол первой успешной попытки</a>
+                </div>
             {% endif %}
             {% if item.logger is not empty %}
-                <a href="{{ path('app_frontend_testing_print', {id: item.logger.id}) }}">(Скачать протокол крайней попытки)</a>
+                 <div class="results_row">
+                    <a href="{{ path('app_frontend_testing_print', {id: item.logger.id}) }}">Скачать протокол крайней попытки</a>
+                </div>
             {% endif %}
         </div>
         <div class="duration">

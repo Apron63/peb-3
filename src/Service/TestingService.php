@@ -179,6 +179,17 @@ class TestingService
         return $skipped;
     }
 
+    public function checkPermissionIfFirstTimeTesting(Permission $permission): Permission
+    {
+        if (! $permission->isSurveyEnabled()) {
+            $permission->setSurveyEnabled(true);
+
+            $this->permissionRepository->save($permission, true);
+        }
+
+        return $permission;
+    }
+
     public function getFirstSuccessfullyLogger(Permission $permission, UserInterface $user): ?Logger
     {
         return $this->loggerRepository->findFirstSuccessfullyLogger($permission, $user);

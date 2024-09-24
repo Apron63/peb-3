@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Service;
 
 use App\Entity\CourseTheme;
@@ -31,12 +33,12 @@ class MyProgramsService
             $themeId = null;
             if (!$hasMultipleThemes) {
                 $courseTheme = $this->courseThemeRepository->findOneBy(['course' => $permission->getCourse()]);
-                
+
                 if ($courseTheme instanceof CourseTheme) {
                     $themeId = $courseTheme->getId();
                 }
             }
-            
+
             $result[] = [
                 'id' => $permission->getId(),
                 'name' => $permission->getCourse()->getName(),
@@ -47,6 +49,7 @@ class MyProgramsService
                 'hasMultipleThemes' => $hasMultipleThemes,
                 'themeId' => $themeId,
                 'courseMenu' => $this->courseService->checkForCourseStage($permission, false),
+                'surveyEnabled' => $permission->isSurveyEnabled(),
             ];
         }
 

@@ -100,7 +100,7 @@ class ReportGeneratorService
 
         $item = 2;
         $nom = 1;
-        
+
         foreach($data as $row) {
             if ($courseName !== $row['shortName']) {
                 $workSheet->setCellValue('A' . $item, '');

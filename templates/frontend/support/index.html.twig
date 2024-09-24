@@ -12,22 +12,22 @@
                 <div class="support">
                     <h1>У вас возникли вопросы?</h1>
                     <div class="support_description">В случае  возникновения вопросов обращайтесь по телефону или через форму обратной связи</div>
-                    <h2>Служба технической поддержки:</h2>
-                    <div class="support_contacts">
+                    <h2>Служба поддержки:</h2>
+                     <div class="support_contacts">
                         <div class="support_contacts_row">
-                            Телефон: <a href="tel:+78462691526">+7 (846) 26-915-26</a> доб. 1103
+                            Телефон: <a href="tel:+79370771165">8-937-077-11-65</a>, <a href="tel:+78462691526">+7 (846) 26-915-26</a>
                         </div>
                         <div class="support_contacts_row">
-                            Email: <a href="mailto:uc@safety63.ru">uc@safety63.ru</a>
+                            Email: <a href="mailto:support@safety63.ru">support@safety63.ru</a>
                         </div>
                         <div class="support_contacts_row">
-                            График работы: пн-чт: с 08:00 до 17:00, пт: с 08:00 до 16:00
+                            График работы: с 8:00 до 22:00 без перерывов и выходных
                         </div>
                     </div>
                     <form class="support_form" form-elem="form" action="{{ path('app_frontend_support') }}" method="POST">
 
                         <label class="support_form_label{% if (form_errors(form.name)) is not empty %} error{% endif %}" form-elem="label">
-                            <div class="support_form_name">ФИО полностью</div>
+                            <div class="support_form_name">Ваше имя</div>
                             <input type="text" name="support[name]" class="support_form_input" form-elem="input-text" value="{{ form.vars.data.name }}">
                             <div class="support_form_error">{{ form_errors(form.name) }}</div>
                         </label>

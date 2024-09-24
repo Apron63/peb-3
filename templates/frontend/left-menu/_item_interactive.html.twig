@@ -1,7 +1,7 @@
 <li class="programs-menu_item {% if permission.courseId == activeCourse %}active{% endif %}" menu-elem="programs-menu-item">
-    <a 
-        href="{{ path('app_frontend_course', {id: permission.id}) }}" 
-        class="programs-menu_item_header" 
+    <a
+        href="{{ path('app_frontend_course', {id: permission.id}) }}"
+        class="programs-menu_item_header"
         menu-elem="program-header"
     >
         {{ permission['name'] }}
@@ -12,14 +12,14 @@
                 <div class="modules-menu_item_header">
                     <a href="{{ path('app_frontend_course_view_list', {id: permission.id}) }}">Нормативные материалы</a>
                 </div>
-            </li> 
+            </li>
             {# TODO
                 {% for info in permission.courseInfo %}
                 <li class="modules-menu_item">
                     <div class="modules-menu_item_header">
                         <a href="{{ path('app_frontend_course_view_file', {id: info.course.id, fileName:  info.fileName, moduleTitle: info.name}) }}">{{ info.name }}</a>
                     </div>
-                </li> 
+                </li>
             {% endfor %} #}
         {% endif %}
 
@@ -38,7 +38,7 @@
                         </li>
                     {% endfor %}
                 </ul>
-            </li>    
+            </li>
         {% endfor %}
 
         <li class="modules-menu_item">
@@ -50,5 +50,14 @@
                 {% endif %}
             </div>
         </li>
+
+        {% if permission.surveyEnabled %}
+            <li class="modules-menu_item">
+                <div class="modules-menu_item_header">
+                    <a href="{{ path('app_frontend_survey', {id: permission.id}) }}">Опрос по курсу</a>
+                </div>
+            </li>
+        {% endif %}
+
     </ul>
 </li>

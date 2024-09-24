@@ -1,0 +1,55 @@
+{% extends 'admin/base.html.twig' %}
+
+{% block title %}Панель управления | Полезное{% endblock %}
+
+{% block breadcrumbs %}
+    <a href="{{ path('admin_homepage') }}">Панель управления</a>
+    <span>/</span>
+    <span>Полезное</span>
+{% endblock %}
+
+{% block content %}
+
+    <h3>Полезное</h3>
+
+    <div class="row">
+
+        <div class="col-3">
+            <a class="btn btn-outline-success" href="{{ path('admin_faq_create') }}">
+                Добавить вопрос
+            </a>
+        </div>
+
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Вопрос</th>
+                    <th></th>
+                </tr>
+            </thead>
+
+            <tbody>
+                {% for item in faqList %}
+                    <tr>
+                        <td>{{ item.id }}</td>
+                        <td>
+                            <a href="{{ path('admin_faq_edit', {id: item.id}) }}">{{ item.question }}</a>
+                        </td>
+                        <td>
+                            <a
+                                class="btn btn-outline-danger"
+                                href="{{ path('admin_faq_delete', {'id': item.id}) }}"
+                                onclick="return window.confirm('Подтвердите действие');"
+                            >
+                                <img src="{{ asset('svg/trash.svg') }}">
+                                Удалить
+                            </a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+{% endblock %}

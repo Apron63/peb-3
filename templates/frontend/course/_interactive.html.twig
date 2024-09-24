@@ -36,4 +36,18 @@
             </a>
         </div>
     </div>
+
+    {% if permission.surveyEnabled %}
+        <div class="program_files">
+            <a class="program_files_item" href="{{ path('app_frontend_survey', {id: permission.id}) }}">
+                <div class="program_files_item_image">
+                    <img src="{{ asset('img/checklist.svg') }}" alt="">
+                </div>
+                <div class="program_files_item_name">
+                    Опрос по курсу
+                </div>
+            </a>
+        </div>
+    {% endif %}
+
 </div>

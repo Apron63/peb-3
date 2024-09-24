@@ -1,0 +1,34 @@
+{% set rowNom = 1 %}
+
+<table border="1">
+    <thead>
+        <tr>
+            <th align="center">№</th>
+            <th align="center">Дата отзыва</th>
+            <th align="center">ФИО слушателя</th>
+            <th align="center">Организация</th>
+            <th align="center">Курс</th>
+            <th align="center">Курс полезен для Вас?</th>
+            <th align="center">Насколько материал курса соответствует вашим ожиданиям? Что бы вы предложили изменить/улучшить?</th>
+            <th align="center">Вам удобно и понятно пользоваться обучающей платформой?</th>
+            <th align="center">Ваши пожелания и предложения по обучающей платформе. Что нам изменить/улучшить в платформе?</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for row in data%}
+            <tr>
+                <td align="center">{{ rowNom }}</td>
+                <td>{{ row.createdAt | date('d.m.Y') }}</td>
+                <td>{{ row.user.fullName }}</td>
+                <td>{{ row.user.organization }}</td>
+                <td>{{ row.course.name }}</td>
+                <td>{{ row.question1 }}</td>
+                <td>{{ row.question2 }}</td>
+                <td>{{ row.question3 }}</td>
+                <td>{{ row.question4 }}</td>
+            </tr>
+
+            {% set rowNom = rowNom + 1 %}
+        {% endfor %}
+    </tbody>
+</table>

@@ -1,0 +1,151 @@
+{% extends 'frontend/base.html.twig' %}
+
+{% block title %}История обучения{% endblock %}
+
+{% block body %}
+    {% include('frontend/components/header.html.twig') %}
+
+    <div class="global-content">
+        {% include('frontend/components/background.html.twig') %}
+        <div class="wrapper container">
+           {{ render(path('app_frontend_left_menu', {'activeItem': 'my-programs', 'activeCourse': permission.course.id})) }}
+            <div class="content">
+                <div class="survey-test">
+                    <div class="survey-test_header">
+                        <h1>Опрос по курсу</h1>
+                    </div>
+                    <div class="survey-test_description">
+                        Ваши отзывы помогают нам меняться. Спасибо!<br/>
+                        Просим Вас оценить курс и удобство пользования нашей платформой. Благодарим за честность ❤
+                    </div>
+                    <form class="test-form survey-test-form" test-form-elem="form">
+                        <!--1 вопрос-->
+                        <div class="test_form_question_wrapper">
+                            <div class="test_form_question_number">
+                                1.
+                            </div>
+                            <div class="test_form_question">
+                                Курс полезен для Вас?
+                            </div>
+                        </div>
+                        <label class="test_form_label test_form_radio_wrapper">
+                            <input class="test_form_radio" type="radio" name="question1" value="Да"{% if survey.question1 == 'Да'%} checked{% endif %}>
+                            <div class="test_form_custom_radio"></div>
+                            <div class="test_form_answer">Да</div>
+                        </label>
+                        <label class="test_form_label test_form_radio_wrapper">
+                            <input class="test_form_radio" type="radio" name="question1" value="Нет" {% if survey.question1 == 'Нет'%} checked{% endif %}>
+                            <div class="test_form_custom_radio"></div>
+                            <div class="test_form_answer">Нет</div>
+                        </label>
+                        <label class="test_form_label test_form_radio_wrapper">
+                            <input class="test_form_radio" type="radio" name="question1" value="Затрудняюсь ответить" {% if survey.question1 == 'Затрудняюсь ответить'%} checked{% endif %}>
+                            <div class="test_form_custom_radio"></div>
+                            <div class="test_form_answer">Затрудняюсь ответить</div>
+                        </label>
+
+                        <!--2 вопрос-->
+                        <div class="test_form_question_wrapper">
+                            <div class="test_form_question_number">
+                                2.
+                            </div>
+                            <div class="test_form_question">
+                                Насколько материал курса соответствует вашим ожиданиям? Что бы вы предложили
+                                изменить/улучшить?
+                            </div>
+                        </div>
+                        <textarea
+                            id="usability"
+                            class="test_form_textarea"
+                            name="question2"
+                            rows="5"
+                        >{{ survey.question2 }}</textarea>
+
+                        <!--3 вопрос-->
+                        <div class="test_form_question_wrapper">
+                            <div class="test_form_question_number">
+                                3.
+                            </div>
+                            <div class="test_form_question">
+                                    Вам удобно и понятно пользоваться обучающей платформой?
+                            </div>
+                        </div>
+                        <label class="test_form_label test_form_radio_wrapper">
+                            <input class="test_form_radio"
+                                    type="radio"
+                                    name="question3"
+                                    value="Да"
+                                    {% if survey.question1 == 'Да'%} checked{% endif %}
+                            >
+                            <div class="test_form_custom_radio"></div>
+                            <div class="test_form_answer">Да</div>
+                        </label>
+                        <label class="test_form_label test_form_radio_wrapper">
+                            <input class="test_form_radio"
+                                    type="radio"
+                                    name="question3"
+                                    value="Нет"
+                                    {% if survey.question1 == 'Нет'%} checked{% endif %}
+                            >
+                            <div class="test_form_custom_radio"></div>
+                            <div class="test_form_answer">Нет</div>
+                        </label>
+                        <label class="test_form_label test_form_radio_wrapper">
+                            <input class="test_form_radio"
+                                    type="radio"
+                                    name="question3"
+                                    value="Затрудняюсь ответить"
+                                    {% if survey.question1 == 'Затрудняюсь ответить'%} checked{% endif %}
+                            >
+                            <div class="test_form_custom_radio"></div>
+                            <div class="test_form_answer">Затрудняюсь ответить</div>
+                        </label>
+
+                        <!--4 вопрос-->
+                        <div class="test_form_question_wrapper">
+                            <div class="test_form_question_number">
+                                4.
+                            </div>
+                            <div class="test_form_question">
+                                Ваши пожелания и предложения по обучающей платформе. Что нам изменить/улучшить
+                                в платформе?
+                            </div>
+                        </div>
+                        <textarea
+                            id="wish"
+                            class="test_form_textarea"
+                            name="question4"
+                            rows="5"
+                        >{{ survey.question4 }}</textarea>
+                        <button
+                            type="button"
+                            class="white-blue_button survey-test_button"
+                            survey-form-elem="submit"
+                            survey-save-url="{{ path('app_frontend_save_survey', {id: permission.id}) }}"
+                        >
+                            Отправить
+                        </button>
+                        <div class="survey-test_form_error" survey-form-elem="error">
+                            <!--тут выводим ошибки-->
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {% include('frontend/components/footer.html.twig') %}
+
+    <div class="overlay" popup-element="overlay">
+        <div class="popup" popup-element="popup">
+            <div class="survey-success_header">Ваш ответ получен. Спасибо ❤</div>
+            <div class="survey-success_description">Обучаться по курсу, проходить все задания и тесты повторно можно
+                неограниченное количество раз, пока не закончится срок действия курса. </div>
+            <div class="survey-success_change">Вы можете <a href="{{ path('app_frontend_survey', {id: permission.id}) }}">изменить</a> свои ответы</div>
+            <div class="popup_close_wrapper">
+                <a class="popup_close" popup-element="popup-close">закрыть</a>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

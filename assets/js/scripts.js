@@ -255,6 +255,78 @@ if (finalTestingLink) {
   }
 }
 
+let faqItems = document.querySelectorAll('[faq-elem="item"]')
+
+if (faqItems.length > 0) {
+  faqItems.forEach((element) => {
+    let question = element.querySelector('[faq-elem="question"]')
+
+    question.addEventListener('click', function (event) {
+      let item = this.closest('[faq-elem="item"]')
+      let wrapper = this.closest('[faq-elem="wrapper"]')
+      let thisAnswer = item.querySelector('[faq-elem="answer"]')
+
+      let allItems = wrapper.querySelectorAll('[faq-elem="item"]')
+
+      allItems.forEach(function (elem) {
+        let answer = elem.querySelector('[faq-elem="answer"]')
+        answer.style.maxHeight = 0 + 'px'
+      })
+
+      thisAnswer.style.maxHeight = thisAnswer.scrollHeight + "px"
+    })
+  })
+}
+
+let surveySubmitButton = document.querySelector('[survey-form-elem="submit"]')
+
+if (surveySubmitButton) {
+  surveySubmitButton.addEventListener('click', function (event) {
+    let form = this.closest('form')
+    let errorField = form.querySelector('[survey-form-elem="error"]')
+    let isError = true
+    let radioCourseWasUseful = ""
+    let radioUsability = ""
+
+    let formRadioCourseWasUseful = form.querySelectorAll('input[type="radio"][name="question1"]')
+    let formRadioUsability = form.querySelectorAll('input[type="radio"][name="question3"]')
+    let formTextareaMaterial = form.querySelector('textarea#usability')
+    let formTextareaWish = form.querySelector('textarea#wish')
+
+    formRadioCourseWasUseful.forEach(function (elem) {
+      if (elem.checked) {
+        radioCourseWasUseful = elem.value
+      }
+    })
+
+    formRadioUsability.forEach(function (elem) {
+      if (elem.checked) {
+        radioUsability = elem.value
+      }
+    })
+
+    if (radioCourseWasUseful != "" &&
+      radioUsability != "" &&
+      formTextareaMaterial.value != "" &&
+      formTextareaWish.value != "") {
+      isError = false
+    }
+
+    if (isError){
+      errorField.innerText = "Пожалуйста, ответьте на все вопросы. Нам будет приятно"
+    } else {
+      errorField.innerText = ""
+      let surveySaveUrl =  document.querySelector('[survey-form-elem="submit"]').getAttribute('survey-save-url')
+      fetch(surveySaveUrl, {
+        method: 'POST',
+        body: new FormData(form),
+      })
+      .then(res => res.ok ? openPopup() : Promise.reject(res))
+      .catch(() => alert('Ошибка отправки сообщения'));
+    }
+  })
+}
+
 const passwordInput = document.querySelector(".password_input");
 
 if (passwordInput) {

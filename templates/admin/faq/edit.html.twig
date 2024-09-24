@@ -1,0 +1,49 @@
+{% extends 'admin/base.html.twig' %}
+
+{% block title %}Панель управления | Полезное{% endblock %}
+
+{% block breadcrumbs %}
+    <a href="{{ path('admin_homepage') }}">Панель управления</a>
+    <span>/</span>
+    <a href="{{ path('admin_faq_list') }}">Полезное</a>
+    <span>/</span>
+    <span>Редактирование</span>
+{% endblock %}
+
+{% block content %}
+
+    <h3>
+        {% if form.vars['value'].id is null %}
+            Создание новой записи
+        {% else %}
+            Редактирование записи
+        {% endif %}
+    </h3>
+
+    {{ form_start(form, {'attr':{'class': 'form-contact contact_form'}}) }}
+
+    <div class="row">
+
+        <div class="col-12 mb-3">
+            <div class="form-group">
+                <span class="text-danger">{{ form_errors(form.question) }}</span>
+                {{ form_widget(form.question) }}
+            </div>
+        </div>
+
+        <div class="col-12 mb-3">
+            <div class="form-group">
+                <span class="text-danger">{{ form_errors(form.answer) }}</span>
+                {{ form_widget(form.answer) }}
+            </div>
+        </div>
+
+        <div class="form-group mb-3">
+            {{ form_widget(form.submit) }}
+        </div>
+
+    </div>
+
+    {{ form_end(form) }}
+
+{% endblock %}

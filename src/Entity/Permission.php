@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Entity;
 
 use App\Repository\PermissionRepository;
@@ -58,6 +60,12 @@ class Permission
     #[ORM\ManyToOne(inversedBy: 'permissions')]
     #[ORM\JoinColumn(onDelete: 'SET NULL')]
     private ?Loader $loader = null;
+
+    #[ORM\Column(options: ['default' => false])]
+    private bool $surveyEnabled = false;
+
+    #[ORM\Column(options: ['default' => true])]
+    private bool $greetingEnabled = true;
 
     #[ORM\ManyToOne]
     #[ORM\JoinColumn(name: 'created_by')]
@@ -220,6 +228,30 @@ class Permission
     public function setCreatedBy(?User $createdBy): self
     {
         $this->createdBy = $createdBy;
+
+        return $this;
+    }
+
+    public function isSurveyEnabled(): bool
+    {
+        return $this->surveyEnabled;
+    }
+
+    public function setSurveyEnabled(bool $surveyEnabled): self
+    {
+        $this->surveyEnabled = $surveyEnabled;
+
+        return $this;
+    }
+
+    public function isGreetingEnabled(): bool
+    {
+        return $this->greetingEnabled;
+    }
+
+    public function setGreetingEnabled(bool $greetingEnabled): self
+    {
+        $this->greetingEnabled = $greetingEnabled;
 
         return $this;
     }

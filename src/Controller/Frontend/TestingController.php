@@ -1,10 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Controller\Frontend;
 
 use App\Entity\Logger;
 use App\Entity\Permission;
 use App\Entity\User;
+use App\Repository\PermissionRepository;
 use App\Service\TestingReportService;
 use App\Service\TestingService;
 use App\Service\UserPermissionService;
@@ -24,6 +27,7 @@ class TestingController extends AbstractController
         private readonly TestingService $testingService,
         private readonly UserPermissionService $userPermissionService,
         private readonly TestingReportService $reportService,
+        private readonly PermissionRepository $permissionRepository,
     ) {}
 
     #[Route('/frontend/testing/{id<\d+>}/', name: 'app_frontend_testing')]
@@ -40,6 +44,8 @@ class TestingController extends AbstractController
         }
 
         $logger = $this->testingService->getLogger($permission, $user);
+
+        $permission = $this->testingService->checkPermissionIfFirstTimeTesting($permission);
 
         if (0 === $logger->getTimeLeftInSeconds()) {
             return $this->redirect(
@@ -73,15 +79,30 @@ class TestingController extends AbstractController
             throw new NotFoundHttpException('User not found');
         }
 
+        $permission = $logger->getPermission();
+
         $firstSuccessfullyLogger = $this->testingService->getFirstSuccessfullyLogger(
-            $logger->getPermission(),
+            $permission,
             $user,
         );
 
+        $showGreeting = false;
+
+        $logger = $this->testingService->closeLogger($logger);
+
+        if ($permission->isGreetingEnabled() && $logger->getResult()) {
+            $permission->setGreetingEnabled(false);
+            $this->permissionRepository->save($permission, true);
+
+            $showGreeting = true;
+        }
+
         return $this->render('frontend/testing/protocol.html.twig', [
-            'logger' => $this->testingService->closeLogger($logger),
+            'logger' => $logger,
             'skipped' => $this->testingService->getSkippedQuestion($logger),
             'hasSuccess' => $firstSuccessfullyLogger instanceof Logger,
+            'showGreetings' => $showGreeting,
+            'permissionId' => $permission->getId(),
         ]);
     }
 
@@ -89,10 +110,11 @@ class TestingController extends AbstractController
     public function printTesting(Logger $logger): BinaryFileResponse
     {
         $permission = $logger->getPermission();
+        /** @var User $user */
         $user = $this->getUser();
 
         if (! $user instanceof User) {
-            throw new NotFoundHttpException('Не найден пользователь');
+            throw new NotFoundHttpException('User not found');
         }
 
         if ($permission->getUser()->getId() !== $user->getId()) {
