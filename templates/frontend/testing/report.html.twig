@@ -42,11 +42,7 @@
                 </tr>
                 <tr>
                     <td>Номер билета:</td>
-                    <td>
-                        {% if logger.ticket is not empty %}
-                            {{ logger.ticket.nom }}
-                        {% endif %}
-                    </td>
+                    <td>{% if logger.ticket is not empty %}{{ logger.ticket.nom }}{% endif %}</td>
                 </tr>
                 <tr>
                     <td>Дата проведения тестирования:</td>
@@ -79,5 +75,18 @@
                 <td width="100">{% if question['isCorrect'] %}Правильно{% else %}Неправильно{% endif %}</td>
             </tr>
         {% endfor %}
+    </tbody>
+</table>
+
+<p></p>
+<p></p>
+
+<table class="table">
+    <tbody>
+        <tr>
+            <td>
+                Подпись/расшифровка  ____________________________________/{% if logger.user.nameLess == true %}_________________________________________{% else %} {{ app.user.fullName }}{% endif %}
+            </td>
+        </tr>
     </tbody>
 </table>

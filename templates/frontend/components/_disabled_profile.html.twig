@@ -7,7 +7,7 @@
                 <div class="header_profile_firstname">{{ app.user.firstName }}</div>
                 <div class="header_profile_middlename">{{ app.user.patronymic }}</div>
             </div>
-        </div>
+        {% endif %}
     </div>
 
     {% if app.user.image is not null%}
@@ -21,6 +21,6 @@
                 {{ app.user.lastName | first }}
             </div>
         </div>
-     {% endif %}
-     
+    {% endif %}
+
 </div>
