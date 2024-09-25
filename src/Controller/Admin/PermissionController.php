@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Controller\Admin;
 
 use App\Decorator\MobileController;
@@ -11,11 +13,14 @@ use App\Form\Admin\PermissionEditType;
 use App\Repository\PermissionRepository;
 use App\Repository\UserRepository;
 use App\Service\BatchCreatePermissionService;
+use App\Service\TestingReportService;
 use App\Service\TestingService;
 use App\Service\UserPermissionService;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
@@ -28,6 +33,7 @@ class PermissionController extends MobileController
         private readonly UserRepository $userRepository,
         private readonly BatchCreatePermissionService $batchCreatePermissionService,
         private readonly UserPermissionService $userPermissionService,
+        private readonly TestingReportService $reportService,
     ) {}
 
     #[Route('/admin/permission/create/{id<\d+>}/', name: 'admin_permission_create')]
@@ -139,7 +145,7 @@ class PermissionController extends MobileController
     }
 
     #[Route('/admin/permission/print/{id<\d+>}/{userId<\d+>}/', name: 'admin_print_testing')]
-    public function printTesting(Permission $permission, int $userId): Response
+    public function printTesting(Permission $permission, int $userId): BinaryFileResponse
     {
         $user = $this->userRepository->find($userId);
         if (! $user instanceof User) {
@@ -149,10 +155,16 @@ class PermissionController extends MobileController
         $logger = $this->testingService->getFirstSuccessfullyLogger($permission, $user);
 
         if ($logger instanceof Logger) {
-            return $this->render('admin/testing/protocol.html.twig', [
-                'logger' => $logger,
-                'skipped' => $this->testingService->getSkippedQuestion($logger),
-            ]);
+            $fileName = $this->reportService->generateTestingPdf($logger);
+            
+            $response = new BinaryFileResponse($fileName);
+            $response->headers->set('Content-Type', 'application/pdf');
+            $response
+                ->setContentDisposition(ResponseHeaderBag::DISPOSITION_ATTACHMENT, 'protocol.pdf')
+                ->deleteFileAfterSend(true);
+
+            return $response;
+
         } else {
             throw new NotFoundHttpException('Logger with success not found');
         }
