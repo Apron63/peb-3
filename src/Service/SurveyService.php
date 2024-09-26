@@ -51,9 +51,9 @@ class SurveyService
     {
         return 'ФИО слушателя : ' . $permission->getUser()->getFullName() . '<br>'
         . 'Курс : ' . $permission->getCourse()->getName() . '<br>'
-        . 'Вопрос 1 : ' . $surveyDto->question1 . '<br>'
-        . 'Вопрос 2 : ' . $surveyDto->question2 . '<br>'
-        . 'Вопрос 3 : ' . $surveyDto->question3 . '<br>'
-        . 'Вопрос 4 : ' . $surveyDto->question4 . '<br>';
+        . 'Курс полезен для Вас : ' . $surveyDto->question1 . '<br>'
+        . 'Насколько материал курса соответствует вашим ожиданиям? Что бы вы предложили изменить/улучшить : ' . $surveyDto->question2 . '<br>'
+        . 'Вам удобно и понятно пользоваться обучающей платформой : ' . $surveyDto->question3 . '<br>'
+        . 'Ваши пожелания и предложения по обучающей платформе. Что нам изменить/улучшить в платформе : ' . $surveyDto->question4 . '<br>';
     }
 }
