@@ -266,14 +266,21 @@ if (faqItems.length > 0) {
       let wrapper = this.closest('[faq-elem="wrapper"]')
       let thisAnswer = item.querySelector('[faq-elem="answer"]')
 
-      let allItems = wrapper.querySelectorAll('[faq-elem="item"]')
+      if (item.classList.contains('active')) {
+        thisAnswer.style.maxHeight = 0 + 'px'
+        item.classList.remove('active')
+      } else {
+        let allItems = wrapper.querySelectorAll('[faq-elem="item"]')
 
-      allItems.forEach(function (elem) {
-        let answer = elem.querySelector('[faq-elem="answer"]')
-        answer.style.maxHeight = 0 + 'px'
-      })
+        allItems.forEach(function (elem) {
+          let answer = elem.querySelector('[faq-elem="answer"]')
+          answer.style.maxHeight = 0 + 'px'
+          elem.classList.remove('active')
+        })
 
-      thisAnswer.style.maxHeight = thisAnswer.scrollHeight + "px"
+        thisAnswer.style.maxHeight = thisAnswer.scrollHeight + "px"
+        item.classList.add('active')
+      }
     })
   })
 }
