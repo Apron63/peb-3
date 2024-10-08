@@ -60,36 +60,39 @@ class LoaderService
         $this->saveToLoader($this->getUsersList($file), $user);
     }
 
-    public function sendUserDataToQuery(User $user, $courseIds, int $duration): array
+    public function sendUserDataToQuery(User $user, array $courseIds, int $duration, array $loaderIds): array
     {
-        foreach ($this->loaderRepository->getLoaderforCheckedUser($user) as $loader) {
-            $queryUser = new QueryUser();
+        foreach ($this->loaderRepository->getLoaderforCheckedUser($user, $loaderIds) as $loader) {
+            $loader = $this->createUsersAndPermissions($user, $loader, $courseIds, $duration);
 
-            $queryUser
-                ->setCreatedBy($user)
-                ->setOrderNom($loader->getOrderNo())
-                ->setCourseIds(
-                    is_array($courseIds)
-                        ? implode(',', $courseIds)
-                        : $courseIds
-                )
-                ->setDuration($duration)
-                ->setLastName($loader->getLastName())
-                ->setFirstName($loader->getFirstName())
-                ->setPatronymic($loader->getPatronymic())
-                ->setPosition($loader->getPosition())
-                ->setOrganization($loader->getOrganization())
-                ->setLoader($loader)
-                ->setResult('new');
+            $this->loaderRepository->save($loader, true);
+        //     $queryUser = new QueryUser();
 
-            if ($loader->isEmailChecked()) {
-                $queryUser->setEmail($loader->getEmail());
-            }
+        //     $queryUser
+        //         ->setCreatedBy($user)
+        //         ->setOrderNom($loader->getOrderNo())
+        //         ->setCourseIds(
+        //             is_array($courseIds)
+        //                 ? implode(',', $courseIds)
+        //                 : $courseIds
+        //         )
+        //         ->setDuration($duration)
+        //         ->setLastName($loader->getLastName())
+        //         ->setFirstName($loader->getFirstName())
+        //         ->setPatronymic($loader->getPatronymic())
+        //         ->setPosition($loader->getPosition())
+        //         ->setOrganization($loader->getOrganization())
+        //         ->setLoader($loader)
+        //         ->setResult('new');
 
-            $this->queryUserRepository->save($queryUser, true);
+        //     if ($loader->isEmailChecked()) {
+        //         $queryUser->setEmail($loader->getEmail());
+        //     }
+
+        //     $this->queryUserRepository->save($queryUser, true);
         }
 
-        $this->bus->dispatch(new Query1CUploadMessage($loader->getOrderNo(), $user->getId()));
+        //$this->bus->dispatch(new Query1CUploadMessage($loader->getOrderNo(), $user->getId()));
 
         return [
             'success' => true,
@@ -97,111 +100,187 @@ class LoaderService
         ];
     }
 
-    public function createUsersAndPermissions(int $userId): void
+    public function createUsersAndPermissions(User $creator, Loader $loader, array $courseids, int $duration): Loader
     {
-        $createdBy = $this->userRepository->find($userId);
+        $now = new DateTime();
 
-        if (! $createdBy instanceof User) {
-            throw new RuntimeException('User id: ' . $userId . ' not found');
-        }
+        $user = $this->userRepository
+            ->findOneBy([
+                'fullName' => implode(
+                    ' ',
+                    [
+                        $loader->getLastName(),
+                        $loader->getFirstName(),
+                        $loader->getPatronymic()
+                    ],
+                ),
+                'organization' => $loader->getOrganization()
+            ]);
 
-        $userData = $this->queryUserRepository->getUserQueryNew($createdBy);
+        if (! $user instanceof User) {
+            $user = (new User())
+                ->setOrganization($loader->getOrganization())
+                ->setLastName($loader->getLastName())
+                ->setFirstName($loader->getFirstName())
+                ->setPatronymic($loader->getPatronymic())
+                ->setPosition($loader->getPosition())
+                ->setPatronymic($loader->getPatronymic())
+                ->setCreatedAt($now)
+                ->setCreatedBy($creator);
 
-        foreach ($userData as $queryUser) {
-            // Ищем пользователя по логину и организации.
-            $user = $this->userRepository
-                ->findOneBy([
-                    'fullName' => implode(
-                        ' ',
-                        [
-                            $queryUser->getLastName(),
-                            $queryUser->getFirstName(),
-                            $queryUser->getPatronymic()
-                        ]
-                    ),
-                    'organization' => $queryUser->getOrganization()
-                ]);
+            $user = $this->userService->setNewUser($user);
 
-            // Создадим нового если не нашлось.
-            if (! $user instanceof User) {
-                $user = (new User())
-                    ->setOrganization($queryUser->getOrganization())
-                    ->setLastName($queryUser->getLastName())
-                    ->setFirstName($queryUser->getFirstName())
-                    ->setPatronymic($queryUser->getPatronymic())
-                    ->setPosition($queryUser->getPosition())
-                    ->setPatronymic($queryUser->getPatronymic())
-                    ->setCreatedAt($queryUser->getCreatedAt())
-                    ->setCreatedBy($createdBy);
-
-                $user = $this->userService->setNewUser($user);
-            }
-
-            if (null !== $queryUser->getEmail()) {
-                $user->setEmail($queryUser->getEmail());
+            if ($loader->isEmailChecked()) {
+                $$user->setEmail($loader->getEmail());
             }
 
             $this->userRepository->save($user, true);
 
-            // Проверяем доступы.
-            $courseName = '';
-            foreach (explode(',', $queryUser->getCourseIds()) as $courseId) {
-                $course = $this->courseRepository->find($courseId);
-
-                if ($course instanceof Course) {
-                    $permission = $this->permissionRepository
-                        ->getLastActivePermission($course, $user);
-
-                    // Создаем новый доступ если нет активного.
-                    if (!$permission instanceof Permission) {
-                        $permission = (new Permission())
-                            ->setCreatedAt(new DateTime())
-                            ->setOrderNom($queryUser->getOrderNom())
-                            ->setDuration($queryUser->getDuration())
-                            ->setCourse($course)
-                            ->setUser($user)
-                            ->setLoader($queryUser->getLoader())
-                            ->setCreatedBy($createdBy);
-
-                        $this->permissionRepository->save($permission, true);
-
-                        if ('' !== $courseName) {
-                            $courseName .= ', ';
-                        }
-
-                        $courseName .= $course->getShortName();
-                    }
-                }
-            }
-
-            // Очередь.
-            $queryUser->setResult('success');
-            $this->queryUserRepository->save($queryUser, true);
-
-            $loader = $queryUser->getLoader();
-            if (! $loader instanceof Loader) {
-                throw new RuntimeException('Loader for user not found');
-            }
-
-            if ('' !== $courseName) {
-                $name = $loader->getCourseName();
-
-                if ('' !== $name) {
-                    $name .= ', ';
-                }
-
-                $name .= $courseName;
-
-                $loader->setCourseName($name);
-            }
-
-            if (null === $loader->getUser()) {
-                $loader->setUser($user);
-            }
-
-            $this->loaderRepository->save($loader, true);
+            $loader->setUser($user);
         }
+
+        $courseName = '';
+
+        foreach ($courseids as $courseId) {
+            $course = $this->courseRepository->find($courseId);
+
+            if ($course instanceof Course) {
+                $permission = $this->permissionRepository->getLastActivePermission($course, $user);
+
+                // Создаем новый доступ если нет активного.
+                if (! $permission instanceof Permission) {
+                    $permission = (new Permission())
+                        ->setCreatedAt(new DateTime())
+                        ->setOrderNom($loader->getOrderNo())
+                        ->setDuration($duration)
+                        ->setCourse($course)
+                        ->setUser($user)
+                        ->setLoader($loader)
+                        ->setCreatedBy($creator);
+
+                    $this->permissionRepository->save($permission, true);
+
+                    if ('' !== $courseName) {
+                        $courseName .= ', ';
+                    }
+
+                    $courseName .= $course->getShortName();
+                } else {
+                    $courseName .= '<span class="text-danger">' . $course->getShortName() . '</span>';
+                }
+            }
+        }
+
+        $loader->setCourseName($loader->getCourseName() ? $loader->getCourseName() . ' ' . $courseName : $courseName);
+
+        return $loader;
     }
+
+    // public function createUsersAndPermissionsOld(int $userId): void
+    // {
+    //     $createdBy = $this->userRepository->find($userId);
+
+    //     if (! $createdBy instanceof User) {
+    //         throw new RuntimeException('User id: ' . $userId . ' not found');
+    //     }
+
+    //     $userData = $this->queryUserRepository->getUserQueryNew($createdBy);
+
+    //     foreach ($userData as $queryUser) {
+    //         // Ищем пользователя по логину и организации.
+    //         $user = $this->userRepository
+    //             ->findOneBy([
+    //                 'fullName' => implode(
+    //                     ' ',
+    //                     [
+    //                         $queryUser->getLastName(),
+    //                         $queryUser->getFirstName(),
+    //                         $queryUser->getPatronymic()
+    //                     ]
+    //                 ),
+    //                 'organization' => $queryUser->getOrganization()
+    //             ]);
+
+    //         // Создадим нового если не нашлось.
+    //         if (! $user instanceof User) {
+    //             $user = (new User())
+    //                 ->setOrganization($queryUser->getOrganization())
+    //                 ->setLastName($queryUser->getLastName())
+    //                 ->setFirstName($queryUser->getFirstName())
+    //                 ->setPatronymic($queryUser->getPatronymic())
+    //                 ->setPosition($queryUser->getPosition())
+    //                 ->setPatronymic($queryUser->getPatronymic())
+    //                 ->setCreatedAt($queryUser->getCreatedAt())
+    //                 ->setCreatedBy($createdBy);
+
+    //             $user = $this->userService->setNewUser($user);
+    //         }
+
+    //         if (null !== $queryUser->getEmail()) {
+    //             $user->setEmail($queryUser->getEmail());
+    //         }
+
+    //         $this->userRepository->save($user, true);
+
+    //         // Проверяем доступы.
+    //         $courseName = '';
+    //         foreach (explode(',', $queryUser->getCourseIds()) as $courseId) {
+    //             $course = $this->courseRepository->find($courseId);
+
+    //             if ($course instanceof Course) {
+    //                 $permission = $this->permissionRepository
+    //                     ->getLastActivePermission($course, $user);
+
+    //                 // Создаем новый доступ если нет активного.
+    //                 if (!$permission instanceof Permission) {
+    //                     $permission = (new Permission())
+    //                         ->setCreatedAt(new DateTime())
+    //                         ->setOrderNom($queryUser->getOrderNom())
+    //                         ->setDuration($queryUser->getDuration())
+    //                         ->setCourse($course)
+    //                         ->setUser($user)
+    //                         ->setLoader($queryUser->getLoader())
+    //                         ->setCreatedBy($createdBy);
+
+    //                     $this->permissionRepository->save($permission, true);
+
+    //                     if ('' !== $courseName) {
+    //                         $courseName .= ', ';
+    //                     }
+
+    //                     $courseName .= $course->getShortName();
+    //                 }
+    //             }
+    //         }
+
+    //         // Очередь.
+    //         $queryUser->setResult('success');
+    //         $this->queryUserRepository->save($queryUser, true);
+
+    //         $loader = $queryUser->getLoader();
+    //         if (! $loader instanceof Loader) {
+    //             throw new RuntimeException('Loader for user not found');
+    //         }
+
+    //         if ('' !== $courseName) {
+    //             $name = $loader->getCourseName();
+
+    //             if ('' !== $name) {
+    //                 $name .= ', ';
+    //             }
+
+    //             $name .= $courseName;
+
+    //             $loader->setCourseName($name);
+    //         }
+
+    //         if (null === $loader->getUser()) {
+    //             $loader->setUser($user);
+    //         }
+
+    //         $this->loaderRepository->save($loader, true);
+    //     }
+    // }
 
     public function checkUserQueryIsEmpty(User $user): bool
     {
@@ -281,8 +360,17 @@ class LoaderService
 
             $loader = new Loader();
 
+            $criteria = [
+                'lastName' => $item['lastName'],
+                'firstName' => $item['firstName'],
+                'patronymic' => $item['patronymic'],
+                'organization' => $item['organization'],
+            ];
+
+            $existingUser = $this->userService->checkUserExist($criteria);
+
             $loader
-                ->setUser(null)
+                ->setUser($existingUser)
                 ->setCreatedBy($user)
                 ->setOrderNo($item['orderNo'])
                 ->setFirstName($item['firstName'])

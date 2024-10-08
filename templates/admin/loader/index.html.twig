@@ -8,14 +8,16 @@
 
     <div class="btn-group">
         <button class="btn btn-outline-dark" id="load1C" data-url="{{ path('admin_import_1C') }}">Загрузить из 1С</button>
-        <button class="btn btn-outline-dark" id="selectAll" data-url="{{ path('admin_loader_set_all_check_box') }}">Выбрать всех</button>
-        <button class="btn btn-outline-dark" id="unselectAll" data-url="{{ path('admin_loader_set_all_check_box') }}">Снять отметку</button>
+        {# <button class="btn btn-outline-dark" id="selectAll" data-url="{{ path('admin_loader_set_all_check_box') }}">Выбрать всех</button> #}
+        <button class="btn btn-outline-dark" id="selectAll">Выбрать всех</button>
+        {# <button class="btn btn-outline-dark" id="unselectAll" data-url="{{ path('admin_loader_set_all_check_box') }}">Снять отметку</button> #}
+        <button class="btn btn-outline-dark" id="unselectAll">Снять отметку</button>
         <button
             class="btn btn-outline-dark"
             id ="assignCourse"
-            data-check="{{ path('admin_loader_check_empty') }}"
+            {# data-check="{{ path('admin_loader_check_empty') }}" #}
             data-prepare="{{ path('admin_loader_prepare_data') }}"
-            data-query={{ path('admin_loader_check_query') }}
+            {# data-query={{ path('admin_loader_check_query') }} #}
         >
             Назначить курс
         </button>
@@ -53,6 +55,7 @@
         <thead>
         <tr>
             <th></th>
+            <th title="Слушатель уже существует">Сущ</th>
             <th>Заказ</th>
             <th>Фамилия, имя, отчество, email</th>
             <th>Организация, должность</th>
@@ -78,6 +81,11 @@
                             >
                         </div>
                     </td>
+                    <td>
+                        {% if item.user is not empty %}
+                            <img src="{{ asset('svg/check-box.svg') }}">
+                        {% endif %}
+                    </td>
                     <td>{{ item.orderNo}}</td>
                     <td>
                         {{ item.lastName}} {{ item.firstName}} {{ item.patronymic }} <br>
@@ -90,13 +98,14 @@
                     <td>
                         {{ item.organization }} <br> {{ item.position }}
                     </td>
-                    <td>{{ item.courseName }}</td>
+                    <td>{{ item.courseName | raw }}</td>
                 </tr>
             {% endfor %}
         </tbody>
     </table>
 
-    <input type="hidden" id="checkbox-change-url" data-url="{{ path('admin_loader_change_check_box') }}">
+    {# <input type="hidden" id="checkbox-change-url" data-url="{{ path('admin_loader_change_check_box') }}"> #}
+    <input type="hidden" id="checkbox-change-url">
     <input type="hidden" id="empty-data" data-empty="{{ emptyData }}">
     <div id="loading-content"></div>
 

@@ -23,12 +23,24 @@ class UserService
         $lastName = $this->slugger->slug($criteria['lastName'])->lower()->toString();
         $firstName = $this->slugger->slug($criteria['firstName'])->lower()->toString();
 
-        if (null === $criteria['patronymic']) {
-            $login = substr($lastName, 0, 9) . $firstName[0];
+        if (! empty($criteria['patronymic'])) {
+            $suluggedPatronimic = $this->slugger->slug($criteria['patronymic'])->lower()->toString();
+
+            if (! empty($suluggedPatronimic)) {
+                $login = substr($lastName, 0, 8) . $firstName[0] . $suluggedPatronimic[0];
+            } else {
+                $login = substr($lastName, 0, 9) . $firstName[0];
+            }
         } else {
-            $patronymic = $this->slugger->slug($criteria['patronymic'])->lower()->toString();
-            $login = substr($lastName, 0, 8) . $firstName[0] . $patronymic[0];
+            $login = substr($lastName, 0, 9) . $firstName[0];
         }
+
+        // if (null === $criteria['patronymic']) {
+        //     $login = substr($lastName, 0, 9) . $firstName[0];
+        // } else {
+        //     $patronymic = $this->slugger->slug($criteria['patronymic'])->lower()->toString();
+        //     $login = substr($lastName, 0, 8) . $firstName[0] . $patronymic[0] ?? '';
+        // }
 
         return $this->userRepository
             ->findOneBy([
@@ -78,7 +90,7 @@ class UserService
         } else {
             $login = substr($lastName, 0, 8) . $firstName[0] . $patronymic[0];
         }
-        
+
         $user->setFullName($user->getLastName() . ' ' . $user->getFirstName() . ' ' . $user->getPatronymic());
 
         $attempt = 1;

@@ -40,9 +40,12 @@ class LoaderRepository extends ServiceEntityRepository
         }
     }
 
+    /**
+     * @return Loader[] array
+     */
     public function getLoaderForUser(User $user): array
     {
-        $queryBuilder = 
+        $queryBuilder =
             $this->createQueryBuilder('l')
             ->where('l.createdBy = :user')
             ->setParameter('user', $user);
@@ -51,17 +54,19 @@ class LoaderRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult();
     }
-    
+
     /**
      * @return Loader[]
      */
-    public function getLoaderforCheckedUser(User $user): array
+    public function getLoaderforCheckedUser(User $user, array $loaderIds): array
     {
-        $queryBuilder = 
-            $this->createQueryBuilder('l')
+        $queryBuilder = $this->createQueryBuilder('l')
             ->where('l.createdBy = :user')
-            ->andWhere('l.checked = 1')
-            ->setParameter('user', $user);
+            ->andWhere('l.id in (:loaderIds)')
+            ->setParameters([
+                'user' => $user,
+                'loaderIds' => $loaderIds,
+            ]);
 
         return $queryBuilder
             ->getQuery()
@@ -103,7 +108,7 @@ class LoaderRepository extends ServiceEntityRepository
             ->getEntityManager()
             ->createQuery('SELECT COUNT(l.id) FROM App\Entity\Loader l where l.createdBy = :user AND l.checked = 1')
             ->setParameter('user', $user);
-        
+
         return $query->getSingleScalarResult() > 0;
     }
 }
