@@ -3,7 +3,7 @@ import * as bootstrap from 'bootstrap'
 
 $('#load1C').on('click', function(e) {
     e.stopImmediatePropagation
-
+    
     let emptyData = Number($('#empty-data').data('empty'))
 
     if (!emptyData) {
@@ -16,34 +16,71 @@ $('#load1C').on('click', function(e) {
     window.location = url
 })
 
+$('.loader-checkbox').on('change', function(e) {
+    let id = Number($(e.target).data('loader-id'))
+    let value = $(e.target).is(':checked')
+
+    $.ajax({
+         url: $('#checkbox-change-url').data('url'),
+         data: {id: id, value: value}
+     }).done(function (data) {
+
+     }).fail(function (data) {
+        console.log(data)
+     })
+})
+
 $('#selectAll').on('click', function(e) {
     e.stopImmediatePropagation
-    $('input[type="checkbox"]').prop('checked', true)
+
+    let url = $('#selectAll').data('url')
+    let action = 'select'
+
+    setAllCheckBox(action, url)
 })
 
 $('#unselectAll').on('click', function(e) {
     e.stopImmediatePropagation
-    $('input[type="checkbox"]').prop('checked', false)
+
+    let url = $('#unselectAll').data('url')
+    let action = 'unselect'
+
+    setAllCheckBox(action, url)
 })
 
 $('#assignCourse').on('click', function(e) {
     e.stopImmediatePropagation
 
-    let loaderIds = []
-    $('.loader-checkbox').each(function(index, elem) {
-        if ($(elem).is(':checked')) {
-            loaderIds.push($(elem).data('loader-id'))
-        }
-    })
+    let url = $('#assignCourse').data('check')
 
-    if (loaderIds.length === 0) {
-        alert('Не выбран ни один слушатель')
-    } else {
-        assignUsersToLoader(loaderIds)
-    }
+    $.ajax({
+        url: url
+    }).done(function (data) {
+        if (data.empty === false) {
+            alert('Не выбраны слушатели')
+            return false;
+        }
+
+        assignUsersToLoader()
+
+    }).fail(function (data) {
+       console.log(data)
+    })
 })
 
-function assignUsersToLoader(loaderIds)
+function setAllCheckBox(action, url)
+{
+    $.ajax({
+        url: url,
+        data: {action: action}
+    }).done(function (data) {
+        location.reload()
+    }).fail(function (data) {
+       console.log(data)
+    })
+}
+
+function assignUsersToLoader()
 {
     $.ajax({
         url: $('#assignCourse').data('prepare')
@@ -58,11 +95,11 @@ function assignUsersToLoader(loaderIds)
         $('#q-search').on('keyup', function () {
             applyFilter();
         })
-
+        
         $('#profile-select').on('change', function () {
             applyFilter();
         })
-
+        
         $('#send-to-query').on('click', function () {
             let duration = $('#duration').val()
 
@@ -70,37 +107,59 @@ function assignUsersToLoader(loaderIds)
                 alert('Не указана продолжительность доступа!')
                 return false
             }
-
+            
             if (duration > 999) {
                 alert('Длительность не может превышать 999 дней !')
                 return false
             }
-
+        
             let course = $('#course-select').val()
 
             if (course == 0) {
                 alert('Не выбран курс!')
                 return false
             }
-
+        
             $.ajax({
                 url: $('#send-to-query').data('url'),
-                data: {duration: duration, course: course, loaderIds: loaderIds},
+                data: {duration: duration, course: course},
                 method: 'POST',
                 beforeSend: function () {
-                    myModal.hide()
+                    $('body').addClass('loading');
+                    $('#loading-content').addClass('loading-content');
                 },
             }).done(function (data) {
-                location.reload()
+                if (data.success === false) {
+                    location.reload()
+                }
+
+                $(function(){
+                    window.setInterval(checkQuery, 1000 )
+                });
+                
             }).fail(function (data) {
                 console.log(data)
             }).always(function(data){
+                myModal.hide()
             })
         })
 
         myModal.show()
     }).fail(function (data) {
         console.log(data)
+    })
+}
+
+function checkQuery ()
+{
+    $.ajax({
+        url:$('#assignCourse').data('query'),
+    }).done(function (data) {
+        if (data.result) {
+            location.reload()
+        }
+    }).fail(function (data) {
+       console.log(data)
     })
 }
 

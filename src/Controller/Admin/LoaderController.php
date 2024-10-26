@@ -63,40 +63,40 @@ class LoaderController extends MobileController
         ]);
     }
 
-    // #[Route('/admin/loader/changeCheckBox/', name: 'admin_loader_change_check_box', condition: 'request.isXmlHttpRequest()')]
-    // public function changeCheckBoxValue(Request $request): JsonResponse
-    // {
-    //     $id = (int) $request->get('id');
-    //     $value = strtolower($request->get('value', 'false'));
+    #[Route('/admin/loader/changeCheckBox/', name: 'admin_loader_change_check_box', condition: 'request.isXmlHttpRequest()')]
+    public function changeCheckBoxValue(Request $request): JsonResponse
+    {
+        $id = (int) $request->get('id');
+        $value = strtolower($request->get('value', 'false'));
 
-    //     $this->loaderService->setCheckBoxChange($id, $value);
+        $this->loaderService->setCheckBoxChange($id, $value);
 
-    //     return new JsonResponse();
-    // }
+        return new JsonResponse();
+    }
 
-    // #[Route('/admin/loader/setAllCheckBox/', name: 'admin_loader_set_all_check_box', condition: 'request.isXmlHttpRequest()')]
-    // public function setAllCheckBoxValue(Request $request): JsonResponse
-    // {
-    //     /** @var User $user */
-    //     $user = $this->getUser();
+    #[Route('/admin/loader/setAllCheckBox/', name: 'admin_loader_set_all_check_box', condition: 'request.isXmlHttpRequest()')]
+    public function setAllCheckBoxValue(Request $request): JsonResponse
+    {
+        /** @var User $user */
+        $user = $this->getUser();
 
-    //     $action = strtolower($request->get('action', 'select'));
+        $action = strtolower($request->get('action', 'select'));
 
-    //     $this->loaderRepository->setAllCheckBoxValue($user, $action);
+        $this->loaderRepository->setAllCheckBoxValue($user, $action);
 
-    //     return new JsonResponse();
-    // }
+        return new JsonResponse();
+    }
 
-    // #[Route('/admin/loader/checkIfLoaderIsEmpty/', name: 'admin_loader_check_empty', condition: 'request.isXmlHttpRequest()')]
-    // public function checkIfLoaderIsEmpty(): JsonResponse
-    // {
-    //     /** @var User $user */
-    //     $user = $this->getUser();
+    #[Route('/admin/loader/checkIfLoaderIsEmpty/', name: 'admin_loader_check_empty', condition: 'request.isXmlHttpRequest()')]
+    public function checkIfLoaderIsEmpty(): JsonResponse
+    {
+        /** @var User $user */
+        $user = $this->getUser();
 
-    //     return new JsonResponse([
-    //         'empty' => $this->loaderRepository->checkIfLoaderIsEmpty($user),
-    //     ]);
-    // }
+        return new JsonResponse([
+            'empty' => $this->loaderRepository->checkIfLoaderIsEmpty($user),
+        ]);
+    }
 
     #[Route('/admin/loader/prepareData/', name: 'admin_loader_prepare_data', condition: 'request.isXmlHttpRequest()')]
     public function prepareData(): Response
@@ -117,12 +117,11 @@ class LoaderController extends MobileController
 
         $courseIds = $request->get('course');
         $duration = $request->get('duration');
-        $loaderIds = $request->get('loaderIds');
 
         if ($duration >= Permission::MAX_DURATION) {
             $result['success'] = false;
         } else {
-            $result = $this->loaderService->sendUserDataToQuery($user, $courseIds, $duration, $loaderIds);
+            $result = $this->loaderService->sendUserDataToQuery($user, $courseIds, $duration);
         }
 
         return new JsonResponse([
@@ -131,14 +130,14 @@ class LoaderController extends MobileController
         ]);
     }
 
-    // #[Route('/admin/loader/checkQuery/', name: 'admin_loader_check_query', condition: 'request.isXmlHttpRequest()')]
-    // public function checkQuery(): JsonResponse
-    // {
-    //     /** @var User $user */
-    //     $user = $this->getUser();
+    #[Route('/admin/loader/checkQuery/', name: 'admin_loader_check_query', condition: 'request.isXmlHttpRequest()')]
+    public function checkQuery(): JsonResponse
+    {
+        /** @var User $user */
+        $user = $this->getUser();
 
-    //     return new JsonResponse([
-    //         'result' => $this->loaderService->checkUserQueryIsEmpty($user)
-    //     ]);
-    // }
+        return new JsonResponse([
+            'result' => $this->loaderService->checkUserQueryIsEmpty($user)
+        ]);
+    }
 }
