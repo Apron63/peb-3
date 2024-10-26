@@ -1175,6 +1175,7 @@ img {
 .results_protocols_wrapper {
   display: flex;
   flex-direction: column;
+  align-items: flex-start;
 }
 
 .results_protocols_item {
@@ -1260,19 +1261,25 @@ img {
 }
 
 .question {
-  flex: 0 0 43%;
+  flex: 0 0 29%;
   padding-left: 7px;
   padding-right: 7px;
 }
 
 .answer {
-  flex: 0 0 43%;
+  flex: 0 0 29%;
   padding-left: 7px;
   padding-right: 7px;
 }
 
 .result {
-  flex: 0 0 10%;
+  flex: 0 0 9%;
+  padding-left: 7px;
+  padding-right: 7px;
+}
+
+.correct-answer {
+  flex: 0 0 29%;
   padding-left: 7px;
 }
 

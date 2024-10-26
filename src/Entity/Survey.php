@@ -37,6 +37,9 @@ class Survey
     #[ORM\Column(length: 5000)]
     private ?string $question4 = null;
 
+    #[ORM\Column(length: 5000)]
+    private ?string $question5 = null;
+
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     #[Gedmo\Timestampable(on: 'create')]
     private ?DateTimeInterface $createdAt = null;
@@ -114,6 +117,18 @@ class Survey
     public function setQuestion4(string $question4): static
     {
         $this->question4 = $question4;
+
+        return $this;
+    }
+
+    public function getQuestion5(): ?string
+    {
+        return $this->question5;
+    }
+
+    public function setQuestion5(string $question5): static
+    {
+        $this->question5 = $question5;
 
         return $this;
     }

@@ -28,7 +28,8 @@ class SurveyService
             ->setQuestion1($surveyDto->question1)
             ->setQuestion2($surveyDto->question2)
             ->setQuestion3($surveyDto->question3)
-            ->setQuestion4($surveyDto->question4);
+            ->setQuestion4($surveyDto->question4)
+            ->setQuestion5($surveyDto->question5);
 
         $this->surveyRepository->save($survey, true);
 
@@ -54,6 +55,7 @@ class SurveyService
         . 'Курс полезен для Вас : ' . $surveyDto->question1 . '<br>'
         . 'Насколько материал курса соответствует вашим ожиданиям? Что бы вы предложили изменить/улучшить : ' . $surveyDto->question2 . '<br>'
         . 'Вам удобно и понятно пользоваться обучающей платформой : ' . $surveyDto->question3 . '<br>'
-        . 'Ваши пожелания и предложения по обучающей платформе. Что нам изменить/улучшить в платформе : ' . $surveyDto->question4 . '<br>';
+        . 'Ваши пожелания и предложения по обучающей платформе. Что нам изменить/улучшить в платформе : ' . $surveyDto->question4 . '<br>'
+        . 'Ваши контакты (почта и телефон) : ' . $surveyDto->question5 . '<br>';
     }
 }

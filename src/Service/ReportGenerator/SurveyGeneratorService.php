@@ -104,6 +104,7 @@ class SurveyGeneratorService
         $workSheet->setCellValue('G1', 'Насколько материал курса соответствует вашим ожиданиям? Что бы вы предложили изменить/улучшить?');
         $workSheet->setCellValue('H1', 'Вам удобно и понятно пользоваться обучающей платформой?');
         $workSheet->setCellValue('I1', 'Ваши пожелания и предложения по обучающей платформе. Что нам изменить/улучшить в платформе?');
+        $workSheet->setCellValue('J1', 'Ваши контакты (почта и телефон)');
 
         $rowNom = 2;
 
@@ -117,6 +118,7 @@ class SurveyGeneratorService
             $workSheet->setCellValue('G' . $rowNom, $row->getQuestion2());
             $workSheet->setCellValue('H' . $rowNom, $row->getQuestion3());
             $workSheet->setCellValue('I' . $rowNom, $row->getQuestion4());
+            $workSheet->setCellValue('J' . $rowNom, $row->getQuestion5());
 
             $workSheet->getRowDimension($rowNom)->setRowHeight(-1);
 
@@ -141,10 +143,10 @@ class SurveyGeneratorService
             ],
         ];
 
-        $workSheet->getStyle('A1:I' . 1)->applyFromArray($headerStyleArray, false);
-        $workSheet->getStyle('A2:I' . $rowNom - 1)->applyFromArray($bodyStyleArray, false);
+        $workSheet->getStyle('A1:J' . 1)->applyFromArray($headerStyleArray, false);
+        $workSheet->getStyle('A2:J' . $rowNom - 1)->applyFromArray($bodyStyleArray, false);
 
-        $workSheet->getStyle('A1:I' . $rowNom - 1)->getAlignment()->setWrapText(true);
+        $workSheet->getStyle('A1:J' . $rowNom - 1)->getAlignment()->setWrapText(true);
 
         $workSheet->getColumnDimension('A')->setWidth(5);
         $workSheet->getColumnDimension('B')->setWidth(10);
@@ -155,6 +157,7 @@ class SurveyGeneratorService
         $workSheet->getColumnDimension('G')->setWidth(30);
         $workSheet->getColumnDimension('H')->setWidth(25);
         $workSheet->getColumnDimension('I')->setWidth(30);
+        $workSheet->getColumnDimension('J')->setWidth(30);
 
         $fileName = $this->personalPath . DIRECTORY_SEPARATOR . (new DateTime())->format('d-m-Y_H_i_s') . '.xlsx';
         $writer = XlsxFactory::createWriter($spreadsheet, 'Xlsx');
@@ -185,9 +188,10 @@ class SurveyGeneratorService
         $table->addCell(1500)->addText('Организация');
         $table->addCell(1500)->addText('Курс');
         $table->addCell(700)->addText('Курс полезен для Вас?');
-        $table->addCell(1000)->addText('Насколько материал курса соответствует вашим ожиданиям? Что бы вы предложили изменить/улучшить?');
+        $table->addCell(700)->addText('Насколько материал курса соответствует вашим ожиданиям? Что бы вы предложили изменить/улучшить?');
         $table->addCell(700)->addText('Вам удобно и понятно пользоваться обучающей платформой?');
-        $table->addCell(1000)->addText('Ваши пожелания и предложения по обучающей платформе. Что нам изменить/улучшить в платформе?');
+        $table->addCell(700)->addText('Ваши пожелания и предложения по обучающей платформе. Что нам изменить/улучшить в платформе?');
+        $table->addCell(700)->addText('Ваши контакты (почта и телефон)');
 
         $rowNom = 1;
 
@@ -200,9 +204,10 @@ class SurveyGeneratorService
             $table->addCell(1500)->addText($row->getUser()->getOrganization());
             $table->addCell(1500)->addText($row->getCourse()->getName());
             $table->addCell(700)->addText($row->getQuestion1());
-            $table->addCell(1000)->addText($row->getQuestion2());
+            $table->addCell(700)->addText($row->getQuestion2());
             $table->addCell(700)->addText($row->getQuestion3());
-            $table->addCell(1000)->addText($row->getQuestion4());
+            $table->addCell(700)->addText($row->getQuestion4());
+            $table->addCell(700)->addText($row->getQuestion5());
 
             $rowNom ++;
         }

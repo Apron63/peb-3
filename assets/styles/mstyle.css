@@ -54,7 +54,8 @@
     .results_table_header .number,
     .results_table_header .question,
     .results_table_header .answer,
-    .results_table_header .result {
+    .results_table_header .result,
+    .results_table_header .correct-answer {
         display: none;
     }
 
@@ -69,7 +70,8 @@
 
     .results_table_content .results_table_row .question,
     .results_table_content .results_table_row .answer,
-    .results_table_content .results_table_row .result {
+    .results_table_content .results_table_row .result,
+    .results_table_content .results_table_row .correct-answer {
         padding-right: 0;
         padding-left: 0;
         padding-bottom: 5px;

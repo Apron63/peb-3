@@ -122,6 +122,12 @@ class TestingService
                             $protocol[$key]['aText'][] = $answers[$answerKey]['description'];
                         }
                     }
+
+                    foreach ($answers as $answer) {
+                        if ($answer['isCorrect']) {
+                            $protocol[$key]['aRightText'][] = $answer['description'];
+                        }
+                    }
                 break;
             }
         }

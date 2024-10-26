@@ -215,17 +215,17 @@
                                 </div>
                             </div>
                             <label class="test_form_label test_form_radio_wrapper">
-                                <input class="test_form_radio" type="radio" name="Курс полезен для Вас?" value="Да">
+                                <input class="test_form_radio" type="radio" name="question1" value="Да">
                                 <div class="test_form_custom_radio"></div>
                                 <div class="test_form_answer">Да</div>
                             </label>
                             <label class="test_form_label test_form_radio_wrapper">
-                                <input class="test_form_radio" type="radio" name="Курс полезен для Вас?" value="Нет">
+                                <input class="test_form_radio" type="radio" name="question1" value="Нет">
                                 <div class="test_form_custom_radio"></div>
                                 <div class="test_form_answer">Нет</div>
                             </label>
                             <label class="test_form_label test_form_radio_wrapper">
-                                <input class="test_form_radio" type="radio" name="Курс полезен для Вас?" value="Затрудняюсь ответить">
+                                <input class="test_form_radio" type="radio" name="question1" value="Затрудняюсь ответить">
                                 <div class="test_form_custom_radio"></div>
                                 <div class="test_form_answer">Затрудняюсь ответить</div>
                             </label>
@@ -242,8 +242,7 @@
                             </div>
                             <textarea id="usability"
                                       class="test_form_textarea"
-                                      name="Насколько материал курса соответствует вашим ожиданиям? Что
-                                        бы вы предложили изменить/улучшить?"
+                                      name="question2"
                                       rows="5"></textarea>
 
                             <!--3 вопрос-->
@@ -258,7 +257,7 @@
                             <label class="test_form_label test_form_radio_wrapper">
                                 <input class="test_form_radio"
                                        type="radio"
-                                       name="Вам удобно и понятно пользоваться обучающей платформой?"
+                                       name="question3"
                                        value="Да">
                                 <div class="test_form_custom_radio"></div>
                                 <div class="test_form_answer">Да</div>
@@ -266,7 +265,7 @@
                             <label class="test_form_label test_form_radio_wrapper">
                                 <input class="test_form_radio"
                                        type="radio"
-                                       name="Вам удобно и понятно пользоваться обучающей платформой?"
+                                       name="question3"
                                        value="Нет">
                                 <div class="test_form_custom_radio"></div>
                                 <div class="test_form_answer">Нет</div>
@@ -274,7 +273,7 @@
                             <label class="test_form_label test_form_radio_wrapper">
                                 <input class="test_form_radio"
                                        type="radio"
-                                       name="Вам удобно и понятно пользоваться обучающей платформой?"
+                                       name="question3"
                                        value="Затрудняюсь ответить">
                                 <div class="test_form_custom_radio"></div>
                                 <div class="test_form_answer">Затрудняюсь ответить</div>
@@ -292,8 +291,21 @@
                             </div>
                             <textarea id="wish"
                                       class="test_form_textarea"
-                                      name="Ваши пожелания и предложения по обучающей платформе.
-                                        Что нам изменить/улучшить в платформе? "
+                                      name="question4"
+                                      rows="5"></textarea>
+                            <!--5 вопрос-->
+                            <div class="test_form_question_wrapper">
+                                <div class="test_form_question_number">
+                                    5.
+                                </div>
+                                <div class="test_form_question">
+                                    Ваши контакты (почта и телефон). Они нужны, чтобы мы могли уточнить детали или дать обратную связь, если
+                                    Вы оставите предложение/замечание:
+                                </div>
+                            </div>
+                            <textarea id="contacts"
+                                      class="test_form_textarea"
+                                      name="question5"
                                       rows="5"></textarea>
                             <button type="button" class="white-blue_button survey-test_button" survey-form-elem="submit">Отправить</button>
                             <div class="survey-test_form_error" survey-form-elem="error">

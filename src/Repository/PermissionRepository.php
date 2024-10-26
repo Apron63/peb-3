@@ -93,7 +93,9 @@ class PermissionRepository extends ServiceEntityRepository
     public function getPermissionLeftMenu(User $user): array
     {
         return $this->createQueryBuilder('p')
+            ->join('p.course', 'c')
             ->where('p.user = :user')
+            ->andWhere('c.hidden != 1')
             ->andWhere('DateDiff(Now(), p.createdAt) <= p.duration')
             ->setParameter('user', $user)
             ->getQuery()

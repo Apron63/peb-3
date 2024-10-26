@@ -24,5 +24,8 @@ class SurveyDto
         #[Assert\NotBlank]
         #[Assert\Length(max:5000)]
         public readonly string $question4,
+
+        #[Assert\Length(max:5000)]
+        public readonly string $question5,
     ) {}
 }

@@ -56,22 +56,20 @@
     <thead>
         <tr>
             <th align="center" width="25">№</th>
-            <th width="200">Вопрос</th>
-            <th width="200">Ответ</th>
-            <th width="100">Результат</th>
+            <th width="150">Вопрос</th>
+            <th width="150">Ответ</th>
+            <th width="80">Результат</th>
+            <th width="150">Верный ответ</th>
         </tr>
     </thead>
     <tbody>
         {% for question in logger.protocol %}
             <tr>
                 <td align="center" width="25">{{ question.nom }}</td>
-                <td width="200">{{ question.qText | raw }}</td>
-                <td width="200">
-                    {% for answer in question.aText %}
-                        {{ answer | raw }}
-                    {% endfor %}
-                </td>
-                <td width="100">{% if question['isCorrect'] %}Правильно{% else %}Неправильно{% endif %}</td>
+                <td width="150">{{ question.qText | raw }}</td>
+                <td width="150">{% for answer in question.aText %}{{ answer | raw }}{% endfor %}</td>
+                <td width="80">{% if question['isCorrect'] %}Правильно{% else %}Неправильно{% endif %}</td>
+                <td width="150">{% if question.aRightText is defined %}{{ question.aRightText | join('; ') | raw }}{% endif %}</td>
             </tr>
         {% endfor %}
     </tbody>
