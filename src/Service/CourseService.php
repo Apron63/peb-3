@@ -6,18 +6,21 @@ use App\Entity\Course;
 use App\Entity\CourseTheme;
 use App\Entity\Module;
 use App\Entity\ModuleSection;
+use App\Entity\ModuleSectionPage;
 use App\Entity\Permission;
 use App\Event\AutonumerationCancelledEvent;
 use App\Repository\CourseThemeRepository;
 use App\Repository\ModuleRepository;
+use App\Repository\ModuleSectionPageRepository;
 use App\Repository\ModuleSectionRepository;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 class CourseService
 {
     public function __construct(
-        private readonly ModuleSectionRepository $moduleSectionRepository,
         private readonly ModuleRepository $moduleRepository,
+        private readonly ModuleSectionRepository $moduleSectionRepository,
+        private readonly ModuleSectionPageRepository $moduleSectionPageRepository,
         private readonly CourseThemeRepository $courseThemeRepository,
         private readonly EventDispatcherInterface $eventDispatcher,
     ) {}
@@ -101,6 +104,37 @@ class CourseService
         if ($sortOrderChanged) {
             $this->eventDispatcher->dispatch(new AutonumerationCancelledEvent($course->getId()));
         }
+    }
+
+    public function addVideoInstructionForInteractive(Course $course): void
+    {
+        $module = new Module();
+
+        $module
+            ->setCourse($course)
+            ->setName('Видеоинструкция')
+            ->setSortOrder(1);
+
+        $this->moduleRepository->save($module, true);
+
+        $moduleSection = new ModuleSection();
+
+        $moduleSection
+            ->setModule($module)
+            ->setName('Как работать с интерактивным курсом?')
+            ->setType(ModuleSection::TYPE_NORMAL);
+
+        $this->moduleSectionRepository->save($moduleSection, true);
+
+        $moduleSectionPage = new ModuleSectionPage();
+
+        $moduleSectionPage
+            ->setSection($moduleSection)
+            ->setName('Как работать с интерактивным курсом?')
+            ->setType(ModuleSectionPage::TYPE_YOUTUBE)
+            ->setUrl('https://rutube.ru/play/embed/e1e9cbd1f929f7b2c5abe4d0381b028e/');
+
+        $this->moduleSectionPageRepository->save($moduleSectionPage, true);
     }
 
     private function getModuleSectionByCourse(Course $course): array

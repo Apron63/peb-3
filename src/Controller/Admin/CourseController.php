@@ -91,6 +91,10 @@ class CourseController extends MobileController
         if ($form->isSubmitted() && $form->isValid()) {
             $this->courseRepository->save($course, true);
 
+            if (Course::INTERACTIVE === $course->getType()) {
+                $this->courseService->addVideoInstructionForInteractive($course);
+            }
+
             $this->addFlash('success', 'Курс добавлен');
 
             return $this->getRedirectUrl($request, 'admin_course_list');
