@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use Psr\Log\LogLevel;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
 
 return static function (ContainerConfigurator $containerConfigurator): void {
@@ -16,7 +17,7 @@ return static function (ContainerConfigurator $containerConfigurator): void {
                 'main' => [
                     'type' => 'stream',
                     'path' => '%kernel.logs_dir%/%kernel.environment%.log',
-                    'level' => 'info',
+                    'level' => LogLevel::NOTICE,
                     'channels' => [
                         '!event',
                     ],
@@ -62,7 +63,7 @@ return static function (ContainerConfigurator $containerConfigurator): void {
                 'main' => [
                     'type' => 'stream',
                     'path' => '%kernel.logs_dir%/%kernel.environment%.log',
-                    'level' => 'error',
+                    'level' => LogLevel::ERROR,
                     'channels' => [
                         '!event',
                     ],
