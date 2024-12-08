@@ -63,6 +63,14 @@
             </div>
         </div>
 
+        <div class="row mb-3 offset-2">
+            <div class="form-check form-switch">
+                <span class="text-danger">{{ form_errors(form.checkedMe) }}</span>
+                {{ form_label(form.checkedMe) }}
+                {{ form_widget(form.checkedMe) }}
+            </div>
+        </div>
+
         <div class="row mb-3">
             {{ form_label(form.course) }}
             <div class="col-sm-10">

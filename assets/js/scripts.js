@@ -230,23 +230,6 @@ if (mainMenu) {
   openMenuAfterLoad(mainMenu);
 }
 
-let programs = document.querySelector('[content-elem="programs"]');
-
-if (programs) {
-  let programsItems = programs.querySelectorAll(
-    '[content-elem="programs-item"]'
-  );
-
-  programsItems.forEach((element) => {
-    element.addEventListener("mouseover", () => {
-      element.classList.add("hover");
-    });
-    element.addEventListener("mouseleave", () => {
-      element.classList.remove("hover");
-    });
-  });
-}
-
 let finalTestingLink = document.querySelector('[content-elem="final-testing"]');
 
 if (finalTestingLink) {

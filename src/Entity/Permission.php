@@ -71,6 +71,10 @@ class Permission
     #[ORM\JoinColumn(name: 'created_by')]
     private ?User $createdBy = null;
 
+    #[ORM\ManyToOne]
+    #[ORM\JoinColumn(name: 'checked_by')]
+    private ?User $checkedBy = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -261,5 +265,17 @@ class Permission
         return $this
             ->createdAt
             ->add(new DateInterval('P' . $this->duration . 'D'));
+    }
+
+    public function getCheckedBy(): ?User
+    {
+        return $this->checkedBy;
+    }
+
+    public function setCheckeddBy(?User $checkedBy): self
+    {
+        $this->checkedBy = $checkedBy;
+
+        return $this;
     }
 }

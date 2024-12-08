@@ -76,6 +76,27 @@
                         <li><a class="dropdown-item color-item" href="{{ path('admin_email_statistic_create', {type: 'XLSX', criteria: criteria}) }}">XLSX</a></li>
                     </ul>
                 </div>
+                <a
+                    class="btn btn-outline-dark"
+                    href="{{ path('admin_permission_check_select_all', {criteria: criteria}) }}"
+                    onclick="return window.confirm('Подтвердите действие')"
+                >
+                    Выбрать всех
+                </a>
+                <a
+                    class="btn btn-outline-dark"
+                    href="{{ path('admin_permission_check_cancel_select', {criteria: criteria}) }}"
+                    onclick="return window.confirm('Подтвердите действие')"
+                >
+                    Снять отметку
+                </a>
+                <button
+                    class="btn btn-outline-dark"
+                    id="permission-checked-prolongate"
+                    data-url="{{ path('admin_permission_prolongate_load_form') }}"
+                >
+                    Продлить доступы
+                </button>
             </div>
         </div>
     </div>
@@ -84,6 +105,7 @@
         <table class="table">
             <thead>
                 <tr>
+                    <th></th>
                     <th>Создан</th>
                     <th>Логин</th>
                     <th>ФИО</th>
@@ -98,6 +120,20 @@
             <tbody>
                 {% for permission in pagination %}
                     <tr>
+                        <td>
+                            <div>
+                                <input
+                                    class="form-check-input user-list-checkbox"
+                                    type="checkbox"
+                                    data-permission-id="{{ permission.permissionId }}"
+                                    value=""
+                                    aria-label="..."
+                                    {% if permission.checkedMe %}
+                                        checked
+                                    {% endif %}
+                                >
+                            </div>
+                        </td>
                         <td>{{ permission.createdAt | date('d.m.Y H:i:s') }}</td>
                         <td>
                             <a href="{{ path('admin_user_edit', {'id': permission.userId}) }}">{{ permission.login }}</a>
@@ -143,5 +179,6 @@
     </div>
 
     <input type="hidden" id="add-duration-button" data-add-duration-url="{{ path('admin_permission_add_duration') }}">
+    <input type="hidden" id="check-user-list" data-check-user-list-url="{{ path('admin_permission_check_permission') }}">
 
 {% endblock %}

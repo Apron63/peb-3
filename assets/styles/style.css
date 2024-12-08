@@ -691,7 +691,7 @@ img {
   z-index: 1;
 }
 
-.programs_item.hover .programs_item_status_wrapper {
+.programs_item:hover .programs_item_status_wrapper {
   display: flex;
 }
 

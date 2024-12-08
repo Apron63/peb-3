@@ -32,6 +32,10 @@ class UserController extends MobileController
     {
         $criteria = $request->get('user_search');
 
+        /** @var User $user */
+        $user = $this->getUser();
+        $criteria['userId'] = $user->getId();
+
         $query = $this->userRepository->getUserSearchQuery($criteria);
 
         $pagination = $this->paginator->paginate(

@@ -40,3 +40,68 @@ $('#change-user-password').on('click', function() {
        console.log(data)
     })
 })
+
+$('.user-list-checkbox').on('click', function(e) {
+    e.stopImmediatePropagation
+
+    let permissionId = $(e.target).data('permission-id')
+    let url = $('#check-user-list').data('check-user-list-url')
+
+    $.ajax({
+        url: url,
+        data: {permissionId: permissionId}
+    }).done(function (data) {
+        if (data.length !== 0) {
+            $(e.target).prop('checked', false)
+
+            $('#toast-message').html(data)
+            $('.toast-header').css('background-color', 'red')
+            let toast = new bootstrap.Toast(toastLiveExample)
+            toast.show()
+        }
+    }).fail(function (data) {
+       console.log(data)
+    })
+})
+
+$('#permission-checked-prolongate').on('click', function(e) {
+    e.stopImmediatePropagation
+
+    $.ajax({
+        url: $('#permission-checked-prolongate').data('url')
+    }).done(function (data) {
+        $('#myModalLabel').html('Массовое продление доступов')
+        $('#myModalBody').html(data)
+
+        const myModal = new bootstrap.Modal($('#myModal'), {
+            keyboard: false
+        })
+
+        myModal.show()
+
+        $('#permission-action-prolongate').on('click', function() {
+            let duration = $('#add_days').val()
+            if (duration === 0 || duration === '') {
+                alert('Не указано количество дней!')
+                return false
+            }
+
+            if (duration > 999) {
+                duration = 999
+            }
+
+            $.ajax({
+                url: $('#permission-action-prolongate').data('url'),
+                data: {duration: duration}
+            }).done(function (data) {
+                window.location.reload(true)
+            }).fail(function (data) {
+                console.log(data)
+            }).always(function(data) {
+                myModal.hide()
+            })
+        })
+    }).fail(function (data) {
+        console.log(data)
+    })
+})
