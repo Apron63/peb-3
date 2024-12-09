@@ -35,7 +35,7 @@ class StatisticGeneratorService
 
     public function generateEmail(User $user, string $type, array $criteria): void
     {
-        $data = $this->userRepository->getUserSearchQuery($criteria['user_search'])->getResult();
+        $data = $this->userRepository->getUserSearchQuery($criteria['user_search'], true)->getResult();
         $this->personalPath = $this->getUserUploadDir($user);
 
         match ($type) {
@@ -47,7 +47,7 @@ class StatisticGeneratorService
 
     public function generateDocument(User $user, string $type, array $criteria): string
     {
-        $data = $this->userRepository->getUserSearchQuery($criteria['user_search'])->getResult();
+        $data = $this->userRepository->getUserSearchQuery($criteria['user_search'], true)->getResult();
         $this->personalPath = $this->getUserUploadDir($user);
 
         return match ($type) {

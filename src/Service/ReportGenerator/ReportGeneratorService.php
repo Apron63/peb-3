@@ -25,7 +25,7 @@ class ReportGeneratorService
 
     public function generateEmail(User $user, string $type, array $criteria): void
     {
-        $data = $this->userRepository->getUserSearchQuery($criteria['user_search'])->getResult();
+        $data = $this->userRepository->getUserSearchQuery($criteria['user_search'], true)->getResult();
         $this->personalPath = $this->getUserUploadDir($user);
 
         match ($type) {
@@ -38,7 +38,7 @@ class ReportGeneratorService
 
     public function generateDocument(User $user, string $type, array $criteria): string
     {
-        $data = $this->userRepository->getUserSearchQuery($criteria['user_search'])->getResult();
+        $data = $this->userRepository->getUserSearchQuery($criteria['user_search'], true)->getResult();
         $this->personalPath = $this->getUserUploadDir($user);
 
         return match ($type) {
@@ -201,10 +201,9 @@ class ReportGeneratorService
             if ($courseName !== $row['shortName']) {
                 $table->addRow();
                 $table->addCell(500, ['bgColor'=>'EEEEEE']);
-                $table->addCell(1000, ['bgColor'=>'EEEEEE'])->addText('Курс');
                 $cell = $table->addCell(null, ['bgColor'=>'EEEEEE']);
-                $cell->addText($row['name']);
-                $cell->getStyle()->setGridSpan(7);
+                $cell->addText('Курс ' . $row['name']);
+                $cell->getStyle()->setGridSpan(5);
 
                 $courseName = $row['shortName'];
                 $nom = 1;

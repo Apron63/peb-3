@@ -202,7 +202,7 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         }
 
         if ($forReport) {
-            $queryBuilder->orderBy('p.course');
+            $queryBuilder->orderBy('c.name, u.fullName');
         }
 
         return $queryBuilder->getQuery();

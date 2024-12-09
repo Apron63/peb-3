@@ -15,7 +15,7 @@
             <div class="btn-group">
                 <div class="dropdown">
                     <button class="btn btn-outline-dark dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
-                        Скачать статистику
+                        Cтатистика
                     </button>
                     <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
                         <li><a class="dropdown-item color-item" href="{{ path('admin_user_report_statistic_to_pdf', {criteria: criteria}) }}">PDF</a></li>
@@ -32,7 +32,7 @@
                         aria-haspopup="true"
                         aria-expanded="false"
                     >
-                        Скачать данные
+                        Данные
                     </button>
                     <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton2">
                         <li><a class="dropdown-item color-item" href="{{ path('admin_user_report_list_to_csv', {criteria: criteria}) }}">CSV</a></li>
@@ -50,7 +50,7 @@
                         aria-haspopup="true"
                         aria-expanded="false"
                     >
-                        Скачать и отправить данные
+                        Отправить данные
                     </button>
                     <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton3">
                         <li><a class="dropdown-item color-item" href="{{ path('admin_email_report_create', {type: 'CSV', criteria: criteria}) }}">CSV</a></li>
@@ -68,7 +68,7 @@
                         aria-haspopup="true"
                         aria-expanded="false"
                     >
-                        Скачать и отправить статистику
+                        Отправить статистику
                     </button>
                     <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton4">
                         <li><a class="dropdown-item color-item" href="{{ path('admin_email_statistic_create', {type: 'PDF', criteria: criteria}) }}">PDF</a></li>
