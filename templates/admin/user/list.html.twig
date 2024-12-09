@@ -4,14 +4,13 @@
 
 {% block content %}
     <h3>Список пользователей</h3>
-    <div class="row count">
+    <span>Всего записей: {{ pagination.getTotalItemCount }}</span>
+
+    <div class="row">
 
         {% set criteria = app.request.query.all %}
 
-        <div class="col-2">
-            Всего записей: {{ pagination.getTotalItemCount }}
-        </div>
-        <div class="col-10">
+        <div class="col-12">
             <div class="btn-group">
                 <div class="dropdown">
                     <button class="btn btn-outline-dark dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
