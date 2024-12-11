@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Form\Admin;
 
 use App\Entity\Course;
@@ -7,7 +9,6 @@ use App\Entity\Profile;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -143,16 +144,6 @@ class UserSearchType extends AbstractType
                 },
                 'label_attr' => [
                     'class' => 'col-sm-2 col-form-label'
-                ],
-            ])
-            ->add('checkedMe', CheckboxType::class, [
-                'label' => 'Выбранные мной',
-                'required' => false,
-                'attr' => [
-                    'class' => 'form-check-input',
-                ],
-                'label_attr' => [
-                    'class' => 'form-check-label',
                 ],
             ])
             ->add('lifeSearch', TextType::class, [

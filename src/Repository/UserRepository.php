@@ -196,11 +196,6 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
                 ->setParameter('course', $criteria['course']);
         }
 
-        if (isset($criteria['checkedMe'], $criteria['userId']) && $criteria['checkedMe']) {
-            $queryBuilder->andWhere('p.checkedBy = :userId')
-                ->setParameter('userId', $criteria['userId']);
-        }
-
         if ($forReport) {
             $queryBuilder->orderBy('c.name, u.fullName');
         }
