@@ -179,7 +179,7 @@ class SurveyGeneratorService
         $section = $phpWord->addSection();
         $section->addText();
 
-        $table = $section->addTable();
+        $table = $section->addTable(['borderSize' => 1]);
 
         $table->addRow();
         $table->addCell(500)->addText('Ном');

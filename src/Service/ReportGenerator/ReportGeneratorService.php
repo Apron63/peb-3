@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Service\ReportGenerator;
 
 use App\Entity\User;
@@ -187,7 +189,7 @@ class ReportGeneratorService
         $section = $phpWord->addSection();
         $section->addText();
 
-        $table = $section->addTable();
+        $table = $section->addTable(['borderSize' => 1]);
 
         $table->addRow();
         $table->addCell(500)->addText('Ном');

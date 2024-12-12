@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Service\ReportGenerator;
 
 use App\Entity\Permission;
@@ -7,7 +9,6 @@ use App\Entity\User;
 use App\Repository\LoggerRepository;
 use App\Repository\PermissionRepository;
 use App\Repository\UserRepository;
-use App\Service\EmailService\EmailService;
 use DateTime;
 use jonasarts\Bundle\TCPDFBundle\TCPDF\TCPDF;
 use PhpOffice\PhpSpreadsheet\IOFactory as XlsxFactory;
@@ -94,7 +95,7 @@ class StatisticGeneratorService
         $section = $phpWord->addSection();
         $section->addText('');
 
-        $table = $section->addTable();
+        $table = $section->addTable(['borderSize' => 1]);
 
         $table->addRow();
         $table->addCell(300)->addText('№');
