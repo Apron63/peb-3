@@ -119,6 +119,19 @@
         </div>
     {% endif %}
 
+    {% if is_granted('ROLE_SUPER_ADMIN') %}
+        <div class="mb-3 row">
+            <div class="col-sm-2"></div>
+            <div class="col-10 mb-3">
+                <div class="form-check form-switch">
+                    <span class="text-danger">{{ form_errors(form.whatsappConfirmed) }}</span>
+                    {{ form_label(form.whatsappConfirmed) }}
+                    {{ form_widget(form.whatsappConfirmed) }}
+                </div>
+            </div>
+        </div>
+    {% endif %}
+
     <div class="form-group mb-3 offset-2">
         {{ form_widget(form.submit) }}
         {% if user.id is not null %}

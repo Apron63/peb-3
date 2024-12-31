@@ -44,7 +44,7 @@
         <div class="col-3">
             <div class="card">
                 <div class="card-header">
-                    Рассылки
+                    Рассылки Email
                 </div>
                 <div class="card-body">
                     <table>
@@ -58,7 +58,7 @@
                         </tr>
                     </table>
                     <div>
-                        <a href="{{ path('admin_dashboard_mail_list')}}" class="btn btn-sm btn-outline-primary">Подробнее...</a>
+                        <a href="{{ path('admin_dashboard_mail_list') }}" class="btn btn-sm btn-outline-primary">Подробнее...</a>
                     </div>
                 </div>
             </div>
@@ -67,23 +67,21 @@
         <div class="col-3">
             <div class="card">
                 <div class="card-header">
-                    Очередь слушателей
+                    Рассылки WhatsApp
                 </div>
                 <div class="card-body">
                     <table>
                         <tr>
-                            <td><p class="card-text">Ожидают создания: </p></td>
-                            <td><p class="card-text text-end">{{ data.queryJobNewCount }}</p></td>
+                            <td><p class="card-text">Создано за сегодня</p></td>
+                            <td><p class="card-text text-end">{{ data.whatsappCreatedToday }}</p></td>
+                        </tr>
+                        <tr>
+                            <td><p class="card-text">Неотправленных</p></td>
+                            <td><p class="card-text text-end">{{ data.whatsappNotSended }}</p></td>
                         </tr>
                     </table>
                     <div>
-                        <a
-                            href="{{ path('admin_dashboard_query_user_clear')}}"
-                            class="btn btn-sm btn-outline-primary"
-                            onclick="return window.confirm('Подтвердите действие');"
-                        >
-                            Очистить
-                        </a>
+                        <a href="{{ path('admin_dashboard_whatsapp_list') }}" class="btn btn-sm btn-outline-primary">Подробнее...</a>
                     </div>
                 </div>
             </div>
@@ -95,23 +93,42 @@
                     Действия
                 </div>
                 <div class="card-body">
+                    <table>
+                        <tr>
+                            <td><p class="card-text">Очередь: </p></td>
+                            <td><p class="card-text text-end">{{ data.queryJobNewCount }}</p></td>
+                        </tr>
+                    </table>
+
+                    <div>
+                        <a
+                            href="{{ path('admin_dashboard_query_user_clear')}}"
+                            class="btn btn-sm btn-outline-primary"
+                            onclick="return window.confirm('Подтвердите действие');"
+                        >
+                            Очистить
+                        </a>
+                    </div>
+
+                    <p></p>
+
                     <div>
                         <a
                             href="{{ path('admin_action_log') }}"
                             class="btn btn-sm btn-outline-primary"
                         >
-                            Просмотр
+                            Действия
                         </a>
                     </div>
                     <p></p>
-                    <div>
+                    {# <div>
                         <a
                             href="{{ path('admin_testing_history') }}"
                             class="btn btn-sm btn-outline-primary"
                         >
                             Проверка тестирования
                         </a>
-                    </div>
+                    </div> #}
                 </div>
             </div>
         </div>
@@ -120,37 +137,10 @@
     <p></p>
 
     {{ form_start(form) }}
-
         <div class="col-12">
             <div class="card">
-                 <div class="card-header">
-                   {{ form_label(form.emailAttachmentStatisticText) }}
-                </div>
-                <div class="card-body">
-                    {{ form_widget(form.emailAttachmentStatisticText) }}
-                </div>
-            </div>
-        </div>
-
-        <p></p>
-
-        <div class="col-12">
-            <div class="card">
-                 <div class="card-header">
-                   {{ form_label(form.emailAttachmentResultText) }}
-                </div>
-                <div class="card-body">
-                    {{ form_widget(form.emailAttachmentResultText) }}
-                </div>
-            </div>
-        </div>
-
-        <p></p>
-
-        <div class="col-12">
-            <div class="card">
-                 <div class="card-header">
-                   {{ form_label(form.userHasNewPermission) }}
+                <div class="card-header">
+                {{ form_label(form.userHasNewPermission) }}
                 </div>
                 <div class="card-body">
                     {{ form_widget(form.userHasNewPermission) }}
@@ -162,8 +152,8 @@
 
         <div class="col-12">
             <div class="card">
-                 <div class="card-header">
-                   {{ form_label(form.userHasActivatedPermission) }}
+                <div class="card-header">
+                {{ form_label(form.userHasActivatedPermission) }}
                 </div>
                 <div class="card-body">
                     {{ form_widget(form.userHasActivatedPermission) }}
@@ -175,11 +165,74 @@
 
         <div class="col-12">
             <div class="card">
-                 <div class="card-header">
-                   {{ form_label(form.permissionWillEndSoon) }}
+                <div class="card-header">
+                {{ form_label(form.permissionWillEndSoon) }}
                 </div>
                 <div class="card-body">
                     {{ form_widget(form.permissionWillEndSoon) }}
+                </div>
+            </div>
+        </div>
+
+        <p></p>
+
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    {{ form_label(form.emailAttachmentStatisticText) }}
+                </div>
+                <div class="card-body">
+                    {{ form_widget(form.emailAttachmentStatisticText) }}
+                </div>
+            </div>
+        </div>
+
+        <p></p>
+
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    {{ form_label(form.emailAttachmentResultText) }}
+                </div>
+                <div class="card-body">
+                    {{ form_widget(form.emailAttachmentResultText) }}
+                </div>
+            </div>
+        </div>
+
+        <p></p>
+
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    {{ form_label(form.userHasNewPermissionWhatsapp) }}
+                </div>
+                <div class="card-body">
+                    {{ form_widget(form.userHasNewPermissionWhatsapp) }}
+                </div>
+            </div>
+        </div>
+
+        <p></p>
+
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    {{ form_label(form.userHasActivatedPermissionWhatsapp) }}
+                </div>
+                <div class="card-body">
+                    {{ form_widget(form.userHasActivatedPermissionWhatsapp) }}
+                </div>
+            </div>
+        </div>
+
+        <p></p><div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    {{ form_label(form.permissionWillEndSoonWhatsapp) }}
+                </div>
+                <div class="card-body">
+                    {{ form_widget(form.permissionWillEndSoonWhatsapp) }}
                 </div>
             </div>
         </div>

@@ -1,5 +1,7 @@
 <?php
 
+declare (strict_types=1);
+
 namespace App\Service;
 
 use DateTime;
@@ -15,6 +17,7 @@ use App\Message\Query1CUploadMessage;
 use App\Repository\CourseRepository;
 use App\Repository\QueryUserRepository;
 use App\Repository\PermissionRepository;
+use Exception;
 use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
@@ -86,6 +89,10 @@ class LoaderService
                 $queryUser->setEmail($loader->getEmail());
             }
 
+            if (! empty($loader->getContact())) {
+                $queryUser->setContact($loader->getContact());
+            }
+
             $this->queryUserRepository->save($queryUser, true);
         }
 
@@ -102,7 +109,7 @@ class LoaderService
         $createdBy = $this->userRepository->find($userId);
 
         if (! $createdBy instanceof User) {
-            throw new RuntimeException('User id: ' . $userId . ' not found');
+            throw new RuntimeException('Creating user - creator id: ' . $userId . ' not found');
         }
 
         $userData = $this->queryUserRepository->getUserQueryNew($createdBy);
@@ -139,6 +146,16 @@ class LoaderService
 
             if (null !== $queryUser->getEmail()) {
                 $user->setEmail($queryUser->getEmail());
+            }
+
+            if (
+                null !== $queryUser->getContact()
+                && $user->getContact() !== $queryUser->getContact()
+            ) {
+                $user
+                    ->setContact($queryUser->getContact())
+                    ->setWhatsappExists(false)
+                    ->setWhatsappConfirmed(true);
             }
 
             $this->userRepository->save($user, true);
@@ -223,10 +240,8 @@ class LoaderService
         $firstLine = true;
         $userFile = fopen($path . '/' . $this->originalFilename, 'rb');
         while ($str = fgetcsv($userFile, null, ';')) {
-            // Удалим BOM символ на первой строке.
             if ($firstLine) {
-                $bom = pack('H*', 'EFBBBF');
-                $str[0] = preg_replace("/^$bom/", '', $str[0]);
+                $str[0] = $this->removeBOMSymbol($str[0]);
                 $firstLine = false;
             }
 
@@ -234,29 +249,19 @@ class LoaderService
                 continue;
             }
 
-            if (count($str) === 11) {
-                // Формат с email
+            if (11 === count($str)) {
                 $tmp['orderNo'] =  $str[0];
-                $tmp['lastName'] =  $str[1];
-                $tmp['firstName'] =  $str[2];
-                $tmp['patronymic'] =  $str[3];
-                $tmp['x3'] =  $str[4];
-                $tmp['position'] =  $str[5];
-                $tmp['email'] =  $str[6];
-                $tmp['organization'] =  $str[7];
-                $tmp['courseName'] =  $str[8];
+                $tmp['lastName'] = $str[1];
+                $tmp['firstName'] = $str[2];
+                $tmp['patronymic'] = $str[3];
+                $tmp['x3'] = $str[4];
+                $tmp['position'] = $str[5];
+                $tmp['email'] = $str[6];
+                $tmp['organization'] = $str[7];
+                $tmp['courseName'] = $str[8];
+                $tmp['phone'] = $str[10];
             } else {
-                // формат без email
-                $tmp['orderNo'] =  $str[0];
-                $tmp['lastName'] =  $str[1];
-                $tmp['firstName'] =  $str[2];
-                $tmp['patronymic'] =  $str[3];
-                $tmp['x3'] =  $str[4];
-                $tmp['position'] =  $str[5];
-                $tmp['organization'] =  $str[6];
-                $tmp['x3_3'] =  $str[7];
-                $tmp['courseName'] =  $str[8];
-                $tmp['email'] = '';
+                throw new Exception('Произошла ошибка. Загрузите файл для СДО');
             }
 
             $userData[] = $tmp;
@@ -270,6 +275,7 @@ class LoaderService
     {
         foreach ($userList as $item) {
             $email = trim($item['email']);
+            $phone = trim($item['phone']);
             $emailChecked = false;
 
             if (
@@ -292,9 +298,16 @@ class LoaderService
                 ->setOrganization($item['organization'])
                 ->setChecked(false)
                 ->setEmail($email)
-                ->setEmailChecked($emailChecked);
+                ->setEmailChecked($emailChecked)
+                ->setContact($phone);
 
             $this->loaderRepository->save($loader, true);
         }
+    }
+
+    private function removeBOMSymbol(string $row): string
+    {
+        $bom = pack('H*', 'EFBBBF');
+        return preg_replace("/^$bom/", '', $row);
     }
 }

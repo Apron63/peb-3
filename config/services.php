@@ -5,7 +5,7 @@ declare(strict_types=1);
 use App\EventListener\CourseRemoveEventListener;
 use App\EventListener\ModuleRemoveEventListener;
 use App\EventListener\ModuleSectionRemoveEventListener;
-use App\EventListener\PermissionRemoveEventListener;
+use App\EventListener\PermissionEventListener;
 use App\EventListener\QuestionRemoveEventListener;
 use App\TwigExtension\HistoryTwigExtension;
 use App\TwigExtension\TwigExtension;
@@ -16,13 +16,9 @@ return static function (ContainerConfigurator $containerConfigurator): void {
     $parameters = $containerConfigurator->parameters();
 
     $parameters->set('doc_upload_directory', '%kernel.project_dir%/public/storage/doc');
-
     $parameters->set('course_upload_directory', '%kernel.project_dir%/public/storage/course');
-
     $parameters->set('report_upload_directory', '%kernel.project_dir%/public/storage/report');
-
     $parameters->set('exchange_1c_upload_directory', '%kernel.project_dir%/public/storage/exchange1c');
-
     $parameters->set('view_directory', '%kernel.project_dir%/templates');
 
     $services = $containerConfigurator->services();
@@ -33,7 +29,9 @@ return static function (ContainerConfigurator $containerConfigurator): void {
         ->bind('$courseUploadPath', '%kernel.project_dir%/public/storage/course')
         ->bind('$reportUploadPath', '%kernel.project_dir%/public/storage/report')
         ->bind('$exchange1cUploadDirectory', '%kernel.project_dir%/public/storage/exchange1c')
-        ->bind('$avatarUploadPath', '%kernel.project_dir%/public/storage/avatar');
+        ->bind('$avatarUploadPath', '%kernel.project_dir%/public/storage/avatar')
+        ->bind('$greenApiIdInstance', '%env(GREEN_API_ID_INSTANCE)%')
+        ->bind('$greenApiTokenInstance', '%env(GREEN_API_API_TOKEN_INSTANCE)%');
 
     $services->load('App\\', __DIR__ . '/../src/')
         ->exclude([
@@ -61,7 +59,7 @@ return static function (ContainerConfigurator $containerConfigurator): void {
         'event' => 'preRemove',
     ]);
 
-    $services->set(PermissionRemoveEventListener::class)
+    $services->set(PermissionEventListener::class)
         ->tag('doctrine.event_listener', [
         'event' => 'preRemove',
     ])

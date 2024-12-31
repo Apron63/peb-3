@@ -1,12 +1,17 @@
 <?php
 
+declare (strict_types=1);
+
 namespace App\Controller\Admin;
 
 use App\Decorator\MobileController;
 use App\Entity\MailingQueue;
+use App\Entity\WhatsappQueue;
 use App\Form\Admin\DashboardType;
 use App\Form\Admin\MainlingQueueSearchType;
+use App\Form\Admin\WhatsappQueueSearchType;
 use App\Repository\MailingQueueRepository;
+use App\Repository\WhatsappQueueRepository;
 use App\Service\ConfigService;
 use App\Service\DashboardService;
 use Knp\Component\Pager\PaginatorInterface;
@@ -22,6 +27,7 @@ class DashboardController extends MobileController
         private readonly ConfigService $configService,
         private readonly PaginatorInterface $paginator,
         private readonly MailingQueueRepository $mailingQueueRepository,
+        private readonly WhatsappQueueRepository $whatsappQueueRepository,
     ) {}
 
     #[Route('/admin/dashboard/', name: 'admin_dashboard')]
@@ -44,6 +50,15 @@ class DashboardController extends MobileController
         $form
             ->get('permissionWillEndSoon')
             ->setData($this->configService->getConfigValue('permissionWillEndSoon'));
+        $form
+            ->get('userHasNewPermissionWhatsapp')
+            ->setData($this->configService->getConfigValue('userHasNewPermissionWhatsapp'));
+        $form
+            ->get('userHasActivatedPermissionWhatsapp')
+            ->setData($this->configService->getConfigValue('userHasActivatedPermissionWhatsapp'));
+        $form
+            ->get('permissionWillEndSoonWhatsapp')
+            ->setData($this->configService->getConfigValue('permissionWillEndSoonWhatsapp'));
 
         $form->handleRequest($request);
 
@@ -53,6 +68,9 @@ class DashboardController extends MobileController
             $this->configService->setConfigValue('userHasNewPermission', $form->get('userHasNewPermission')->getData());
             $this->configService->setConfigValue('userHasActivatedPermission', $form->get('userHasActivatedPermission')->getData());
             $this->configService->setConfigValue('permissionWillEndSoon', $form->get('permissionWillEndSoon')->getData());
+            $this->configService->setConfigValue('userHasNewPermissionwhatsapp', $form->get('userHasNewPermissionWhatsapp')->getData());
+            $this->configService->setConfigValue('userHasActivatedPermissionWhatsapp', $form->get('userHasActivatedPermissionWhatsapp')->getData());
+            $this->configService->setConfigValue('permissionWillEndSoonWhatsapp', $form->get('permissionWillEndSoonWhatsapp')->getData());
         }
 
         return $this->mobileRender('admin/dashboard/index.html.twig', [
@@ -84,12 +102,44 @@ class DashboardController extends MobileController
         ]);
     }
 
+    #[Route('/admin/dashboard/whatsapplist/', name: 'admin_dashboard_whatsapp_list')]
+    #[IsGranted('ROLE_ADMIN')]
+    public function whatsapplList(Request $request): Response
+    {
+        $form = $this->createForm(WhatsappQueueSearchType::class);
+        $form->handleRequest($request);
+
+        $sender = $form->get('sender')->getData();
+        $userName = $form->get('userName')->getData();
+        $phone = $form->get('phone')->getData();
+
+        $pagination = $this->paginator->paginate(
+            $this->whatsappQueueRepository->getWhatsappQuery($sender, $userName, $phone),
+            $request->query->getInt('page', 1),
+            10
+        );
+
+        return $this->mobileRender('admin/dashboard/whatsapp-list.html.twig', [
+            'form' => $form->createView(),
+            'pagination' => $pagination,
+        ]);
+    }
+
     #[Route('/admin/dashboard/maillist/detail/{id<\d+>}/', name: 'admin_dashboard_mail_list_detail')]
     #[IsGranted('ROLE_ADMIN')]
     public function mailListDetail(MailingQueue $mail): Response
     {
         return $this->mobileRender('admin/dashboard/mail-detail.html.twig', [
             'mail' => $mail,
+        ]);
+    }
+
+    #[Route('/admin/dashboard/whatsapp/detail/{id<\d+>}/', name: 'admin_dashboard_whatsapp_list_detail')]
+    #[IsGranted('ROLE_ADMIN')]
+    public function whatsappListDetail(WhatsappQueue $message): Response
+    {
+        return $this->mobileRender('admin/dashboard/whatsapp-detail.html.twig', [
+            'message' => $message,
         ]);
     }
 

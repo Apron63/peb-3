@@ -1,5 +1,7 @@
 <?php
 
+declare (strict_types=1);
+
 namespace App\Entity;
 
 use App\Repository\ConfigRepository;
@@ -16,7 +18,7 @@ class Config
 
     #[ORM\Column(type: Types::TEXT, length: 50000, nullable: true)]
     private ?string $emailAttachmentStatisticText = null;
-    
+
     #[ORM\Column(type: Types::TEXT, length: 50000, nullable: true)]
     private ?string $emailAttachmentResultText = null;
 
@@ -28,6 +30,15 @@ class Config
 
     #[ORM\Column(type: Types::TEXT, length: 50000, nullable: true)]
     private ?string $permissionWillEndSoon = null;
+
+    #[ORM\Column(type: Types::TEXT, length: 50000, nullable: true)]
+    private ?string $userHasNewPermissionWhatsapp = null;
+
+    #[ORM\Column(type: Types::TEXT, length: 50000, nullable: true)]
+    private ?string $userHasActivatedPermissionWhatsapp = null;
+
+    #[ORM\Column(type: Types::TEXT, length: 50000, nullable: true)]
+    private ?string $permissionWillEndSoonWhatsapp = null;
 
     public function getId(): ?int
     {
@@ -90,6 +101,42 @@ class Config
     public function setPermissionWillEndSoon(?string $permissionWillEndSoon): self
     {
         $this->permissionWillEndSoon = $permissionWillEndSoon;
+
+        return $this;
+    }
+
+    public function getUserHasNewPermissionWhatsapp(): ?string
+    {
+        return $this->userHasNewPermissionWhatsapp;
+    }
+
+    public function setUserHasNewPermissionwhatsapp(?string $userHasNewPermissionWhatsapp): self
+    {
+        $this->userHasNewPermissionWhatsapp = $userHasNewPermissionWhatsapp;
+
+        return $this;
+    }
+
+    public function getUserHasActivatedPermissionWhatsapp(): ?string
+    {
+        return $this->userHasActivatedPermissionWhatsapp;
+    }
+
+    public function setUserHasActivatedPermissionWhatsapp(?string $userHasActivatedPermissionWhatsapp): self
+    {
+        $this->userHasActivatedPermissionWhatsapp = $userHasActivatedPermissionWhatsapp;
+
+        return $this;
+    }
+
+    public function getPermissionWillEndSoonWhatsapp(): ?string
+    {
+        return $this->permissionWillEndSoonWhatsapp;
+    }
+
+    public function setPermissionWillEndSoonWhatsapp(?string $permissionWillEndSoonWhatsapp): self
+    {
+        $this->permissionWillEndSoonWhatsapp = $permissionWillEndSoonWhatsapp;
 
         return $this;
     }

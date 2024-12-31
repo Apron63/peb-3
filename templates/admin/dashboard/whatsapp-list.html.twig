@@ -9,12 +9,12 @@
         <a href="{{ path('admin_dashboard') }}">Инструменты</a>
         <span>/</span>
     {% endif %}
-    <span>Рассылки Email</span>
+    <span>Рассылки WhatsApp</span>
 {% endblock %}
 
 {% block content %}
 
-    <h3>Рассылки Email</h3>
+    <h3>Рассылки WhatsApp</h3>
 
     {{ form_start(form, {'attr':{'class': 'form-contact contact_form'}}) }}
         <div class ="row">
@@ -28,7 +28,7 @@
             </div>
 
             <div class="col-3">
-                {{ form_widget(form.email) }}
+                {{ form_widget(form.phone) }}
             </div>
 
             <div class="col-1 float-end">
@@ -43,21 +43,20 @@
     <div class="row">
         <table class="table">
             <thead>
-            <tr>
-                <th>Создано</th>
-                <th>Отправлено</th>
-                <th>Получатель</th>
-                <th>Тема</th>
-                <th>Содержание</th>
-            </tr>
+                <tr>
+                    <th>Создано</th>
+                    <th>Отправлено</th>
+                    <th>Получатель</th>
+                    <th>Номер</th>
+                    <th>Тема</th>
+                    <th>Статус</th>
+                    <th>Действие</th>
+                </tr>
             </thead>
 
             <tbody>
                 {% for page in pagination %}
                     <tr>
-                        <td>
-                            {{ page.createdAt | date('d.m.Y H:i:s') }}
-                        </td>
                         <td>
                             {% if page.sendedAt is null %}
                                 -
@@ -66,23 +65,24 @@
                             {% endif %}
                         </td>
                         <td>
+                            {{ page.createdAt | date('d.m.Y H:i:s') }}
+                        </td>
+                        <td>
                             {% if page.user is not empty %}
-                                {{ page.user.fullName }},
+                                {{ page.user.fullName }}
                             {% endif %}
-
-                            {% if page.reciever is not empty %}
-                                {{ page.reciever }}
-                            {% elseif page.user.email is defined %}
-                                {{ page.user.email }}
-                            {% else %}
-                                -
-                            {% endif %}
+                        </td>
+                        <td>
+                            {{ page.phone }}
                         </td>
                         <td>
                             {{ page.subject }}
                         </td>
                         <td>
-                            <a href="{{ path('admin_dashboard_mail_list_detail', {id: page.id}) }}" class="btn btn-outline-primary">Показать</a>
+                            {{ page.status }}
+                        </td>
+                        <td>
+                            <a href="{{ path('admin_dashboard_whatsapp_list_detail', {id: page.id}) }}" class="btn btn-outline-primary">Показать</a>
                         </td>
                     </tr>
                 {% endfor %}

@@ -1,5 +1,7 @@
 <?php
 
+declare (strict_types=1);
+
 namespace App\Service;
 
 use App\Entity\Course;
@@ -9,6 +11,7 @@ use App\Entity\Permission;
 use App\Entity\User;
 use App\Repository\MailingQueueRepository;
 use App\Repository\PermissionRepository;
+use App\Service\Whatsapp\WhatsappService;
 use DateTime;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
@@ -19,6 +22,7 @@ class UserPermissionService
         private readonly PermissionRepository $permissionRepository,
         private readonly CourseService $courseService,
         private readonly MailingQueueRepository $mailingQueueRepository,
+        private readonly WhatsappService $whatsappService,
         private readonly DashboardService $dashboardService,
         private readonly ConfigService $configService,
     ) {}
@@ -74,6 +78,10 @@ class UserPermissionService
                         ->setContent($content);
 
                     $this->mailingQueueRepository->save($mailingQueue, true);
+                }
+
+                if (null !== $permission->getUser()->getContact()) {
+                    $this->whatsappService->userHasActivatedPermission($permission);
                 }
             }
 

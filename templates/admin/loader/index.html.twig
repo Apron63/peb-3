@@ -54,7 +54,7 @@
         <tr>
             <th></th>
             <th>Заказ</th>
-            <th>Фамилия, имя, отчество, email</th>
+            <th>Фамилия, имя, отчество, email, телефон</th>
             <th>Организация, должность</th>
             <th>Курс</th>
         </tr>
@@ -80,11 +80,19 @@
                     </td>
                     <td>{{ item.orderNo}}</td>
                     <td>
-                        {{ item.lastName}} {{ item.firstName}} {{ item.patronymic }} <br>
-                        {% if item.emailChecked %}
-                            {{ item.email }}
-                        {% else %}
-                            <span class="text-danger-emphasis">{{ item.email }}</span>
+                        {{ item.lastName}} {{ item.firstName}} {{ item.patronymic }}
+
+                        {% if item.email is not empty %}
+                            <br>
+                            {% if item.emailChecked %}
+                                {{ item.email }}
+                            {% else %}
+                                <span class="text-danger-emphasis">{{ item.email }}</span>
+                            {% endif %}
+                        {% endif %}
+
+                        {% if item.contact is not empty %}
+                            <br>{{ item.contact }}
                         {% endif %}
                     </td>
                     <td>

@@ -223,6 +223,19 @@ class UserEditType extends AbstractType
                     'label_attr' => [
                         'class' => 'form-check-label'
                     ],
+                ])
+                ->add('whatsappConfirmed', CheckboxType::class, [
+                    'label' => 'Разрешение на рассылку WhatsApp',
+                    'required' => false,
+                    'attr' => [
+                        'class' => 'form-check-input',
+                        'placeholder' => 'Разрешение на рассылку WhatsApp',
+                        'onfocus' => 'this.placeholder = ""',
+                        'onblur' => 'this.placeholder = "Разрешение на рассылку WhatsApp"',
+                    ],
+                    'label_attr' => [
+                        'class' => 'form-check-label'
+                    ],
                 ]);
 
             $builder->get('roles')

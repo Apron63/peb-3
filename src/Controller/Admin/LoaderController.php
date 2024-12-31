@@ -1,5 +1,7 @@
 <?php
 
+declare (strict_types=1);
+
 namespace App\Controller\Admin;
 
 use App\Decorator\MobileController;
@@ -10,6 +12,7 @@ use App\Repository\CourseRepository;
 use App\Repository\LoaderRepository;
 use App\Repository\ProfileRepository;
 use App\Service\LoaderService;
+use Exception;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -38,7 +41,11 @@ class LoaderController extends MobileController
             && $form->isValid()
             && $form->get('filename')->getData() !== null
         ) {
-            $this->loaderService->loadDataFrom1C($form->get('filename')->getData(), $user);
+            try {
+                $this->loaderService->loadDataFrom1C($form->get('filename')->getData(), $user);
+            } catch (Exception $e) {
+                $this->addFlash('error', $e->getMessage());
+            }
 
             return $this->redirectToRoute('admin_loader');
         }
@@ -116,7 +123,7 @@ class LoaderController extends MobileController
         $user = $this->getUser();
 
         $courseIds = $request->get('course');
-        $duration = $request->get('duration');
+        $duration = (int) $request->get('duration');
 
         if ($duration >= Permission::MAX_DURATION) {
             $result['success'] = false;

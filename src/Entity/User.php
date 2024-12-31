@@ -82,6 +82,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(length: 50, nullable: true)]
     private ?string $sessionId = null;
 
+    #[ORM\Column]
+    private bool $whatsappExists = false;
+
+    #[ORM\Column]
+    private bool $whatsappConfirmed = true;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -321,6 +327,30 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setSessionId($sessionId): self
     {
         $this->sessionId = $sessionId;
+
+        return $this;
+    }
+
+    public function isWhatsappExiists(): bool
+    {
+        return $this->whatsappExists;
+    }
+
+    public function setWhatsappExists(bool $whatsappExists): self
+    {
+        $this->whatsappExists = $whatsappExists;
+
+        return $this;
+    }
+
+    public function isWhatsappConfirmed(): bool
+    {
+        return $this->whatsappConfirmed;
+    }
+
+    public function setWhatsappConfirmed(bool $whatsappConfirmed): self
+    {
+        $this->whatsappConfirmed = $whatsappConfirmed;
 
         return $this;
     }

@@ -1,10 +1,13 @@
 <?php
 
+declare (strict_types=1);
+
 namespace App\Service;
 
 use App\Entity\User;
 use App\Repository\MailingQueueRepository;
 use App\Repository\QueryUserRepository;
+use App\Repository\WhatsappQueueRepository;
 use Symfony\Bundle\SecurityBundle\Security;
 
 class DashboardService
@@ -13,6 +16,7 @@ class DashboardService
 
     public function __construct(
         private readonly MailingQueueRepository $mailingQueueRepository,
+        private readonly WhatsappQueueRepository $whatsappQueueRepository,
         private readonly QueryUserRepository $queryUserRepository,
         private readonly Security $security,
     ) {}
@@ -30,6 +34,8 @@ class DashboardService
             'usedSpace' => $usedSpace,
             'mailCreatedToday' => $this->mailingQueueRepository->getMailCreatedToday(),
             'mailNotSended' => $this->mailingQueueRepository->getMailNotSended(),
+            'whatsappCreatedToday' => $this->whatsappQueueRepository->getWhatsappCreatedToday(),
+            'whatsappNotSended' => $this->whatsappQueueRepository->getWhatsappNotSendedCount(),
             'queryJobNewCount' => $this->queryUserRepository->getQueryJobNewCount(),
         ];
     }

@@ -1,5 +1,7 @@
 <?php
 
+declare (strict_types=1);
+
 namespace App\Repository;
 
 use App\Entity\Course;
@@ -110,8 +112,7 @@ class PermissionRepository extends ServiceEntityRepository
         return $this
             ->createQueryBuilder('p')
             ->join('p.user', 'u')
-            ->where('u.email IS NOT NULL')
-            ->andWhere('DateDiff(Now(), p.createdAt) = p.duration - 5')
+            ->where('DateDiff(Now(), p.createdAt) = p.duration - 5')
             ->getQuery()
             ->getResult();
     }

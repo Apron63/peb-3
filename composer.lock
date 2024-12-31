@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "2e0feda0d2a3fc5f086d4ca5343126b4",
+    "content-hash": "6c50681c817371bcb1eda145cd715ca4",
     "packages": [
         {
             "name": "beberlei/doctrineextensions",
@@ -1702,6 +1702,56 @@
                 }
             ],
             "time": "2024-10-07T22:30:27+00:00"
+        },
+        {
+            "name": "green-api/whatsapp-api-client-php",
+            "version": "v0.3",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/green-api/whatsapp-api-client-php.git",
+                "reference": "c3d5be8711e615a01479a7dbd767f9b17a9baa10"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/green-api/whatsapp-api-client-php/zipball/c3d5be8711e615a01479a7dbd767f9b17a9baa10",
+                "reference": "c3d5be8711e615a01479a7dbd767f9b17a9baa10",
+                "shasum": ""
+            },
+            "require": {
+                "ext-curl": "*",
+                "ext-fileinfo": "*",
+                "ext-json": "*",
+                "php": ">=7.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "GreenApi\\RestApi\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Green-api.com",
+                    "email": "support@green-api.com"
+                }
+            ],
+            "description": "Green-api.com REST API Client",
+            "keywords": [
+                "api",
+                "green-api.com",
+                "private api",
+                "rest",
+                "whatsapp"
+            ],
+            "support": {
+                "issues": "https://github.com/green-api/whatsapp-api-client-php/issues",
+                "source": "https://github.com/green-api/whatsapp-api-client-php/tree/v0.3"
+            },
+            "time": "2024-10-06T15:52:10+00:00"
         },
         {
             "name": "jonasarts/tcpdf-bundle",

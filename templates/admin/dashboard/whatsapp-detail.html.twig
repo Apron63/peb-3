@@ -1,0 +1,102 @@
+{% extends 'admin/base.html.twig' %}
+
+{% block title %}Панель управления | Детализация{% endblock %}
+
+{% block breadcrumbs %}
+    <a href="{{ path('admin_homepage') }}">Панель управления</a>
+    <span>/</span>
+    {% if is_granted('ROLE_SUPER_ADMIN') %}
+        <a href="{{ path('admin_dashboard') }}">Инструменты</a>
+        <span>/</span>
+    {% endif %}
+    <a href="{{ path('admin_dashboard_whatsapp_list') }}">Рассылки</a>
+    <span>/</span>
+    <span>Детализация</span>
+{% endblock %}
+
+{% block content %}
+
+    <h3>Детализация</h3>
+
+    <div class="row">
+        <table class="table">
+            <tbody>
+                <tr>
+                    <td>
+                        Отправлено
+                    </td>
+                    <td>
+                        {% if message.sendedAt is null %}
+                            -
+                        {% else %}
+                            {{ message.sendedAt | date('d.m.Y H:i:s') }}
+                        {% endif %}
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Создано
+                    </td>
+                    <td>
+                        {{ message.createdAt | date('d.m.Y H:i:s') }}
+
+                        {% if message.createdBy is not null %}
+                            {{ message.createdBy.fullName }}
+                        {% endif %}
+                    </td>
+                </tr>
+                {% if message.user is not null %}
+                    <tr>
+                        <td>
+                            Получатель
+                        </td>
+                        <td>
+                            {{ message.user.fullName }}
+                        </td>
+                    </tr>
+                {% endif %}
+                <tr>
+                    <td>
+                        Телефон
+                    </td>
+                    <td>
+                        {{ message.phone }}
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Тема
+                    </td>
+                    <td>
+                        {{ message.subject }}
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Содержание
+                    </td>
+                    <td>
+                        {{ message.content | raw }}
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Статус отправки
+                    </td>
+                    <td>
+                        {{ message.status }}
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Попыток отправки
+                    </td>
+                    <td>
+                        {{ message.attempts }}
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+{% endblock %}

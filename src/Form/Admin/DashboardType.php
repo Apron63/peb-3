@@ -1,5 +1,7 @@
 <?php
 
+declare (strict_types=1);
+
 namespace App\Form\Admin;
 
 use Symfony\Component\Form\AbstractType;
@@ -22,15 +24,27 @@ class DashboardType extends AbstractType
                 'mapped' => false,
             ])
             ->add('userHasNewPermission', CkeditorType::class, [
-                'label' => 'Информирование слушателя о назначении доступа',
+                'label' => 'Информирование слушателя о назначении доступа по Email',
                 'mapped' => false,
             ])
             ->add('userHasActivatedPermission', CkeditorType::class, [
-                'label' => 'Информирование слушателя после активации курса',
+                'label' => 'Информирование слушателя после активации курса по Email',
                 'mapped' => false,
             ])
             ->add('permissionWillEndSoon', CkeditorType::class, [
-                'label' => 'Информирование слушателя об окончании действия курса',
+                'label' => 'Информирование слушателя об окончании действия курса по Email',
+                'mapped' => false,
+            ])
+            ->add('userHasNewPermissionWhatsapp', CkeditorType::class, [
+                'label' => 'Информирование слушателя о назначении доступа по WhatsApp',
+                'mapped' => false,
+            ])
+            ->add('userHasActivatedPermissionWhatsapp', CkeditorType::class, [
+                'label' => 'Информирование слушателя после активации курса по WhatsApp',
+                'mapped' => false,
+            ])
+            ->add('permissionWillEndSoonWhatsapp', CkeditorType::class, [
+                'label' => 'Информирование слушателя об окончании действия курса по WhatsApp',
                 'mapped' => false,
             ])
             ->add('actionSubmit', SubmitType::class, [

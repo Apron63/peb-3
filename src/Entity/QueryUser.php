@@ -54,6 +54,9 @@ class QueryUser
     #[ORM\JoinColumn(onDelete: 'SET NULL')]
     private ?Loader $loader = null;
 
+    #[ORM\Column(length: 50, nullable: true)]
+    private ?string $contact = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -199,6 +202,18 @@ class QueryUser
     public function setEmail(string $email): self
     {
         $this->email = $email;
+
+        return $this;
+    }
+
+    public function getContact(): ?string
+    {
+        return $this->contact;
+    }
+
+    public function setContact(?string $contact): self
+    {
+        $this->contact = $contact;
 
         return $this;
     }

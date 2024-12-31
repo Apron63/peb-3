@@ -1,5 +1,7 @@
 <?php
 
+declare (strict_types=1);
+
 namespace App\Entity;
 
 use App\Repository\LoaderRepository;
@@ -52,6 +54,9 @@ class Loader
 
     #[ORM\Column]
     private bool $emailChecked = false;
+
+    #[ORM\Column(length: 50, nullable: true)]
+    private ?string $contact = null;
 
     #[ORM\OneToMany(mappedBy: 'loader', targetEntity: Permission::class)]
     private Collection $permissions;
@@ -206,6 +211,18 @@ class Loader
     public function setEmailChecked(bool $emailChecked): self
     {
         $this->emailChecked = $emailChecked;
+
+        return $this;
+    }
+
+    public function getContact(): ?string
+    {
+        return $this->contact;
+    }
+
+    public function setContact(?string $contact): self
+    {
+        $this->contact = $contact;
 
         return $this;
     }
