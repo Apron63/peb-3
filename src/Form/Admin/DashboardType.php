@@ -5,10 +5,11 @@ declare (strict_types=1);
 namespace App\Form\Admin;
 
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\FormBuilderInterface;
-use Trsteel\CkeditorBundle\Form\Type\CkeditorType;
-use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
+use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
+use Trsteel\CkeditorBundle\Form\Type\CkeditorType;
 
 class DashboardType extends AbstractType
 {
@@ -35,17 +36,29 @@ class DashboardType extends AbstractType
                 'label' => 'Информирование слушателя об окончании действия курса по Email',
                 'mapped' => false,
             ])
-            ->add('userHasNewPermissionWhatsapp', CkeditorType::class, [
+            ->add('userHasNewPermissionWhatsapp', TextareaType ::class, [
                 'label' => 'Информирование слушателя о назначении доступа по WhatsApp',
                 'mapped' => false,
+                'attr' => [
+                    'class' => 'form-control',
+                    'rows' => 7,
+                ],
             ])
-            ->add('userHasActivatedPermissionWhatsapp', CkeditorType::class, [
+            ->add('userHasActivatedPermissionWhatsapp', TextareaType ::class, [
                 'label' => 'Информирование слушателя после активации курса по WhatsApp',
                 'mapped' => false,
+                'attr' => [
+                    'class' => 'form-control',
+                    'rows' => 7,
+                ],
             ])
-            ->add('permissionWillEndSoonWhatsapp', CkeditorType::class, [
+            ->add('permissionWillEndSoonWhatsapp', TextareaType ::class, [
                 'label' => 'Информирование слушателя об окончании действия курса по WhatsApp',
                 'mapped' => false,
+                'attr' => [
+                    'class' => 'form-control',
+                    'rows' => 7,
+                ],
             ])
             ->add('actionSubmit', SubmitType::class, [
                 'label' => 'Сохранить',
