@@ -89,8 +89,8 @@ class LoaderService
                 $queryUser->setEmail($loader->getEmail());
             }
 
-            if (! empty($loader->getContact())) {
-                $queryUser->setContact($loader->getContact());
+            if (! empty($loader->getPhone())) {
+                $queryUser->setPhone($loader->getPhone());
             }
 
             $this->queryUserRepository->save($queryUser, true);
@@ -149,11 +149,11 @@ class LoaderService
             }
 
             if (
-                null !== $queryUser->getContact()
-                && $user->getContact() !== $queryUser->getContact()
+                null !== $queryUser->getPhone()
+                && $user->getContact() !== $queryUser->getPhone()
             ) {
                 $user
-                    ->setContact($queryUser->getContact())
+                    ->setMobilePhone($queryUser->getPhone())
                     ->setWhatsappExists(false)
                     ->setWhatsappConfirmed(true);
             }
@@ -249,7 +249,7 @@ class LoaderService
                 continue;
             }
 
-            if (11 === count($str)) {
+            if (12 === count($str)) {
                 $tmp['orderNo'] =  $str[0];
                 $tmp['lastName'] = $str[1];
                 $tmp['firstName'] = $str[2];
@@ -257,9 +257,9 @@ class LoaderService
                 $tmp['x3'] = $str[4];
                 $tmp['position'] = $str[5];
                 $tmp['email'] = $str[6];
-                $tmp['organization'] = $str[7];
-                $tmp['courseName'] = $str[8];
-                $tmp['phone'] = $str[10];
+                $tmp['phone'] = $str[7];
+                $tmp['organization'] = $str[8];
+                $tmp['courseName'] = $str[9];
             } else {
                 throw new Exception('Произошла ошибка. Загрузите файл для СДО');
             }
@@ -299,7 +299,7 @@ class LoaderService
                 ->setChecked(false)
                 ->setEmail($email)
                 ->setEmailChecked($emailChecked)
-                ->setContact($phone);
+                ->setPhone($phone);
 
             $this->loaderRepository->save($loader, true);
         }

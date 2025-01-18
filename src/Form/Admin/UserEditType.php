@@ -147,6 +147,19 @@ class UserEditType extends AbstractType
                     'class' => 'col-sm-2 col-form-label'
                 ],
             ])
+            ->add('mobilePhone', TextType::class, [
+                'required' => false,
+                'label' => 'Мобильный',
+                'attr' => [
+                    'class' => 'form-control',
+                    'placeholder' => '+7 XXX XXX XXXX',
+                    'onfocus' => 'this.placeholder = ""',
+                    'onblur' => 'this.placeholder = "Контакты"',
+                ],
+                'label_attr' => [
+                    'class' => 'col-sm-2 col-form-label'
+                ],
+            ])
             ->add('submit', SubmitType::class, [
                 'label' => 'Сохранить',
                 'attr' => [

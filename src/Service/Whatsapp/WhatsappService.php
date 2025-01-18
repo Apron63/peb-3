@@ -11,6 +11,7 @@ use App\Repository\UserRepository;
 use App\Repository\WhatsappQueueRepository;
 use App\Service\ConfigService;
 use App\Service\DashboardService;
+use DateTime;
 use GreenApi\RestApi\GreenApiClient;
 use Throwable;
 
@@ -37,7 +38,7 @@ readonly class WhatsappService
 
         if (
             null === $permission->getId()
-            && null !== $user->getContact()
+            && null !== $user->getMobilePhone()
             && $user->isWhatsappConfirmed()
         ) {
             $content = $this->dashboardService->replaceValue(
@@ -60,9 +61,9 @@ readonly class WhatsappService
             $whatsappMessage = (new WhatsappQueue())
                 ->setUser($user)
                 ->setSubject(self::NEW_PRMISSION_ADDED_MESSAGE . $permission->getCourse()->getShortName())
-                ->setPhone($user->getContact())
+                ->setPhone($user->getMobilePhone())
                 ->setCreatedBy($permission->getCreatedBy())
-                ->setSendedAt(new \DateTime())
+                ->setSendedAt(new DateTime())
                 ->setAttempts(1)
                 ->setContent($content);
 
@@ -99,9 +100,9 @@ readonly class WhatsappService
             $whatsappMessage = (new WhatsappQueue())
                 ->setUser($user)
                 ->setSubject(self::USER_HAS_ACTIVATED_PERMISSION_MESSAGE . $permission->getCourse()->getShortName())
-                ->setPhone($user->getContact())
+                ->setPhone($user->getMobilePhone())
                 ->setCreatedBy($permission->getCreatedBy())
-                ->setSendedAt(new \DateTime())
+                ->setSendedAt(new DateTime())
                 ->setAttempts(1)
                 ->setContent($content);
 
@@ -138,9 +139,9 @@ readonly class WhatsappService
             $whatsappMessage = (new WhatsappQueue())
                 ->setUser($user)
                 ->setSubject(self::PERMISSION_WILL_END_SOON_MESSAGE . $permission->getCourse()->getShortName())
-                ->setPhone($user->getContact())
+                ->setPhone($user->getMobilePhone())
                 ->setCreatedBy($permission->getCreatedBy())
-                ->setSendedAt(new \DateTime())
+                ->setSendedAt(new DateTime())
                 ->setAttempts(1)
                 ->setContent($content);
 
@@ -158,7 +159,7 @@ readonly class WhatsappService
 
     public function send(User $user, string $message): void
     {
-        if (empty($user->getContact())) {
+        if (empty($user->getMobilePhone())) {
             throw new Throwable('Не задан номер телефона');
         }
 
@@ -166,7 +167,7 @@ readonly class WhatsappService
             throw new Throwable('Отсутствует согласие на получение рассылки');
         }
 
-        $phone = (string) preg_replace('/[^\d]/', '', $user->getContact());
+        $phone = (string) preg_replace('/[^\d]/', '', $user->getMobilePhone());
 
         if (self::PHONE_NUMBER_LENGTH !== strlen($phone)) {
             throw new Throwable('В номере телефона долно быть ровно ' . self::PHONE_NUMBER_LENGTH . ' цифр');

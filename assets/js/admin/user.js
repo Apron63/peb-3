@@ -1,5 +1,6 @@
 import $ from 'jquery'
 import * as bootstrap from 'bootstrap'
+import Inputmask from 'inputmask'
 
 let url = $('#add-duration-button').data('add-duration-url')
 
@@ -105,3 +106,20 @@ $('#permission-checked-prolongate').on('click', function(e) {
         console.log(data)
     })
 })
+
+let selector = $('#user_edit_mobilePhone')
+if (selector.length > 0) {
+    let im = new Inputmask('+7 999 999 9999')
+    im.mask(selector)
+
+    $('#user-edit-form').on('submit', function() {
+        let mobilePhoneValue = $(selector).val()
+
+        // Это страшный костыль, который потом надо будет поправить
+        if (mobilePhoneValue.indexOf('_') !== -1) {
+            alert('Номер телефона не совпадает с форматом +7 XXX XXX XXXX')
+
+            return false
+        }
+    })
+}

@@ -80,7 +80,7 @@ class UserPermissionService
                     $this->mailingQueueRepository->save($mailingQueue, true);
                 }
 
-                if (null !== $permission->getUser()->getContact()) {
+                if (null !== $permission->getUser()->getMobilePhone()) {
                     $this->whatsappService->userHasActivatedPermission($permission);
                 }
             }

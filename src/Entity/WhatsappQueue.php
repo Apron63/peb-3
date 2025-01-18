@@ -27,7 +27,7 @@ class WhatsappQueue
     #[ORM\JoinColumn]
     private ?User $user = null;
 
-    #[ORM\Column(type: Types::STRING)]
+    #[ORM\Column(type: Types::STRING, length: 50)]
     private string $phone;
 
     #[ORM\Column(type: Types::STRING)]

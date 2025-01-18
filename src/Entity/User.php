@@ -73,6 +73,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $contact = null;
 
+    #[ORM\Column(length: 50, nullable: true)]
+    private ?string $mobilePhone = null;
+
     #[ORM\ManyToOne(targetEntity: self::class)]
     private ?self $createdBy = null;
 
@@ -286,6 +289,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setContact(?string $contact): self
     {
         $this->contact = $contact;
+
+        return $this;
+    }
+
+    public function getMobilePhone(): ?string
+    {
+        return $this->mobilePhone;
+    }
+
+    public function setMobilePhone(?string $mobilePhone): self
+    {
+        $this->mobilePhone = $mobilePhone;
 
         return $this;
     }

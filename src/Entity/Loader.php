@@ -56,7 +56,7 @@ class Loader
     private bool $emailChecked = false;
 
     #[ORM\Column(length: 50, nullable: true)]
-    private ?string $contact = null;
+    private ?string $phone = null;
 
     #[ORM\OneToMany(mappedBy: 'loader', targetEntity: Permission::class)]
     private Collection $permissions;
@@ -215,14 +215,14 @@ class Loader
         return $this;
     }
 
-    public function getContact(): ?string
+    public function getPhone(): ?string
     {
-        return $this->contact;
+        return $this->phone;
     }
 
-    public function setContact(?string $contact): self
+    public function setPhone(?string $phone): self
     {
-        $this->contact = $contact;
+        $this->phone = $phone;
 
         return $this;
     }

@@ -1,5 +1,7 @@
 <?php
 
+declare (strict_types=1);
+
 namespace App\Entity;
 
 use App\Repository\QueryUserRepository;
@@ -55,7 +57,7 @@ class QueryUser
     private ?Loader $loader = null;
 
     #[ORM\Column(length: 50, nullable: true)]
-    private ?string $contact = null;
+    private ?string $phone = null;
 
     public function getId(): ?int
     {
@@ -206,14 +208,14 @@ class QueryUser
         return $this;
     }
 
-    public function getContact(): ?string
+    public function getPhone(): ?string
     {
-        return $this->contact;
+        return $this->phone;
     }
 
-    public function setContact(?string $contact): self
+    public function setPhone(?string $phone): self
     {
-        $this->contact = $contact;
+        $this->phone = $phone;
 
         return $this;
     }

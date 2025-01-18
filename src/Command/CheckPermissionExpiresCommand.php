@@ -74,7 +74,7 @@ class CheckPermissionExpiresCommand extends Command
                 }
             }
 
-            if (null !== $user->getContact()) {
+            if (null !== $user->getMobilePhone()) {
                 $this->whatsappService->permissionWillEndSoon($permission);
             }
         }
