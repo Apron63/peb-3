@@ -10,6 +10,7 @@ use App\EventListener\QuestionRemoveEventListener;
 use App\TwigExtension\HistoryTwigExtension;
 use App\TwigExtension\TwigExtension;
 use Monolog\Processor\WebProcessor;
+use Symfony\Bridge\Monolog\Processor\TokenProcessor;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
 
 return static function (ContainerConfigurator $containerConfigurator): void {
@@ -47,6 +48,9 @@ return static function (ContainerConfigurator $containerConfigurator): void {
         ->tag('twig.extension');
 
     $services->set('monolog.processor.web', WebProcessor::class)
+        ->tag('monolog.processor');
+
+    $services->set('monolog.processor.token', TokenProcessor::class)
         ->tag('monolog.processor');
 
     $services->set(CourseRemoveEventListener::class)
