@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Service\ReportGenerator;
 
 use App\Entity\User;
+use App\Repository\PermissionRepository;
 use App\Repository\UserRepository;
 use DateTime;
 use PhpOffice\PhpSpreadsheet\IOFactory as XlsxFactory;
@@ -21,6 +22,7 @@ class ReportGeneratorService
 
     public function __construct(
         private readonly UserRepository $userRepository,
+        private readonly PermissionRepository $permissionRepository,
         private readonly Filesystem $filesystem,
         private readonly string $reportUploadPath,
     ) {}
@@ -240,5 +242,47 @@ class ReportGeneratorService
         }
 
         return $path;
+    }
+
+    public function getPermissionSelected(User $user): string
+    {
+        $spreadsheet = new Spreadsheet();
+        $workSheet = $spreadsheet->getActiveSheet();
+        $this->personalPath = $this->getUserUploadDir($user);
+
+        $workSheet->setCellValue('A1', 'Курс');
+        $workSheet->setCellValue('B1', 'ФИО');
+        $workSheet->setCellValue('C1', 'Организация');
+
+        $item = 2;
+
+        foreach($this->permissionRepository->getPermissonSelectedByUser($user) as $row) {
+            $workSheet->setCellValue('A' . $item, $row->getCourse()->getShortName());
+            $workSheet->setCellValue('B' . $item, $row->getUser()->getFullName());
+            $workSheet->setCellValue('C' . $item, $row->getUser()->getOrganization());
+
+            $item ++;
+        }
+
+        $styleArray = [
+            'borders' => [
+                'allBorders' => ['borderStyle' => Border::BORDER_THIN],
+            ],
+        ];
+
+        $workSheet->getStyle('A1:C' . $item - 1)->applyFromArray($styleArray, false);
+
+        $workSheet->getColumnDimension('A')->setAutoSize(true);
+        $workSheet->getColumnDimension('B')->setAutoSize(true);
+        $workSheet->getColumnDimension('C')->setAutoSize(true);
+
+        $fileName = $this->personalPath . DIRECTORY_SEPARATOR . (new DateTime())->format('d-m-Y_H_i_s') . '.xlsx';
+        $writer = XlsxFactory::createWriter($spreadsheet, 'Xlsx');
+        $writer->save($fileName);
+
+        $spreadsheet->disconnectWorksheets();
+        unset($spreadsheet);
+
+        return $fileName;
     }
 }

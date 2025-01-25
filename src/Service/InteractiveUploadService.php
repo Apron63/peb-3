@@ -1,5 +1,7 @@
 <?php
 
+declare (strict_types=1);
+
 namespace App\Service;
 
 use App\Entity\ModuleSectionPage;
@@ -31,7 +33,7 @@ class InteractiveUploadService
             . DIRECTORY_SEPARATOR;
 
         // TODO Вынести методы работы с файлами в отдельный сервис
-        
+
             // Проверить что каталог существует, при необходимости создать.
         if (! file_exists($path) && ! mkdir($path, 0777, true) && ! is_dir($path)) {
             throw new RuntimeException(sprintf('Directory "%s" was not created', $path));

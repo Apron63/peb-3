@@ -1,5 +1,7 @@
 <?php
 
+declare (strict_types=1);
+
 namespace App\Controller\Admin;
 
 use App\Service\ReportGenerator\ReportGeneratorService;
@@ -147,6 +149,21 @@ class UserReportController extends AbstractController
         $response->headers->set('Content-Type', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document');
         $response
             ->setContentDisposition(ResponseHeaderBag::DISPOSITION_ATTACHMENT, 'report.docx')
+            ->deleteFileAfterSend(true);
+
+        return $response;
+    }
+
+    #[Route('/admin/user/report/permission-selected/', name: 'admin_user_report_permission_selected')]
+    public function adminUserReportPermissionSelected(): BinaryFileResponse
+    {
+        $user = $this->getUser();
+
+        $fileName = $this->reportGeneratorService->getPermissionSelected($user);
+        $response = new BinaryFileResponse($fileName);
+        $response->headers->set('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        $response
+            ->setContentDisposition(ResponseHeaderBag::DISPOSITION_ATTACHMENT, 'Слушатели отмеченные.xlsx')
             ->deleteFileAfterSend(true);
 
         return $response;

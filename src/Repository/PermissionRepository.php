@@ -219,4 +219,19 @@ class PermissionRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult();
     }
+
+    /**
+     *  @return Permission[]
+     */
+    public function getPermissonSelectedByUser(User $user): array
+    {
+        $queryBuilder = $this->createQueryBuilder('p');
+
+        return $queryBuilder
+            ->where('p.checkedBy = :user')
+            ->setParameter('user', $user)
+            ->orderBy('p.course, p.createdAt')
+            ->getQuery()
+            ->getResult();
+    }
 }
