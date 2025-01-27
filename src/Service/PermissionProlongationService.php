@@ -1,5 +1,7 @@
 <?php
 
+declare (strict_types=1);
+
 namespace App\Service;
 
 use App\Entity\Permission;
@@ -117,7 +119,9 @@ class PermissionProlongationService
         $permissions = $this->permissionRepository->findBy(['checkedBy' => $user]);
 
         foreach($permissions as $permission) {
-            $permission->setDuration($permission->getDuration() + $duration);
+            $permission
+                ->setDuration($permission->getDuration() + $duration)
+                ->setCheckeddBy(null);
 
             $this->permissionRepository->save($permission, true);
         }
