@@ -12,6 +12,7 @@ use App\Repository\WhatsappQueueRepository;
 use App\Service\ConfigService;
 use App\Service\DashboardService;
 use DateTime;
+use Exception;
 use GreenApi\RestApi\GreenApiClient;
 use Throwable;
 
@@ -160,17 +161,17 @@ readonly class WhatsappService
     public function send(User $user, string $message): void
     {
         if (empty($user->getMobilePhone())) {
-            throw new Throwable('Не задан номер телефона');
+            throw new Exception('Не задан номер телефона');
         }
 
         if (! $user->isWhatsappConfirmed()) {
-            throw new Throwable('Отсутствует согласие на получение рассылки');
+            throw new Exception('Отсутствует согласие на получение рассылки');
         }
 
         $phone = (string) preg_replace('/[^\d]/', '', $user->getMobilePhone());
 
         if (self::PHONE_NUMBER_LENGTH !== strlen($phone)) {
-            throw new Throwable('В номере телефона долно быть ровно ' . self::PHONE_NUMBER_LENGTH . ' цифр');
+            throw new Exception('В номере телефона долно быть ровно ' . self::PHONE_NUMBER_LENGTH . ' цифр');
         }
 
         $greenApi = new GreenApiClient($this->greenApiIdInstance, $this->greenApiTokenInstance);
@@ -180,7 +181,7 @@ readonly class WhatsappService
             $result = $greenApi->serviceMethods->checkWhatsapp((int) $phone);
 
             if (! $result->data->existsWhatsapp) {
-                throw new Throwable('Слушатель не зарегистрирован в WhatsApp');
+                throw new Exception('Слушатель не зарегистрирован в WhatsApp');
             } else {
                 $user->setWhatsappExists(true);
 
@@ -191,7 +192,7 @@ readonly class WhatsappService
         $result = $greenApi->sending->sendMessage($chatId, $message);
 
         if (self::SENDED_STATUS_OK !== $result->code) {
-            throw new Throwable('Ошибка отправки: ' . $result->error);
+            throw new Exception('Ошибка отправки: ' . $result->error);
         }
     }
 }

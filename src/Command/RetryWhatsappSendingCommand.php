@@ -56,7 +56,6 @@ class RetryWhatsappSendingCommand extends Command
                 $whatsappMessage->setStatus('Успешно');
             } catch (Throwable $e) {
                 $whatsappMessage->setStatus($e->getMessage());
-
             }
 
             $whatsappMessage
