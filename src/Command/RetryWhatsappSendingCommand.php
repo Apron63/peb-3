@@ -46,7 +46,7 @@ class RetryWhatsappSendingCommand extends Command
 
             $user = $whatsappMessage->getUser();
 
-            $output->writeln('Найден пользователь: ' . $user->getContact());
+            $output->writeln('Найден пользователь: ' . $user->getMobilePhone());
 
             $message = $whatsappMessage->getContent();
 

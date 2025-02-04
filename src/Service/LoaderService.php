@@ -150,7 +150,7 @@ class LoaderService
 
             if (
                 null !== $queryUser->getPhone()
-                && $user->getContact() !== $queryUser->getPhone()
+                && $user->getMobilePhone() !== $queryUser->getPhone()
             ) {
                 $user
                     ->setMobilePhone($queryUser->getPhone())
