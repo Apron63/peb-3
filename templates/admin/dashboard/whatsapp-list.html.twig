@@ -82,7 +82,23 @@
                             {{ page.status }}
                         </td>
                         <td>
-                            <a href="{{ path('admin_dashboard_whatsapp_list_detail', {id: page.id}) }}" class="btn btn-outline-primary">Показать</a>
+                            <div class="btn-group">
+                                <a
+                                    href="{{ path('admin_dashboard_whatsapp_list_detail', {id: page.id}) }}"
+                                    class="btn btn-outline-primary"
+                                    title="Детальный просмотр"
+                                >
+                                    <img src="{{ asset('svg/eye.svg') }}">
+                                </a>
+                                <a
+                                    href="{{ path('admin_dashboard_whatsapp_list_delete', {id: page.id}) }}"
+                                    class="btn btn-outline-danger"
+                                    title="Удалить расслку"
+                                    onclick="return window.confirm('Подтвердите действие');"
+                                >
+                                    <img src="{{ asset('svg/trash.svg') }}">
+                                </a>
+                            </div>
                         </td>
                     </tr>
                 {% endfor %}

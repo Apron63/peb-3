@@ -143,6 +143,17 @@ class DashboardController extends MobileController
         ]);
     }
 
+    #[Route('/admin/dashboard/whatsapp/delete/{id<\d+>}/', name: 'admin_dashboard_whatsapp_list_delete')]
+    #[IsGranted('ROLE_ADMIN')]
+    public function whatsappListDelete(WhatsappQueue $message): Response
+    {
+        $this->whatsappQueueRepository->remove($message, true);
+
+        $this->addFlash('success', 'Удален элемент рассылки');
+
+        return $this->redirectToRoute('admin_dashboard_whatsapp_list');
+    }
+
     #[Route('/admin/dashboard/query_user/clear/', name: 'admin_dashboard_query_user_clear')]
     #[IsGranted('ROLE_SUPER_ADMIN')]
     public function queryUserClear(): Response
