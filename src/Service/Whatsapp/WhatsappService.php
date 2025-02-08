@@ -33,13 +33,17 @@ readonly class WhatsappService
         private string $greenApiTokenInstance,
     ) {}
 
-    public function addNewPermissionToWhatsappQueue(Permission $permission): void
+    public function addNewPermissionToWhatsappQueue(Permission $permission): array
     {
+        $result = [
+            'status' => false,
+            'message' => '',
+        ];
+
         $user = $permission->getUser();
 
         if (
-            null === $permission->getId()
-            && null !== $user->getMobilePhone()
+            null !== $user->getMobilePhone()
             && $user->isWhatsappConfirmed()
         ) {
             $content = $this->dashboardService->replaceValue(
@@ -49,12 +53,14 @@ readonly class WhatsappService
                     '{PASSWORD}',
                     '{DURATION}',
                     '{COURSE}',
+                    '{LASTDATE}',
                 ],
                 [
                     $permission->getUser()->getLogin(),
                     $permission->getUser()->getPlainPassword(),
                     $permission->getDuration(),
                     $permission->getCourse()->getName(),
+                    $permission->getEndDate()->format('d.m.Y'),
                 ],
                 $permission->getCreatedBy(),
             );
@@ -72,12 +78,20 @@ readonly class WhatsappService
                 $this->send($user, $content);
 
                 $whatsappMessage->setStatus('Успешно');
+                $result['message'] = 'Успешно';
             } catch (Throwable $e) {
-                $whatsappMessage->setStatus($e->getMessage());
+                $errorMessage = $e->getMessage();
+
+                $whatsappMessage->setStatus($errorMessage);
+
+                $result['status'] = false;
+                $result['message'] = $errorMessage;
             }
 
             $this->whatsappQueueRepository->save($whatsappMessage, true);
         }
+
+        return $result;
     }
 
     public function userHasActivatedPermission(Permission $permission): void
