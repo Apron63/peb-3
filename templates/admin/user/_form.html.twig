@@ -102,9 +102,9 @@
                 {{ form_widget(form.roles) }}
             </div>
         </div>
-        <div class="mb-3 row">
+        <div class="row">
             <div class="col-sm-2"></div>
-            <div class="col-10 mb-3">
+            <div class="col-10">
                 <div class="form-check form-switch">
                     <span class="text-danger">{{ form_errors(form.active) }}</span>
                     {{ form_widget(form.active) }}
@@ -115,9 +115,9 @@
     {% endif %}
 
     {% if is_granted('ROLE_SUPER_ADMIN') %}
-        <div class="mb-3 row">
+        <div class="row">
             <div class="col-sm-2"></div>
-            <div class="col-10 mb-3">
+            <div class="col-10">
                 <div class="form-check form-switch">
                     <span class="text-danger">{{ form_errors(form.nameLess) }}</span>
                     {{ form_label(form.nameLess) }}
@@ -128,9 +128,9 @@
     {% endif %}
 
     {% if is_granted('ROLE_SUPER_ADMIN') %}
-        <div class="mb-3 row">
+        <div class="row">
             <div class="col-sm-2"></div>
-            <div class="col-10 mb-3">
+            <div class="col-10">
                 <div class="form-check form-switch">
                     <span class="text-danger">{{ form_errors(form.whatsappConfirmed) }}</span>
                     {{ form_label(form.whatsappConfirmed) }}
