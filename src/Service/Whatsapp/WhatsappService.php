@@ -78,6 +78,8 @@ readonly class WhatsappService
                 $this->send($user, $content);
 
                 $whatsappMessage->setStatus('Успешно');
+
+                $result['status'] = true;
                 $result['message'] = 'Успешно';
             } catch (Throwable $e) {
                 $errorMessage = $e->getMessage();

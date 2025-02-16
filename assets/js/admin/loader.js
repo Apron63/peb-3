@@ -3,7 +3,7 @@ import * as bootstrap from 'bootstrap'
 
 $('#load1C').on('click', function(e) {
     e.stopImmediatePropagation
-    
+
     let emptyData = Number($('#empty-data').data('empty'))
 
     if (!emptyData) {
@@ -95,11 +95,11 @@ function assignUsersToLoader()
         $('#q-search').on('keyup', function () {
             applyFilter();
         })
-        
+
         $('#profile-select').on('change', function () {
             applyFilter();
         })
-        
+
         $('#send-to-query').on('click', function () {
             let duration = $('#duration').val()
 
@@ -107,19 +107,24 @@ function assignUsersToLoader()
                 alert('Не указана продолжительность доступа!')
                 return false
             }
-            
+
             if (duration > 999) {
                 alert('Длительность не может превышать 999 дней !')
                 return false
             }
-        
+
             let course = $('#course-select').val()
 
             if (course == 0) {
                 alert('Не выбран курс!')
                 return false
             }
-        
+
+            if (course.length > 50) {
+                alert('Вы выбрали более 50 курсов одновременно')
+                return false
+            }
+
             $.ajax({
                 url: $('#send-to-query').data('url'),
                 data: {duration: duration, course: course},
@@ -136,7 +141,7 @@ function assignUsersToLoader()
                 $(function(){
                     window.setInterval(checkQuery, 1000 )
                 });
-                
+
             }).fail(function (data) {
                 console.log(data)
             }).always(function(data){

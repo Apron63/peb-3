@@ -14,7 +14,6 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 class WhatsappController extends MobileController
 {
     public function __construct(
-
         private readonly UserSenderService $userSenderService,
     ) {}
 

@@ -1,10 +1,13 @@
 <?php
 
+declare (strict_types=1);
+
 namespace App\EventListener;
 
 use App\Entity\User;
 use App\Entity\UserState;
 use App\Repository\UserStateRepository;
+use App\Service\Whatsapp\UserSenderService;
 use DateTime;
 use Doctrine\Bundle\DoctrineBundle\Attribute\AsDoctrineListener;
 use Doctrine\ORM\Event\PostUpdateEventArgs;
@@ -22,11 +25,15 @@ class UserStateEventListener
         'updatedAt',
         'sessionId',
         'fullName',
+        'whatsappExists',
     ];
+
+    private bool $hasMobilePhoneChanged = false;
 
     public function __construct(
         private readonly Security $security,
         private readonly UserStateRepository $userStateRepository,
+        private readonly UserSenderService $userSenderService,
     ) {}
 
     public function postUpdate (PostUpdateEventArgs $args): void
@@ -44,6 +51,7 @@ class UserStateEventListener
         }
 
         $entityManager = $args->getObjectManager();
+         /** @disregard Undefined method 'getUnitOfWork'.intelephense(P1013) */
         $unitOfWork = $entityManager->getUnitOfWork();
         $changeSet = $unitOfWork->getEntityChangeSet($entity);
         $changes = $this->mapChanges($changeSet);
@@ -55,9 +63,15 @@ class UserStateEventListener
                 ->setUser($entity)
                 ->setCreatedAt(new DateTime())
                 ->setCreatedBy($user)
-                ->setChanges($this->mapChanges($changeSet));
+                ->setChanges($changes);
 
             $this->userStateRepository->save($userState, true);
+
+            if ($this->hasMobilePhoneChanged) {
+                $entity->setWhatsappExists(false);
+
+                $this->userSenderService->resendToUser($entity);
+            }
         }
     }
 
@@ -67,11 +81,22 @@ class UserStateEventListener
 
         foreach($changeSet as $fieldName => $change) {
             if (! in_array($fieldName, self::EXCLUDED_FIELDS)) {
+                $oldValue = $this->formatChangedData($change[0]);
+                $newValue = $this->formatChangedData($change[1]);
+
                 $result[] = [
                     'field' => $fieldName,
-                    'oldValue' => $this->formatChangedData($change[0]),
-                    'newValue' => $this->formatChangedData($change[1]),
+                    'oldValue' => $oldValue,
+                    'newValue' => $newValue,
                 ];
+            }
+
+            if (
+                $fieldName === 'mobilePhone'
+                && ! empty($newValue)
+                && $newValue !== $oldValue
+            ) {
+                $this->hasMobilePhoneChanged = true;
             }
         }
 
@@ -84,11 +109,13 @@ class UserStateEventListener
 
         if ($data instanceof DateTime) {
             $result = $data->format('d.m.Y H:i:s');
-        } else if ($data instanceof int) {
+        } elseif ($data instanceof int) {
             $result = (string) $data;
-        } else if (null === $data) {
+        } elseif (is_bool($data)) {
+            $result = $data ? 'Да' : 'Нет';
+        } elseif (null === $data) {
             $result = 'не задано';
-        } else if (is_array($data)) {
+        } elseif (is_array($data)) {
             $result = implode(',', $data);
         }
 

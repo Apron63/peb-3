@@ -40,6 +40,10 @@
                         Контактный номер
                     {% elseif change.field == "roles" %}
                         Роль
+                    {% elseif change.field == "whatsappConfirmed" %}
+                        Рассылка по WhatsApp
+                    {% elseif change.field == "mobilePhone" %}
+                        Мобильный
                     {% else %}
                         {{ change.field }}
                     {% endif %}
