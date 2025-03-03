@@ -196,7 +196,7 @@ readonly class WhatsappService
         if (! $user->isWhatsappExiists()) {
             $result = $greenApi->serviceMethods->checkWhatsapp((int) $phone);
 
-            if (! $result->data->existsWhatsapp) {
+            if (! $result?->data?->existsWhatsapp) {
                 throw new Exception('Слушатель не зарегистрирован в WhatsApp');
             } else {
                 $user->setWhatsappExists(true);
