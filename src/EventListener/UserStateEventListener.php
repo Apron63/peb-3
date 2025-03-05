@@ -68,10 +68,6 @@ class UserStateEventListener
             $this->userStateRepository->save($userState, true);
 
             if ($this->hasMobilePhoneChanged) {
-                $entity
-                    ->setWhatsappExists(false)
-                    ->setWhatsappConfirmed(true);
-
                 $this->userSenderService->resendToUser($entity);
             }
         }
@@ -95,7 +91,7 @@ class UserStateEventListener
 
             if (
                 $fieldName === 'mobilePhone'
-                && ! empty($newValue)
+                && $newValue !== 'не задано'
                 && $newValue !== $oldValue
             ) {
                 $this->hasMobilePhoneChanged = true;

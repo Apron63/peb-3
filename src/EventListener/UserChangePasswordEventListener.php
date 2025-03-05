@@ -27,6 +27,12 @@ class UserChangePasswordEventListener
             $entity->setPassword($this->passwordEncoder->hashPassword($entity, $entity->getPlainPassword()));
         }
 
+        if ($args->hasChangedField('mobilePhone') && !empty($entity->getMobilePhone())) {
+            $entity
+                ->setWhatsappExists(false)
+                ->setWhatsappConfirmed(true);
+        }
+
         $entity->setFullName($entity->getLastName() . ' ' . $entity->getFirstName() . ' ' . $entity->getPatronymic());
     }
 }
