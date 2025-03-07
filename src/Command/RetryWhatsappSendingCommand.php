@@ -40,7 +40,7 @@ class RetryWhatsappSendingCommand extends Command
         $now = new DateTime();
 
         foreach ($this->whatsappQueueRepository->getWhatsappNotSended() as $whatsappMessage) {
-            if (WhatsappQueue::MAX_TRY_COUNT < $whatsappMessage->getAttempts()) {
+            if (WhatsappQueue::MAX_TRY_COUNT <= $whatsappMessage->getAttempts()) {
                 continue;
             }
 
