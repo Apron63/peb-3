@@ -78,13 +78,18 @@ class PermissionController extends MobileController
                 'creator' => $this->getUser(),
             ];
 
-            $this->batchCreatePermissionService->batchCreatePermission($data);
+            if (count($data['course']) >= 50) {
+                $this->addFlash('error', 'Вы выбрали более 50 курсов одновременно. Максимальное количество - 50 курсов');
+            }
+            else {
+                $this->batchCreatePermissionService->batchCreatePermission($data);
 
-            $this->addFlash('success', 'Доступы успешно созданы');
+                $this->addFlash('success', 'Доступы успешно созданы');
 
-            return $this->redirect(
-                $this->generateUrl('admin_user_edit', ['id' => $user->getId()])
-            );
+                return $this->redirect(
+                    $this->generateUrl('admin_user_edit', ['id' => $user->getId()])
+                );
+            }
         }
 
         return $this->mobileRender('admin/permission/create-batch.html.twig', [
@@ -156,7 +161,7 @@ class PermissionController extends MobileController
 
         if ($logger instanceof Logger) {
             $fileName = $this->reportService->generateTestingPdf($logger);
-            
+
             $response = new BinaryFileResponse($fileName);
             $response->headers->set('Content-Type', 'application/pdf');
             $response

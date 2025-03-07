@@ -120,8 +120,8 @@ function assignUsersToLoader()
                 return false
             }
 
-            if (course.length > 50) {
-                alert('Вы выбрали более 50 курсов одновременно')
+            if (course.length >= 50) {
+                alert('Вы выбрали более 50 курсов одновременно. Максимальное количество - 50 курсов')
                 return false
             }
 
