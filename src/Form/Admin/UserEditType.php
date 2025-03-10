@@ -15,6 +15,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\CallbackTransformer;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Component\Validator\Constraints\Email;
 
 class UserEditType extends AbstractType
 {
@@ -132,6 +133,9 @@ class UserEditType extends AbstractType
                 ],
                 'label_attr' => [
                     'class' => 'col-sm-2 col-form-label'
+                ],
+                'constraints' => [
+                    new Email(),
                 ],
             ])
             ->add('contact', TextType::class, [

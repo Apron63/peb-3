@@ -12,11 +12,11 @@ use App\Repository\CourseRepository;
 use App\Repository\LoaderRepository;
 use App\Repository\ProfileRepository;
 use App\Service\LoaderService;
-use Exception;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Throwable;
 
 class LoaderController extends MobileController
 {
@@ -43,7 +43,7 @@ class LoaderController extends MobileController
         ) {
             try {
                 $this->loaderService->loadDataFrom1C($form->get('filename')->getData(), $user);
-            } catch (Exception $e) {
+            } catch (Throwable $e) {
                 $this->addFlash('error', $e->getMessage());
             }
 

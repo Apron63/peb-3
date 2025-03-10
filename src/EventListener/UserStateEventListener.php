@@ -7,7 +7,8 @@ namespace App\EventListener;
 use App\Entity\User;
 use App\Entity\UserState;
 use App\Repository\UserStateRepository;
-use App\Service\Whatsapp\UserSenderService;
+use App\Service\EmailService\UserSenderService as EmailService;
+use App\Service\Whatsapp\UserSenderService as WhatsappService;
 use DateTime;
 use Doctrine\Bundle\DoctrineBundle\Attribute\AsDoctrineListener;
 use Doctrine\ORM\Event\PostUpdateEventArgs;
@@ -29,11 +30,13 @@ class UserStateEventListener
     ];
 
     private bool $hasMobilePhoneChanged = false;
+    private bool $hasEmailChanged = false;
 
     public function __construct(
         private readonly Security $security,
         private readonly UserStateRepository $userStateRepository,
-        private readonly UserSenderService $userSenderService,
+        private readonly WhatsappService $whatsappService,
+        private readonly EmailService $emailService,
     ) {}
 
     public function postUpdate (PostUpdateEventArgs $args): void
@@ -68,7 +71,11 @@ class UserStateEventListener
             $this->userStateRepository->save($userState, true);
 
             if ($this->hasMobilePhoneChanged) {
-                $this->userSenderService->resendToUser($entity);
+                $this->whatsappService->resendToUser($entity);
+            }
+
+            if ($this->hasEmailChanged) {
+                $this->emailService->resendToUser($entity);
             }
         }
     }
@@ -95,6 +102,14 @@ class UserStateEventListener
                 && $newValue !== $oldValue
             ) {
                 $this->hasMobilePhoneChanged = true;
+            }
+
+            if (
+                $fieldName === 'email'
+                && $newValue !== 'не задано'
+                && $newValue !== $oldValue
+            ) {
+                $this->hasEmailChanged = true;
             }
         }
 
