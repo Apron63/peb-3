@@ -58,14 +58,14 @@
                 {% for page in pagination %}
                     <tr>
                         <td>
+                            {{ page.createdAt | date('d.m.Y H:i:s') }}
+                        </td>
+                        <td>
                             {% if page.sendedAt is null %}
                                 -
                             {% else %}
                                 {{ page.sendedAt | date('d.m.Y H:i:s') }}
                             {% endif %}
-                        </td>
-                        <td>
-                            {{ page.createdAt | date('d.m.Y H:i:s') }}
                         </td>
                         <td>
                             {% if page.user is not empty %}
