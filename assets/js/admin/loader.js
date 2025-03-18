@@ -101,10 +101,10 @@ function assignUsersToLoader()
         })
 
         $('#send-to-query').on('click', function () {
-            let duration = $('#duration').val()
+            let duration = Number($('#duration').val())
 
-            if (duration === 0 || duration === '') {
-                alert('Не указана продолжительность доступа!')
+            if (duration <= 0 || duration === '') {
+                alert('Не указана или неправильно указана продолжительность доступа!')
                 return false
             }
 
