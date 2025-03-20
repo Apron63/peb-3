@@ -1,11 +1,15 @@
 <?php
 
+declare (strict_types=1);
+
 namespace App\Repository;
 
 use App\Entity\Answer;
 use App\Entity\Course;
 use App\Entity\CourseInfo;
 use App\Entity\CourseTheme;
+use App\Entity\Permission;
+use App\Entity\PreparationHistory;
 use App\Entity\Profile;
 use App\Entity\Questions;
 use App\Entity\Ticket;
@@ -192,6 +196,30 @@ class CourseRepository extends ServiceEntityRepository
             ->delete(Ticket::class, 'ticket')
             ->where('ticket.course = :course')
             ->setParameter('course', $course)
+            ->getQuery()
+            ->getResult();
+
+        $permissions = $this
+            ->getEntityManager()
+            ->createQueryBuilder()
+            ->select('p.id')
+            ->from(Permission::class, 'p')
+            ->where('p.course = :course')
+            ->setParameter('course', $course)
+            ->getQuery()
+            ->getScalarResult();
+
+        $permissionsIds = array_map(
+            fn(array $permission) => $permission['id'],
+            $permissions,
+        );
+
+        $this
+            ->getEntityManager()
+            ->createQueryBuilder()
+            ->delete(PreparationHistory::class, 'ph')
+            ->where('ph.permission IN (:permissionsIds)')
+            ->setParameter('permissionsIds', $permissionsIds)
             ->getQuery()
             ->getResult();
     }

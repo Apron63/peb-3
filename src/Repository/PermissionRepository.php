@@ -174,16 +174,23 @@ class PermissionRepository extends ServiceEntityRepository
             ->createQuery("SELECT p.id FROM App\Entity\Permission p WHERE p.course = :courseId")
             ->setParameter('courseId', $course->getId());
 
-        $qIds = $query->execute();
-        $qIds = array_map(function ($e) {
-            return $e['id'];
-        }, $qIds);
+        $permissionsIds = $query->execute();
+        $permissionsIds = array_map(
+            static fn($e) => $e['id'],
+            $permissionsIds
+        );
 
         $query = $this->getEntityManager()
-            ->createQuery('DELETE FROM App\Entity\Logger l WHERE l.permission IN (:qIds)')
-            ->setParameter('qIds', $qIds);
+            ->createQuery('DELETE FROM App\Entity\Logger l WHERE l.permission IN (:permissionsIds)')
+            ->setParameter('permissionsIds', $permissionsIds);
 
-        $qIds = $query->execute();
+        $qq = $query->execute();
+
+        $query = $this->getEntityManager()
+            ->createQuery('DELETE FROM App\Entity\PreparationHistory ph WHERE ph.permission IN (:permissionsIds)')
+            ->setParameter('permissionsIds', $permissionsIds);
+
+        $qq = $query->execute();
 
         $query = $this->getEntityManager()
             ->createQuery("DELETE FROM App\Entity\Permission p WHERE p.course = :courseId")

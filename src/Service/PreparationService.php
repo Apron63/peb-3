@@ -1,11 +1,15 @@
 <?php
 
+declare (strict_types=1);
+
 namespace App\Service;
 
 use App\Entity\Course;
 use App\Entity\Permission;
+use App\Entity\PreparationHistory;
 use App\Entity\Questions;
 use App\Repository\AnswerRepository;
+use App\Repository\PreparationHistoryRepository;
 use App\Repository\QuestionsRepository;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
@@ -19,6 +23,7 @@ class PreparationService
     public function __construct(
         private readonly QuestionsRepository $questionsRepository,
         private readonly AnswerRepository $answerRepository,
+        private readonly PreparationHistoryRepository $preparationHistoryRepository,
         private readonly UrlGeneratorInterface $urlGenerator,
     ) {}
 
@@ -51,6 +56,9 @@ class PreparationService
             ->setMaxResults($perPage)
             ->getResult();
 
+        $preparationHistory = $this->getPreparationHistory($permission);
+        $preparationContent = $preparationHistory->getContent();
+
         /** @var Questions $question */
         foreach ($questions as $question) {
             $answers = $this->answerRepository->getAnswers($question, true);
@@ -61,7 +69,8 @@ class PreparationService
                     'description' => $answer['description'],
                     'right' => $answer['isCorrect'],
                     'nom' => $answer['nom'],
-
+                    'id' => $answer['id'],
+                    'checked' => $preparationContent[$question->getId()][$answer['id']] ?? false,
                 ];
             }
 
@@ -223,5 +232,19 @@ class PreparationService
         }
 
         return $paginator;
+    }
+
+    private function getPreparationHistory(Permission $permission): PreparationHistory
+    {
+        $preparationHistory = $this->preparationHistoryRepository->getPreparationHistory($permission);
+
+        if (null === $preparationHistory) {
+            $preparationHistory = new PreparationHistory;
+
+            $preparationHistory->setPermission($permission);
+            $this->preparationHistoryRepository->save($preparationHistory, true);
+        }
+
+        return $preparationHistory;
     }
 }

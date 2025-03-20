@@ -1,5 +1,7 @@
 <?php
 
+declare (strict_types=1);
+
 namespace App\Controller\Frontend;
 
 use App\Entity\Course;
@@ -8,6 +10,7 @@ use App\Entity\Permission;
 use App\Entity\User;
 use App\Repository\CourseThemeRepository;
 use App\Repository\PermissionRepository;
+use App\Repository\PreparationHistoryRepository;
 use App\Service\PreparationService;
 use App\Service\UserPermissionService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -25,6 +28,7 @@ class PreparationController extends AbstractController
         private readonly UserPermissionService $userPermissionService,
         private readonly PreparationService $preparationService,
         private readonly PermissionRepository $permissionRepository,
+        private readonly PreparationHistoryRepository $preparationHistoryRepository,
     ) {}
 
     #[Route('/preparation-one/{id<\d+>}/{themeId<\d+>}/', name: 'app_frontend_preparation_one')]
@@ -152,5 +156,34 @@ class PreparationController extends AbstractController
                 'data' => $data,
             ]),
         ]);
+    }
+
+    #[Route('/preparation-save-history/', name: 'app_frontend_preparation_save_history', condition: 'request.isXmlHttpRequest()', methods: 'POST')]
+    public function preparationSaveHistory(Request $request): JsonResponse
+    {
+        $response = new JsonResponse();
+
+        $requestContent = json_decode($request->getContent(), true);
+
+        /** @var User $user */
+        $user = $this->getUser();
+
+        $permission = $this->permissionRepository->find($requestContent['permissionId']);
+        if ($permission->getUser()->getId() !== $user->getId()) {
+            return $response;
+        }
+
+        $preparationHistory = $this->preparationHistoryRepository->getPreparationHistory($permission);
+        if (null === $preparationHistory) {
+            return $response;
+        }
+
+        $content = $preparationHistory->getContent();
+        $content[$requestContent['questionId']] = $requestContent['answers'];
+        $preparationHistory->setContent($content);
+
+        $this->preparationHistoryRepository->save($preparationHistory, true);
+
+        return $response;
     }
 }

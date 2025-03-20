@@ -19,7 +19,7 @@ $(fileupload).on('change', function () {
         dataType: 'json',
         contentType: false,
         method: 'POST',
-        processData : false, 
+        processData : false,
     }).done(function(data) {
         if (!data.success) {
             $('#error-message').text(data.message)

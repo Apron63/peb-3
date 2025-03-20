@@ -1,6 +1,6 @@
 <form class="control-questions_item" test-form-elem="form" id="question-{{ item.id }}">
 
-    <div class="test_form_question_wrapper">
+    <div class="test_form_question_wrapper" data-question-id="{{ item.id }}">
         <div class="test_form_question_number">
             {{ item.nom }}.
         </div>
@@ -11,10 +11,17 @@
 
     {% for answer in item.answers %}
         <label class="test_form_label test_form_radio_wrapper">
-            <input class="test_form_radio" type="radio" name="answer1" value="{{ answer.nom }}" data-right="{{ answer.right }}">
+            <input
+                class="test_form_radio"
+                type="radio" name="answer1"
+                value="{{ answer.nom }}"
+                data-right="{{ answer.right }}"
+                data-answer-id="{{ answer.id }}"
+                {% if answer.checked %}checked{% endif %}
+            >
             <div class="test_form_custom_radio"></div>
             <div class="test_form_answer">{{ answer.description | raw }}</div>
-        </label>    
+        </label>
     {% endfor %}
 
     {% if item.help is not empty %}
@@ -33,4 +40,3 @@
     </div>
 
 </form>
-                        
