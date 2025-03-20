@@ -18,7 +18,6 @@ class WhatsappController extends MobileController
     ) {}
 
     #[Route('/admin/user/whatsapp/resend/{id<\d+>}/', name: 'admin_user_whatsapp_resend')]
-    #[IsGranted('ROLE_SUPER_ADMIN')]
     public function whatsappResend(User $user): RedirectResponse
     {
         if (empty($user->getMobilePhone())) {
