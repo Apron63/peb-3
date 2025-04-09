@@ -70,7 +70,7 @@ class PreparationService
                     'right' => $answer['isCorrect'],
                     'nom' => $answer['nom'],
                     'id' => $answer['id'],
-                    'checked' => $preparationContent[$question->getId()][$answer['id']] ?? false,
+                    'checked' => $preparationContent[$question->getId()]['answers'][$answer['id']] ?? false,
                 ];
             }
 
@@ -81,6 +81,8 @@ class PreparationService
                 'description' => $question->getDescription(),
                 'help' => $question->getHelp(),
                 'answers' => $answerData,
+                'result' => $preparationContent[$question->getId()]['result'] ?? false,
+                'hasRight' => $preparationContent[$question->getId()]['hasRight'] ?? false,
             ];
         }
 

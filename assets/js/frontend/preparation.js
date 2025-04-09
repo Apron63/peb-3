@@ -5,7 +5,7 @@ $(document).on('click', '.control-questions_item_button', function(e) {
 
     let wrapperId = $(e.target).data('form-id')
     let answerType = $(e.target).data('answer-type')
-
+    let data = {};
     let correct = true
 
     if (answerType == 1) {
@@ -17,6 +17,24 @@ $(document).on('click', '.control-questions_item_button', function(e) {
                 correct = false
             }
         })
+
+        $(this)
+        .closest('.control-questions_item')
+        .find('.test_form_question_wrapper')
+        .each(function(i, el) {
+            data.questionId = $(el).data('question-id')
+        })
+
+        let answers = {}
+
+        $(this)
+        .closest('.control-questions_item')
+        .find('.test_form_radio')
+        .each(function(i, el) {
+            answers[$(el).data('answer-id')] = $(el).is(':checked')
+        })
+
+        data.answers = answers
     } else {
         $(this).closest('#'+ wrapperId).find('input[type="checkbox"]').each(function(i, e) {
             let userAnswer = $(e).prop('checked')
@@ -26,6 +44,24 @@ $(document).on('click', '.control-questions_item_button', function(e) {
                 correct = false
             }
         })
+
+        $(this)
+        .closest('.control-questions_item')
+        .find('.test_form_question_wrapper')
+        .each(function(i, el) {
+            data.questionId = $(el).data('question-id')
+        })
+
+        let answers = {}
+
+        $(this)
+        .closest('.control-questions_item')
+        .find('.test_form_checkbox')
+        .each(function(i, el) {
+            answers[$(el).data('answer-id')] = $(el).is(':checked')
+        })
+
+        data.answers = answers
     }
 
     let result = $(this).closest('#'+ wrapperId).find('.control-questions_item_result')
@@ -44,56 +80,9 @@ $(document).on('click', '.control-questions_item_button', function(e) {
 
         $(result).html('Неправильно')
     }
-})
 
-$(document).on('change', '.test_form_checkbox', function(e) {
-    e.stopImmediatePropagation()
-
-    let data = {};
-
-    $(e.target)
-    .closest('.control-questions_item')
-    .find('.test_form_question_wrapper')
-    .each(function(i, el) {
-        data.questionId = $(el).data('question-id')
-    })
-
-    let answers = {}
-
-    $(e.target)
-    .closest('.control-questions_item')
-    .find('.test_form_checkbox')
-    .each(function(i, el) {
-        answers[$(el).data('answer-id')] = $(el).is(':checked')
-    })
-
-    data.answers = answers
-
-    savePreparationData(data)
-})
-
-$(document).on('change', '.test_form_radio', function(e) {
-    e.stopImmediatePropagation()
-
-    let data = {};
-
-    $(e.target)
-    .closest('.control-questions_item')
-    .find('.test_form_question_wrapper')
-    .each(function(i, el) {
-        data.questionId = $(el).data('question-id')
-    })
-
-    let answers = {}
-
-    $(e.target)
-    .closest('.control-questions_item')
-    .find('.test_form_radio')
-    .each(function(i, el) {
-        answers[ $(el).data('answer-id')] = $(el).is(':checked')
-    })
-
-    data.answers = answers
+    data.result = $(result).text()
+    data.hasRight = $(result).hasClass('right')
 
     savePreparationData(data)
 })

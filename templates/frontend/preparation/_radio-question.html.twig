@@ -36,7 +36,7 @@
 
     <div class="control-questions_item_buttons_wrapper">
         <button type="button" class="white-blue_button control-questions_item_button" data-form-id="question-{{ item.id }}" data-answer-type="{{ item.type }}">Ответить</button>
-        <div class="control-questions_item_result"></div>
+        <div class="control-questions_item_result {% if item.hasRight %}right{% endif %}">{{ item.result }}</div>
     </div>
 
 </form>
