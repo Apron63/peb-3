@@ -264,7 +264,7 @@ class Permission
     {
         $creationDate = $this->createdAt ?? new DateTime();
 
-        return $creationDate->add(new DateInterval('P' . $this->duration . 'D'));
+        return (clone $creationDate)->add(new DateInterval('P' . $this->duration . 'D'));
     }
 
     public function getCheckedBy(): ?User
