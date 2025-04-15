@@ -46,4 +46,13 @@ class PreparationHistoryRepository extends ServiceEntityRepository
             $this->getEntityManager()->flush();
         }
     }
+
+    public function removePreparationHistoryForPermission(Permission $permission): void
+    {
+        $query = $this->getEntityManager()
+            ->createQuery('DELETE FROM App\Entity\PreparationHistory ph WHERE ph.permission = :permissionId')
+            ->setParameter('permissionId', $permission->getId());
+
+        $query->execute();
+    }
 }
