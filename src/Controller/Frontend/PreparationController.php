@@ -162,6 +162,8 @@ class PreparationController extends AbstractController
     public function preparationSaveHistory(Request $request): JsonResponse
     {
         $response = new JsonResponse();
+        // TODO Функционал временно деактивирован
+        return $response;
 
         $requestContent = json_decode($request->getContent(), true);
 

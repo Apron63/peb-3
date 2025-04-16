@@ -84,7 +84,8 @@ $(document).on('click', '.control-questions_item_button', function(e) {
     data.result = $(result).text()
     data.hasRight = $(result).hasClass('right')
 
-    savePreparationData(data)
+    // TODO функуионал временно деактивирован
+    //savePreparationData(data)
 })
 
 function savePreparationData(data)

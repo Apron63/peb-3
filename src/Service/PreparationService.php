@@ -56,8 +56,9 @@ class PreparationService
             ->setMaxResults($perPage)
             ->getResult();
 
-        $preparationHistory = $this->getPreparationHistory($permission);
-        $preparationContent = $preparationHistory->getContent();
+        // TODO Функционал временно отключен
+        // $preparationHistory = $this->getPreparationHistory($permission);
+        // $preparationContent = $preparationHistory->getContent();
 
         /** @var Questions $question */
         foreach ($questions as $question) {
