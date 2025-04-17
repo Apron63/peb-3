@@ -171,7 +171,10 @@ class PreparationController extends AbstractController
         $user = $this->getUser();
 
         $permission = $this->permissionRepository->find($requestContent['permissionId']);
-        if ($permission->getUser()->getId() !== $user->getId()) {
+        if (
+            ! $user instanceof User
+            || $permission->getUser()->getId() !== $user->getId()
+        ) {
             return $response;
         }
 

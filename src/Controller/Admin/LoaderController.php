@@ -16,6 +16,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Throwable;
 
 class LoaderController extends MobileController
@@ -121,6 +122,10 @@ class LoaderController extends MobileController
     {
         /** @var User $user */
         $user = $this->getUser();
+
+        if (! $user instanceof User) {
+            throw new AccessDeniedException();
+        }
 
         $courseIds = $request->get('course');
         $duration = (int) $request->get('duration');
