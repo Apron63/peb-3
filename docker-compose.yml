@@ -34,7 +34,7 @@ services:
       - default
 
   mysql:
-    image: mysql:latest
+    image: mysql:8
     command: 'mysqld --innodb-flush-method=fsync --sort_buffer_size=1M'
     restart: unless-stopped
     container_name: peb_mysql

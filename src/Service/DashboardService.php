@@ -45,7 +45,7 @@ class DashboardService
         $this->queryUserRepository->queryUserClear();
     }
 
-    public function replaceValue(string $source, array $from = [], array $target = [], User $user =  null): string
+    public function replaceValue(string $source, array $from = [], array $target = [], ?User $user = null): string
     {
         $result = $source;
 

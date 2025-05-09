@@ -1,4 +1,4 @@
-FROM php:8.2-fpm
+FROM php:8.4-fpm
 
 RUN usermod -u 1000 www-data
 RUN chown -R 1000 /var/www/html/

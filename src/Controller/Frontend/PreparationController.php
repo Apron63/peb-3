@@ -32,7 +32,7 @@ class PreparationController extends AbstractController
     ) {}
 
     #[Route('/preparation-one/{id<\d+>}/{themeId<\d+>}/', name: 'app_frontend_preparation_one')]
-    public function preparationOne(Permission $permission, int $themeId = null, Request $request): Response
+    public function preparationOne(Permission $permission, ?int $themeId = null, Request $request): Response
     {
         /** @var User $user */
         $user = $this->getUser();

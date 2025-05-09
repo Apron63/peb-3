@@ -1,5 +1,7 @@
 <?php
 
+declare (strict_types=1);
+
 namespace App\Decorator;
 
 use MobileDetectBundle\DeviceDetector\MobileDetector;
@@ -10,7 +12,7 @@ class MobileController extends AbstractController
 {
     private const VIEW_EXTENSION = '.html.twig';
 
-    public function mobileRender(string $view, array $parameters = [], Response $response = null): Response
+    public function mobileRender(string $view, array $parameters = [], ?Response $response = null): Response
     {
         $detector = new MobileDetector();
 
