@@ -1,5 +1,7 @@
 <?php
 
+declare (strict_types=1);
+
 namespace App\Repository;
 
 use App\Entity\Permission;
@@ -194,6 +196,11 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         if (isset($criteria['course']) && $criteria['course']) {
             $queryBuilder->andWhere('p.course IN (:course)')
                 ->setParameter('course', $criteria['course']);
+        }
+
+        if (isset($criteria['checkedMe'], $criteria['userId']) && $criteria['checkedMe']) {
+            $queryBuilder->andWhere('p.checkedBy = :userId')
+                ->setParameter('userId', $criteria['userId']);
         }
 
         if ($forReport) {

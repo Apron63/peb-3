@@ -241,4 +241,9 @@ class PermissionRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult();
     }
+
+    public function getPermissonCountSelectedByUser(User $user): int
+    {
+        return count($this->getPermissonSelectedByUser($user));
+    }
 }

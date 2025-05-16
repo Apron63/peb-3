@@ -1,5 +1,7 @@
 <?php
 
+declare (strict_types=1);
+
 namespace App\Service;
 
 use App\Entity\User;
@@ -78,7 +80,7 @@ class UserService
         } else {
             $login = substr($lastName, 0, 8) . $firstName[0] . $patronymic[0];
         }
-        
+
         $user->setFullName($user->getLastName() . ' ' . $user->getFirstName() . ' ' . $user->getPatronymic());
 
         $attempt = 1;

@@ -1,5 +1,7 @@
 <?php
 
+declare (strict_types=1);
+
 namespace App\Controller\Admin;
 
 use App\Decorator\MobileController;
@@ -46,7 +48,8 @@ class UserController extends MobileController
         );
 
         return $this->mobileRender('admin/user/list.html.twig', [
-            'pagination' => $pagination
+            'pagination' => $pagination,
+            'selectedCount' => $this->permissionRepository->getPermissonCountSelectedByUser($user),
         ]);
     }
 

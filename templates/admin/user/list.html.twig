@@ -107,6 +107,17 @@
         </div>
     </div>
 
+    {% if selectedCount > 0 %}
+        <p></p>
+        <div class="row">
+             <div class="d-grid gap-2">
+                <a class="btn btn-danger" href="{{ path('admin_user_list', {user_search: {userId: true, checkedMe: true}}) }}">
+                    У вас есть отмеченные пользователи: {{ selectedCount }}. Нажмите, чтобы посмотреть
+                </a>
+            </div>
+        </div>
+    {% endif %}
+
     <div class="scroll-table">
         <table class="table">
             <thead>
