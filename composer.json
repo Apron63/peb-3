@@ -11,9 +11,9 @@
         "ext-xmlreader": "*",
         "ext-zip": "*",
         "beberlei/doctrineextensions": "dev-master",
-        "doctrine/doctrine-bundle": "^2.11",
-        "doctrine/doctrine-migrations-bundle": "^3.2",
-        "doctrine/orm": "^2.7",
+        "doctrine/doctrine-bundle": "^2.14",
+        "doctrine/doctrine-migrations-bundle": "^3.4",
+        "doctrine/orm": "^3.3",
         "green-api/whatsapp-api-client-php": "^0.3.0",
         "jonasarts/tcpdf-bundle": "*",
         "knplabs/knp-paginator-bundle": "^6.3",
@@ -120,12 +120,12 @@
     "extra": {
         "symfony": {
             "allow-contrib": false,
-            "require": "6.3.*"
+            "require": "^7.0"
         }
     },
     "require-dev": {
-        "phpstan/phpdoc-parser": "^1.15",
-        "phpunit/phpunit": "^10.3",
+        "phpstan/phpdoc-parser": "^2.0",
+        "phpunit/phpunit": "^12.0",
         "symfony/browser-kit": "^7.0",
         "symfony/css-selector": "^7.0",
         "symfony/debug-bundle": "^7.0",
@@ -134,6 +134,6 @@
         "symfony/phpunit-bridge": "^7.0",
         "symfony/stopwatch": "^7.0",
         "symfony/web-profiler-bundle": "^7.0",
-        "symplify/config-transformer": "^12.3"
+        "symplify/config-transformer": "*"
     }
 }
