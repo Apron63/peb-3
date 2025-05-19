@@ -1,9 +1,12 @@
 <?php
 
+declare (strict_types=1);
+
 namespace App\Repository;
 
 use App\Entity\MailingQueue;
 use App\Entity\User;
+use DateTime;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\Query;
 use Doctrine\Persistence\ManagerRegistry;
@@ -60,9 +63,12 @@ class MailingQueueRepository extends ServiceEntityRepository
     {
         $queryBuilder = $this->createQueryBuilder('m');
 
+        $now = new DateTime();
         return $queryBuilder
             ->select('count(m)')
-            ->where('m.createdAt = NOW()')
+            ->where('m.createdAt BETWEEN :startDate AND :endDate')
+            ->setParameter('startDate', clone $now->setTime(0, 0, 0))
+            ->setParameter('endDate', clone $now->setTime(23, 59, 59))
             ->getQuery()
             ->getSingleScalarResult();
     }

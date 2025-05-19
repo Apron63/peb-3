@@ -6,6 +6,7 @@ namespace App\Repository;
 
 use App\Entity\User;
 use App\Entity\WhatsappQueue;
+use DateTime;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\Query;
 use Doctrine\Persistence\ManagerRegistry;
@@ -47,9 +48,12 @@ class WhatsappQueueRepository extends ServiceEntityRepository
     {
         $queryBuilder = $this->createQueryBuilder('w');
 
+         $now = new DateTime();
         return $queryBuilder
             ->select('count(w)')
-            ->where('w.createdAt = NOW()')
+            ->where('w.createdAt BETWEEN :startDate AND :endDate')
+            ->setParameter('startDate', clone $now->setTime(0, 0, 0))
+            ->setParameter('endDate', clone $now->setTime(23, 59, 59))
             ->getQuery()
             ->getSingleScalarResult();
     }
