@@ -48,26 +48,22 @@ class DemoLoggerRepository extends ServiceEntityRepository
             ->andWhere('l.user = :user')
             ->andWhere('l.result = 0')
             ->andWhere('l.endAt IS NULL')
-            ->setParameters([
-                'permission' => $permission,
-                'user' => $user,
-            ])
+            ->setParameter('permission', $permission)
+            ->setParameter('user', $user)
             ->orderBy('l.beginAt', 'desc')
             ->setMaxResults(1)
             ->getQuery()
             ->getOneOrNullResult();
     }
-    
+
     public function findFirstSuccessfullyLogger(Permission $permission, UserInterface $user): ?DemoLogger
     {
         return $this->createQueryBuilder('l')
             ->where('l.permission = :permission')
             ->andWhere('l.user = :user')
             ->andWhere('l.result = 1')
-            ->setParameters([
-                'permission' => $permission,
-                'user' => $user,
-            ])
+            ->setParameter('permission', $permission)
+            ->setParameter('user', $user)
             ->orderBy('l.beginAt', 'asc')
             ->setMaxResults(1)
             ->getQuery()

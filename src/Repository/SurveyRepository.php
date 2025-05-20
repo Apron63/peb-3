@@ -47,10 +47,8 @@ class SurveyRepository extends ServiceEntityRepository
         $survey = $queryBuilder
             ->where('s.user = :user AND s.course = :course')
             ->orderBy('s.createdAt', 'DESC')
-            ->setParameters([
-                'user' => $user,
-                'course' => $course,
-            ])
+            ->setParameter('user', $user)
+            ->setParameter('course', $course)
             ->setMaxResults(1)
             ->getQuery()
             ->getOneOrNullResult();

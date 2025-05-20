@@ -1,5 +1,7 @@
 <?php
 
+declare (strict_types=1);
+
 namespace App\Repository;
 
 use DateTime;
@@ -49,10 +51,9 @@ class LoggerRepository extends ServiceEntityRepository
             ->andWhere('l.user = :user')
             ->andWhere('l.result = 0')
             ->andWhere('l.endAt IS NULL')
-            ->setParameters([
-                'permission' => $permission,
-                'user' => $user,
-            ])
+            ->andWhere('l.endAt IS NULL')
+            ->setParameter('permission', $permission)
+            ->setParameter('user', $user)
             ->orderBy('l.beginAt', 'desc')
             ->setMaxResults(1)
             ->getQuery()
@@ -65,10 +66,8 @@ class LoggerRepository extends ServiceEntityRepository
             ->where('l.permission = :permission')
             ->andWhere('l.user = :user')
             ->andWhere('l.result = 1')
-            ->setParameters([
-                'permission' => $permission,
-                'user' => $user,
-            ])
+            ->setParameter('permission', $permission)
+            ->setParameter('user', $user)
             ->orderBy('l.beginAt', 'asc')
             ->setMaxResults(1)
             ->getQuery()
