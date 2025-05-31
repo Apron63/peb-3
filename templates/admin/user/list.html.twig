@@ -128,7 +128,7 @@
                     <th>ФИО</th>
                     <th>Организация</th>
                     <th>Курс</th>
-                    <th>Дней</th>
+                    <th style="width: 140px">Дней</th>
                     <th>Статус</th>
                     <th>Акт</th>
                 </tr>
@@ -158,12 +158,21 @@
                         <td>{{ permission.fullName }}</td>
                         <td>{{ permission.organization }}</td>
                         <td>{{ permission.shortName }}</td>
-                        <td>
+                        <td class="input-duration-row">
+                            <div class="permission-history text-end">
+                                {% if permissionsHistories[permission.permissionId] is defined %}
+                                    {% include '/admin/user/_permission_history.html.twig' with {permissionId: permission.permissionId} %}
+                                {% endif %}
+                            </div>
+
                             <div class="input-group" style="width:120px;">
-                                <span style="padding-right:5px;">{{ permission.duration }}</span>
                                 <input type="number" class="form-control">
                                 <button class="btn btn-danger btn-sm button-add-duration" data-permission-id="{{ permission.permissionId }}">+</button>
                             </div>
+
+                            {% if permission.duration > 0 %}
+                                <span class="permission-duration" style="padding-right:5px;">Всего: {{ permission.duration }} дней</span>
+                            {% endif %}
                         </td>
                         <td>
                             {% if permission.stage == 1 %}

@@ -85,3 +85,7 @@ body {
 .table {
     --bs-table-bg: transparent;
 }
+
+.custom-tooltip {
+    font-size: 20px;
+}

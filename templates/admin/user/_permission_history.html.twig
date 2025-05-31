@@ -1,0 +1,12 @@
+{% for permissionHistory in permissionsHistories[permissionId] %}
+    <span
+        class="justify-content-end"
+        data-bs-toggle="tooltip"
+        data-bs-custom-class="custom-tooltip"
+        data-bs-title="{{ permissionHistory.createdAt | date('d.m.Y H:i:s') }} {{ permissionHistory.fullName }}"
+    >
+        {% if not loop.first and permissionHistory.duration > 0 %}+{% endif %}{{ permissionHistory.duration }}
+        ({{ permissionHistory.createdAt | date('d.m.Y') }})
+        <br>
+    </span>
+{% endfor %}

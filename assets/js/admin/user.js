@@ -5,9 +5,10 @@ import Inputmask from 'inputmask'
 let url = $('#add-duration-button').data('add-duration-url')
 
 $('.button-add-duration').on('click', function(e) {
-    let duration = $(e.target).closest('.input-group').find('.form-control').val()
-    let valueNow = $(e.target).closest('.input-group').find('span')
-    let inputNow = $(e.target).closest('.input-group').find('input')
+    let duration = $(e.target).closest('.input-duration-row').find('.form-control').val()
+    let valueNow = $(e.target).closest('.input-duration-row').find('.permission-duration')
+    let permissionHistory = $(e.target).closest('.input-duration-row').find('.permission-history')
+    let inputNow = $(e.target).closest('.input-duration-row').find('input')
 
     if (duration != '') {
         let permissionId = $(e.target).data('permission-id')
@@ -16,8 +17,13 @@ $('.button-add-duration').on('click', function(e) {
             url: url,
             data: {permissionId: permissionId, duration: Number(duration)}
         }).done(function (data) {
-            $(valueNow).text(data['duration'])
+            $(valueNow).text('Всего: ' + data['duration'] + ' дней')
+            $(permissionHistory).html(data['content'])
             $(inputNow).val('')
+
+            tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
+            tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
+
         }).fail(function (data) {
            console.log(data)
         })
@@ -123,3 +129,7 @@ if (selector.length > 0) {
         }
     })
 }
+
+// Enable tooltips
+let tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
+let tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))

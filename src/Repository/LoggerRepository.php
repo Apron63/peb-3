@@ -4,12 +4,12 @@ declare (strict_types=1);
 
 namespace App\Repository;
 
-use DateTime;
 use App\Entity\Logger;
 use App\Entity\Permission;
+use DateTime;
+use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\Security\Core\User\UserInterface;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 
 /**
  * @extends ServiceEntityRepository<Logger>
@@ -78,6 +78,12 @@ class LoggerRepository extends ServiceEntityRepository
     {
         $query = $this->getEntityManager()
             ->createQuery("DELETE FROM App\Entity\Logger l WHERE l.permission = :permissionId")
+            ->setParameter('permissionId', $permission->getId());
+
+        $query->execute();
+
+        $query = $this->getEntityManager()
+            ->createQuery("DELETE FROM App\Entity\PermissionHistory ph WHERE ph.permissionId = :permissionId")
             ->setParameter('permissionId', $permission->getId());
 
         $query->execute();

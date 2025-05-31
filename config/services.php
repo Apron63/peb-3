@@ -69,6 +69,9 @@ return static function (ContainerConfigurator $containerConfigurator): void {
     ])
         ->tag('doctrine.event_listener', [
         'event' => 'prePersist',
+    ])
+        ->tag('doctrine.event_listener', [
+        'event' => 'postPersist',
     ]);
 
     $services->set(ModuleSectionRemoveEventListener::class)

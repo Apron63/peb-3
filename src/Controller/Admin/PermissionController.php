@@ -10,6 +10,7 @@ use App\Entity\Permission;
 use App\Entity\User;
 use App\Form\Admin\PermissionBatchCreateType;
 use App\Form\Admin\PermissionEditType;
+use App\Repository\PermissionHistoryRepository;
 use App\Repository\PermissionRepository;
 use App\Repository\UserRepository;
 use App\Service\BatchCreatePermissionService;
@@ -34,6 +35,7 @@ class PermissionController extends MobileController
         private readonly BatchCreatePermissionService $batchCreatePermissionService,
         private readonly UserPermissionService $userPermissionService,
         private readonly TestingReportService $reportService,
+        private readonly PermissionHistoryRepository $permissionHistoryRepository,
     ) {}
 
     #[Route('/admin/permission/create/{id<\d+>}/', name: 'admin_permission_create')]
@@ -178,7 +180,7 @@ class PermissionController extends MobileController
     #[Route('/admin/permission/add-duration/', name: 'admin_permission_add_duration', condition: 'request.isXmlHttpRequest()'), IsGranted('ROLE_ADMIN')]
     public function addDuration(Request $request): JsonResponse
     {
-        $permissionId = $request->get('permissionId');
+        $permissionId = (int) $request->get('permissionId');
         $duration = $request->get('duration');
 
         $permission = $this->permissionRepository->find($permissionId);
@@ -192,6 +194,14 @@ class PermissionController extends MobileController
             $this->permissionRepository->save($permission, true);
         }
 
-        return new JsonResponse(['duration' => $permission->getDuration()]);
+        $content = $this->renderView('/admin/user/_permission_history.html.twig', [
+            'permissionId' => $permissionId,
+            'permissionsHistories' => $this->permissionHistoryRepository->getPermissionsHistories($permissionId),
+        ]);
+
+        return new JsonResponse([
+            'duration' => $permission->getDuration(),
+            'content' => $content,
+        ]);
     }
 }

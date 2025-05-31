@@ -7,6 +7,7 @@ namespace App\Controller\Admin;
 use App\Decorator\MobileController;
 use App\Entity\User;
 use App\Form\Admin\UserEditType;
+use App\Repository\PermissionHistoryRepository;
 use App\Repository\PermissionRepository;
 use App\Repository\UserHistoryRepository;
 use App\Repository\UserRepository;
@@ -27,6 +28,7 @@ class UserController extends MobileController
         private readonly UserHistoryRepository $userHistoryRepository,
         private readonly UserStateRepository $userStateRepository,
         private readonly PaginatorInterface $paginator,
+        private readonly PermissionHistoryRepository $permissionHistoryRepository,
     ) {}
 
     #[Route('/admin/user/', name: 'admin_user_list')]
@@ -47,9 +49,22 @@ class UserController extends MobileController
             ['distinct' => false],
         );
 
+        $permissionsIds = array_unique(
+            array_map(
+                static fn(array $item) => $item['permissionId'],
+                $pagination->getItems(),
+            )
+        );
+
+        $permissionsIds = array_filter(
+            $permissionsIds,
+            static fn(?int $id) => null !== $id,
+        );
+
         return $this->mobileRender('admin/user/list.html.twig', [
             'pagination' => $pagination,
             'selectedCount' => $this->permissionRepository->getPermissonCountSelectedByUser($user),
+            'permissionsHistories' => $this->permissionHistoryRepository->getPermissionsHistories(...$permissionsIds),
         ]);
     }
 
