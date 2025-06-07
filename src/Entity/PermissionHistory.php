@@ -28,6 +28,9 @@ class PermissionHistory
     #[ORM\JoinColumn(nullable: false, name: 'created_by')]
     private ?User $createdBy = null;
 
+    #[ORM\Column]
+    private ?bool $initial = false;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -65,6 +68,18 @@ class PermissionHistory
     public function setCreatedBy(?User $createdBy): static
     {
         $this->createdBy = $createdBy;
+
+        return $this;
+    }
+
+    public function isInitial(): ?bool
+    {
+        return $this->initial;
+    }
+
+    public function setInitial(bool $initial): static
+    {
+        $this->initial = $initial;
 
         return $this;
     }

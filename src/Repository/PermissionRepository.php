@@ -246,4 +246,20 @@ class PermissionRepository extends ServiceEntityRepository
     {
         return count($this->getPermissonSelectedByUser($user));
     }
+
+    /**
+     * @return Permission[]
+     */
+    public function getPermissionsPortion(int $limit, int $offset): array
+    {
+        $queryBuilder = $this->createQueryBuilder('p');
+
+        return $queryBuilder
+            ->orderBy('p.createdAt')
+            ->where('p.createdBy IS NOT NULL')
+            ->setMaxResults($limit)
+            ->setFirstResult($offset * ($limit - 1))
+            ->getQuery()
+            ->getResult();
+    }
 }
