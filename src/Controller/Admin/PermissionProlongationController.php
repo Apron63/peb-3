@@ -76,8 +76,15 @@ class PermissionProlongationController extends MobileController
         $user = $this->getUser();
         $duration = (int) $request->get('duration');
 
-        $this->permissionProlongationService->permissionProlongate($duration, $user);
+        $permissionsCount = $this->permissionProlongationService->permissionProlongate($duration, $user);
 
-        return new JsonResponse('Продление достуров успешно выполнено');
+        if ($permissionsCount > 0) {
+            $this->addFlash('success', 'Продление доступов успешно выполнено');
+        }
+        else {
+            $this->addFlash('error', 'Нет отмеченых слушателей');
+        }
+
+        return new JsonResponse();
     }
 }

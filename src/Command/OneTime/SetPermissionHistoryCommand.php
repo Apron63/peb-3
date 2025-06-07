@@ -1,5 +1,7 @@
 <?php
 
+declare (strict_types=1);
+
 namespace App\Command\OneTime;
 
 use App\Entity\PermissionHistory;
@@ -53,7 +55,7 @@ class SetPermissionHistoryCommand
                             $permissionHistory->setInitial(true);
                         }
                         else {
-                                $permissionHistory->setInitial(false);
+                            $permissionHistory->setInitial(false);
                         }
 
                         if ($prevValue !== $permissionHistory->isInitial()) {

@@ -48,13 +48,6 @@
                     {% if moduleSection.nextMaterialId is not empty %}
                         <a href="{{ path('user_get_info_module', {id: permission.id, moduleId: moduleSection.nextMaterialId}) }}">Далее</a>
                     {% endif %}
-                    {# {% if isLastArrowButton %}
-                        {% if isFinalTestingEnabled %}
-                            <a href="{{ path('app_frontend_testing', {id: permission.id}) }}">Далее</a>
-                        {% else %}
-                            <a content-elem="final-testing" status="not-passed">Далее</a>
-                        {% endif %}
-                    {% endif %} #}
                 </div>
 
             </div>

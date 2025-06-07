@@ -125,11 +125,6 @@ class CourseController extends AbstractController
             throw new NotFoundHttpException('Section not found');
         }
 
-        $finalTestingEnabled = false;
-        if ($moduleSection->isFinalTestingIsNext()) {
-            $finalTestingEnabled = $this->moduleSectionArrowsService->isFinalTestingEnabled($permission);
-        }
-
         $this->userPermissionService->checkPermissionHistory($permission, $moduleSection);
 
         $response = new Response();
@@ -145,8 +140,6 @@ class CourseController extends AbstractController
             'permission' => $permission,
             'moduleSection' => $moduleSection,
             'moduleSectionPages' => $moduleSectionPages,
-            'isLastArrowButton' => $moduleSection->isFinalTestingIsNext(),
-            'isFinalTestingEnabled' => $finalTestingEnabled,
         ], $response);
     }
 }

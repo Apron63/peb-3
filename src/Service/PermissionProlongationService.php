@@ -114,7 +114,7 @@ class PermissionProlongationService
         return null;
     }
 
-    public function permissionProlongate(int $duration, User $user): void
+    public function permissionProlongate(int $duration, User $user): int
     {
         $permissions = $this->permissionRepository->findBy(['checkedBy' => $user]);
 
@@ -125,5 +125,7 @@ class PermissionProlongationService
 
             $this->permissionRepository->save($permission, true);
         }
+
+        return count($permissions);
     }
 }

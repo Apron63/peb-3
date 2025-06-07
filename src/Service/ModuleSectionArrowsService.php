@@ -1,15 +1,15 @@
 <?php
 
+declare (strict_types=1);
+
 namespace App\Service;
 
 use App\Entity\Course;
-use App\Entity\Permission;
 use App\Entity\User;
 use App\Event\ActionLogEvent;
 use App\Repository\CourseRepository;
 use App\Repository\ModuleRepository;
 use App\Repository\ModuleSectionRepository;
-use App\Service\CourseService;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 class ModuleSectionArrowsService
@@ -21,7 +21,6 @@ class ModuleSectionArrowsService
         private readonly ModuleSectionRepository $moduleSectionRepository,
         private readonly ModuleRepository $moduleRepository,
         private readonly CourseRepository $courseRepository,
-        private readonly CourseService $courseService,
         private readonly EventDispatcherInterface $eventDispatcher,
     ) {}
 
@@ -54,19 +53,6 @@ class ModuleSectionArrowsService
         return $this->groups[$choice] ?? null;
     }
 
-    public function isFinalTestingEnabled(Permission $permission): bool
-    {
-        $courseProgressItems = $this->courseService->checkForCourseStage($permission);
-
-        foreach ($courseProgressItems as $item) {
-            if (! $item['active']) {
-                return false;
-            }
-        }
-
-        return true;
-    }
-
     public function autonumerationCourse(Course $course, User $user): void
     {
         $moduleSections = $this->moduleSectionRepository->getModuleSectionsListByCourse($course);
@@ -85,18 +71,17 @@ class ModuleSectionArrowsService
             if ($key === $last) {
                 $moduleSection
                     ->setPrevMaterialId($moduleSectionsByNom[$key - 1]->getId())
-                    ->setNextMaterialId(null)
-                    ->setFinalTestingIsNext(true);
-            } else if ($key === $first) {
+                    ->setNextMaterialId(null);
+            }
+            elseif ($key === $first) {
                 $moduleSection
                     ->setPrevMaterialId(null)
-                    ->setNextMaterialId($moduleSectionsByNom[$key + 1]->getId())
-                    ->setFinalTestingIsNext(false);
-            } else {
+                    ->setNextMaterialId($moduleSectionsByNom[$key + 1]->getId());
+            }
+            else {
                 $moduleSection
                     ->setPrevMaterialId($moduleSectionsByNom[$key - 1]->getId())
-                    ->setNextMaterialId($moduleSectionsByNom[$key + 1]->getId())
-                    ->setFinalTestingIsNext(false);
+                    ->setNextMaterialId($moduleSectionsByNom[$key + 1]->getId());
             }
 
             $this->moduleSectionRepository->save($moduleSection, true);

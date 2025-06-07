@@ -1,11 +1,12 @@
 <?php
 
+declare (strict_types=1);
+
 namespace App\Form\Admin;
 
 use App\Entity\ModuleSection;
 use App\Service\ModuleSectionArrowsService;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -87,16 +88,6 @@ class ModuleSectionEditType extends AbstractType
                 ],
                 'label_attr' => [
                     'class' => 'col-sm-2 col-form-label'
-                ],
-            ])
-            ->add('finalTestingIsNext', CheckboxType::class, [
-                'label' => 'Переход к итоговому тестированию',
-                'required' => false,
-                'attr' => [
-                    'class' => 'form-check-input',
-                ],
-                'label_attr' => [
-                    'class' => 'form-check-label',
                 ],
             ])
             ->add('submit', SubmitType::class, [

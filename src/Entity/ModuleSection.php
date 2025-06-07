@@ -1,5 +1,7 @@
 <?php
 
+declare (strict_types=1);
+
 namespace App\Entity;
 
 use Doctrine\DBAL\Types\Types;
@@ -39,9 +41,6 @@ class ModuleSection
 
     #[ORM\Column(nullable: true)]
     private ?int $nextMaterialId = null;
-
-    #[ORM\Column()]
-    private bool $finalTestingIsNext = false;
 
     public function getId(): ?int
     {
@@ -104,18 +103,6 @@ class ModuleSection
     public function setNextMaterialId(?int $nextMaterialId): self
     {
         $this->nextMaterialId = $nextMaterialId;
-
-        return $this;
-    }
-
-    public function isFinalTestingIsNext(): bool
-    {
-        return $this->finalTestingIsNext;
-    }
-
-    public function setFinalTestingIsNext(bool $finalTestingIsNext): self
-    {
-        $this->finalTestingIsNext = $finalTestingIsNext;
 
         return $this;
     }

@@ -54,7 +54,7 @@ class PermissionHistoryRepository extends ServiceEntityRepository
             ->where('ph.permissionId IN (:permissionsIds)')
             ->setParameter('permissionsIds', $permissionsIds)
             ->orderBy('ph.permissionId')
-            ->addOrderBy('ph.initial')
+            ->addOrderBy('ph.initial', 'DESC')
             ->addOrderBy('ph.createdAt')
             ->getQuery()
             ->getArrayResult();
@@ -76,7 +76,7 @@ class PermissionHistoryRepository extends ServiceEntityRepository
         return $queryBuilder
             ->where('ph.permissionId = :permissionId')
             ->setParameter('permissionId', $permissionId)
-            ->orderBy('ph.initial')
+            ->orderBy('ph.initial', 'DESC')
             ->addOrderBy('ph.createdAt')
             ->getQuery()
             ->getResult();

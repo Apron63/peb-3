@@ -52,13 +52,6 @@
                     {{ form_widget(form.nextMaterialId) }}
                 </div>
             </div>
-            <div class="col-12 mb-3">
-                <div class="form-group">
-                    <span class="text-danger">{{ form_errors(form.finalTestingIsNext) }}</span>
-                    {{ form_label(form.finalTestingIsNext) }}
-                    {{ form_widget(form.finalTestingIsNext) }}
-                </div>
-            </div>
 
             {% if is_granted('ROLE_SUPER_ADMIN')  %}
                 <a
