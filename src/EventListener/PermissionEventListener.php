@@ -65,11 +65,11 @@ class PermissionEventListener
             $user = $entity->getCreatedBy();
         }
 
-        $permissionHistory = new PermissionHistory;
-        $permissionHistory
+        $permissionHistory = new PermissionHistory()
             ->setPermissionId($entity->getId())
             ->setDuration($entity->getDuration())
-            ->setCreatedBy($user);
+            ->setCreatedBy($user)
+            ->setInitial(true);
 
         $this->permissionHistoryRepository->save($permissionHistory, true);
     }

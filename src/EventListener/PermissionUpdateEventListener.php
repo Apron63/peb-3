@@ -37,11 +37,11 @@ class PermissionUpdateEventListener
             $duration = $changeSet['duration'][1] - $changeSet['duration'][0];
             $user = $this->security->getUser();
 
-            $permissionHistory = new PermissionHistory;
-            $permissionHistory
+            $permissionHistory = new PermissionHistory()
                 ->setPermissionId($entity->getId())
                 ->setDuration($duration)
-                ->setCreatedBy($user);
+                ->setCreatedBy($user)
+                ->setInitial(false);
 
             $this->permissionHistoryRepository->save($permissionHistory, true);
         }

@@ -13,7 +13,7 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 #[AsCommand(name: 'app:permission-histoty-init')]
 class SetPermissionHistoryCommand
 {
-    private const int BATCH_SIZE = 10;
+    private const int BATCH_SIZE = 100;
 
     public function __construct(
         private readonly EntityManagerInterface $entityManager,
@@ -47,14 +47,18 @@ class SetPermissionHistoryCommand
                 }
                 else {
                     foreach ($permissionHistories as $key => $permissionHistory) {
+                        $prevValue = $permissionHistory->isInitial();
+
                         if (0 === $key) {
                             $permissionHistory->setInitial(true);
                         }
                         else {
-                            $permissionHistory->setInitial(false);
+                                $permissionHistory->setInitial(false);
                         }
 
-                        $this->permissionHistoryRepository->save($permissionHistory, true);
+                        if ($prevValue !== $permissionHistory->isInitial()) {
+                            $this->permissionHistoryRepository->save($permissionHistory, true);
+                        }
                     }
                 }
             }
