@@ -7,7 +7,9 @@ namespace App\Command\OneTime;
 use App\Entity\PermissionHistory;
 use App\Repository\PermissionHistoryRepository;
 use App\Repository\PermissionRepository;
+use Doctrine\DBAL\Logging\Middleware;
 use Doctrine\ORM\EntityManagerInterface;
+use Psr\Log\NullLogger;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Style\SymfonyStyle;
@@ -25,6 +27,9 @@ class SetPermissionHistoryCommand
 
     public function __invoke(SymfonyStyle $io): int
     {
+        $connection = $this->entityManager->getConnection();
+        $connection->getConfiguration()->setMiddlewares([new Middleware(new NullLogger())]);
+
         $portion = 0;
         while (true) {
             $permissions = $this->permissionRepository->getPermissionsPortion(self::BATCH_SIZE, $portion++);
@@ -65,6 +70,7 @@ class SetPermissionHistoryCommand
                 }
             }
 
+            gc_collect_cycles();
             $io->writeln('Выполнено: ' . $portion * self::BATCH_SIZE);
         }
 

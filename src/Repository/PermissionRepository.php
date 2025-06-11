@@ -257,6 +257,7 @@ class PermissionRepository extends ServiceEntityRepository
         return $queryBuilder
             ->orderBy('p.createdAt')
             ->where('p.createdBy IS NOT NULL')
+            ->andWhere('DateDiff(Now(), p.createdAt) <= p.duration')
             ->setMaxResults($limit)
             ->setFirstResult($offset * ($limit - 1))
             ->getQuery()
