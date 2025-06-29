@@ -15,9 +15,11 @@ use function dirname;
 class InteractiveUploadService
 {
     private string $originalFilename;
+    private string $originalFileExtension;
 
     public function __construct(
         private readonly string $courseUploadPath,
+        private readonly string $videoUploadPath,
         private readonly ModuleSectionPageRepository $moduleSectionPageRepository,
     ) {}
 
@@ -32,9 +34,7 @@ class InteractiveUploadService
             . $moduleSectionPage->getId()
             . DIRECTORY_SEPARATOR;
 
-        // TODO Вынести методы работы с файлами в отдельный сервис
-
-            // Проверить что каталог существует, при необходимости создать.
+        // Проверить что каталог существует, при необходимости создать.
         if (! file_exists($path) && ! mkdir($path, 0777, true) && ! is_dir($path)) {
             throw new RuntimeException(sprintf('Directory "%s" was not created', $path));
         }
@@ -93,5 +93,36 @@ class InteractiveUploadService
 
         $moduleSectionPage->setUrl($data->getClientOriginalName());
         $this->moduleSectionPageRepository->save($moduleSectionPage, true);
+    }
+
+    public function videoFileInteractiveUpload(UploadedFile $data, ModuleSectionPage $moduleSectionPage, string $schemeAndHttpHost): void
+    {
+        $this->originalFilename = pathinfo($data->getClientOriginalName(), PATHINFO_FILENAME);
+        $this->originalFileExtension = pathinfo($data->getClientOriginalName(), PATHINFO_EXTENSION);
+        $path =
+            $this->videoUploadPath
+            . DIRECTORY_SEPARATOR
+            . $moduleSectionPage->getSection()->getModule()->getCourse()->getId()
+            . DIRECTORY_SEPARATOR;
+
+        // Проверить что каталог существует, при необходимости создать.
+        if (! file_exists($path) && ! mkdir($path, 0777, true) && ! is_dir($path)) {
+            throw new RuntimeException(sprintf('Directory "%s" was not created', $path));
+        }
+
+        // Переносим файл
+        try {
+            $data->move($path, $this->originalFilename . '.' . $this->originalFileExtension);
+        } catch (FileException) {
+            throw new RuntimeException('Невозможно переместить файл в каталог загрузки');
+        }
+
+        $moduleSectionPage->setVideoUrl(
+            $schemeAndHttpHost
+            . '/video/'
+            . $moduleSectionPage->getSection()->getModule()->getCourse()->getId()
+            . DIRECTORY_SEPARATOR
+            . $data->getClientOriginalName()
+        );
     }
 }

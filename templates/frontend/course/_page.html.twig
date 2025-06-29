@@ -33,6 +33,15 @@
                                 >
                                 </iframe>
                             </div>
+                        {% elseif page.type == 4 %}
+                            <div class="module_video">
+                                <iframe
+                                    src="{{ page.videoUrl }}"
+                                    frameborder="0"
+                                    allowfullscreen
+                                >
+                                </iframe>
+                            </div>
                         {% else %}
                             <div class="module_slider">
                                 {{ page.textData | raw }}

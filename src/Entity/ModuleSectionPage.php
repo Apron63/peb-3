@@ -1,5 +1,7 @@
 <?php
 
+declare (strict_types=1);
+
 namespace App\Entity;
 
 use App\Repository\ModuleSectionPageRepository;
@@ -12,11 +14,13 @@ class ModuleSectionPage
     public const TYPE_SCORM = 1;
     public const TYPE_YOUTUBE = 2;
     public const TYPE_TEXT = 3;
+    public const TYPE_INTERNAL_VIDEO = 4;
 
     public const PAGE_TYPES = [
         'Курсы SCORM' => self::TYPE_SCORM,
         'Внешняя ссылка' => self::TYPE_YOUTUBE,
         'Текст' => self::TYPE_TEXT,
+        'Загруженное видео' => self::TYPE_INTERNAL_VIDEO,
     ];
 
     #[ORM\Id]
@@ -36,6 +40,9 @@ class ModuleSectionPage
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $url = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $videoUrl = null;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $textData = null;
@@ -89,6 +96,18 @@ class ModuleSectionPage
     public function setUrl(?string $url): self
     {
         $this->url = $url;
+
+        return $this;
+    }
+
+    public function getvideoUrl(): ?string
+    {
+        return $this->videoUrl;
+    }
+
+    public function setVideoUrl(?string $videoUrl): self
+    {
+        $this->videoUrl = $videoUrl;
 
         return $this;
     }

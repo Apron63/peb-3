@@ -47,13 +47,29 @@
             </div>
         </div>
 
+        <div id="video-file-area">
+            <div class="col-12 mb-3">
+                <div class="form-group">
+                    <span class="text-danger">{{ form_errors(form.videoUrl) }}</span>
+                    {{ form_widget(form.videoUrl) }}
+                </div>
+            </div>
+
+            <div class="col-10 mb-3">
+                <div class="form-group">
+                    <span class="text-danger">{{ form_errors(form.videoFilename) }}</span>
+                    {{ form_widget(form.videoFilename) }}
+                </div>
+            </div>
+        </div>
+
         <div class="col-12 mb-3">
             <div class="form-group">
                 <span class="text-danger">{{ form_errors(form.type) }}</span>
                 {{ form_widget(form.type) }}
             </div>
         </div>
-        
+
         <div class="col-12 mb-3">
             <div class="form-group">
                 <span class="text-danger">{{ form_errors(form.textData) }}</span>

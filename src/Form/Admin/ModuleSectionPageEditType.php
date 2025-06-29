@@ -1,5 +1,7 @@
 <?php
 
+declare (strict_types=1);
+
 namespace App\Form\Admin;
 
 use App\Entity\ModuleSectionPage;
@@ -67,6 +69,38 @@ class ModuleSectionPageEditType extends AbstractType
                             'application/zip',
                         ],
                         'mimeTypesMessage' => 'Выбранный файл не является ZIP архивом',
+                    ])
+                ],
+            ])
+            ->add('videoUrl', TextType::class, [
+                'required' => false,
+                'label' => 'Ссылка на загруженное видео',
+                'attr' => [
+                    'class' => 'form-control',
+                    'placeholder' => 'Ссылка на загруженное видео',
+                    'onfocus' => 'this.placeholder = ""',
+                    'onblur' => 'this.placeholder = "Ссылка на загруженное видео"',
+                ],
+                'label_attr' => [
+                    'class' => 'col-sm-2 col-form-label'
+                ],
+                'constraints' => [
+                    new Length([
+                        'max' => 255,
+                    ]),
+                ],
+            ])
+            ->add('videoFilename', FileType::class, [
+                'label' => 'Загруженное видео',
+                'mapped' => false,
+                'required' => false,
+                'constraints' => [
+                    new File([
+                        'maxSize' => '100m',
+                        'mimeTypes' => [
+                            'video/mp4',
+                        ],
+                        'mimeTypesMessage' => 'Выбранный файл не является файлом видео',
                     ])
                 ],
             ])

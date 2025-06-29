@@ -1,13 +1,82 @@
-<div style="text-align:center">
-    <image src="{{ asset('/img/403.png') }}">
-</div>
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ошибка 403 - Доступ запрещен</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            font-size: 14px;
+            background-color: white;
+            text-align: center;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+        .sad-emoji {
+            font-size: 96px;
+            margin-bottom: 20px;
+        }
+        h1 {
+            font-family: 'Arial', sans-serif;
+            font-size: 48px;
+            margin: 10px 0;
+            color: #333;
+        }
+        .message {
+            max-width: 600px;
+            margin: 20px auto;
+            line-height: 1.5;
+            font-size: 18px;
+        }
+        .message-line {
+            display: block;
+            margin-bottom: 10px;
+            white-space: nowrap;
+        }
+        .contact-info {
+            margin-top: 15px;
+            text-align: center;
+            font-size: 18px;
+            line-height: 1.6;
+        }
+        .btn {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #e05457;
+            color: white;
+            text-decoration: none;
+            border-radius: 20px;
+            font-weight: bold;
+            margin-top: 25px;
+            transition: background-color 0.3s;
+            text-transform: uppercase;
+        }
+        .btn:hover {
+            background-color: #c04548;
+        }
+    </style>
+</head>
+<body>
+    <div class="sad-emoji">😞</div>
+    <h1>403</h1>
 
-<p></p>
+    <div class="message">
+        <span class="message-line">Нам очень жаль, но у вас не хватает прав, чтобы выполнить это действие.</span>
+        <span class="message-line">Обратитесь в службу поддержки:</span>
+    </div>
 
-<div style="text-align:center">
-    <p>У вас не хватает прав, чтобы выполнить это действие.</p>
-    <p>Обратитесь в службу поддержки:</p>
-    <p>телефон: 8 (846) 26-915-26 доб. 1103, <a href="mailto:uc@safety63.ru">e-mail: uc@safety63.ru</a></p>
-    <p>График работы: ПН-ЧТ: 08:00-17:00, ПТ: 08:00-16:00</p>
-    <p>Памятка по ошибкам: <a href="https://disk.yandex.ru/d/dRsfLK4vTduveQ">Посмотреть</a></p>
-</div>
+    <div class="contact-info">
+        телефон: 8 (846) 26-915-26 доб. 1103<br>
+        e-mail: <a href="mailto:uc@safety63.ru">uc@safety63.ru</a><br>
+        График работы: ПН-ЧТ: 08:00-17:00, ПТ: 08:00-16:00
+    </div>
+
+    <a href="/" class="btn">НА ГЛАВНУЮ</a>
+</body>
+</html>

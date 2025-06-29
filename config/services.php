@@ -28,6 +28,7 @@ return static function (ContainerConfigurator $containerConfigurator): void {
         ->autowire()
         ->autoconfigure()
         ->bind('$courseUploadPath', '%kernel.project_dir%/public/storage/course')
+        ->bind('$videoUploadPath', '%kernel.project_dir%/public/video')
         ->bind('$reportUploadPath', '%kernel.project_dir%/public/storage/report')
         ->bind('$exchange1cUploadDirectory', '%kernel.project_dir%/public/storage/exchange1c')
         ->bind('$avatarUploadPath', '%kernel.project_dir%/public/storage/avatar')

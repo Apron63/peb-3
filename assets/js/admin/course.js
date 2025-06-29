@@ -2,6 +2,7 @@ import $ from 'jquery'
 import 'jquery-ui-bundle'
 
 const parsedUrl = new URL(window.location)
+const TYPE_INTERNAL_VIDEO = 4
 
 $('#course-type-select').on('change', function () {
     const value = $('#course-type-select').val()
@@ -42,6 +43,9 @@ $('#course-life-search-button').on('click', function (e) {
     window.location = parsedUrl.href
 })
 
+$('#module_section_page_edit_type').on('change', function () {
+    checkVideoUrl()
+})
 
 $(function($) {
     $('#draggable-module-container').sortable()
@@ -57,3 +61,18 @@ $('#course-edit-form').on('submit', function() {
 
     $('#course_edit_sortOrder').val(JSON.stringify(Object.fromEntries(sortOrder)))
 })
+
+$(window).on('load', function() {
+    checkVideoUrl()
+})
+
+function checkVideoUrl()
+{
+    const value = $('#module_section_page_edit_type').val()
+    if (value == TYPE_INTERNAL_VIDEO) {
+        $('#video-file-area').show()
+    }
+    else {
+        $('#video-file-area').hide()
+    }
+}
