@@ -113,9 +113,9 @@ class InteractiveUploadService
         // Переносим файл
         try {
             $targetFileName = $path . $this->originalFilename . '.' . $this->originalFileExtension;
-            
+
             $data->move($path, $this->originalFilename . '.' . $this->originalFileExtension);
-            chmod($targetFileName, 755);
+            chmod($targetFileName, 0755);
         } catch (FileException) {
             throw new RuntimeException('Невозможно переместить файл в каталог загрузки');
         }
