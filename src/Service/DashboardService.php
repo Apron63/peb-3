@@ -12,7 +12,7 @@ use Symfony\Bundle\SecurityBundle\Security;
 
 class DashboardService
 {
-    private const FREE_DISK_SPACE_MIN = 2_150_000_000;
+    private const int FREE_DISK_SPACE_MIN = 2_150_000_000;
 
     public function __construct(
         private readonly MailingQueueRepository $mailingQueueRepository,
