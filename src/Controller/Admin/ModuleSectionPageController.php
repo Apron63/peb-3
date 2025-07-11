@@ -38,11 +38,17 @@ class ModuleSectionPageController extends MobileController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $needSaveAgain = false;
+
+            $this->moduleSectionPageRepository->save($moduleSectionPage, true);
+
             if (null !== $form->get('filename')->getData()) {
                 $this->interactiveUploadService->fileInteractiveUpload(
                     $form->get('filename')->getData(),
                     $moduleSectionPage
                 );
+
+                $needSaveAgain = true;
             }
 
             if (null !== $form->get('videoFilename')->getData()) {
@@ -51,9 +57,14 @@ class ModuleSectionPageController extends MobileController
                     $moduleSectionPage,
                     $request->getSchemeAndHttpHost(),
                 );
+
+                $needSaveAgain = true;
             }
 
-            $this->moduleSectionPageRepository->save($moduleSectionPage, true);
+            if ($needSaveAgain) {
+                $this->moduleSectionPageRepository->save($moduleSectionPage, true);
+            }
+
             $this->eventDispatcher->dispatch(new AutonumerationCancelledEvent($moduleSection->getModule()->getCourse()->getId()));
             $this->addFlash('success', 'Шаблон для курса успешно добавлен');
             return $this->redirectToRoute('admin_module_section_edit', ['id' => $moduleSection->getId()]);
@@ -73,6 +84,10 @@ class ModuleSectionPageController extends MobileController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $needSaveAgain = false;
+
+            $this->moduleSectionPageRepository->save($moduleSectionPage, true);
+
             if (null !== $form->get('filename')->getData()) {
                 $this->interactiveUploadService->fileInteractiveUpload(
                     $form->get('filename')->getData(),
@@ -82,6 +97,8 @@ class ModuleSectionPageController extends MobileController
                 $moduleSectionPage->setUrl(
                     $form->get('filename')->getData()->getClientOriginalName()
                 );
+
+                $needSaveAgain = true;
             }
 
             if (null !== $form->get('videoFilename')->getData()) {
@@ -90,9 +107,14 @@ class ModuleSectionPageController extends MobileController
                     $moduleSectionPage,
                     $request->getSchemeAndHttpHost(),
                 );
+
+                $needSaveAgain = true;
             }
 
-            $this->moduleSectionPageRepository->save($moduleSectionPage, true);
+            if ($needSaveAgain) {
+                $this->moduleSectionPageRepository->save($moduleSectionPage, true);
+            }
+
             $this->eventDispatcher->dispatch(new AutonumerationCancelledEvent($moduleSectionPage->getSection()->getModule()->getCourse()->getId()));
             $this->addFlash('success', 'Шаблон для курса успешно изменен');
             return $this->redirectToRoute('admin_module_section_edit', ['id' => $moduleSectionPage->getSection()->getId()]);
@@ -122,9 +144,7 @@ class ModuleSectionPageController extends MobileController
             try {
                 unlink($videoFilename);
             }
-            catch (Exception $e) {
-
-            }
+            catch (Exception $e) {}
         }
 
         $this->eventDispatcher->dispatch(new AutonumerationCancelledEvent($moduleSectionPage->getSection()->getModule()->getCourse()->getId()));

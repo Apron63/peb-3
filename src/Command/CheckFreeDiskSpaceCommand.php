@@ -22,7 +22,7 @@ class CheckFreeDiskSpaceCommand
     public function __invoke(SymfonyStyle $io): int
     {
         $freeDiskSpace = disk_free_space('/');
-        $diskTotalSpace =  disk_total_space('/');
+        $diskTotalSpace = disk_total_space('/');
 
         if ($freeDiskSpace < self::FREE_DISK_SPACE_MIN) {
             $this->bus->dispatch(
