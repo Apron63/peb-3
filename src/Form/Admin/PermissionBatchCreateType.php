@@ -1,5 +1,7 @@
 <?php
 
+declare (strict_types=1);
+
 namespace App\Form\Admin;
 
 use App\Entity\Course;
@@ -75,6 +77,7 @@ class PermissionBatchCreateType extends AbstractType
                         'data-profile' => $course->getProfile()?->getId(),
                     ];
                 },
+                'choice_label' => fn(Course $course) => $course->getCourseType() . $course->getShortName(),
             ])
             ->add('lifeSearch', TextType::class, [
                 'required' => false,

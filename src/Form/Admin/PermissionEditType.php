@@ -1,5 +1,7 @@
 <?php
 
+declare (strict_types=1);
+
 namespace App\Form\Admin;
 
 use App\Entity\Course;
@@ -74,6 +76,7 @@ class PermissionEditType extends AbstractType
                         'data-profile' => $course->getProfile()?->getId(),
                     ];
                 },
+                'choice_label' => fn(Course $course) => $course->getCourseType() . $course->getShortName(),
                 'constraints' => [
                     new NotBlank(),
                 ],

@@ -1,5 +1,7 @@
 <?php
 
+declare (strict_types=1);
+
 namespace App\Entity;
 
 use Doctrine\DBAL\Types\Types;
@@ -191,5 +193,10 @@ class Course
         $this->hidden = $hidden;
 
         return $this;
+    }
+
+    public function getCourseType(): string
+    {
+        return self::CLASSIC === $this->type ? '(К) ' : '(И) ';
     }
 }
