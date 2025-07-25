@@ -14,6 +14,7 @@ use App\Entity\Profile;
 use App\Entity\Questions;
 use App\Entity\Ticket;
 use App\Service\XmlCourseDownload\CourseThemeDTO;
+use DateTime;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\DBAL\Logging\Middleware;
 use Doctrine\ORM\AbstractQuery;
@@ -280,6 +281,13 @@ class CourseRepository extends ServiceEntityRepository
                     INSERT INTO course_info (id, course_id, name, file_name)
                     VALUES (NULL, {$courseId}, '{$shortMaterialName}', '{$material->filename}')
                 ");
+            }
+
+            $course = $this->find($courseId);
+
+            if (null !== $course) {
+                $course->setUpdatedAt(new DateTime());
+                $this->save($course, true);
             }
 
             $this->getEntityManager()->commit();
