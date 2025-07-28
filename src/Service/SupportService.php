@@ -1,9 +1,11 @@
 <?php
 
+declare (strict_types=1);
+
 namespace App\Service;
 
-use App\Entity\Support;
 use App\Message\SendEmailMessage;
+use App\RequestDto\SupportDto;
 use Symfony\Component\Messenger\MessageBusInterface;
 
 class SupportService
@@ -12,33 +14,33 @@ class SupportService
         private readonly MessageBusInterface $bus,
     ) {}
 
-    public function sendSupportMailMessage(Support $support): void
+    public function sendSupportMailMessage(SupportDto $supportDto): void
     {
         $this->bus->dispatch(new SendEmailMessage(
             'uc@safety63.ru',
             'Запрос технической поддержки СДО PROобучение',
-            $this->composeMail($support)
+            $this->composeMail($supportDto)
         ));
 
         $this->bus->dispatch(new SendEmailMessage(
             'info@safety63.ru',
             'Запрос технической поддержки СДО PROобучение',
-            $this->composeMail($support)
+            $this->composeMail($supportDto)
         ));
 
         $this->bus->dispatch(new SendEmailMessage(
             '1103@safety63.ru',
             'Запрос технической поддержки СДО PROобучение',
-            $this->composeMail($support)
+            $this->composeMail($supportDto)
         ));
     }
 
-    private function composeMail(Support $support): string
+    private function composeMail(SupportDto $supportDto): string
     {
-        return 'ФИО полностью : ' . $support->getName() . '<br>'
-        . 'E-Mail : ' . $support->getEmail() . '<br>'
-        . 'Телефон : ' . $support->getPhone() . '<br>'
-        . 'Курс : ' . $support->getCourse() . '<br>'
-        . 'Вопрос : ' . $support->getQuestion() . '<br>';
+        return 'ФИО полностью : ' . $supportDto->name . '<br>'
+        . 'E-Mail : ' . $supportDto->email . '<br>'
+        . 'Телефон : ' . $supportDto->phone . '<br>'
+        . 'Курс : ' . $supportDto->course . '<br>'
+        . 'Вопрос : ' . $supportDto->question . '<br>';
     }
 }

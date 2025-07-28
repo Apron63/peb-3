@@ -24,52 +24,62 @@
                             График работы: ПН-ЧТ: с 08:00 до 17:00, ПТ: с 08:00 до 16:00
                         </div>
                     </div>
-                    <form class="support_form" form-elem="form" action="{{ path('app_frontend_support') }}" method="POST">
-
-                        <label class="support_form_label{% if (form_errors(form.name)) is not empty %} error{% endif %}" form-elem="label">
+                    <form class="support_form" form-elem="form">
+                        <label class="support_form_label" form-elem="label">
                             <div class="support_form_name">Ваше имя</div>
-                            <input type="text" name="support[name]" class="support_form_input" form-elem="input-text" value="{{ form.vars.data.name }}">
-                            <div class="support_form_error">{{ form_errors(form.name) }}</div>
+                            <input type="text" name="name" class="support_form_input" form-elem="input-text">
+                            <div class="support_form_error"></div>
                         </label>
-
-                        <label class="support_form_label{% if (form_errors(form.email)) is not empty %} error{% endif %}" form-elem="label">
+                        <label class="support_form_label" form-elem="label">
                             <div class="support_form_name">Email</div>
-                            <input type="email" name="support[email]" class="support_form_input" form-elem="input-text" value="{{ form.vars.data.email }}">
-                            <div class="support_form_error">{{ form_errors(form.email) }}</div>
+                            <input type="email" name="email" class="support_form_input" form-elem="input-text">
+                            <div class="support_form_error"></div>
                         </label>
-
-                        <label class="support_form_label{% if (form_errors(form.phone)) is not empty %} error{% endif %}" form-elem="label">
+                        <label class="support_form_label" form-elem="label">
                             <div class="support_form_name">Телефон</div>
-                            <input type="text" name="support[phone]" class="support_form_input" form-elem="input-text" value="{{ form.vars.data.phone }}">
-                            <div class="support_form_error">{{ form_errors(form.phone) }}</div>
+                            <input type="text" name="phone" class="support_form_input" form-elem="input-text">
+                            <div class="support_form_error"></div>
                         </label>
-
-                        <label class="support_form_label{% if (form_errors(form.course)) is not empty %} error{% endif %}" form-elem="label">
+                        <label class="support_form_label" form-elem="label">
                             <div class="support_form_name">Ваш курс</div>
-                            <input type="text" name="support[course]" class="support_form_input" form-elem="input-text" value="{{ form.vars.data.course }}">
-                            <div class="support_form_error">{{ form_errors(form.course) }}</div>
+                            <input type="text" name="course" class="support_form_input" form-elem="input-text">
+                            <div class="support_form_error"></div>
                         </label>
-
-                        <label class="support_form_label{% if (form_errors(form.question)) is not empty %} error{% endif %}" form-elem="label">
+                        <label class="support_form_label" form-elem="label">
                             <div class="support_form_name">Ваш вопрос</div>
-                            <input type="text" name="support[question]" class="support_form_input" form-elem="input-text" value="{{ form.vars.data.question }}">
-                            <div class="support_form_error">{{ form_errors(form.question) }}</div>
+                            <input type="text" name="question" class="support_form_input" form-elem="input-text">
+                            <div class="support_form_error"></div>
                         </label>
-
                         <div class="support_agree">
-                            Нажимая кнопку "Отправить сообщение" вы соглашаетесь с условиями <a href="/storage/doc/Политика_конфидециальности.pdf" target="_blank">политики конфиденциальности</a>
+                            Нажимая кнопку "Отправить сообщение" вы соглашаетесь с условиями <a href="javascript:void(0)">политики конфиденциальности</a>
                         </div>
-
                         <div class="support_submit_wrapper">
-                            <button class="support_submit red_button" type="submit">Отправить сообщение</button>
+                            <button
+                                class="support_submit red_button"
+                                type="button"
+                                support-form-elem="submit"
+                                support-url={{ path('app_frontend_support_send_email') }}
+                            >
+                                Отправить сообщение
+                            </button>
                         </div>
 
-                        <input type="hidden" name="support[_token]" value="{{ csrf_token('support') }}"/>
+                        <input type="hidden" name="_token" value="{{ csrf_token('support') }}"/>
                     </form>
                 </div>
             </div>
         </div>
     </div>
+
     {% include('frontend/components/footer.html.twig') %}
-    <div class="overlay" popup-element="overlay"></div>
+
+    <div class="overlay" popup-element="overlay">
+        <div class="popup" popup-element="popup">
+            <div class="survey-success_header">Ваше обращение принято</div>
+            <div class="survey-success_description">Спасибо за обратную связь</div>
+            <div class="popup_close_wrapper">
+                <a class="popup_close" popup-element="popup-close">закрыть</a>
+            </div>
+        </div>
+    </div>
 {% endblock %}

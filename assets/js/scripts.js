@@ -268,6 +268,24 @@ if (faqItems.length > 0) {
   })
 }
 
+let supportSubmitButton = document.querySelector('[support-form-elem="submit"]')
+
+if (supportSubmitButton) {
+  console.log(supportSubmitButton)
+  supportSubmitButton.addEventListener('click', function (event) {
+    let form = this.closest('form')
+
+    let supportUrl =  document.querySelector('[support-form-elem="submit"]').getAttribute('support-url')
+    fetch(supportUrl, {
+      method: 'POST',
+      body: new FormData(form),
+    })
+    .then(res => res.ok ? openPopup() : Promise.reject(res))
+    .catch(() => alert('Ошибка отправки сообщения'));
+    
+  })
+}
+
 let surveySubmitButton = document.querySelector('[survey-form-elem="submit"]')
 
 if (surveySubmitButton) {

@@ -1,0 +1,35 @@
+<?php
+
+declare(strict_types=1);
+
+namespace App\RequestDto;
+
+use Symfony\Component\Validator\Constraints as Assert;
+
+class SupportDto
+{
+    public function __construct(
+        #[Assert\NotBlank]
+        #[Assert\Length(max:255)]
+        public readonly string $name,
+
+        #[Assert\NotBlank]
+        #[Assert\Length(max:255)]
+        #[Assert\Email()]
+        public readonly string $email,
+
+        #[Assert\NotBlank]
+        #[Assert\Length(max:255)]
+        public readonly string $phone,
+
+        #[Assert\NotBlank]
+        #[Assert\Length(max:1000)]
+        public readonly string $course,
+
+        #[Assert\NotBlank]
+        public readonly string $question,
+
+        #[Assert\NotBlank]
+        public readonly string $_token,
+    ) {}
+}

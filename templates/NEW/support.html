@@ -241,7 +241,7 @@
                                 Нажимая кнопку "Отправить сообщение" вы соглашаетесь с условиями <a href="javascript:void(0)">политики конфиденциальности</a>
                             </div>
                             <div class="support_submit_wrapper">
-                                <button class="support_submit red_button" type="button">Отправить сообщение</button>
+                                <button class="support_submit red_button" type="button" support-form-elem="submit">Отправить сообщение</button>
                             </div>
                         </form>
                     </div>
@@ -258,6 +258,13 @@
             </div>
         </footer>
         <div class="overlay" popup-element="overlay">
+            <div class="popup" popup-element="popup">
+                <div class="survey-success_header">Ваше обращение принято</div>
+                <div class="survey-success_description">Спасибо за обратную связь</div>
+                <div class="popup_close_wrapper">
+                    <a class="popup_close" popup-element="popup-close">закрыть</a>
+                </div>
+            </div>
         </div>
     </div>
     <script src="js/scripts.js"></script>

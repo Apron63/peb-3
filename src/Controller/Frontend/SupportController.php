@@ -1,14 +1,17 @@
 <?php
 
+declare (strict_types=1);
+
 namespace App\Controller\Frontend;
 
 use App\Entity\Support;
-use App\Form\Frontend\SupportType;
+use App\RequestDto\SupportDto;
 use App\Service\SupportService;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
+use Symfony\Component\Routing\Attribute\Route;
 
 class SupportController extends AbstractController
 {
@@ -17,21 +20,28 @@ class SupportController extends AbstractController
     ) {}
 
     #[Route('/support/', name: 'app_frontend_support')]
-    public function index(Request $request): Response
+    public function index(): Response
     {
         $support = new Support();
-        $form = $this->createForm(SupportType::class, $support);
-
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $this->supportService->sendSupportMailMessage($support);
-
-            return $this->redirectToRoute('homepage');
-        }
 
         return $this->render('frontend/support/index.html.twig', [
-            'form' => $form->createView(),
+            'support' => $support,
         ]);
+    }
+
+    #[Route('/support/send-email/', name: 'app_frontend_support_send_email', methods: 'POST')]
+    public function sendEmailToSupport(
+        #[MapRequestPayload(
+        )] SupportDto $supportDto
+    ): JsonResponse {
+        $status = Response::HTTP_NOT_FOUND;
+
+        if ($this->isCsrfTokenValid('support', $supportDto->_token)) {
+            $this->supportService->sendSupportMailMessage($supportDto);
+
+            $status = Response::HTTP_OK;
+        }
+
+        return new JsonResponse(status: $status);
     }
 }
