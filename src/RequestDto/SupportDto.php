@@ -10,20 +10,15 @@ class SupportDto
 {
     public function __construct(
         #[Assert\NotBlank]
-        #[Assert\Length(max:255)]
         public readonly string $name,
 
         #[Assert\NotBlank]
-        #[Assert\Length(max:255)]
-        #[Assert\Email()]
         public readonly string $email,
 
         #[Assert\NotBlank]
-        #[Assert\Length(max:255)]
         public readonly string $phone,
 
         #[Assert\NotBlank]
-        #[Assert\Length(max:1000)]
         public readonly string $course,
 
         #[Assert\NotBlank]

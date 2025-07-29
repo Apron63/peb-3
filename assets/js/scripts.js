@@ -271,17 +271,34 @@ if (faqItems.length > 0) {
 let supportSubmitButton = document.querySelector('[support-form-elem="submit"]')
 
 if (supportSubmitButton) {
-  console.log(supportSubmitButton)
+
   supportSubmitButton.addEventListener('click', function (event) {
     let form = this.closest('form')
+    let isError = false
 
-    let supportUrl =  document.querySelector('[support-form-elem="submit"]').getAttribute('support-url')
-    fetch(supportUrl, {
-      method: 'POST',
-      body: new FormData(form),
+    form.querySelectorAll('[form-elem="input-error"]').forEach(function(element) {
+      element.innerText = ""
+      element.closest('[form-elem="label"]').classList.remove("error")
     })
-    .then(res => res.ok ? openPopup() : Promise.reject(res))
-    .catch(() => alert('Ошибка отправки сообщения'));
+
+    form.querySelectorAll('[form-elem="input-text"]').forEach(function(element) {
+      if(element.value == "") {
+        isError = true
+        element.nextElementSibling.innerText = "Поле не может быть пустым"
+        element.closest('[form-elem="label"]').classList.add("error")
+      }
+    })
+
+    if(!isError){
+      let supportUrl =  document.querySelector('[support-form-elem="submit"]').getAttribute('support-url')
+      fetch(supportUrl, {
+        method: 'POST',
+        body: new FormData(form),
+      })
+      .then(res => res.ok ? openPopup() : Promise.reject(res))
+      .catch(() => alert('Ошибка отправки сообщения'));
+    }
+    
     
   })
 }
