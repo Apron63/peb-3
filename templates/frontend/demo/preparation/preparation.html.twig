@@ -9,12 +9,13 @@
     <div class="global-content">
         {% include('frontend/components/background.html.twig') %}
         <div class="wrapper container">
+            {{ render(path('app_demo_left_menu', {'activeItem': 'my-programs', 'activeCourse': data.courseId })) }}
             <div class="content">
                 <div class="control-questions" control-questions-elem="wrapper">
                     <h1>Подготовка к аттестации</h1>
                     {% include('frontend/preparation/_counters.html.twig') %}
                     <div class="control-questions_wrapper" control-questions-elem="inner">
-                        {% include('frontend/demo/_partial.html.twig') %}
+                        {% include('frontend/demo/preparation/partial.html.twig') %}
                     </div>
                     <div
                         class="control-questions_mobile_ajax"

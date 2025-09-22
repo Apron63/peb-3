@@ -1,0 +1,26 @@
+<div class="left-menu">
+    <div class="main-menu_mobile_button" menu-elem="mobile-open">Меню</div>
+    <nav class="main-menu" menu-elem="main-menu">
+        <li class="main-menu_item {% if activeItem == 'my-programs' %}active{% endif %}" menu-elem="main-menu-item">
+            <a href="{{ path('app_demo') }}" class="main-menu_item_header" menu-elem="main-header">Мои программы</a>
+            <ul class="programs-menu" menu-elem="programs-menu">
+            {% for permission in permissions %}
+                {% if permission['type'] == 1 %}
+                    {% include 'frontend/demo/left-menu/_item_classic.html.twig' with {'permission' : permission} %}
+                {% else %}
+                    {% include 'frontend/demo/left-menu/_item_interactive.html.twig' with {'permission' : permission} %}
+                {% endif %}
+            {% endfor%}
+            </ul>
+        </li>
+        <li class="main-menu_item {% if activeItem == 'history' %}active{% endif %}" menu-elem="main-menu-item">
+            <a class="main-menu_item_header" href="{{ path('app_demo_history') }}">История обучения</a>
+        </li>
+        <li class="main-menu_item {% if activeItem == 'support' %}active{% endif %}" menu-elem="main-menu-item">
+            <a class="main-menu_item_header" href="{{ path('app_demo_support') }}">Поддержка</a>
+        </li>
+        <li class="main-menu_item {% if activeItem == 'faq' %}active{% endif %}" menu-elem="main-menu-item">
+            <a class="main-menu_item_header" href="{{ path('app_demo_faq') }}">Полезное</a>
+        </li>
+    </nav>
+</div>

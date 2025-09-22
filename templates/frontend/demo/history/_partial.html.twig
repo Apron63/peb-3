@@ -1,0 +1,43 @@
+{% for item in data.items %}
+    <div class="history_table_row">
+        <div class="course">{{ item.name }}</div>
+        <div class="status">
+            {% if item.stage == 1 %}
+                обучение не начато
+            {% elseif item.stage == 2 %}
+                обучение идет
+            {% else %}
+                обучение завершено
+            {% endif %}
+        </div>
+        <div class="start_at">
+            {% if item.activatedAt is not empty %}
+                <span class="header">начало обучения: </span>{{ item.activatedAt | date('d.m.Y') }}
+            {% endif %}
+        </div>
+        <div class="finish_at">
+            {% if item.endDate is not empty %}
+                <span class="header">завершение обучения: </span>{{ item.endDate | date('d.m.Y') }}
+            {% endif %}
+        </div>
+        <div class="results">
+            <div class="results_row">
+                <span class="header">результат: </span>
+                {{ item.result }}
+            </div>
+            {% if item.stage == 3 %}
+                <div class="results_row">
+                    <a href="{{ path('app_frontend_testing_success_print', {id: item.permissionId}) }}">Скачать протокол первой успешной попытки</a>
+                </div>
+            {% endif %}
+            {% if item.loggerId is not empty %}
+                 <div class="results_row">
+                    <a href="{{ path('app_frontend_testing_print', {id: item.loggerId}) }}">Скачать протокол крайней попытки</a>
+                </div>
+            {% endif %}
+        </div>
+        <div class="duration">
+            <span class="header">длительность: </span>{{ item.duration }}
+        </div>
+    </div>
+{% endfor %}

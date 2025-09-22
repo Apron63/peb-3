@@ -7,6 +7,7 @@ namespace App\Service;
 use App\Entity\CourseTheme;
 use App\Entity\User;
 use App\Repository\CourseInfoRepository;
+use App\Repository\CourseRepository;
 use App\Repository\CourseThemeRepository;
 use App\Repository\PermissionRepository;
 
@@ -16,7 +17,8 @@ class MyProgramsService
         private readonly PermissionRepository $permissionRepository,
         private readonly CourseInfoRepository $courseInfoRepository,
         private readonly CourseThemeRepository $courseThemeRepository,
-        private readonly CourseService $courseService
+        private readonly CourseService $courseService,
+        private readonly CourseRepository $courseRepository,
     ) {}
 
     public function createSideMenuForUser(User $user): array
@@ -50,6 +52,41 @@ class MyProgramsService
                 'themeId' => $themeId,
                 'courseMenu' => $this->courseService->checkForCourseStage($permission, false),
                 'surveyEnabled' => $permission->isSurveyEnabled(),
+            ];
+        }
+
+        return $result;
+    }
+
+    public function createSideMenuForDemo(): array
+    {
+        $result = [];
+
+        $courses = $this->courseRepository->findBy(['forDemo' => true]);
+        foreach ($courses as $course) {
+            $courseInfo = $this->courseInfoRepository->findBy(['course' => $course]);
+
+            $hasMultipleThemes = $this->courseService->hasMultipleThemes($course);
+            $themeId = null;
+            if (!$hasMultipleThemes) {
+                $courseTheme = $this->courseThemeRepository->findOneBy(['course' => $course]);
+
+                if ($courseTheme instanceof CourseTheme) {
+                    $themeId = $courseTheme->getId();
+                }
+            }
+
+            $result[] = [
+                'id' => $course->getId(), // TODO
+                'name' => $course->getName(),
+                'shortName' =>  $course->getShortName(),
+                'type' => $course->getType(),
+                'courseInfo' => $courseInfo,
+                'courseId' => $course->getId(),
+                'hasMultipleThemes' => $hasMultipleThemes,
+                'themeId' => $themeId,
+                'courseMenu' => 111, // $this->courseService->checkForCourseStage($permission, false), TODO
+                'surveyEnabled' => false,
             ];
         }
 

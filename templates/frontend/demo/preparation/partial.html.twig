@@ -1,5 +1,5 @@
  {% for item in data.questions %}
-    {% if item.type == 1  %}
+    {% if item.type == 1 %}
         {% include('frontend/preparation/_radio-question.html.twig') %}
     {%else %}
         {% include('frontend/preparation/_checkbox-question.html.twig') %}

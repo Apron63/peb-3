@@ -1,0 +1,34 @@
+{% extends 'frontend/base.html.twig' %}
+
+{% block title %}История обучения{% endblock %}
+
+{% block body %}
+    {% include('frontend/components/header.html.twig') %}
+
+    <div class="global-content">
+        {% include('frontend/components/background.html.twig') %}
+        <div class="wrapper container">
+           {{ render(path('app_demo_left_menu', {'activeItem': 'faq'})) }}
+            <div class="content">
+                <div class="faq">
+                    <h1>Полезное</h1>
+                    <div class="faq_list" faq-elem="wrapper">
+                        {% for item in faq %}
+                            <div class="faq_item" faq-elem="item">
+                                <div class="faq_question" faq-elem="question">
+                                    {{ item.question | raw }}
+                                </div>
+                                <div class="faq_answer" faq-elem="answer">
+                                    {{ item.answer | raw }}
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {% include('frontend/components/footer.html.twig') %}
+
+{% endblock %}

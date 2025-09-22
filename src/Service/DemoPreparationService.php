@@ -59,10 +59,11 @@ class DemoPreparationService
 
             foreach ($answers as $answer) {
                 $answerData[] = [
+                    'id' => $answer['id'],
                     'description' => $answer['description'],
                     'right' => $answer['isCorrect'],
                     'nom' => $answer['nom'],
-
+                    'checked' => false,
                 ];
             }
 
@@ -73,6 +74,8 @@ class DemoPreparationService
                 'description' => $question->getDescription(),
                 'help' => $question->getHelp(),
                 'answers' => $answerData,
+                'hasRight' => false,
+                'result' => '',
             ];
         }
 

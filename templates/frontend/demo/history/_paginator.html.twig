@@ -1,0 +1,38 @@
+<div class="history_display">
+    <div class="history_display_count_wrapper">
+        <div class="history_display_count_header">отображать по: </div>
+        <div class="history_display_count">
+            {% if perPage == 20 %}
+                <a href="javascript:void(0)" class="history_display_count_item active">20</a>
+            {% else %}
+                <a href="{{ path('app_demo_history', {page: 1, perPage: 20}) }}" class="history_display_count_item">20</a>
+            {% endif %}
+            <div class="history_display_separator">|</div>
+            {% if perPage == 50 %}
+                <a href="javascript:void(0)" class="history_display_count_item active">50</a>
+            {% else %}
+                <a href="{{ path('app_demo_history', {page: 1, perPage: 50}) }}" class="history_display_count_item">50</a>
+            {% endif %}
+            <div class="history_display_separator">|</div>
+            {% if perPage == 100 %}
+                <a href="javascript:void(0)" class="history_display_count_item active">100</a>
+            {% else %}
+                <a href="{{ path('app_demo_history', {page: 1, perPage: 100}) }}" class="history_display_count_item">100</a>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="history_display_pages_wrapper">
+        {% for page in data.paginator %}
+             <a
+                href="{% if page.isActive %}javascript:void(0){% else %}{{ page.url }}{% endif %}"
+                class="history_display_pages_item{% if page.isActive %} active{% endif %}"
+            >
+                {{ page.title }}
+            </a>
+            {% if not loop.last %}
+                <div class="history_display_separator">|</div>
+            {% endif %}
+        {% endfor %}
+    </div>
+</div>

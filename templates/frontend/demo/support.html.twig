@@ -7,7 +7,7 @@
     <div class="global-content">
         {% include('frontend/components/background.html.twig') %}
         <div class="wrapper container">
-            {{ render(path('app_frontend_left_menu', {'activeItem': 'support'})) }}
+            {{ render(path('app_demo_left_menu', {'activeItem': 'support'})) }}
             <div class="content">
                 <div class="support">
                     <h1>У вас возникли вопросы?</h1>
@@ -52,6 +52,7 @@
                         </label>
                         <div class="support_agree">
                             Нажимая кнопку "Отправить сообщение" вы соглашаетесь с условиями <a href="/storage/doc/Политика_конфидециальности.pdf" target="_blank">политики конфиденциальности</a>
+
                         </div>
                         <div class="support_submit_wrapper">
                             <button

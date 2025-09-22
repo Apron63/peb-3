@@ -18,6 +18,10 @@
                 {% include 'frontend/components/_active_profile.html.twig' %}
             {% endif %}
         </div>
+    {% else %}
+        <div class="header_profile">
+            {% include 'frontend/components/_demo_profile.html.twig' %}
+        </div>
     {% endif %}
 
 </header>

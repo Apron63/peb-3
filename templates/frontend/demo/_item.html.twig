@@ -1,0 +1,30 @@
+<div class="programs_item" content-elem="programs-item">
+    <div class="programs_item_image_wrapper">
+        <div class="programs_item_image_inner">
+            {% if course.image is null %}
+                <img src="{{ asset('img/no_course_image.jpg') }}" alt="">
+            {% else %}
+                <img src="/storage/course/{{ course.id }}{{ asset(course.image) }}" alt="">
+            {% endif %}
+        </div>
+    </div>
+    <div class="programs_item_header">
+        {{ course.name }}
+    </div>
+    <div class="programs_item_status_wrapper">
+        <div class="programs_item_status"></div>
+        <a
+            href="{{ path('app_demo_course', {id: course.id}) }}"
+            class="programs_item_status_link red_button"
+        >
+            Начать обучение
+            {# {% if permission.stage == 1 %}
+                Начать обучение
+            {% elseif permission.stage == 2 %}
+                Продолжить обучение
+            {% else %}
+                Обучение завершено
+            {% endif %} #}
+        </a>
+    </div>
+</div>
