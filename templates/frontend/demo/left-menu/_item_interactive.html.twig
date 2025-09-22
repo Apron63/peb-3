@@ -22,9 +22,6 @@
                 <div class="modules-menu_item_header">{{ menu.name }}</div>
                 <ul class="parts-menu">
                     {% for section in menu.sections %}
-                        {% if menu.active == false %}
-                            {% set finalTestingEnabled = false %}
-                        {% endif %}
                         <li class="parts-menu_item">
                             <a href="{{ path('app_demo_module_section', {id: section.id}) }}">{{ section.name }}</a>
                         </li>
