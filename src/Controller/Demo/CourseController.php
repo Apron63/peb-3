@@ -6,8 +6,10 @@ namespace App\Controller\Demo;
 
 use App\Entity\Course;
 use App\Entity\ModuleSection;
+use App\Entity\User;
 use App\Repository\CourseInfoRepository;
 use App\Repository\ModuleSectionPageRepository;
+use App\Repository\ModuleSectionRepository;
 use App\Service\CourseService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Cookie;
@@ -24,6 +26,7 @@ class CourseController extends AbstractController
         private readonly CourseService $courseService,
         private readonly ModuleSectionPageRepository $moduleSectionPageRepository,
         private readonly UrlGeneratorInterface $urlGenerator,
+        private readonly ModuleSectionRepository $moduleSectionRepository,
     ) {}
 
     #[Route('/demo/{id<\d+>}/', name: 'app_demo_course')]
@@ -82,8 +85,42 @@ class CourseController extends AbstractController
 
         $moduleSectionPages = $this->moduleSectionPageRepository->getModuleSectionPages($section);
 
-        return $this->render('frontend/demo/_info-file.html.twig', [
+        return $this->render('frontend/demo/info/info-file.html.twig', [
+            'course' => $section->getModule()->getCourse(),
             'moduleSection' => $section,
+            'moduleSectionPages' => $moduleSectionPages,
+        ], $response);
+    }
+
+    #[Route('demo/course/interactive/{id<\d+>}/{moduleId<\d+>}/', name: 'demo_get_info_module')]
+    public function getInfoModule(Course $course, int $moduleId, Request $request): Response
+    {
+        /** @var User $user */
+        $user = $this->getUser();
+
+        if ($user instanceof User) {
+            throw new NotFoundHttpException('User Not Allowed');
+        }
+
+        $sessionId = $request->cookies->get('PHPSESSID');
+
+        $moduleSection = $this->moduleSectionRepository->find($moduleId);
+        if (! $moduleSection instanceof ModuleSection) {
+            throw new NotFoundHttpException('Section not found');
+        }
+
+        $response = new Response();
+        $response->headers->setCookie(new Cookie('init', md5($sessionId), time() + 3600));
+
+        if (ModuleSection::TYPE_TESTING === $moduleSection->getType()) {
+            return $this->redirectToRoute('app_demo_preparation_interactive', ['id' => $course->getId()]);
+        } else {
+            $moduleSectionPages = $this->moduleSectionPageRepository->getModuleSectionPages($moduleSection);
+        }
+
+        return $this->render('frontend/course/_page.html.twig', [
+            'permission' => $course,
+            'moduleSection' => $moduleSection,
             'moduleSectionPages' => $moduleSectionPages,
         ], $response);
     }

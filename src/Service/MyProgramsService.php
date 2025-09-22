@@ -64,7 +64,10 @@ class MyProgramsService
 
         $courses = $this->courseRepository->findBy(['forDemo' => true]);
         foreach ($courses as $course) {
-            $courseInfo = $this->courseInfoRepository->findBy(['course' => $course]);
+            $courseInfo = array_filter(
+                $this->courseInfoRepository->findBy(['course' => $course]),
+                static fn ($info) => !empty($info->getName()),
+            );
 
             $hasMultipleThemes = $this->courseService->hasMultipleThemes($course);
             $themeId = null;
@@ -85,7 +88,7 @@ class MyProgramsService
                 'courseId' => $course->getId(),
                 'hasMultipleThemes' => $hasMultipleThemes,
                 'themeId' => $themeId,
-                'courseMenu' => 111, // $this->courseService->checkForCourseStage($permission, false), TODO
+                'courseMenu' => $this->courseService->getCourseProgressForDemo($course),
                 'surveyEnabled' => false,
             ];
         }
