@@ -81,7 +81,10 @@
                             Вложение
                         </td>
                         <td>
-                            {{ mail.attachment }}
+                            {% set attachments =  mail.attachment | split(',') %}
+                            {% for attachment in attachments %}
+                                <a href="{{ path('admin_email_read_file', {filename: attachment | trim, emailId: mail.id}) }}" target="_blank">{{ attachment | trim }}</a><br>
+                            {% endfor %}
                         </td>
                     </tr>
                 {% endif %}

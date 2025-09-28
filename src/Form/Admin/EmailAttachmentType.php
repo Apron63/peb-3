@@ -26,7 +26,7 @@ class EmailAttachmentType extends AbstractType
                 ],
                 'mapped' => false,
             ])
-            ->add('mailId', HiddenType::class, [
+            ->add('emailId', HiddenType::class, [
                 'mapped' => false,
             ])
             ->add('submit', SubmitType::class, [

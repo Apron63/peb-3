@@ -12,7 +12,7 @@
             <div class="col-10">
                 {{ form_row(formAttachment.attachment) }}
             </div>
-            {{ form_row(formAttachment.mailId) }}
+            {{ form_row(formAttachment.emailId) }}
             <div class="col-2">
                 {{ form_row(formAttachment.submit) }}
             </div>
@@ -62,13 +62,13 @@
                 {% for file in files %}
                     <tr>
                         <td>
-                            <a href="{{ path('admin_email_read_file', {filename: file}) }}" target="_blank">
+                            <a href="{{ path('admin_email_read_file', {filename: file, emailId: form.vars.value.id}) }}" target="_blank">
                                 {{ file }}
                             </a>
                         </td>
                         <td>
                             <a
-                                href="{{ path('admin_email_delete_file', {filename: file, mailId: form.vars.value.id}) }}"
+                                href="{{ path('admin_email_delete_file', {filename: file, emailId: form.vars.value.id}) }}"
                                 class="btn btn-outline-danger"
                                 onclick="return window.confirm('Подтвердите действие');"
                             >
@@ -84,6 +84,5 @@
             {{ form_row(form.submit) }}
         </div>
     {{ form_end(form) }}
-
 
 {% endblock %}

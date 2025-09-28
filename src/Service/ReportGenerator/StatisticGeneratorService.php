@@ -34,10 +34,10 @@ class StatisticGeneratorService
         private readonly string $reportUploadPath,
     ) {}
 
-    public function generateEmail(User $user, string $type, array $criteria): void
+    public function generateEmail(User $user, string $type, array $criteria, int $emailId): void
     {
         $data = $this->userRepository->getUserSearchQuery($criteria['user_search'], true)->getResult();
-        $this->personalPath = $this->getUserUploadDir($user);
+        $this->personalPath = $this->getUserUploadDir($user, $emailId);
 
         match ($type) {
             'PDF' => $this->generateStatisticPdf($data, $user),
@@ -264,9 +264,13 @@ class StatisticGeneratorService
         ]);
     }
 
-    public function getUserUploadDir(User $user): string
+    public function getUserUploadDir(User $user, ?int $emailId = null): string
     {
         $path = $this->reportUploadPath . DIRECTORY_SEPARATOR . 'personal' . DIRECTORY_SEPARATOR . $user->getId();
+
+        if (null !== $emailId) {
+            $path .= DIRECTORY_SEPARATOR . $emailId;
+        }
 
         if (! $this->filesystem->exists($path)) {
             $this->filesystem->mkdir($path);

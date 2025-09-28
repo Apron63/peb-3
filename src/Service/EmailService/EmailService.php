@@ -1,5 +1,7 @@
 <?php
 
+declare (strict_types=1);
+
 namespace App\Service\EmailService;
 
 use App\Entity\MailingQueue;
@@ -33,29 +35,23 @@ class EmailService
 
     public function createEmailWithReportData(User $user, string $type, array $criteria): MailingQueue
     {
-        $this->prepareDir($user);
-        $this->reportGeneratorService->generateEmail($user, $type, $criteria);
-
-        $email = new MailingQueue();
-        $email
+        $email = new MailingQueue()
             ->setCreatedBy($user)
             ->setSubject('Данные')
             ->setContent(
                 $this->dashboardService->replaceValue(
                     $this->configService->getConfigValue('emailAttachmentResultText')
-                )
+                    )
             );
 
         $this->mailingQueueRepository->save($email, true);
+        $this->reportGeneratorService->generateEmail($user, $type, $criteria, $email->getId());
 
         return $email;
     }
 
     public function createEmailWithStatisticData(User $user, string $type, array $criteria): MailingQueue
     {
-        $this->prepareDir($user);
-        $this->statisticGeneratorService->generateEmail($user, $type, $criteria);
-
         $email = new MailingQueue();
         $email
             ->setCreatedBy($user)
@@ -67,13 +63,15 @@ class EmailService
             );
 
         $this->mailingQueueRepository->save($email, true);
+        $this->statisticGeneratorService->generateEmail($user, $type, $criteria, $email->getId());
 
         return $email;
     }
 
-    public function getUserUploadDir(User $user): string
+    public function getUserUploadDir(User $user, int $emailId): string
     {
-        $path = $this->reportUploadPath . DIRECTORY_SEPARATOR . 'personal' . DIRECTORY_SEPARATOR . $user->getId();
+        $path = $this->reportUploadPath . DIRECTORY_SEPARATOR . 'personal'
+            . DIRECTORY_SEPARATOR . $user->getId() . DIRECTORY_SEPARATOR . $emailId;
 
         if (! $this->filesystem->exists($path)) {
             $this->filesystem->mkdir($path);
@@ -82,11 +80,11 @@ class EmailService
         return $path;
     }
 
-    public function getUploadedFiles(User $user): array
+    public function getUploadedFiles(User $user, int $emailId): array
     {
         $result = [];
 
-        $path = $this->getUserUploadDir($user);
+        $path = $this->getUserUploadDir($user, $emailId) ;
 
         $finder = new Finder();
         $finder->files()->in($path);
@@ -100,28 +98,28 @@ class EmailService
         return $result;
     }
 
-    public function readFile(string $filename, User $user): string
+    public function readFile(string $filename, User $user, int $emailId): string
     {
-        return $this->getUserUploadDir($user) . DIRECTORY_SEPARATOR . $filename;
+        return $this->getUserUploadDir($user, $emailId) . DIRECTORY_SEPARATOR . $filename;
     }
 
-    public function deleteFile(string $filename, User $user): void
+    public function deleteFile(string $filename, User $user, int $emailId): void
     {
-        $path = $this->getUserUploadDir($user) . DIRECTORY_SEPARATOR . $filename;
+        $path = $this->getUserUploadDir($user, $emailId) . DIRECTORY_SEPARATOR . $filename;
 
         $this->filesystem->remove($path);
     }
 
     public function sendEmailWithAttachments(MailingQueue $email): void
     {
-        $personalPath = $this->getUserUploadDir($email->getCreatedBy());
+        $personalPath = $this->getUserUploadDir($email->getCreatedBy(), $email->getId());
 
         $allRecievers = array_map(
             fn($address) => trim($address),
             explode(',', $email->getReciever())
         );
 
-        $sendedMail = (new Email())
+        $sendedMail = new Email()
             ->from(
                 new Address(
                     $email->getCreatedBy()->getEmail(),
@@ -140,7 +138,7 @@ class EmailService
             foreach ($finder as $file) {
                 $sendedMail->addPart(
                     new DataPart(
-                        new File($file)
+                        new File($file->getRealPath())
                     )
                 );
 
@@ -155,21 +153,5 @@ class EmailService
             ->setAttachment(implode(', ', $attachments));
 
         $this->mailingQueueRepository->save($email, true);
-    }
-
-    private function prepareDir(User $user): string
-    {
-        $personalPath = $this->getUserUploadDir($user);
-
-        $finder = new Finder();
-        $finder->files()->in($personalPath);
-
-        if ($finder->hasResults()) {
-            foreach ($finder as $file) {
-                $this->filesystem->remove($file);
-            }
-        }
-
-        return $personalPath;
     }
 }

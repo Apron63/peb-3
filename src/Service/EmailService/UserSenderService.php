@@ -1,5 +1,7 @@
 <?php
 
+declare (strict_types=1);
+
 namespace App\Service\EmailService;
 
 use App\Entity\MailingQueue;
@@ -42,7 +44,7 @@ class UserSenderService
                 $permission->getCreatedBy(),
             );
 
-            $mail = (new MailingQueue())
+            $mail = new MailingQueue()
                 ->setUser($permission->getUser())
                 ->setSubject('Вам назначен курс : ' . $permission->getCourse()->getShortName())
                 ->setCreatedBy($permission->getCreatedBy())

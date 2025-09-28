@@ -1,5 +1,7 @@
 <?php
 
+declare (strict_types=1);
+
 namespace App\Controller\Admin\Email;
 
 use App\Entity\MailingQueue;
@@ -37,7 +39,7 @@ class EditEmailController extends AbstractController
 
         $form = $this->createForm(AdminEmailType::class, $email);
         $formAttachment = $this->createForm(EmailAttachmentType::class);
-        $formAttachment->get('mailId')->setData($email->getId());
+        $formAttachment->get('emailId')->setData($email->getId());
 
         $form->handleRequest($request);
 
@@ -54,19 +56,20 @@ class EditEmailController extends AbstractController
         return $this->render('admin/email/edit/index.html.twig', [
             'form' => $form->createView(),
             'formAttachment' => $formAttachment->createView(),
-            'files' => $this->emailService->getUploadedFiles($user),
+            'files' => $this->emailService->getUploadedFiles($user, $email->getId()),
         ]);
     }
 
     #[Route('/admin/email/read-file/', name: 'admin_email_read_file')]
     public function readFile(Request $request): Response
     {
-         /** @var User $user */
-         $user = $this->getUser();
+        /** @var User $user */
+        $user = $this->getUser();
 
-         $filename = $request->get('filename');
+        $filename = $request->get('filename');
+        $emailId = (int) $request->get('emailId');
 
-        $outputFileName = $this->emailService->readFile($filename, $user);
+        $outputFileName = $this->emailService->readFile($filename, $user, $emailId);
 
         $response = new BinaryFileResponse($outputFileName);
         $response->setContentDisposition(ResponseHeaderBag::DISPOSITION_INLINE, $filename);
@@ -77,16 +80,16 @@ class EditEmailController extends AbstractController
     #[Route('/admin/email/delete-file/', name: 'admin_email_delete_file')]
     public function deleteFile(Request $request): Response
     {
-         /** @var User $user */
-         $user = $this->getUser();
+        /** @var User $user */
+        $user = $this->getUser();
 
-         $filename = $request->get('filename');
-         $mailId = $request->get('mailId');
+        $filename = $request->get('filename');
+        $emailId = (int) $request->get('emailId');
 
-        $this->emailService->deleteFile($filename, $user);
+        $this->emailService->deleteFile($filename, $user, $emailId);
         $this->addFlash('success', 'Вложение удалено');
 
-        return $this->redirectToRoute('admin_email_report_edit', ['mailId' => $mailId]);
+        return $this->redirectToRoute('admin_email_report_edit', ['mailId' => $emailId]);
     }
 
     #[Route('/admin/email/add-file/', name: 'admin_email_add_file')]
@@ -99,8 +102,8 @@ class EditEmailController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted()) {
-            $mailId = (int) $form->get('mailId')->getData();
-            $personalPath = $this->emailService->getUserUploadDir($user);
+            $emailId = (int) $form->get('emailId')->getData();
+            $personalPath = $this->emailService->getUserUploadDir($user, $emailId);
             $attachment = $form->get('attachment')->getData();
             $attachmentName = $attachment->getClientOriginalName();
             $attachment->move($personalPath, $attachmentName);
@@ -108,6 +111,6 @@ class EditEmailController extends AbstractController
             $this->addFlash('success', 'Вложение добавлено');
         }
 
-        return $this->redirectToRoute('admin_email_report_edit', ['mailId' => $mailId]);
+        return $this->redirectToRoute('admin_email_report_edit', ['mailId' => $emailId]);
     }
 }
