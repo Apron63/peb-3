@@ -98,9 +98,11 @@ class EmailService
         return $result;
     }
 
-    public function readFile(string $filename, User $user, int $emailId): string
+    public function readFile(string $filename, int $emailId): string
     {
-        return $this->getUserUploadDir($user, $emailId) . DIRECTORY_SEPARATOR . $filename;
+        $email = $this->mailingQueueRepository->find($emailId);
+
+        return $this->getUserUploadDir($email->getCreatedBy(), $emailId) . DIRECTORY_SEPARATOR . $filename;
     }
 
     public function deleteFile(string $filename, User $user, int $emailId): void

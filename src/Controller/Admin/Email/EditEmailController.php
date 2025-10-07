@@ -63,13 +63,10 @@ class EditEmailController extends AbstractController
     #[Route('/admin/email/read-file/', name: 'admin_email_read_file')]
     public function readFile(Request $request): Response
     {
-        /** @var User $user */
-        $user = $this->getUser();
-
         $filename = $request->get('filename');
         $emailId = (int) $request->get('emailId');
 
-        $outputFileName = $this->emailService->readFile($filename, $user, $emailId);
+        $outputFileName = $this->emailService->readFile($filename, $emailId);
 
         $response = new BinaryFileResponse($outputFileName);
         $response->setContentDisposition(ResponseHeaderBag::DISPOSITION_INLINE, $filename);

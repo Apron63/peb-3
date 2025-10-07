@@ -31,11 +31,11 @@ class HistotyController extends AbstractController
                     'name' => 'Б.1.9 Строительство, реконструкция, техническое перевооружение, капитальный ремонт, консервация и ликвидация химически опасных производственных объектов',
                     'stage' => 1,
                     'activatedAt' => new DateTime('2025-08-01'),
-                    'endDate' => '',
+                    'endDate' => '30.09.2025',
                     'result' => 'Сдано',
                     'permissionId' => 999,
                     'loggerId' => 222,
-                    'duration' => 20,
+                    'duration' => '20 ч. 10 м.',
                 ],
                 [
                     'name' => 'Обучение безопасным методам и приемам выполнения работ при воздействии вредных и опасных производственных факторов',
@@ -45,7 +45,7 @@ class HistotyController extends AbstractController
                     'result' => 'Сдано',
                     'permissionId' => 999,
                     'loggerId' => 222,
-                    'duration' => 30,
+                    'duration' => '30 ч. 15 м.',
                 ],
             ],
             'paginator' => [
