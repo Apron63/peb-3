@@ -27,12 +27,16 @@
             </div>
             {% if item.stage == 3 %}
                 <div class="results_row">
-                    <a href="{{ path('app_frontend_testing_success_print', {id: item.permissionId}) }}">Скачать протокол первой успешной попытки</a>
+                    {% if item.successLogName is not empty %}
+                        <a href="/storage/doc/{{ item.successLogName }}" target="_blank">Скачать протокол первой успешной попытки</a>
+                    {% endif %}
                 </div>
             {% endif %}
             {% if item.loggerId is not empty %}
                  <div class="results_row">
-                    <a href="{{ path('app_frontend_testing_print', {id: item.loggerId}) }}">Скачать протокол крайней попытки</a>
+                    {% if item.lastLogName is not empty %}
+                        <a href="/storage/doc/{{ item.lastLogName }}" target="_blank">Скачать протокол крайней попытки</a>
+                    {% endif %}
                 </div>
             {% endif %}
         </div>

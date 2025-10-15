@@ -35,6 +35,8 @@ class HistotyController extends AbstractController
                     'result' => 'Сдано',
                     'permissionId' => 999,
                     'loggerId' => 222,
+                    'lastLogName' => 'Образец Б.1.9.pdf',
+                    'successLogName' => '',
                     'duration' => '20 ч. 10 м.',
                 ],
                 [
@@ -45,6 +47,8 @@ class HistotyController extends AbstractController
                     'result' => 'Сдано',
                     'permissionId' => 999,
                     'loggerId' => 222,
+                    'lastLogName' => 'Образец Факторы крайний протокол.pdf',
+                    'successLogName' => 'Образец Факторы_протокол успешной попытки.pdf',
                     'duration' => '30 ч. 15 м.',
                 ],
             ],
