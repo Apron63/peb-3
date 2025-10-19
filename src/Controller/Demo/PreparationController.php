@@ -44,7 +44,7 @@ class PreparationController extends AbstractController
             (int) $request->get('perPage', 20),
         );
 
-        return $this->render('frontend/demo/_preparation.html.twig', [
+        return $this->render('frontend/demo/preparation/preparation.html.twig', [
             'data' => $data,
         ]);
     }
@@ -103,7 +103,7 @@ class PreparationController extends AbstractController
             (int) $request->get('perPage', 20),
         );
 
-        return $this->render('frontend/demo/_preparation.html.twig', [
+        return $this->render('frontend/demo/preparation/preparation.html.twig', [
             'data' => $data,
         ]);
     }
@@ -131,7 +131,7 @@ class PreparationController extends AbstractController
             'page' => $page + 1,
             'per_page' => $perPage,
             'total' => $data['total'],
-            'content' => $this->renderView('frontend/demo/_partial.html.twig', [
+            'content' => $this->renderView('frontend/demo/preparation/partial.html.twig', [
                 'data' => $data,
             ]),
         ]);
