@@ -79,7 +79,7 @@ class CourseController extends AbstractController
             return $this->redirect($url);
         }
 
-        $sessionId = $request->cookies->get('PHPSESSID');
+        $sessionId = $request->cookies->get('PHPSESSID') ?? 'demo';
         $response = new Response();
         $response->headers->setCookie(new Cookie('init', md5($sessionId), time() + 3600));
 
@@ -102,7 +102,7 @@ class CourseController extends AbstractController
             throw new NotFoundHttpException('User Not Allowed');
         }
 
-        $sessionId = $request->cookies->get('PHPSESSID');
+        $sessionId = $request->cookies->get('PHPSESSID') ?? 'demo';
 
         $moduleSection = $this->moduleSectionRepository->find($moduleId);
         if (! $moduleSection instanceof ModuleSection) {
