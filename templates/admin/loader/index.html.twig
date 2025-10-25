@@ -49,6 +49,13 @@
         </div> #}
     </div>
 
+    {% if hasError %}
+        <p></p>
+        <div class="row alert alert-danger">
+            В загруженном файле содержатся ошибки!
+        </div>
+    {% endif %}
+
     <table class="table">
         <thead>
         <tr>
@@ -64,19 +71,25 @@
             {% for item in data %}
                 <tr>
                     <td>
-                        <div>
-                            <input
-                                class="form-check-input loader-checkbox"
-                                type="checkbox"
-                                id="check_{{ item.id }}"
-                                data-loader-id="{{ item.id }}"
-                                value=""
-                                aria-label="..."
-                                {% if item.checked %}
-                                    checked
-                                {% endif %}
-                            >
-                        </div>
+                        {% if item.errors is not empty %}
+                            <a href="javascript:void(0)" class="d-inline-block" onclick="alert('{{ item.errors }}')">
+                                <img src="{{ asset('svg/redcross.svg') }}">
+                            </a>
+                        {% else %}
+                            <div>
+                                <input
+                                    class="form-check-input loader-checkbox"
+                                    type="checkbox"
+                                    id="check_{{ item.id }}"
+                                    data-loader-id="{{ item.id }}"
+                                    value=""
+                                    aria-label="..."
+                                    {% if item.checked %}
+                                        checked
+                                    {% endif %}
+                                >
+                            </div>
+                        {% endif %}
                     </td>
                     <td>{{ item.orderNo}}</td>
                     <td>

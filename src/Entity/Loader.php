@@ -43,6 +43,9 @@ class Loader
     #[ORM\Column(length: 255)]
     private ?string $organization = null;
 
+    #[ORM\Column(length: 255)]
+    private ?string $errors = null;
+
     #[ORM\Column(length: 2500)]
     private string $courseName = '';
 
@@ -163,6 +166,18 @@ class Loader
     public function setOrganization(string $organization): self
     {
         $this->organization = $organization;
+
+        return $this;
+    }
+
+    public function getErrors(): ?string
+    {
+        return $this->errors;
+    }
+
+    public function setErors(string $errors): self
+    {
+        $this->errors = $errors;
 
         return $this;
     }

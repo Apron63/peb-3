@@ -65,9 +65,18 @@ class LoaderController extends MobileController
         $data = $this->loaderRepository->getLoaderForUser($user);
         $emptyData = count($data) > 0 ? 0 : 1;
 
+        $hasError = false;
+        foreach($data as $item) {
+            if (! empty($item->getErrors())) {
+                $hasError = true;
+                break;
+            }
+        }
+
         return $this->render('admin/loader/index.html.twig', [
             'data' => $data,
             'emptyData' => $emptyData,
+            'hasError' => $hasError,
         ]);
     }
 

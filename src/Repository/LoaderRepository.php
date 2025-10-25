@@ -40,9 +40,12 @@ class LoaderRepository extends ServiceEntityRepository
         }
     }
 
+    /**
+     * @return Loader[]
+     */
     public function getLoaderForUser(User $user): array
     {
-        $queryBuilder = 
+        $queryBuilder =
             $this->createQueryBuilder('l')
             ->where('l.createdBy = :user')
             ->setParameter('user', $user);
@@ -51,13 +54,13 @@ class LoaderRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult();
     }
-    
+
     /**
      * @return Loader[]
      */
     public function getLoaderforCheckedUser(User $user): array
     {
-        $queryBuilder = 
+        $queryBuilder =
             $this->createQueryBuilder('l')
             ->where('l.createdBy = :user')
             ->andWhere('l.checked = 1')
@@ -78,10 +81,11 @@ class LoaderRepository extends ServiceEntityRepository
 
         $query = $this
             ->getEntityManager()
-            ->createQuery('UPDATE App\Entity\Loader l set l.checked = :value where l.createdBy = :user')
+            ->createQuery('UPDATE App\Entity\Loader l set l.checked = :value where l.createdBy = :user AND l.errors = :emptyValue')
             ->setParameters([
                 'value' => $value,
                 'user' => $user,
+                'emptyValue' => '',
             ]);
 
         $query->execute();
@@ -103,7 +107,7 @@ class LoaderRepository extends ServiceEntityRepository
             ->getEntityManager()
             ->createQuery('SELECT COUNT(l.id) FROM App\Entity\Loader l where l.createdBy = :user AND l.checked = 1')
             ->setParameter('user', $user);
-        
+
         return $query->getSingleScalarResult() > 0;
     }
 }

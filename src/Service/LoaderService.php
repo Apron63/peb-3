@@ -264,7 +264,7 @@ class LoaderService
                 throw new Exception('Произошла ошибка. Загрузите файл для СДО');
             }
 
-            $userData[] = $tmp;
+            $userData[] = $this->validateLoader($tmp);
         }
 
         fclose($userFile);
@@ -285,9 +285,7 @@ class LoaderService
                 $emailChecked = true;
             }
 
-            $loader = new Loader();
-
-            $loader
+            $loader = new Loader()
                 ->setUser(null)
                 ->setCreatedBy($user)
                 ->setOrderNo($item['orderNo'])
@@ -299,7 +297,8 @@ class LoaderService
                 ->setChecked(false)
                 ->setEmail($email)
                 ->setEmailChecked($emailChecked)
-                ->setPhone($phone);
+                ->setPhone($phone)
+                ->setErors($item['errors']);
 
             $this->loaderRepository->save($loader, true);
         }
@@ -309,5 +308,23 @@ class LoaderService
     {
         $bom = pack('H*', 'EFBBBF');
         return preg_replace("/^$bom/", '', $row);
+    }
+
+    private function validateLoader(array $validation): array
+    {
+        $errors = [];
+
+        if (mb_strlen($validation['lastName']) > 50) {
+            $errors[] = 'Слишком длинная фамилмя';
+        }
+        if (mb_strlen($validation['firstName']) > 50) {
+            $errors[] = 'Слишком длинное имя';
+        }
+        if (mb_strlen($validation['patronymic']) > 50) {
+            $errors[] = 'Слишком длинное отчество';
+        }
+
+        $validation['errors'] = implode('\n', $errors);
+        return $validation;
     }
 }
