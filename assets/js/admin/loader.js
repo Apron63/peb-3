@@ -92,6 +92,27 @@ function assignUsersToLoader()
             keyboard: false
         })
 
+        function updateRightSelect()
+        {
+            rightSelect.innerHTML = '';
+
+            for (let i = 0; i < leftSelect.options.length; i++) {
+                const option = leftSelect.options[i];
+
+                if (option.selected) {
+                    const newOption = document.createElement('option');
+                    newOption.value = option.value;
+                    newOption.textContent = option.textContent;
+                    rightSelect.appendChild(newOption);
+                }
+            }
+        }
+
+        const leftSelect = document.getElementById('course-select');
+        const rightSelect = document.getElementById('course-selected');
+        leftSelect.addEventListener('change', updateRightSelect);
+        updateRightSelect();
+
         $('#q-search').on('keyup', function () {
             applyFilter();
         })
@@ -120,8 +141,8 @@ function assignUsersToLoader()
                 return false
             }
 
-            if (course.length >= 50) {
-                alert('Вы выбрали более 50 курсов одновременно. Максимальное количество - 50 курсов')
+            if (course.length >= 30) {
+                alert('Вы выбрали более 30 курсов одновременно. Максимальное количество - 30 курсов')
                 return false
             }
 
@@ -168,7 +189,8 @@ function checkQuery ()
     })
 }
 
-function applyFilter() {
+function applyFilter()
+{
     let filter = $('#q-search').val().toUpperCase()
     let selectedProfile = Number($('#profile-select :selected').val())
     $('#course-select').find('option').each(function (i, e) {
