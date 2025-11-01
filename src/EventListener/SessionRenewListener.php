@@ -20,6 +20,11 @@ class SessionRenewListener
     public function onKernelRequest(RequestEvent $event): void
     {
         $request = $event->getRequest();
+
+        if ($request->isXmlHttpRequest()) {
+            return;
+        }
+        
         $session = $request->getSession();
 
         if ($session && $session->isStarted() && $session->has('_security_main')) {
