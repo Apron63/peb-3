@@ -4,24 +4,18 @@
 </div>
 
 <div class="row">
-        <div class="mb-3">
-            <label for="course-select" class="form-label">Выберите курсы</label>
-            <select class="form-select" id="course-select" name="course-select" size="10" multiple>
-                {% for item in course %}
-                    <option class="course-select-item" data-profile="{{ item['profileId'] }}" value="{{ item['id'] }}">
-                        {{ item.courseType }} {{ item.shortName }}
-                    </option>
-                {% endfor %}
-            </select>
-        </div>
-    {# <div class="col-6">
-        <div class="mb-3">
-            <label for="course-selected" class="form-label">Выбранные курсы</label>
-            <select class="form-select" id="course-selected" name="course-selected" size="10" multiple>
-            </select>
-        </div>
-    </div> #}
+    <div class="mb-3">
+        <label for="course-select" class="form-label">Выберите курсы</label>
+        <select class="form-select" id="course-select" name="course-select" size="10" multiple>
+            {% for item in course %}
+                <option class="course-select-item" data-profile="{{ item['profileId'] }}" value="{{ item['id'] }}">
+                    {{ item.courseType }} {{ item.shortName }}
+                </option>
+            {% endfor %}
+        </select>
+    </div>
 </div>
+
 <div class="row">
     <div class="mb-3">
         <label for="course-selected" class="form-label">Выбранные курсы</label>

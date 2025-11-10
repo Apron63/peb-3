@@ -23,6 +23,24 @@
             <button
                 class="btn btn-outline-dark dropdown-toggle"
                 type="button"
+                id="dropdownMenuButton2"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
+                data-url="{{ path('admin_loader_set_messenger') }}"
+            >
+                Информирование
+            </button>
+            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton2">
+                <li><a class="dropdown-item color-item" href="javascript:void(0)" id="set-msg-whatsup">Whatsapp</a></li>
+                <li><a class="dropdown-item color-item" href="javascript:void(0)" id="set-mag-max">Max</a></li>
+                {# <li><a class="dropdown-item color-item" href="javascript:void(0)" id="set-mag-both">Whatsapp + Max</a></li>
+                <li><a class="dropdown-item color-item" href="javascript:void(0)" id="set-mag-none">Ни одного</a></li> #}
+            </ul>
+        </div>
+        <div class="dropdown">
+            <button
+                class="btn btn-outline-dark dropdown-toggle"
+                type="button"
                 id="dropdownMenuButton1"
                 data-bs-toggle="dropdown"
                 aria-expanded="false"
@@ -36,17 +54,6 @@
                 <li><a class="dropdown-item color-item" href="{{ path('admin_loader_report_to_docx') }}" id="getContentDOCX">DOCX</a></li>
             </ul>
         </div>
-        {# <div class="dropdown hide">
-            <button class="btn btn-outline-dark dropdown-toggle" type="button" id="dropdownMenuButton2" data-bs-toggle="dropdown" aria-expanded="false">
-                Скачать и отправить данные
-            </button>
-            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton2">
-                <li><a class="dropdown-item color-item" href="#" onclick="getEmail('CSV')">CSV</a></li>
-                <li><a class="dropdown-item color-item" href="#" onclick="getEmail('XLSX')">XLSX</a></li>
-                <li><a class="dropdown-item color-item" href="#" onclick="getEmail('TXT')">TXT</a></li>
-                <li><a class="dropdown-item color-item" href="#" onclick="getEmail('DOCX')">DOCX</a></li>
-            </ul>
-        </div> #}
     </div>
 
     {% if hasError %}
@@ -61,7 +68,9 @@
         <tr>
             <th></th>
             <th>Заказ</th>
-            <th>Фамилия, имя, отчество, email, телефон</th>
+            <th>ФИО</th>
+            <th>Email, телефон</th>
+            <th>Информирование</th>
             <th>Организация, должность</th>
             <th>Курс</th>
         </tr>
@@ -94,18 +103,29 @@
                     <td>{{ item.orderNo}}</td>
                     <td>
                         {{ item.lastName}} {{ item.firstName}} {{ item.patronymic }}
-
+                    </td>
+                    <td>
                         {% if item.email is not empty %}
-                            <br>
                             {% if item.emailChecked %}
-                                {{ item.email }}
+                                {{ item.email }}<br>
                             {% else %}
                                 <span class="text-danger-emphasis">{{ item.email }}</span>
                             {% endif %}
                         {% endif %}
 
                         {% if item.phone is not empty %}
-                            <br>{{ item.phone }}
+                            {{ item.phone }}
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if item.toEmail %}
+                            <div>почта</div>
+                        {% endif %}
+                        {% if item.toWhatsUp %}
+                            <div>Whatsapp</div>
+                        {% endif %}
+                        {% if item.toMax %}
+                            <div>Max</div>
                         {% endif %}
                     </td>
                     <td>

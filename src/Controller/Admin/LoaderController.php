@@ -104,6 +104,19 @@ class LoaderController extends MobileController
         return new JsonResponse();
     }
 
+    #[Route('/admin/loader/setMeaaenger/', name: 'admin_loader_set_messenger', condition: 'request.isXmlHttpRequest()')]
+    public function setMessanger(Request $request): JsonResponse
+    {
+        /** @var User $user */
+        $user = $this->getUser();
+
+        $action = strtolower($request->get('action', 'none'));
+
+        $this->loaderRepository->setMessanger($user, $action);
+
+        return new JsonResponse(['result' => true]);
+    }
+
     #[Route('/admin/loader/checkIfLoaderIsEmpty/', name: 'admin_loader_check_empty', condition: 'request.isXmlHttpRequest()')]
     public function checkIfLoaderIsEmpty(): JsonResponse
     {

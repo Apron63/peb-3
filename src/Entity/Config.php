@@ -40,6 +40,15 @@ class Config
     #[ORM\Column(type: Types::TEXT, length: 50000, nullable: true)]
     private ?string $permissionWillEndSoonWhatsapp = null;
 
+    #[ORM\Column(type: Types::TEXT, length: 50000, nullable: true)]
+    private ?string $userHasNewPermissionMax = null;
+
+    #[ORM\Column(type: Types::TEXT, length: 50000, nullable: true)]
+    private ?string $userHasActivatedPermissionMax = null;
+
+    #[ORM\Column(type: Types::TEXT, length: 50000, nullable: true)]
+    private ?string $permissionWillEndSoonMax = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -137,6 +146,42 @@ class Config
     public function setPermissionWillEndSoonWhatsapp(?string $permissionWillEndSoonWhatsapp): self
     {
         $this->permissionWillEndSoonWhatsapp = $permissionWillEndSoonWhatsapp;
+
+        return $this;
+    }
+
+    public function getUserHasNewPermissionMax(): ?string
+    {
+        return $this->userHasNewPermissionMax;
+    }
+
+    public function setUserHasNewPermissionMax(?string $userHasNewPermissionMax): self
+    {
+        $this->userHasNewPermissionMax = $userHasNewPermissionMax;
+
+        return $this;
+    }
+
+    public function getUserHasActivatedPermissionMax(): ?string
+    {
+        return $this->userHasActivatedPermissionMax;
+    }
+
+    public function setUserHasActivatedPermissionMax(?string $userHasActivatedPermissionMax): self
+    {
+        $this->userHasActivatedPermissionMax = $userHasActivatedPermissionMax;
+
+        return $this;
+    }
+
+    public function getPermissionWillEndSoonMax(): ?string
+    {
+        return $this->permissionWillEndSoonMax;
+    }
+
+    public function setPermissionWillEndSoonMax(?string $permissionWillEndSoonMax): self
+    {
+        $this->permissionWillEndSoonMax = $permissionWillEndSoonMax;
 
         return $this;
     }

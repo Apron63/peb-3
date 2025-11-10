@@ -59,6 +59,12 @@ class QueryUser
     #[ORM\Column(length: 50, nullable: true)]
     private ?string $phone = null;
 
+    #[ORM\Column]
+    private bool $toWhatsup = false;
+
+    #[ORM\Column]
+    private bool $toMax = false;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -216,6 +222,30 @@ class QueryUser
     public function setPhone(?string $phone): self
     {
         $this->phone = $phone;
+
+        return $this;
+    }
+
+    public function getToWhatsup(): ?bool
+    {
+        return $this->toWhatsup;
+    }
+
+    public function setToWhatsup(bool $toWhatsup): self
+    {
+        $this->toWhatsup = $toWhatsup;
+
+        return $this;
+    }
+
+    public function getToMax(): ?bool
+    {
+        return $this->toMax;
+    }
+
+    public function setToMax(bool $toMax): self
+    {
+        $this->toMax = $toMax;
 
         return $this;
     }

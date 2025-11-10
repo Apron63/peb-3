@@ -93,6 +93,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column]
     private bool $whatsappConfirmed = true;
 
+    #[ORM\Column]
+    private bool $maxExists = false;
+
+    #[ORM\Column]
+    private bool $maxConfirmed = true;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -348,7 +354,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function isWhatsappExiists(): bool
+    public function isWhatsappExists(): bool
     {
         return $this->whatsappExists;
     }
@@ -368,6 +374,30 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setWhatsappConfirmed(bool $whatsappConfirmed): self
     {
         $this->whatsappConfirmed = $whatsappConfirmed;
+
+        return $this;
+    }
+
+    public function isMaxExists(): bool
+    {
+        return $this->maxExists;
+    }
+
+    public function setMaxExists(bool $maxExists): self
+    {
+        $this->maxExists = $maxExists;
+
+        return $this;
+    }
+
+    public function isMaxConfirmed(): bool
+    {
+        return $this->maxConfirmed;
+    }
+
+    public function setMaxConfirmed(bool $maxConfirmed): self
+    {
+        $this->maxConfirmed = $maxConfirmed;
 
         return $this;
     }

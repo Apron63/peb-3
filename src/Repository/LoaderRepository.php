@@ -91,6 +91,66 @@ class LoaderRepository extends ServiceEntityRepository
         $query->execute();
     }
 
+    public function setMessanger(User $user, string $action): void
+    {
+        switch ($action) {
+            case 'whatsup':
+                $query = $this->getEntityManager()
+                    ->createQuery('UPDATE App\Entity\Loader l set l.toWhatsup = :trueValue where l.createdBy = :user AND l.errors = :emptyValue AND l.checked = :checkedValue')
+                    ->setParameters([
+                        'trueValue' => true,
+                        'user' => $user,
+                        'emptyValue' => '',
+                        'checkedValue' => true,
+                    ]);
+                break;
+            case 'max':
+                $query = $this->getEntityManager()
+                    ->createQuery('UPDATE App\Entity\Loader l set l.toMax = :trueValue where l.createdBy = :user AND l.errors = :emptyValue AND l.checked = :checkedValue')
+                    ->setParameters([
+                        'trueValue' => true,
+                        'user' => $user,
+                        'emptyValue' => '',
+                        'checkedValue' => true,
+                    ]);
+                break;
+            case 'both':
+                $query = $this->getEntityManager()
+                    ->createQuery('UPDATE App\Entity\Loader l set l.toWhatsup = :trueValue, l.toMax = :trueValue where l.createdBy = :user AND l.errors = :emptyValue AND l.checked = :checkedValue')
+                    ->setParameters([
+                        'trueValue' => true,
+                        'user' => $user,
+                        'emptyValue' => '',
+                        'checkedValue' => true,
+                    ]);
+                break;
+            case 'none':
+                $query = $this->getEntityManager()
+                    ->createQuery('UPDATE App\Entity\Loader l set l.toWhatsup = :falseValue where l.createdBy = :user AND l.errors = :emptyValue AND l.checked = :checkedValue AND l.toWhatsup = :whFalseValue')
+                    ->setParameters([
+                        'falseValue' => false,
+                        'user' => $user,
+                        'emptyValue' => '',
+                        'checkedValue' => true,
+                        'whFalseValue' => false,
+                    ]);
+
+                $query->execute();
+
+                $query = $this->getEntityManager()
+                    ->createQuery('UPDATE App\Entity\Loader l set l.toMax = :falseValue where l.createdBy = :user AND l.errors = :emptyValue AND l.checked = :checkedValue AND l.toMax = :maxFalseValue')
+                    ->setParameters([
+                        'falseValue' => false,
+                        'user' => $user,
+                        'emptyValue' => '',
+                        'checkedValue' => true,
+                        'maxFalseValue' => false,
+                    ]);
+        }
+
+        $query->execute();
+    }
+
     public function clearLoaderForUser(User $user): void
     {
         $query = $this

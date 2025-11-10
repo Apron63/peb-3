@@ -138,16 +138,30 @@
                 </div>
             </div>
         </div>
+        <div class="row">
+            <div class="col-sm-2"></div>
+            <div class="col-10">
+                <div class="form-check form-switch">
+                    <span class="text-danger">{{ form_errors(form.maxConfirmed) }}</span>
+                    {{ form_label(form.maxConfirmed) }}
+                    {{ form_widget(form.maxConfirmed) }}
+                </div>
+            </div>
+        </div>
     {% endif %}
 
     <p></p>
-    
+
     <div class="form-group mb-3 offset-2">
         {{ form_widget(form.submit) }}
         {% if user.id is not null %}
             <a href="{{ path('admin_user_info', {id: user.id}) }}" target="_blank" class="btn btn-outline-primary">Сведения</a>
             <a href="{{ path('admin_user_whatsapp_resend', {id: user.id}) }}" class="btn btn-outline-secondary">
                 <img src="{{ asset('svg/whatsapp.svg') }}">
+                Информировать заново
+            </a>
+            <a href="{{ path('admin_user_whatsapp_resend', {id: user.id}) }}" class="btn btn-outline-secondary">
+                <img src="{{ asset('svg/max.svg') }}" width="20" height="20">
                 Информировать заново
             </a>
         {% endif %}

@@ -59,6 +59,15 @@ class DashboardController extends MobileController
         $form
             ->get('permissionWillEndSoonWhatsapp')
             ->setData($this->configService->getConfigValue('permissionWillEndSoonWhatsapp'));
+        $form
+            ->get('userHasNewPermissionMax')
+            ->setData($this->configService->getConfigValue('userHasNewPermissionMax'));
+        $form
+            ->get('userHasActivatedPermissionMax')
+            ->setData($this->configService->getConfigValue('userHasActivatedPermissionMax'));
+        $form
+            ->get('permissionWillEndSoonMax')
+            ->setData($this->configService->getConfigValue('permissionWillEndSoonMax'));
 
         $form->handleRequest($request);
 
@@ -71,6 +80,9 @@ class DashboardController extends MobileController
             $this->configService->setConfigValue('userHasNewPermissionwhatsapp', $form->get('userHasNewPermissionWhatsapp')->getData());
             $this->configService->setConfigValue('userHasActivatedPermissionWhatsapp', $form->get('userHasActivatedPermissionWhatsapp')->getData());
             $this->configService->setConfigValue('permissionWillEndSoonWhatsapp', $form->get('permissionWillEndSoonWhatsapp')->getData());
+            $this->configService->setConfigValue('userHasNewPermissionMax', $form->get('userHasNewPermissionMax')->getData());
+            $this->configService->setConfigValue('userHasActivatedPermissionMax', $form->get('userHasActivatedPermissionMax')->getData());
+            $this->configService->setConfigValue('permissionWillEndSoonMax', $form->get('permissionWillEndSoonMax')->getData());
         }
 
         return $this->mobileRender('admin/dashboard/index.html.twig', [

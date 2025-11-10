@@ -4,23 +4,23 @@ declare (strict_types=1);
 
 namespace App\Service;
 
-use DateTime;
-use App\Entity\User;
-use RuntimeException;
 use App\Entity\Course;
 use App\Entity\Loader;
-use App\Entity\QueryUser;
 use App\Entity\Permission;
-use App\Repository\UserRepository;
-use App\Repository\LoaderRepository;
+use App\Entity\QueryUser;
+use App\Entity\User;
 use App\Message\Query1CUploadMessage;
 use App\Repository\CourseRepository;
-use App\Repository\QueryUserRepository;
+use App\Repository\LoaderRepository;
 use App\Repository\PermissionRepository;
+use App\Repository\QueryUserRepository;
+use App\Repository\UserRepository;
+use DateTime;
 use Exception;
-use Symfony\Component\Messenger\MessageBusInterface;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
+use RuntimeException;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Symfony\Component\Messenger\MessageBusInterface;
 
 class LoaderService
 {
@@ -82,6 +82,8 @@ class LoaderService
                 ->setPatronymic($loader->getPatronymic())
                 ->setPosition($loader->getPosition())
                 ->setOrganization($loader->getOrganization())
+                ->setToWhatsup($loader->getToWhatsup())
+                ->setToMax($loader->getToMax())
                 ->setLoader($loader)
                 ->setResult('new');
 
@@ -152,10 +154,15 @@ class LoaderService
                 null !== $queryUser->getPhone()
                 && $user->getMobilePhone() !== $queryUser->getPhone()
             ) {
-                $user
-                    ->setMobilePhone($queryUser->getPhone())
-                    ->setWhatsappExists(false)
-                    ->setWhatsappConfirmed(true);
+                $user->setMobilePhone($queryUser->getPhone());
+
+                if ($queryUser->getToWhatsup()) {
+                    $user->setWhatsappExists(false)->setWhatsappConfirmed(true);
+                }
+
+                if ($queryUser->getToMax()) {
+                    $user->setMaxExists(false)->setMaxConfirmed(true);
+                }
             }
 
             $this->userRepository->save($user, true);
@@ -264,7 +271,38 @@ class LoaderService
                 throw new Exception('Произошла ошибка. Загрузите файл для СДО');
             }
 
-            $userData[] = $this->validateLoader($tmp);
+            $currentUser = $this->userRepository->findOneBy([
+                'firstName' => $tmp['firstName'],
+                'lastName' => $tmp['lastName'],
+                'patronymic' => $tmp['patronymic'],
+                'organization' => $tmp['organization'],
+            ]);
+
+            $messengersData = [
+                'email' => $tmp['email'],
+                'phone' => $tmp['phone'],
+                'whatsappExists' => false,
+                'whatsappConfirmed' => false,
+                'maxExists' => false,
+                'maxConfirmed' => false,
+            ];
+
+            if ($currentUser instanceof User) {
+                if (empty($tmp['email']) && ! empty($currentUser->getEmail())) {
+                    $messengersData['email'] = $currentUser->getEmail();
+                }
+
+                if (empty($tmp['phone']) && ! empty($currentUser->getMobilePhone())) {
+                    $messengersData['phone'] = $currentUser->getMobilePhone();
+                }
+
+                $messengersData['whatsappExists'] = $currentUser->isWhatsappExists();
+                $messengersData['whatsappConfirmed'] = $currentUser->isWhatsappExists();
+                $messengersData['maxExists'] = $currentUser->isMaxExists();
+                $messengersData['maxConfirmed'] = $currentUser->isMaxConfirmed();
+            }
+
+            $userData[] = array_merge($this->validateLoader($tmp), $messengersData);
         }
 
         fclose($userFile);
@@ -298,7 +336,10 @@ class LoaderService
                 ->setEmail($email)
                 ->setEmailChecked($emailChecked)
                 ->setPhone($phone)
-                ->setErors($item['errors']);
+                ->setErors($item['errors'])
+                ->setToEmail($emailChecked)
+                ->setToWhatsup($item['whatsappExists'] && $item['whatsappConfirmed'])
+                ->setToMax($item['maxExists'] && $item['maxConfirmed']);
 
             $this->loaderRepository->save($loader, true);
         }

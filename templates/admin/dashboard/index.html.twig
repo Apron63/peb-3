@@ -67,7 +67,7 @@
         <div class="col-3">
             <div class="card">
                 <div class="card-header">
-                    Рассылки WhatsApp
+                    Рассылки WhatsApp, MAX
                 </div>
                 <div class="card-body">
                     <table>
@@ -226,13 +226,54 @@
             </div>
         </div>
 
-        <p></p><div class="col-12">
+        <p></p>
+
+        <div class="col-12">
             <div class="card">
                 <div class="card-header">
                     {{ form_label(form.permissionWillEndSoonWhatsapp) }}
                 </div>
                 <div class="card-body">
                     {{ form_widget(form.permissionWillEndSoonWhatsapp) }}
+                </div>
+            </div>
+        </div>
+
+        <p></p>
+
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    {{ form_label(form.userHasNewPermissionMax) }}
+                </div>
+                <div class="card-body">
+                    {{ form_widget(form.userHasNewPermissionMax) }}
+                </div>
+            </div>
+        </div>
+
+        <p></p>
+
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    {{ form_label(form.userHasActivatedPermissionMax) }}
+                </div>
+                <div class="card-body">
+                    {{ form_widget(form.userHasActivatedPermissionMax) }}
+                </div>
+            </div>
+        </div>
+
+        <p></p>
+
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    {{ form_label(form.permissionWillEndSoonMax) }}
+                </div>
+                <div class="card-body">
+                    {{ form_widget(form.permissionWillEndSoonMax) }}
                 </div>
             </div>
         </div>

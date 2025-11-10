@@ -13,8 +13,13 @@ use Gedmo\Timestampable\Traits\TimestampableEntity;
 #[ORM\Entity(repositoryClass: WhatsappQueueRepository::class)]
 class WhatsappQueue
 {
-    public const SUCCESS_TRY_NAME = 'Успешно';
-    public const MAX_TRY_COUNT = 3;
+    public const string SUCCESS_TRY_NAME = 'Успешно';
+    public const int MAX_TRY_COUNT = 3;
+
+    public const int MESSENGER_TYPE_WHATSUP = 1;
+    public const string MESSENGER_TYPE_WHATSUP_NAME = 'Whatsup';
+    public const int MESSENGER_TYPE_MAX = 2;
+    public const string MESSENGER_TYPE_MAX_NAME = 'MAX';
 
     use TimestampableEntity;
 
@@ -48,6 +53,9 @@ class WhatsappQueue
     #[ORM\ManyToOne]
     #[ORM\JoinColumn(name: 'created_by')]
     private ?User $createdBy = null;
+
+    #[ORM\Column]
+    private int $messengerType = 1;
 
     public function getId(): ?int
     {
@@ -152,6 +160,18 @@ class WhatsappQueue
     public function setCreatedBy(?User $createdBy): self
     {
         $this->createdBy = $createdBy;
+
+        return $this;
+    }
+
+    public function getMessengerType(): int
+    {
+        return $this->messengerType;
+    }
+
+    public function setMessengerType(int $messengerType): self
+    {
+        $this->messengerType = $messengerType;
 
         return $this;
     }

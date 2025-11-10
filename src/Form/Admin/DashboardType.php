@@ -60,6 +60,30 @@ class DashboardType extends AbstractType
                     'rows' => 7,
                 ],
             ])
+            ->add('userHasNewPermissionMax', TextareaType ::class, [
+                'label' => 'Информирование слушателя о назначении доступа по Max',
+                'mapped' => false,
+                'attr' => [
+                    'class' => 'form-control',
+                    'rows' => 7,
+                ],
+            ])
+            ->add('userHasActivatedPermissionMax', TextareaType ::class, [
+                'label' => 'Информирование слушателя после активации курса по Max',
+                'mapped' => false,
+                'attr' => [
+                    'class' => 'form-control',
+                    'rows' => 7,
+                ],
+            ])
+            ->add('permissionWillEndSoonMax', TextareaType ::class, [
+                'label' => 'Информирование слушателя об окончании действия курса по Max',
+                'mapped' => false,
+                'attr' => [
+                    'class' => 'form-control',
+                    'rows' => 7,
+                ],
+            ])
             ->add('actionSubmit', SubmitType::class, [
                 'label' => 'Сохранить',
                 'attr' => [

@@ -253,6 +253,19 @@ class UserEditType extends AbstractType
                     'label_attr' => [
                         'class' => 'form-check-label'
                     ],
+                ])
+                ->add('maxConfirmed', CheckboxType::class, [
+                    'label' => 'Разрешение на рассылку Max',
+                    'required' => false,
+                    'attr' => [
+                        'class' => 'form-check-input',
+                        'placeholder' => 'Разрешение на рассылку Max',
+                        'onfocus' => 'this.placeholder = ""',
+                        'onblur' => 'this.placeholder = "Разрешение на рассылку Max"',
+                    ],
+                    'label_attr' => [
+                        'class' => 'form-check-label'
+                    ],
                 ]);
 
             $builder->get('roles')

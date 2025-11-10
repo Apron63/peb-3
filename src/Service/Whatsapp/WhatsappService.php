@@ -193,7 +193,7 @@ readonly class WhatsappService
         $greenApi = new GreenApiClient($this->greenApiIdInstance, $this->greenApiTokenInstance);
         $chatId = $phone . '@c.us';
 
-        if (! $user->isWhatsappExiists()) {
+        if (! $user->isWhatsappExists()) {
             $result = $greenApi->serviceMethods->checkWhatsapp((int) $phone);
 
             if (! $result?->data?->existsWhatsapp) {

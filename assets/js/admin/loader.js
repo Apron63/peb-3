@@ -30,6 +30,22 @@ $('.loader-checkbox').on('change', function(e) {
      })
 })
 
+$('#set-msg-whatsup').on('click', function(e) {
+    setMessenger('whatsup')
+})
+
+$('#set-mag-max').on('click', function(e) {
+    setMessenger('max')
+})
+
+$('#set-mag-both').on('click', function(e) {
+    setMessenger('both')
+})
+
+$('#set-mag-none').on('click', function(e) {
+    setMessenger('none')
+})
+
 $('#selectAll').on('click', function(e) {
     e.stopImmediatePropagation
 
@@ -219,5 +235,19 @@ function applyFilter()
         if (nowHidden && !mustHidden) {
             $(e).removeAttr('style').show()
         }
+    })
+}
+
+function setMessenger(action)
+{
+    $.ajax({
+        url: $('#dropdownMenuButton2').data('url'),
+        data: {action: action}
+    }).done(function (data) {
+        if (data.result) {
+            location.reload()
+        }
+    }).fail(function (data) {
+       console.log(data)
     })
 }

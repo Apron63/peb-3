@@ -9,7 +9,7 @@
         <a href="{{ path('admin_dashboard') }}">Инструменты</a>
         <span>/</span>
     {% endif %}
-    <span>Рассылки WhatsApp</span>
+    <span>Рассылки WhatsApp, MAX</span>
 {% endblock %}
 
 {% block content %}
@@ -49,6 +49,7 @@
                     <th>Получатель</th>
                     <th>Номер</th>
                     <th>Тема</th>
+                    <th>Мессенджер</th>
                     <th>Статус</th>
                     <th>Действие</th>
                 </tr>
@@ -77,6 +78,13 @@
                         </td>
                         <td>
                             {{ page.subject }}
+                        </td>
+                        <td>
+                            {% if page.messengerType == 1 %}
+                                WhatsUp
+                            {% else %}
+                                MAX
+                            {% endif %}
                         </td>
                         <td>
                             {{ page.status }}
