@@ -33,7 +33,9 @@ return static function (ContainerConfigurator $containerConfigurator): void {
         ->bind('$exchange1cUploadDirectory', '%kernel.project_dir%/public/storage/exchange1c')
         ->bind('$avatarUploadPath', '%kernel.project_dir%/public/storage/avatar')
         ->bind('$greenApiIdInstance', '%env(GREEN_API_ID_INSTANCE)%')
-        ->bind('$greenApiTokenInstance', '%env(GREEN_API_API_TOKEN_INSTANCE)%');
+        ->bind('$greenApiTokenInstance', '%env(GREEN_API_API_TOKEN_INSTANCE)%')
+        ->bind('$greenApiIdInstanceMax', '%env(GREEN_API_ID_INSTANCE_MAX)%')
+        ->bind('$greenApiTokenInstanceMax', '%env(GREEN_API_API_TOKEN_INSTANCE_MAX)%');
 
     $services->load('App\\', __DIR__ . '/../src/')
         ->exclude([

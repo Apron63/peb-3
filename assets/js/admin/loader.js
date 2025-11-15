@@ -31,7 +31,7 @@ $('.loader-checkbox').on('change', function(e) {
 })
 
 $('#set-msg-whatsup').on('click', function(e) {
-    setMessenger('whatsup')
+    setMessenger('whatsApp')
 })
 
 $('#set-mag-max').on('click', function(e) {

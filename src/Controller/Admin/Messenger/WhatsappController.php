@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Controller\Admin;
+namespace App\Controller\Admin\Messenger;
 
 use App\Decorator\MobileController;
 use App\Entity\User;
@@ -25,7 +25,7 @@ class WhatsappController extends MobileController
         } elseif (!$user->isWhatsappConfirmed()) {
             $this->addFlash('error', 'Не задано согласие на рассылку');
         } else {
-            $result = $this->userSenderService->resendToUser($user);
+            $result = $this->userSenderService->resendToWhatsApp($user);
 
             $this->addFlash($result['status'] ? 'success' : 'error', $result['message']);
         }

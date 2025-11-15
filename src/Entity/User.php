@@ -99,6 +99,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column]
     private bool $maxConfirmed = true;
 
+    #[ORM\Column(length: 25, nullable: true)]
+    private ?string $maxChatId = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -398,6 +401,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setMaxConfirmed(bool $maxConfirmed): self
     {
         $this->maxConfirmed = $maxConfirmed;
+
+        return $this;
+    }
+
+    public function getMaxChatId(): ?string
+    {
+        return $this->maxChatId;
+    }
+
+    public function setMaxChatId(?string $maxChatId): self
+    {
+        $this->maxChatId = $maxChatId;
 
         return $this;
     }

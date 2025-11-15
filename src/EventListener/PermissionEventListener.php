@@ -11,6 +11,7 @@ use App\Repository\LoggerRepository;
 use App\Repository\PermissionHistoryRepository;
 use App\Repository\PreparationHistoryRepository;
 use App\Service\MailingService;
+use App\Service\Whatsapp\MaxService;
 use App\Service\Whatsapp\WhatsappService;
 use Doctrine\Persistence\Event\LifecycleEventArgs;
 use Symfony\Bundle\SecurityBundle\Security;
@@ -23,6 +24,7 @@ class PermissionEventListener
         private readonly WhatsappService $whatsappService,
         private readonly PermissionHistoryRepository $permissionHistoryRepository,
         private readonly PreparationHistoryRepository $preparationHistoryRepository,
+        private readonly MaxService $maxService,
         private Security $security,
     ) {}
 
@@ -49,6 +51,8 @@ class PermissionEventListener
         $this->mailingService->addNewPermissionToMailQueue($entity);
 
         $this->whatsappService->addNewPermissionToWhatsappQueue($entity);
+
+        $this->maxService->addNewPermissionToWhatsappQueue($entity);
     }
 
     public function postPersist($args): void

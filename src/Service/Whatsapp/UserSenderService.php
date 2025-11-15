@@ -12,9 +12,10 @@ readonly class UserSenderService
     public function __construct(
         private readonly PermissionRepository $permissionRepository,
         private readonly WhatsappService $whatsappService,
+        private readonly MaxService $maxService,
     ) {}
 
-    public function resendToUser(User $user): array
+    public function resendToWhatsApp(User $user): array
     {
         $result = [
             'status' => false,
@@ -25,6 +26,29 @@ readonly class UserSenderService
 
             foreach ($activePermissions as $permission) {
                 $result = $this->whatsappService->addNewPermissionToWhatsappQueue($permission);
+
+                if (!$result['status']) {
+                    break;
+                }
+            }
+
+            $result['status'] = true;
+            $result['message'] = 'Рассылка выполнена';
+
+        return $result;
+    }
+
+    public function resendToMax(User $user): array
+    {
+        $result = [
+            'status' => false,
+            'message' => 'Нет действующих доступов',
+        ];
+
+        $activePermissions = $this->permissionRepository->getPermissionLeftMenu($user);
+
+            foreach ($activePermissions as $permission) {
+                $result = $this->maxService->addNewPermissionToWhatsappQueue($permission);
 
                 if (!$result['status']) {
                     break;

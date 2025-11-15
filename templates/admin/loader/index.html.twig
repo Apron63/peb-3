@@ -31,10 +31,10 @@
                 Информирование
             </button>
             <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton2">
-                <li><a class="dropdown-item color-item" href="javascript:void(0)" id="set-msg-whatsup">Whatsapp</a></li>
+                <li><a class="dropdown-item color-item" href="javascript:void(0)" id="set-msg-whatsup">WhatsApp</a></li>
                 <li><a class="dropdown-item color-item" href="javascript:void(0)" id="set-mag-max">Max</a></li>
-                {# <li><a class="dropdown-item color-item" href="javascript:void(0)" id="set-mag-both">Whatsapp + Max</a></li>
-                <li><a class="dropdown-item color-item" href="javascript:void(0)" id="set-mag-none">Ни одного</a></li> #}
+                <li><a class="dropdown-item color-item" href="javascript:void(0)" id="set-mag-both">WhatsApp + Max</a></li>
+                <li><a class="dropdown-item color-item" href="javascript:void(0)" id="set-mag-none">Ни одного</a></li>
             </ul>
         </div>
         <div class="dropdown">
@@ -53,6 +53,10 @@
                 <li><a class="dropdown-item color-item" href="{{ path('admin_loader_report_to_txt') }}" id="getContentTXT">TXT</a></li>
                 <li><a class="dropdown-item color-item" href="{{ path('admin_loader_report_to_docx') }}" id="getContentDOCX">DOCX</a></li>
             </ul>
+        </div>
+        <div>
+            <span class="bg-warning">Уже есть</span>
+            <span class="bg-danger">Отключено</span>
         </div>
     </div>
 
@@ -121,11 +125,27 @@
                         {% if item.toEmail %}
                             <div>почта</div>
                         {% endif %}
-                        {% if item.toWhatsUp %}
-                            <div>Whatsapp</div>
+
+                        {% set whatsAppClassBack = '' %}
+                        {% if item.whatsAppExists %}
+                            {% set whatsAppClassBack = 'bg-warning' %}
+                        {% endif %}
+                        {% if item.whatsappDisabled %}
+                            {% set whatsAppClassBack = 'bg-danger' %}
+                        {% endif %}
+                        {% if item.toWhatsApp %}
+                            <div class="{{ whatsAppClassBack }}">Whatsapp</div>
+                        {% endif %}
+
+                        {% set maxClassBack = '' %}
+                        {% if item.whatsAppExists %}
+                            {% set maxAppClassBack = 'bg-warning' %}
+                        {% endif %}
+                        {% if item.whatsappDisabled %}
+                            {% set maxAppClassBack = 'bg-danger' %}
                         {% endif %}
                         {% if item.toMax %}
-                            <div>Max</div>
+                            <div class="{{ maxClassBack }}">Max</div>
                         {% endif %}
                     </td>
                     <td>

@@ -82,7 +82,7 @@ class LoaderService
                 ->setPatronymic($loader->getPatronymic())
                 ->setPosition($loader->getPosition())
                 ->setOrganization($loader->getOrganization())
-                ->setToWhatsup($loader->getToWhatsup())
+                ->setToWhatsup($loader->getToWhatsApp())
                 ->setToMax($loader->getToMax())
                 ->setLoader($loader)
                 ->setResult('new');
@@ -133,7 +133,7 @@ class LoaderService
 
             // Создадим нового если не нашлось.
             if (! $user instanceof User) {
-                $user = (new User())
+                $user = new User()
                     ->setOrganization($queryUser->getOrganization())
                     ->setLastName($queryUser->getLastName())
                     ->setFirstName($queryUser->getFirstName())
@@ -141,7 +141,12 @@ class LoaderService
                     ->setPosition($queryUser->getPosition())
                     ->setPatronymic($queryUser->getPatronymic())
                     ->setCreatedAt($queryUser->getCreatedAt())
-                    ->setCreatedBy($createdBy);
+                    ->setCreatedBy($createdBy)
+                    ->setWhatsappExists(false)
+                    ->setWhatsappConfirmed(false)
+                    ->setMaxExists(false)
+                    ->setMaxConfirmed(false)
+                    ->setMaxChatId(null);
 
                 $user = $this->userService->setNewUser($user);
             }
@@ -152,17 +157,14 @@ class LoaderService
 
             if (
                 null !== $queryUser->getPhone()
-                && $user->getMobilePhone() !== $queryUser->getPhone()
+                || null !== $user->getMobilePhone()
             ) {
-                $user->setMobilePhone($queryUser->getPhone());
-
-                if ($queryUser->getToWhatsup()) {
-                    $user->setWhatsappExists(false)->setWhatsappConfirmed(true);
+                if (null !== $queryUser->getPhone()) {
+                    $user->setMobilePhone($queryUser->getPhone());
                 }
 
-                if ($queryUser->getToMax()) {
-                    $user->setMaxExists(false)->setMaxConfirmed(true);
-                }
+                $user->setWhatsappConfirmed($queryUser->getToWhatsup());
+                $user->setMaxConfirmed($queryUser->getToMax());
             }
 
             $this->userRepository->save($user, true);
@@ -215,7 +217,6 @@ class LoaderService
                 }
 
                 $name .= $courseName;
-
                 $loader->setCourseName($name);
             }
 
@@ -230,6 +231,43 @@ class LoaderService
     public function checkUserQueryIsEmpty(User $user): bool
     {
         return $this->queryUserRepository->checkUserQueryIsEmpty($user);
+    }
+
+    public function setMessenger(User $user, string $action): void
+    {
+        $loaders = $this->loaderRepository->getLoaderforCheckedUser($user);
+
+        foreach ($loaders as $loader) {
+            switch ($action) {
+                case 'whatsapp':
+                    $loader
+                        ->setToWhatsApp(true)
+                        ->setToMax(false)
+                        ->setWhatsAppDisabled(false);
+                    break;
+                case 'max':
+                    $loader
+                        ->setToWhatsApp(false)
+                        ->setToMax(true)
+                        ->setMaxDisabled(false);
+                    break;
+                case 'both':
+                    $loader
+                        ->setToWhatsApp(true)
+                        ->setToMax(true)
+                        ->setWhatsAppDisabled(false)
+                        ->setMaxDisabled(false);
+                    break;
+                case 'none':
+                    $loader
+                        ->setToWhatsApp(false)
+                        ->setToMax(false)
+                        ->setWhatsAppDisabled(true)
+                        ->setMaxDisabled(true);
+            }
+        }
+
+        $this->loaderRepository->setMessenger(...$loaders);
     }
 
     private function getUsersList(UploadedFile $data): array
@@ -297,7 +335,7 @@ class LoaderService
                 }
 
                 $messengersData['whatsappExists'] = $currentUser->isWhatsappExists();
-                $messengersData['whatsappConfirmed'] = $currentUser->isWhatsappExists();
+                $messengersData['whatsappConfirmed'] = $currentUser->isWhatsappConfirmed();
                 $messengersData['maxExists'] = $currentUser->isMaxExists();
                 $messengersData['maxConfirmed'] = $currentUser->isMaxConfirmed();
             }
@@ -338,8 +376,12 @@ class LoaderService
                 ->setPhone($phone)
                 ->setErors($item['errors'])
                 ->setToEmail($emailChecked)
-                ->setToWhatsup($item['whatsappExists'] && $item['whatsappConfirmed'])
-                ->setToMax($item['maxExists'] && $item['maxConfirmed']);
+                ->setToWhatsApp($item['whatsappExists'])
+                ->setWhatsAppExists($item['whatsappExists'])
+                ->setWhatsAppDisabled(! $item['whatsappConfirmed'])
+                ->setToMax($item['maxExists'])
+                ->setMaxExists($item['maxExists'])
+                ->setMaxDisabled(! $item['maxConfirmed']);
 
             $this->loaderRepository->save($loader, true);
         }

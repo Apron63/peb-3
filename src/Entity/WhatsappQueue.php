@@ -16,8 +16,8 @@ class WhatsappQueue
     public const string SUCCESS_TRY_NAME = 'Успешно';
     public const int MAX_TRY_COUNT = 3;
 
-    public const int MESSENGER_TYPE_WHATSUP = 1;
-    public const string MESSENGER_TYPE_WHATSUP_NAME = 'Whatsup';
+    public const int MESSENGER_TYPE_WHATSAPP = 1;
+    public const string MESSENGER_TYPE_WHATSAPP_NAME = 'WhatsApp';
     public const int MESSENGER_TYPE_MAX = 2;
     public const string MESSENGER_TYPE_MAX_NAME = 'MAX';
 

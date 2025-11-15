@@ -112,7 +112,7 @@ class LoaderController extends MobileController
 
         $action = strtolower($request->get('action', 'none'));
 
-        $this->loaderRepository->setMessanger($user, $action);
+        $this->loaderService->setMessenger($user, $action);
 
         return new JsonResponse(['result' => true]);
     }

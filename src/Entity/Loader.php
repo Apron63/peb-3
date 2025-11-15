@@ -65,10 +65,22 @@ class Loader
     private bool $toEmail = false;
 
     #[ORM\Column]
-    private bool $toWhatsup = false;
+    private bool $toWhatsApp = false;
+
+    #[ORM\Column]
+    private bool $whatsAppExists = false;
+
+    #[ORM\Column]
+    private bool $whatsAppDisabled = false;
 
     #[ORM\Column]
     private bool $toMax = false;
+
+    #[ORM\Column]
+    private bool $maxExists = false;
+
+    #[ORM\Column]
+    private bool $maxDisabled = false;
 
     #[ORM\OneToMany(mappedBy: 'loader', targetEntity: Permission::class)]
     private Collection $permissions;
@@ -263,14 +275,38 @@ class Loader
         return $this;
     }
 
-    public function getToWhatsup(): ?bool
+    public function getToWhatsApp(): ?bool
     {
-        return $this->toWhatsup;
+        return $this->toWhatsApp;
     }
 
-    public function setToWhatsup(bool $toWhatsup): self
+    public function setToWhatsApp(bool $toWhatsApp): self
     {
-        $this->toWhatsup = $toWhatsup;
+        $this->toWhatsApp = $toWhatsApp;
+
+        return $this;
+    }
+
+    public function isWhatsAppExists(): ?bool
+    {
+        return $this->whatsAppExists;
+    }
+
+    public function setWhatsAppExists(bool $whatsAppExists): self
+    {
+        $this->whatsAppExists = $whatsAppExists;
+
+        return $this;
+    }
+
+    public function isWhatsAppDisabled(): ?bool
+    {
+        return $this->whatsAppDisabled;
+    }
+
+    public function setWhatsAppDisabled(bool $whatsAppDisabled): self
+    {
+        $this->whatsAppDisabled = $whatsAppDisabled;
 
         return $this;
     }
@@ -283,6 +319,30 @@ class Loader
     public function setToMax(bool $toMax): self
     {
         $this->toMax = $toMax;
+
+        return $this;
+    }
+
+    public function isMaxExists(): ?bool
+    {
+        return $this->maxExists;
+    }
+
+    public function setMaxExists(bool $maxExists): self
+    {
+        $this->maxExists = $maxExists;
+
+        return $this;
+    }
+
+    public function isMaxDisabled(): ?bool
+    {
+        return $this->maxDisabled;
+    }
+
+    public function setMaxDisabled(bool $maxDisabled): self
+    {
+        $this->maxDisabled = $maxDisabled;
 
         return $this;
     }
