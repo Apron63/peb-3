@@ -54,10 +54,6 @@
                 <li><a class="dropdown-item color-item" href="{{ path('admin_loader_report_to_docx') }}" id="getContentDOCX">DOCX</a></li>
             </ul>
         </div>
-        <div>
-            <span class="bg-warning">Уже есть</span>
-            <span class="bg-danger">Отключено</span>
-        </div>
     </div>
 
     {% if hasError %}
@@ -69,15 +65,21 @@
 
     <table class="table">
         <thead>
-        <tr>
-            <th></th>
-            <th>Заказ</th>
-            <th>ФИО</th>
-            <th>Email, телефон</th>
-            <th>Информирование</th>
-            <th>Организация, должность</th>
-            <th>Курс</th>
-        </tr>
+            <tr>
+                <th></th>
+                <th class="align-top">Заказ</th>
+                <th class="align-top">ФИО</th>
+                <th class="align-top">Email, телефон</th>
+                <th class="align-top">
+                    Информирование
+                    <div>
+                        <span class="bg-warning fw-normal">Уже есть</span>
+                        <span class="bg-danger fw-normal">Отключено</span>
+                    </div>
+                </th>
+                <th class="align-top">Организация, должность</th>
+                <th class="align-top">Курс</th>
+            </tr>
         </thead>
 
         <tbody>
