@@ -11,6 +11,7 @@ use App\Entity\Permission;
 use App\Entity\User;
 use App\Repository\MailingQueueRepository;
 use App\Repository\PermissionRepository;
+use App\Service\Whatsapp\MaxService;
 use App\Service\Whatsapp\WhatsappService;
 use DateTime;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -23,6 +24,7 @@ class UserPermissionService
         private readonly CourseService $courseService,
         private readonly MailingQueueRepository $mailingQueueRepository,
         private readonly WhatsappService $whatsappService,
+        private readonly MaxService $maxService,
         private readonly DashboardService $dashboardService,
         private readonly ConfigService $configService,
     ) {}
@@ -80,8 +82,12 @@ class UserPermissionService
                     $this->mailingQueueRepository->save($mailingQueue, true);
                 }
 
-                if (null !== $permission->getUser()->getMobilePhone()) {
+                if (null !== $permission->getUser()->getMobilePhone() && $permission->getUser()->isWhatsappConfirmed()) {
                     $this->whatsappService->userHasActivatedPermission($permission);
+                }
+
+                if (null !== $permission->getUser()->getMobilePhone() && $permission->getUser()->isMaxConfirmed()) {
+                    $this->maxService->userHasActivatedPermission($permission);
                 }
             }
 

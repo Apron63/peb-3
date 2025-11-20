@@ -9,6 +9,7 @@ use App\Service\ConfigService;
 use App\Service\DashboardService;
 use App\Repository\PermissionRepository;
 use App\Repository\MailingQueueRepository;
+use App\Service\Whatsapp\MaxService;
 use App\Service\Whatsapp\WhatsappService;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Attribute\AsCommand;
@@ -22,6 +23,7 @@ class CheckPermissionExpiresCommand extends Command
         private readonly PermissionRepository $permissionRepository,
         private readonly MailingQueueRepository $mailingQueueRepository,
         private readonly WhatsappService $whatsappService,
+        private readonly MaxService $maxService,
         private readonly DashboardService $dashboardService,
         private readonly ConfigService $configService,
     ) {
@@ -74,8 +76,12 @@ class CheckPermissionExpiresCommand extends Command
                 }
             }
 
-            if (null !== $user->getMobilePhone()) {
+            if (null !== $user->getMobilePhone() && $user->isWhatsappConfirmed()) {
                 $this->whatsappService->permissionWillEndSoon($permission);
+            }
+
+            if (null !== $user->getMobilePhone() && $user->isMaxConfirmed()) {
+                $this->maxService->permissionWillEndSoon($permission);
             }
         }
 

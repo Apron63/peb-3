@@ -136,15 +136,15 @@
                             {% set whatsAppClassBack = 'bg-danger' %}
                         {% endif %}
                         {% if item.toWhatsApp %}
-                            <div class="{{ whatsAppClassBack }}">Whatsapp</div>
+                            <div class="{{ whatsAppClassBack }}">WhatsApp</div>
                         {% endif %}
 
                         {% set maxClassBack = '' %}
-                        {% if item.whatsAppExists %}
-                            {% set maxAppClassBack = 'bg-warning' %}
+                        {% if item.maxExists %}
+                            {% set maxClassBack = 'bg-warning' %}
                         {% endif %}
-                        {% if item.whatsappDisabled %}
-                            {% set maxAppClassBack = 'bg-danger' %}
+                        {% if item.maxDisabled %}
+                            {% set maxClassBack = 'bg-danger' %}
                         {% endif %}
                         {% if item.toMax %}
                             <div class="{{ maxClassBack }}">Max</div>

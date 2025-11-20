@@ -23,7 +23,7 @@ readonly class MaxService
     private const string NEW_PRMISSION_ADDED_MESSAGE = 'Вам назначен новый курс ';
     private const string USER_HAS_ACTIVATED_PERMISSION_MESSAGE = 'Активирован учебный курс ';
     private const string PERMISSION_WILL_END_SOON_MESSAGE = 'Доступ скоро истекает ';
-    private const string API_URL = 'https://api.url';
+    private const string API_URL = 'https://3100.api.green-api.com';
 
     public function __construct(
         private readonly HttpClientInterface $httpClient,
@@ -205,7 +205,7 @@ readonly class MaxService
                 'POST',
                 self::API_URL . '/v3/waInstance' . $this->greenApiIdInstanceMax . '/checkAccount/' . $this->greenApiTokenInstanceMax,
                 [
-                    'body' => [
+                    'json' => [
                         'phoneNumber' => $phone,
                     ]
                 ],
@@ -218,7 +218,7 @@ readonly class MaxService
 
             $statusCode = $response->getStatusCode();
             if (self::SENDED_STATUS_OK !== $statusCode) {
-                throw new Exception('Ошибка отправки данных: Ответ сервера' . $statusCode);
+                throw new Exception('Ошибка отправки данных: Ответ сервера: ' . $statusCode);
             }
             $content = $response->toArray();
 
@@ -232,7 +232,7 @@ readonly class MaxService
             }
 
             $chatId = $content['chatId'];
-            $user->setMaxExists(true);
+            $user->setMaxExists(true)->setMaxChatId($chatId);
             $this->userRepository->save($user, true);
         }
 
@@ -240,7 +240,7 @@ readonly class MaxService
             'POST',
             self::API_URL . '/v3/waInstance' . $this->greenApiIdInstanceMax . '/sendMessage/' . $this->greenApiTokenInstanceMax,
             [
-                'body' => [
+                'json' => [
                     'chatId' => $chatId,
                     'message' => $message,
                 ]
@@ -254,7 +254,7 @@ readonly class MaxService
 
         $statusCode = $response->getStatusCode();
         if (self::SENDED_STATUS_OK !== $statusCode) {
-            throw new Exception('Ошибка отправки данных: Ответ сервера' . $statusCode);
+            throw new Exception('Ошибка отправки данных: Ответ сервера: ' . $statusCode);
         }
     }
 }

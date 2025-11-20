@@ -82,8 +82,8 @@ class LoaderService
                 ->setPatronymic($loader->getPatronymic())
                 ->setPosition($loader->getPosition())
                 ->setOrganization($loader->getOrganization())
-                ->setToWhatsup($loader->getToWhatsApp())
-                ->setToMax($loader->getToMax())
+                ->setToWhatsup($loader->getToWhatsApp() && ! $loader->isWhatsAppDisabled())
+                ->setToMax($loader->getToMax() && ! $loader->isMaxDisabled())
                 ->setLoader($loader)
                 ->setResult('new');
 
