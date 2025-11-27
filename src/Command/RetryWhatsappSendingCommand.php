@@ -6,8 +6,7 @@ namespace App\Command;
 
 use App\Entity\WhatsappQueue;
 use App\Repository\WhatsappQueueRepository;
-use App\Service\ConfigService;
-use App\Service\DashboardService;
+use App\Service\Whatsapp\MaxService;
 use App\Service\Whatsapp\WhatsappService;
 use DateTime;
 use Symfony\Component\Console\Attribute\AsCommand;
@@ -22,8 +21,7 @@ class RetryWhatsappSendingCommand extends Command
     public function __construct(
         private readonly WhatsappQueueRepository $whatsappQueueRepository,
         private readonly WhatsappService $whatsappService,
-        private readonly DashboardService $dashboardService,
-        private readonly ConfigService $configService,
+        private readonly MaxService $maxService,
     ) {
         parent::__construct();
     }
@@ -31,8 +29,8 @@ class RetryWhatsappSendingCommand extends Command
     protected function configure(): void
     {
         $this
-            ->setDescription('Повторная рассылка неотправленных сообщений для WhatsApp')
-            ->setHelp('Повторная рассылка неотправленных сообщений для WhatsApp');
+            ->setDescription('Повторная рассылка неотправленных сообщений для WhatsApp / MAX')
+            ->setHelp('Повторная рассылка неотправленных сообщений для WhatsApp / MAX');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
@@ -51,10 +49,17 @@ class RetryWhatsappSendingCommand extends Command
             $message = $whatsappMessage->getContent();
 
             try {
-                $this->whatsappService->send($user, $message);
+                if ($whatsappMessage::MESSENGER_TYPE_MAX === $whatsappMessage->getMessengerType()) {
+                    $this->maxService->send($user, $message);
+                }
+                else {
+                    $this->whatsappService->send($user, $message);
+
+                }
 
                 $whatsappMessage->setStatus('Успешно');
-            } catch (Throwable $e) {
+            }
+            catch (Throwable $e) {
                 $whatsappMessage->setStatus($e->getMessage());
             }
 

@@ -104,7 +104,7 @@ class LoaderController extends MobileController
         return new JsonResponse();
     }
 
-    #[Route('/admin/loader/setMeaaenger/', name: 'admin_loader_set_messenger', condition: 'request.isXmlHttpRequest()')]
+    #[Route('/admin/loader/setMessenger/', name: 'admin_loader_set_messenger', condition: 'request.isXmlHttpRequest()')]
     public function setMessanger(Request $request): JsonResponse
     {
         /** @var User $user */
