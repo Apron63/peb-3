@@ -218,7 +218,7 @@ readonly class MaxService
 
             $statusCode = $response->getStatusCode();
             if (self::SENDED_STATUS_OK !== $statusCode) {
-                throw new Exception('Ошибка отправки данных: Ответ сервера: ' . $statusCode);
+                throw new Exception('Ошибка отправки запроса chatId: Ответ сервера: ' . $statusCode);
             }
             $content = $response->toArray();
 
