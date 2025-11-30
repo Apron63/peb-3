@@ -30,9 +30,7 @@ class UserChangePasswordEventListener
         if ($args->hasChangedField('mobilePhone') && ! empty($entity->getMobilePhone())) {
             $entity
                 ->setWhatsappExists(false)
-                ->setWhatsappConfirmed(true)
                 ->setMaxExists(false)
-                ->setMaxConfirmed(true)
                 ->setMaxChatId(null);
         }
 
