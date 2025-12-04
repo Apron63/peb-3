@@ -14,7 +14,7 @@
 
 {% block content %}
 
-    <h3>Рассылки WhatsApp</h3>
+    <h3>Рассылки WhatsApp, MAX</h3>
 
     {{ form_start(form, {'attr':{'class': 'form-contact contact_form'}}) }}
         <div class ="row">
@@ -70,7 +70,7 @@
                         </td>
                         <td>
                             {% if page.user is not empty %}
-                                {{ page.user.fullName }}
+                                <a href="{{ path('admin_user_edit', {id: page.user.id}) }}">{{ page.user.fullName }}</a>
                             {% endif %}
                         </td>
                         <td>
