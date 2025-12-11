@@ -14,7 +14,7 @@ return static function (ContainerConfigurator $containerConfigurator): void {
             'url' => '%env(resolve:DATABASE_URL)%',
         ],
         'orm' => [
-            // 'auto_generate_proxy_classes' => true,
+            'auto_generate_proxy_classes' => true,
             'naming_strategy' => 'doctrine.orm.naming_strategy.underscore_number_aware',
             'auto_mapping' => true,
             'mappings' => [
@@ -35,7 +35,7 @@ return static function (ContainerConfigurator $containerConfigurator): void {
                     'JSON_CONTAINS' => JsonContains::class,
                 ],
             ],
-            // 'report_fields_where_declared' => true,
+            'report_fields_where_declared' => true,
         ],
     ]);
     if ($containerConfigurator->env() === 'test') {
@@ -48,8 +48,8 @@ return static function (ContainerConfigurator $containerConfigurator): void {
     if ($containerConfigurator->env() === 'prod') {
         $containerConfigurator->extension('doctrine', [
             'orm' => [
-                // 'auto_generate_proxy_classes' => false,
-                // 'proxy_dir' => '%kernel.build_dir%/doctrine/orm/Proxies',
+                'auto_generate_proxy_classes' => false,
+                'proxy_dir' => '%kernel.build_dir%/doctrine/orm/Proxies',
                 'query_cache_driver' => [
                     'type' => 'pool',
                     'pool' => 'doctrine.system_cache_pool',
