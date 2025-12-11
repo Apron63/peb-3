@@ -103,7 +103,7 @@ class CourseController extends AbstractController
         return $this->render('frontend/course/_storage.html.twig', [
             'permission' => $permission,
             'fileName' => $url,
-            'moduleTitle' => $request->get('moduleTitle'),
+            'moduleTitle' => $request->query->get('moduleTitle'),
             'lastAccess' => $permission->getLastAccess()->getTimestamp(),
         ]);
     }

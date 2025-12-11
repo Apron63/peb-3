@@ -28,41 +28,62 @@ class TicketService
 
     public function createTickets(int $courseId, int $ticketsCnt, int $errorsCnt, int $timeLeft, array $themes, User $user): void
     {
-        $themesIds = array_map(
-            static fn ($theme) => $theme['id'],
-            $themes
-        );
-
+        $ticketsTotalCount = 0;
         $course = $this->courseRepository->findOneBy(['id' => $courseId]);
-
         $this->courseRepository->deleteOldTickets($course);
 
-        $questionArray = [];
-        foreach ($themesIds as $themeId) {
-            $questionArray[$themeId] = $this->questionsRepository->getQuestionIds($course, $themeId);
-        }
+        foreach ($themes as $theme) {
+            $questionsInTicket = (int) $theme['inputValue'];
+            $questionsArray = $this->questionsRepository->getQuestionIds($course, (int) $theme['id']);
+            $savedQuestionArray = $questionsArray;
+            $questionsCount = count($questionsArray);
 
-        $arr = [];
-        for ($i = 1; $i <= $ticketsCnt; $i++) {
-            foreach ($themesIds as $themeId) {
-                $tmp = $questionArray[$themeId];
+            if (0 === $ticketsTotalCount) {
+                $ticketsTotalCount = intdiv($questionsCount, $questionsInTicket);
 
-                shuffle($tmp);
-                $index = array_search($themeId, array_column($themes, 'id'));
-                $arr[$themeId] = array_slice($tmp, 0, $themes[$index]['inputValue']);
+                if ($questionsCount % $questionsInTicket > 0) {
+                    $ticketsTotalCount++;
+                }
             }
 
-            $ticket = new Ticket();
-            $ticket->setNom($i)
-                ->setCourse($course)
-                ->setText((array)json_encode($arr, JSON_NUMERIC_CHECK))
-                ->setErrCnt($errorsCnt);
+            shuffle($questionsArray);
 
-            if (0 !== $timeLeft) {
-                $ticket->setTimeLeft($timeLeft);
+            for ($i = 1; $i <= $ticketsTotalCount; $i++) {
+                $ticketQuestionArray = [];
+
+                if (count($questionsArray) > $questionsInTicket) {
+                    for ($j = 1; $j <= $questionsInTicket; $j++) {
+                        $ticketQuestionArray[] = array_pop($questionsArray);
+                    }
+                }
+                else {
+                    $elementsLeft = $questionsArray;
+                    $elementsCount = count($elementsLeft);
+                    $questionsArray = array_diff($savedQuestionArray, $questionsArray);
+                    shuffle($questionsArray);
+
+                    for ($j = 1; $j <= $elementsCount; $j++) {
+                        $ticketQuestionArray[] = array_pop($elementsLeft);
+                    }
+
+                    for ($j = 1; $j <= $questionsInTicket - $elementsCount; $j++) {
+                        $ticketQuestionArray[] = array_pop($questionsArray);
+                    }
+                }
+
+                $arr[(int) $theme['id']] = $ticketQuestionArray;
+                $ticket = new Ticket()
+                    ->setNom($i)
+                    ->setCourse($course)
+                    ->setText((array) json_encode($arr, JSON_NUMERIC_CHECK))
+                    ->setErrCnt($errorsCnt);
+
+                if (0 !== $timeLeft) {
+                    $ticket->setTimeLeft($timeLeft);
+                }
+
+                $this->ticketRepository->save($ticket, true);
             }
-
-            $this->ticketRepository->save($ticket, true);
         }
 
         $this->eventDispatcher->dispatch(new ActionLogEvent(

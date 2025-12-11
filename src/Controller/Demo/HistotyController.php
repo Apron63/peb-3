@@ -18,8 +18,8 @@ class HistotyController extends AbstractController
     #[Route('/demo/history/', name: 'app_demo_history')]
     public function index(Request $request): Response
     {
-        $page = $request->get('page', 1);
-        $perPage = $request->get('perPage', 20);
+        $page = $request->query->get('page', 1);
+        $perPage = $request->query->get('perPage', 20);
 
         if (! in_array($perPage, [4, 20, 50, 100])) {
             $perPage = 20;

@@ -25,7 +25,7 @@ class EditEmailController extends AbstractController
         private readonly EmailService $emailService,
     ) {}
 
-    #[Route('/admin/email/edit/{mailId}', name: 'admin_email_report_edit')]
+    #[Route('/admin/email/edit/{mailId}/', name: 'admin_email_report_edit')]
     public function index(Request $request, ?int $mailId = null): Response
     {
         /** @var User $user */
@@ -63,8 +63,8 @@ class EditEmailController extends AbstractController
     #[Route('/admin/email/read-file/', name: 'admin_email_read_file')]
     public function readFile(Request $request): Response
     {
-        $filename = $request->get('filename');
-        $emailId = (int) $request->get('emailId');
+        $filename = $request->query->get('filename');
+        $emailId = (int) $request->query->get('emailId');
 
         $outputFileName = $this->emailService->readFile($filename, $emailId);
 
@@ -80,8 +80,8 @@ class EditEmailController extends AbstractController
         /** @var User $user */
         $user = $this->getUser();
 
-        $filename = $request->get('filename');
-        $emailId = (int) $request->get('emailId');
+        $filename = $request->query->get('filename');
+        $emailId = (int) $request->query->get('emailId');
 
         $this->emailService->deleteFile($filename, $user, $emailId);
         $this->addFlash('success', 'Вложение удалено');

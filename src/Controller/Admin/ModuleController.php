@@ -93,10 +93,10 @@ class ModuleController extends MobileController
     {
         $user = $this->getUser();
 
-        $ticketCount = (int)$request->get('ticketCount');
-        $questionCount = (int)$request->get('questionCount');
-        $timeLeft = (int)$request->get('timeLeft');
-        $errorsCount = (int)$request->get('errorsCount');
+        $ticketCount = (int) $request->query->get('ticketCount');
+        $questionCount = (int) $request->query->get('questionCount');
+        $timeLeft = (int )$request->query->get('timeLeft');
+        $errorsCount = (int) $request->query->get('errorsCount');
 
         $this->ticketService->createModuleTickets($course, $ticketCount, $questionCount, $timeLeft, $errorsCount, $user);
 

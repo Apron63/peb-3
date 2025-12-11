@@ -180,8 +180,8 @@ class PermissionController extends MobileController
     #[Route('/admin/permission/add-duration/', name: 'admin_permission_add_duration', condition: 'request.isXmlHttpRequest()'), IsGranted('ROLE_ADMIN')]
     public function addDuration(Request $request): JsonResponse
     {
-        $permissionId = (int) $request->get('permissionId');
-        $duration = $request->get('duration');
+        $permissionId = (int) $request->query->get('permissionId');
+        $duration = $request->query->get('duration');
 
         $permission = $this->permissionRepository->find($permissionId);
         if (! $permission instanceof Permission) {

@@ -27,12 +27,14 @@ class TicketController extends AbstractController
     {
         $user = $this->getUser();
 
+        $query = $request->query->all();
+
         $this->ticketService->createTickets(
-            $request->get('course'),
-            $request->get('ticketCnt', 1),
-            $request->get('errCnt', 1),
-            $request->get('timeLeft', 0),
-            $request->get('themes', []),
+            $query['course'],
+            $query['ticketCnt'] ?? 1,
+            $query['errCnt'] ?? 1,
+            $query['timeLeft'] ?? 0,
+            $query['themes'] ?? [],
             $user,
         );
 

@@ -83,8 +83,8 @@ class LoaderController extends MobileController
     #[Route('/admin/loader/changeCheckBox/', name: 'admin_loader_change_check_box', condition: 'request.isXmlHttpRequest()')]
     public function changeCheckBoxValue(Request $request): JsonResponse
     {
-        $id = (int) $request->get('id');
-        $value = strtolower($request->get('value', 'false'));
+        $id = (int) $request->query->get('id');
+        $value = strtolower($request->query->get('value', 'false'));
 
         $this->loaderService->setCheckBoxChange($id, $value);
 
@@ -97,7 +97,7 @@ class LoaderController extends MobileController
         /** @var User $user */
         $user = $this->getUser();
 
-        $action = strtolower($request->get('action', 'select'));
+        $action = strtolower($request->query->get('action', 'select'));
 
         $this->loaderRepository->setAllCheckBoxValue($user, $action);
 
@@ -110,7 +110,7 @@ class LoaderController extends MobileController
         /** @var User $user */
         $user = $this->getUser();
 
-        $action = strtolower($request->get('action', 'none'));
+        $action = strtolower($request->query->get('action', 'none'));
 
         $this->loaderService->setMessenger($user, $action);
 
@@ -149,8 +149,8 @@ class LoaderController extends MobileController
             throw new AccessDeniedException();
         }
 
-        $courseIds = $request->get('course');
-        $duration = (int) $request->get('duration');
+        $courseIds = $request->query->get('course');
+        $duration = (int) $request->query->get('duration');
 
         if ($duration >= Permission::MAX_DURATION) {
             $result['success'] = false;

@@ -34,7 +34,8 @@ class UserController extends MobileController
     #[Route('/admin/user/', name: 'admin_user_list')]
     public function adminUserList(Request $request): Response
     {
-        $criteria = $request->get('user_search');
+        $query = $request->query->all();
+        $criteria = $query['user_search'] ?? [];
 
         /** @var User $user */
         $user = $this->getUser();

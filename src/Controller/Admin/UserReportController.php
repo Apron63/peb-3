@@ -25,7 +25,8 @@ class UserReportController extends AbstractController
     public function adminUserReportStatisticToPdf(Request $request): Response
     {
         $user = $this->getUser();
-        $criteria = $request->get('criteria');
+        $query = $request->query->all();
+        $criteria = $query['criteria'] ?? [];
 
         try {
             $fileName = $this->statisticGeneratorService->generateDocument($user, 'PDF', $criteria);
@@ -48,7 +49,8 @@ class UserReportController extends AbstractController
     public function adminUserReportStatisticToDocx(Request $request): Response
     {
         $user = $this->getUser();
-        $criteria = $request->get('criteria');
+        $query = $request->query->all();
+        $criteria = $query['criteria'] ?? [];
 
         try {
             $fileName = $this->statisticGeneratorService->generateDocument($user, 'DOCX', $criteria);
@@ -71,7 +73,8 @@ class UserReportController extends AbstractController
     public function adminUserReportStatisticToXlsx(Request $request): Response
     {
         $user = $this->getUser();
-        $criteria = $request->get('criteria');
+        $query = $request->query->all();
+        $criteria = $query['criteria'] ?? [];
 
         try {
             $fileName = $this->statisticGeneratorService->generateDocument($user, 'XLSX', $criteria);
@@ -94,7 +97,8 @@ class UserReportController extends AbstractController
     public function adminUserReportListToCsv(Request $request): BinaryFileResponse
     {
         $user = $this->getUser();
-        $criteria = $request->get('criteria');
+        $query = $request->query->all();
+        $criteria = $query['criteria'] ?? [];
 
         $fileName = $this->reportGeneratorService->generateDocument($user, 'CSV', $criteria);
         $response = new BinaryFileResponse($fileName);
@@ -110,7 +114,8 @@ class UserReportController extends AbstractController
     public function adminUserReportListToXlsx(Request $request): BinaryFileResponse
     {
         $user = $this->getUser();
-        $criteria = $request->get('criteria');
+        $query = $request->query->all();
+        $criteria = $query['criteria'] ?? [];
 
         $fileName = $this->reportGeneratorService->generateDocument($user, 'XLSX', $criteria);
         $response = new BinaryFileResponse($fileName);
@@ -126,7 +131,8 @@ class UserReportController extends AbstractController
     public function adminUserReportListToTxt(Request $request): BinaryFileResponse
     {
         $user = $this->getUser();
-        $criteria = $request->get('criteria');
+        $query = $request->query->all();
+        $criteria = $query['criteria'] ?? [];
 
         $fileName = $this->reportGeneratorService->generateDocument($user, 'TXT', $criteria);
         $response = new BinaryFileResponse($fileName);
@@ -142,7 +148,8 @@ class UserReportController extends AbstractController
     public function adminUserReportListToDocx(Request $request): BinaryFileResponse
     {
         $user = $this->getUser();
-        $criteria = $request->get('criteria');
+        $query = $request->query->all();
+        $criteria = $query['criteria'] ?? [];
 
         $fileName = $this->reportGeneratorService->generateDocument($user, 'DOCX', $criteria);
         $response = new BinaryFileResponse($fileName);

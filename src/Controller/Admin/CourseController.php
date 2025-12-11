@@ -63,9 +63,9 @@ class CourseController extends MobileController
     #[IsGranted('ROLE_SUPER_ADMIN')]
     public function index(Request $request, PaginatorInterface $paginator): Response
     {
-        $type = $request->get('type');
-        $profile = $request->get('profile');
-        $name = $request->get('name');
+        $type = $request->query->get('type');
+        $profile = $request->query->get('profile');
+        $name = $request->query->get('name');
 
         $pagination = $paginator->paginate(
             $this->courseRepository->getAllCoursesQuery($type, $profile, $name),

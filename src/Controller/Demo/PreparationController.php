@@ -40,8 +40,8 @@ class PreparationController extends AbstractController
         $data = $this->demoPreparationService->getQuestionDataForCourse(
             $course,
             $themeId,
-            (int) $request->get('page', 1),
-            (int) $request->get('perPage', 20),
+            (int) $request->query->get('page', 1),
+            (int) $request->query->get('perPage', 20),
         );
 
         return $this->render('frontend/demo/preparation/preparation.html.twig', [
@@ -80,8 +80,8 @@ class PreparationController extends AbstractController
         $data = $this->demoPreparationService->getQuestionDataForCourse(
             $course,
             $themeId,
-            (int) $request->get('page', 1),
-            (int) $request->get('perPage', 20),
+            (int) $request->query->get('page', 1),
+            (int) $request->query->get('perPage', 20),
         );
 
         return $this->render('frontend/demo/preparation/preparation.html.twig', [
@@ -99,8 +99,8 @@ class PreparationController extends AbstractController
         $data = $this->demoPreparationService->getQuestionDataForCourse(
             $course,
             null,
-            (int) $request->get('page', 1),
-            (int) $request->get('perPage', 20),
+            (int) $request->query->get('page', 1),
+            (int) $request->query->get('perPage', 20),
         );
 
         return $this->render('frontend/demo/preparation/preparation.html.twig', [

@@ -24,7 +24,8 @@ class CreateEmailController extends AbstractController
         /** @var User $user */
         $user = $this->getUser();
 
-        $criteria = $request->get('criteria');
+        $query = $request->query->all();
+        $criteria = $query['criteria'] ?? [];
 
         if (empty($user->getEmail())) {
             $this->addFlash('error', 'Не заполнен email у пользователя');
@@ -49,7 +50,8 @@ class CreateEmailController extends AbstractController
         /** @var User $user */
         $user = $this->getUser();
 
-        $criteria = $request->get('criteria');
+        $query = $request->query->all();
+        $criteria = $query['criteria'] ?? [];
 
         if (empty($user->getEmail())) {
             $this->addFlash('error', 'Не заполнен email у пользователя');

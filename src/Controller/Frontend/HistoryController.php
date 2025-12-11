@@ -26,8 +26,8 @@ class HistoryController extends AbstractController
             throw new NotFoundHttpException('User Not Found');
         }
 
-        $page = $request->get('page', 1);
-        $perPage = $request->get('perPage', 20);
+        $page = $request->query->get('page', 1);
+        $perPage = $request->query->get('perPage', 20);
 
         if (! in_array($perPage, [4, 20, 50, 100])) {
             $perPage = 20;

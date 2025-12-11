@@ -41,7 +41,7 @@ class LoginFormAuthenticator extends AbstractLoginFormAuthenticator
 
     public function supports(Request $request): bool
     {
-        return 
+        return
             self::LOGIN_ROUTE === $request->attributes->get('_route')
             && $request->isMethod('POST');
     }
@@ -104,7 +104,7 @@ class LoginFormAuthenticator extends AbstractLoginFormAuthenticator
             new UserBadge($login),
             new PasswordCredentials($request->request->get('password', '')),
             [
-                new CsrfTokenBadge('authenticate', $request->get('_csrf_token')),
+                new CsrfTokenBadge('authenticate', $request->request->get('_csrf_token')),
             ]
         );
     }
@@ -114,7 +114,7 @@ class LoginFormAuthenticator extends AbstractLoginFormAuthenticator
         if ($this->security->isGranted(User::ROLE_ADMIN)) {
             return new RedirectResponse($this->urlGenerator->generate('admin_homepage'));
         }
-        
+
         if ($this->security->isGranted(User::ROLE_STUDENT)) {
             return new RedirectResponse($this->urlGenerator->generate('homepage'));
         }

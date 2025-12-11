@@ -1,5 +1,7 @@
 <?php
 
+declare (strict_types=1);
+
 namespace App\Controller\Frontend;
 
 use App\Entity\Permission;
@@ -27,7 +29,10 @@ class TimeControlController extends AbstractController
     #[Route('/frontend/timing/', name: 'app_frontend_timing', methods: 'POST', condition: 'request.isXmlHttpRequest()')]
     public function index(Request $request): Response
     {
-        $permissionId = $request->get('permissionId');
+        $params = $request->request->all();
+        $permissionId = (int) $params['permissionId'];
+        $startTime = (int) $params['startTime'];
+        $needRestart = $params['logout'] ?? 'false';
 
         $permission = $this->permissionRepository->find($permissionId);
 
@@ -45,10 +50,7 @@ class TimeControlController extends AbstractController
             throw new AccessDeniedException('Permission: ' . $permission->getId() . ' not available for user: ' . $user->getId());
         }
 
-        $startTime = (int) $request->get('startTime');
         $this->permissionService->setTimeSpent($permission, $startTime);
-
-        $needRestart = $request->get('logout', 'false');
 
         if ($needRestart === strtolower('true')) {
             $this->security->logout(false);

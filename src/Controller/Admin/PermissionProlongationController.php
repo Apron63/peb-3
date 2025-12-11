@@ -21,7 +21,7 @@ class PermissionProlongationController extends MobileController
     public function checkPermission(Request $request): JsonResponse
     {
         $user = $this->getUser();
-        $permissionId = (int) $request->get('permissionId');
+        $permissionId = (int) $request->query->get('permissionId');
 
         return new JsonResponse(
             $this->permissionProlongationService->checkPermission($permissionId, $user)
@@ -32,7 +32,8 @@ class PermissionProlongationController extends MobileController
     public function selectPermission(Request $request): RedirectResponse
     {
         $user = $this->getUser();
-        $criteria = $request->get('criteria');
+        $query = $request->query->all();
+        $criteria = $query['criteria'] ?? [];
 
         $result = $this->permissionProlongationService->selectAll($criteria, $user);
 
@@ -49,7 +50,8 @@ class PermissionProlongationController extends MobileController
     public function cancelSelectPermission(Request $request): RedirectResponse
     {
         $user = $this->getUser();
-        $criteria = $request->get('criteria');
+        $query = $request->query->all();
+        $criteria = $query['criteria'] ?? [];
 
         $result = $this->permissionProlongationService->cancelSelectAll($criteria, $user);
 
@@ -74,7 +76,7 @@ class PermissionProlongationController extends MobileController
     public function permissionProlongateAction(Request $request): JsonResponse
     {
         $user = $this->getUser();
-        $duration = (int) $request->get('duration');
+        $duration = (int) $request->query->get('duration');
 
         $permissionsCount = $this->permissionProlongationService->permissionProlongate($duration, $user);
 

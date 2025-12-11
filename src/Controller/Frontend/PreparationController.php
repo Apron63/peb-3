@@ -53,8 +53,8 @@ class PreparationController extends AbstractController
         $data = $this->preparationService->getQuestionData(
             $permission,
             $themeId,
-            (int) $request->get('page', 1),
-            (int) $request->get('perPage', 20),
+            (int) $request->query->get('page', 1),
+            (int) $request->query->get('perPage', 20),
         );
 
         if (empty($permission->getHistory())) {
@@ -108,8 +108,8 @@ class PreparationController extends AbstractController
         $data = $this->preparationService->getQuestionData(
             $permission,
             null,
-            (int) $request->get('page', 1),
-            (int) $request->get('perPage', 20),
+            (int) $request->query->get('page', 1),
+            (int) $request->query->get('perPage', 20),
         );
 
         return $this->render('frontend/preparation/index.html.twig', [

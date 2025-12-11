@@ -13,21 +13,6 @@ $('#build-tickets').on('click', function (e) {
         popoverIsActive = false
     }
 
-    if ($('#ticket-cnt').val() <= 0) {
-        popoverIsActive = true
-        elementWithPopover = $('#ticket-cnt')
-
-        popover = new bootstrap.Popover(document.querySelector('#ticket-cnt'), {
-            title: 'Неправильное количество',
-            content: 'Количество билетов должно быть больше 0',
-            container: 'body',
-            trigger: 'manual'
-        })
-
-        popover.show()
-        return false
-    }
-
     let theme = []
     let questionCompleted = true
     let popoverIsActive = false
@@ -64,7 +49,6 @@ $('#build-tickets').on('click', function (e) {
 
     let data = {
         course: Number($('#course-id').val()),
-        ticketCnt: Number($('#ticket-cnt').val()),
         errCnt: Number($('#err-cnt').val()),
         timeLeft: Number($('#time-left').val()),
         themes: theme
@@ -75,6 +59,7 @@ $('#build-tickets').on('click', function (e) {
         data: data
     }).done(function (e) {
         $('#toast-message').html('Билеты успешно созданы!')
+        $('.toast-header').css('background-color', 'green')
         let toast = new bootstrap.Toast(toastLiveExample)
         toast.show()
     }).fail(function (e) {
