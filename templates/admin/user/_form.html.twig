@@ -127,28 +127,26 @@
         </div>
     {% endif %}
 
-    {% if is_granted('ROLE_SUPER_ADMIN') %}
-        <div class="row">
-            <div class="col-sm-2"></div>
-            <div class="col-10">
-                <div class="form-check form-switch">
-                    <span class="text-danger">{{ form_errors(form.whatsappConfirmed) }}</span>
-                    {{ form_label(form.whatsappConfirmed) }}
-                    {{ form_widget(form.whatsappConfirmed) }}
-                </div>
+    <div class="row">
+        <div class="col-sm-2"></div>
+        <div class="col-10">
+            <div class="form-check form-switch">
+                <span class="text-danger">{{ form_errors(form.whatsappConfirmed) }}</span>
+                {{ form_label(form.whatsappConfirmed) }}
+                {{ form_widget(form.whatsappConfirmed) }}
             </div>
         </div>
-        <div class="row">
-            <div class="col-sm-2"></div>
-            <div class="col-10">
-                <div class="form-check form-switch">
-                    <span class="text-danger">{{ form_errors(form.maxConfirmed) }}</span>
-                    {{ form_label(form.maxConfirmed) }}
-                    {{ form_widget(form.maxConfirmed) }}
-                </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-2"></div>
+        <div class="col-10">
+            <div class="form-check form-switch">
+                <span class="text-danger">{{ form_errors(form.maxConfirmed) }}</span>
+                {{ form_label(form.maxConfirmed) }}
+                {{ form_widget(form.maxConfirmed) }}
             </div>
         </div>
-    {% endif %}
+    </div>
 
     <p></p>
 

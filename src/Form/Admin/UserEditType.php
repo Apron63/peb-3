@@ -164,6 +164,32 @@ class UserEditType extends AbstractType
                     'class' => 'col-sm-2 col-form-label'
                 ],
             ])
+            ->add('whatsappConfirmed', CheckboxType::class, [
+                'label' => 'Разрешение на рассылку WhatsApp',
+                'required' => false,
+                'attr' => [
+                    'class' => 'form-check-input',
+                    'placeholder' => 'Разрешение на рассылку WhatsApp',
+                    'onfocus' => 'this.placeholder = ""',
+                    'onblur' => 'this.placeholder = "Разрешение на рассылку WhatsApp"',
+                ],
+                'label_attr' => [
+                    'class' => 'form-check-label'
+                ],
+            ])
+            ->add('maxConfirmed', CheckboxType::class, [
+                'label' => 'Разрешение на рассылку Max',
+                'required' => false,
+                'attr' => [
+                    'class' => 'form-check-input',
+                    'placeholder' => 'Разрешение на рассылку Max',
+                    'onfocus' => 'this.placeholder = ""',
+                    'onblur' => 'this.placeholder = "Разрешение на рассылку Max"',
+                ],
+                'label_attr' => [
+                    'class' => 'form-check-label'
+                ],
+            ])
             ->add('submit', SubmitType::class, [
                 'label' => 'Сохранить',
                 'attr' => [
@@ -240,33 +266,8 @@ class UserEditType extends AbstractType
                     'label_attr' => [
                         'class' => 'form-check-label'
                     ],
-                ])
-                ->add('whatsappConfirmed', CheckboxType::class, [
-                    'label' => 'Разрешение на рассылку WhatsApp',
-                    'required' => false,
-                    'attr' => [
-                        'class' => 'form-check-input',
-                        'placeholder' => 'Разрешение на рассылку WhatsApp',
-                        'onfocus' => 'this.placeholder = ""',
-                        'onblur' => 'this.placeholder = "Разрешение на рассылку WhatsApp"',
-                    ],
-                    'label_attr' => [
-                        'class' => 'form-check-label'
-                    ],
-                ])
-                ->add('maxConfirmed', CheckboxType::class, [
-                    'label' => 'Разрешение на рассылку Max',
-                    'required' => false,
-                    'attr' => [
-                        'class' => 'form-check-input',
-                        'placeholder' => 'Разрешение на рассылку Max',
-                        'onfocus' => 'this.placeholder = ""',
-                        'onblur' => 'this.placeholder = "Разрешение на рассылку Max"',
-                    ],
-                    'label_attr' => [
-                        'class' => 'form-check-label'
-                    ],
                 ]);
+
 
             $builder->get('roles')
                 ->addModelTransformer(new CallbackTransformer(
