@@ -149,8 +149,9 @@ class LoaderController extends MobileController
             throw new AccessDeniedException();
         }
 
-        $courseIds = $request->query->get('course');
-        $duration = (int) $request->query->get('duration');
+        $query = $request->request->all();
+        $courseIds = $query['course'];
+        $duration = (int) $query['duration'];
 
         if ($duration >= Permission::MAX_DURATION) {
             $result['success'] = false;

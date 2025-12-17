@@ -181,7 +181,7 @@ class PermissionController extends MobileController
     public function addDuration(Request $request): JsonResponse
     {
         $permissionId = (int) $request->query->get('permissionId');
-        $duration = $request->query->get('duration');
+        $duration = (int) $request->query->get('duration');
 
         $permission = $this->permissionRepository->find($permissionId);
         if (! $permission instanceof Permission) {
