@@ -143,9 +143,9 @@ class LoaderService
                     ->setCreatedAt($queryUser->getCreatedAt())
                     ->setCreatedBy($createdBy)
                     ->setWhatsappExists(false)
-                    ->setWhatsappConfirmed(true)
+                    ->setWhatsappConfirmed($queryUser->getToWhatsup())
                     ->setMaxExists(false)
-                    ->setMaxConfirmed(true)
+                    ->setMaxConfirmed($queryUser->getToMax())
                     ->setMaxChatId(null);
 
                 $user = $this->userService->setNewUser($user);
