@@ -152,6 +152,11 @@
 
     <div class="form-group mb-3 offset-2">
         {{ form_widget(form.submit) }}
+
+        <a href="{{ path('admin_user_list') }}" class="btn btn-outline-dark">
+            Назад
+        </a>
+        
         {% if user.id is not null %}
             <a href="{{ path('admin_user_info', {id: user.id}) }}" target="_blank" class="btn btn-outline-primary">Сведения</a>
             <a href="{{ path('admin_user_whatsapp_resend', {id: user.id}) }}" class="btn btn-outline-secondary">

@@ -111,7 +111,7 @@ class UserController extends MobileController
         if ($form->isSubmitted() && $form->isValid()) {
             $this->userRepository->save($user, true);
 
-            return $this->redirectToRoute('admin_user_list');
+            return $this->redirectToRoute('admin_user_edit', ['id' => $user->getId()]);
         }
 
         $query = $this->permissionRepository->getPermissionQuery($user);
