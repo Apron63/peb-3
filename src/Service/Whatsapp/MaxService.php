@@ -100,6 +100,8 @@ readonly class MaxService
 
     public function userHasActivatedPermission(Permission $permission): void
     {
+        // TODO рассылка отключена
+        return;
         $user = $permission->getUser();
 
         if (null !== $user->getMobilePhone() && $user->isMaxConfirmed()) {
@@ -142,6 +144,8 @@ readonly class MaxService
 
     public function permissionWillEndSoon(Permission $permission): void
     {
+        // TODO Временно отключено
+        return;
         $user = $permission->getUser();
 
         if (null !== $user->getMobilePhone() && $user->isMaxConfirmed()) {
