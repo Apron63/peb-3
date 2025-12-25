@@ -198,6 +198,18 @@
                 <div class="content">
                     <div class="control-questions" control-questions-elem="wrapper">
                         <h1>Подготовка к аттестации</h1>
+                        <div class="control-questions_history_buttons_wrapper">
+                                <button type="button"
+                                        class="control-questions_history_button"
+                                        element-action="open-popup-save-history">
+                                    Хранить историю
+                                </button>
+                                <button type="button"
+                                        class="control-questions_history_button"
+                                        element-action="open-popup-clear-history">
+                                    Очистить историю
+                                </button>
+                            </div>
                         <div class="control-questions_display">
                             <div class="control-questions_display_count_wrapper">
                                 <div class="control-questions_display_count_header">отображать по: </div>
@@ -256,10 +268,18 @@
                                         Подсказка на вопрос
                                     </div>
                                 </div>
+                                <!--Обратить внимание: вёрстка немного изменена при добавлении пункта "добавить в избранное"-->
                                 <div class="control-questions_item_buttons_wrapper">
-                                    <button type="button" class="white-blue_button control-questions_item_button">Ответить</button>
-                                    <!--Результат ответа-->
-                                    <div class="control-questions_item_result right">Правильно</div>
+                                    <div class="control-questions_item_buttons_answer_wrapper">
+                                        <button type="button" class="white-blue_button control-questions_item_button">Ответить</button>
+                                        <!--Результат ответа-->
+                                        <div class="control-questions_item_result right">Правильно</div>
+                                    </div>
+                                    <!--Пункт "добавить в избранное"-->
+                                    <a class="control-questions_item_add-favorites">
+                                        <img src="images/add-favorites.svg" alt="">
+                                        <div>Добавить в избранное</div>
+                                    </a>
                                 </div>
                             </form>
                             <form class="control-questions_item" test-form-elem="form">
@@ -299,9 +319,16 @@
                                     </div>
                                 </div>
                                 <div class="control-questions_item_buttons_wrapper">
-                                    <button type="button" class="white-blue_button control-questions_item_button">Ответить</button>
-                                    <!--Результат ответа-->
-                                    <div class="control-questions_item_result wrong">Не правильно</div>
+                                    <div class="control-questions_item_buttons_answer_wrapper">
+                                        <button type="button" class="white-blue_button control-questions_item_button">Ответить</button>
+                                        <!--Результат ответа-->
+                                        <div class="control-questions_item_result wrong">Не правильно</div>
+                                    </div>
+                                    <!--Пункт "удалить из избранного"-->
+                                    <a class="control-questions_item_add-favorites">
+                                        <img src="images/added-favorites.svg" alt="">
+                                        <div>Удалить из избранного</div>
+                                    </a>
                                 </div>
                             </form>
                             <form class="control-questions_item" test-form-elem="form">
@@ -336,9 +363,16 @@
                                     </div>
                                 </div>
                                 <div class="control-questions_item_buttons_wrapper">
-                                    <button type="button" class="white-blue_button control-questions_item_button">Ответить</button>
-                                    <!--Результат ответа-->
-                                    <div class="control-questions_item_result"></div>
+                                    <div class="control-questions_item_buttons_answer_wrapper">
+                                        <button type="button" class="white-blue_button control-questions_item_button">Ответить</button>
+                                        <!--Результат ответа-->
+                                        <div class="control-questions_item_result"></div>
+                                    </div>
+                                    <!--Пункт "добавить в избранное"-->
+                                    <a class="control-questions_item_add-favorites">
+                                        <img src="images/add-favorites.svg" alt="">
+                                        <div>Добавить в избранное</div>
+                                    </a>
                                 </div>
                             </form>
                             <!-- Вставка новых вопросов будет здесь -->
@@ -379,7 +413,7 @@
                     </div>
                     <!-- Добавлен блок с ссылки для переключения модулей, вместо "#" нужно указать адрес страницы, на которую ссылается ссылка, если нужна только кнопка "назад", то к блоку c классом "arrow_links", добавить класс "arrow-links-prev", а если нужна только кнопка "далее", то добавить класс "arrow-links-next"  -->
                     <div class="arrow_links ">
-                        <a  href="#">Назад</a> 
+                        <a  href="#">Назад</a>
                         <a  href="#">Далее</a>
                     </div>
                     <!--Конец блока с ссылками-->
@@ -396,6 +430,35 @@
             </div>
         </footer>
         <div class="overlay" popup-element="overlay">
+            <!--Попап с подтверждением хранения истории-->
+            <div class="popup" popup-element="popup" popup-type="save-history">
+                <div class="survey-success_header">Хранение истории ответов</div>
+                <div class="survey-success_description">При нажатии на кнопку вы активируете сохранение истории ваших
+                    ответов. Ваши ответы и результаты будут сохранятся в системе.<br/>
+                    В любой момент вы сможете очистить историю сохраненных ответов.<br/>
+                    Сохранять историю ответов?
+                </div>
+                <div class="popup_options_wrapper">
+                    <!--Здесь необходимо реализовать действия для сохранения истории-->
+                    <a class="popup_close">Сохранять</a>
+                </div>
+                <div class="popup_options_wrapper">
+                    <a class="popup_close" popup-element="popup-close">Не сохранять</a>
+                </div>
+            </div>
+            <!--Попап с подтверждением очистки истории-->
+            <div class="popup" popup-element="popup" popup-type="clear-history">
+                <div class="survey-success_header">Очистка истории ответов</div>
+                <div class="survey-success_description">При нажатии на кнопку ваши ответы и результаты очистятся в
+                    истории. Очистить историю ответов?</div>
+                <div class="popup_options_wrapper">
+                    <!--Здесь необходимо реализовать действия для очистки истории-->
+                    <a class="popup_close">Да, очистить</a>
+                </div>
+                <div class="popup_options_wrapper">
+                    <a class="popup_close" popup-element="popup-close">Нет, оставить</a>
+                </div>
+            </div>
         </div>
     </div>
     <script src="js/scripts.js"></script>

@@ -42,6 +42,7 @@ class TestingReportService
     {
         return $this->twig->render('frontend/testing/report.html.twig', [
             'logger' => $logger,
+            'errorsActually' => $this->testingService->getErrorsQuestion($logger),
             'skipped' => $this->testingService->getSkippedQuestion($logger),
         ]);
     }

@@ -1,6 +1,12 @@
-function openPopup() {
+function openPopup(otherSelector = false) {
   let overlay = document.querySelector('[popup-element="overlay"]');
-  let popup = document.querySelector('[popup-element="popup"]');
+  let popup = ""
+  if(otherSelector){
+    popup = document.querySelector(`[popup-element="popup"]${otherSelector}`)
+  } else {
+    popup = document.querySelector('[popup-element="popup"]');
+  }
+  
   overlay.classList.add("show");
   setTimeout(function () {
     popup.classList.add("show");
@@ -9,21 +15,30 @@ function openPopup() {
 
 function closePopup(event) {
   let overlay = document.querySelector('[popup-element="overlay"]');
-  let popup = document.querySelector('[popup-element="popup"]');
-  let popupCloseButton = document.querySelector(
-    '[popup-element="popup-close"]'
-  );
+  let popups = document.querySelectorAll('[popup-element="popup"]');
 
-  if (
-    event.target.closest('[popup-element="popup"]') != popup ||
-    event.target == popupCloseButton
-  ) {
-    popup.classList.remove("show");
-    setTimeout(function () {
-      overlay.classList.remove("show");
-    }, 300);
-  }
+  popups.forEach(popup => {
+    // Проверяем, находится ли клик вне текущего popup
+    const isClickOutside = !popup.contains(event.target);
+    // Проверяем, является ли элемент, по которому кликнули, кнопкой закрытия
+    const isCloseButton = event.target.hasAttribute('popup-element') && event.target.getAttribute('popup-element') === 'popup-close';
+
+    // Если клик вне popup или по кнопке закрытия — скрываем его
+    if (isClickOutside || isCloseButton) {
+      popup.classList.remove("show");
+      // Если все попапы закрыты, скрываем оверлей
+      setTimeout(() => {
+        const allPopupsClosed = Array.from(popups).every(p => !p.classList.contains('show'));
+        if (allPopupsClosed) {
+          overlay.classList.remove("show");
+        }
+      }, 300);
+    }
+  });
+ 
 }
+
+
 
 // Функция открытия подменю после загрузки страницы
 function openMenuAfterLoad(menu) {
@@ -217,6 +232,22 @@ let openPopupButton = document.querySelector('[element-action="open-popup"]');
 
 if (openPopupButton) {
   openPopupButton.addEventListener("click", openPopup);
+}
+
+let openPopupSaveHistory = document.querySelector('[element-action="open-popup-save-history"]')
+
+if (openPopupSaveHistory){
+  openPopupSaveHistory.addEventListener("click", function(){
+    openPopup('[popup-type="save-history"]')
+  })
+}
+
+let openPopupClearHistory = document.querySelector('[element-action="open-popup-clear-history"]')
+
+if (openPopupClearHistory){
+  openPopupClearHistory.addEventListener("click", function(){
+    openPopup('[popup-type="clear-history"]')
+  })
 }
 
 let overlay = document.querySelector('[popup-element="overlay"]');

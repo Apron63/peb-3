@@ -67,6 +67,9 @@ class Permission
     #[ORM\Column(options: ['default' => true])]
     private bool $greetingEnabled = true;
 
+    #[ORM\Column(options: ['default' => true])]
+    private bool $firstTimeEnabled = true;
+
     #[ORM\ManyToOne]
     #[ORM\JoinColumn(name: 'created_by')]
     private ?User $createdBy = null;
@@ -74,6 +77,9 @@ class Permission
     #[ORM\ManyToOne]
     #[ORM\JoinColumn(name: 'checked_by')]
     private ?User $checkedBy = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?array $favorites = null;
 
     public function getId(): ?int
     {
@@ -260,6 +266,18 @@ class Permission
         return $this;
     }
 
+    public function isFirstTimeEnabled(): bool
+    {
+        return $this->firstTimeEnabled;
+    }
+
+    public function setFirstTimeEnabled(bool $firstTimeEnabled): self
+    {
+        $this->firstTimeEnabled = $firstTimeEnabled;
+
+        return $this;
+    }
+
     public function getEndDate(): DateTimeInterface
     {
         $creationDate = $this->createdAt ?? new DateTime();
@@ -275,6 +293,18 @@ class Permission
     public function setCheckeddBy(?User $checkedBy): self
     {
         $this->checkedBy = $checkedBy;
+
+        return $this;
+    }
+
+    public function getFavorites(): array
+    {
+        return $this->favorites ?? [];
+    }
+
+    public function setFavorites(?array $favorites): static
+    {
+        $this->favorites = $favorites;
 
         return $this;
     }

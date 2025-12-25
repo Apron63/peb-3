@@ -10,6 +10,17 @@
         </div>
     </div>
 
+    {# {% if hasFavorites %}
+        <div class="modules_item">
+            <div class="modules_item_favorites">
+                <img src="{{ asset('img/add-favorites.svg') }}" alt="">
+            </div>
+            <div class="modules_item_composition">
+                <a href="{{ path('app_frontend_favorites_list', {id: permission.id}) }}" class="modules_item_name">Избранное</a>
+            </div>
+        </div>
+    {% endif %} #}
+
     <div class="modules_item">
         <div class="modules_item_check" {% if permission.stage == 3 %}status="passed"{% endif %}></div>
         <div class="modules_item_composition">

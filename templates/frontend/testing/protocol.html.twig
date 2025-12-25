@@ -36,7 +36,7 @@
                         </div>
                         <div class="results_data_row">
                             <div class="results_data_row_name">Допущено ошибок:</div>
-                            <div class="results_data_row_value {% if  logger.errorActually > logger.errorAllowed %} errors{% endif %}">{{ logger.errorActually }}</div>
+                            <div class="results_data_row_value {% if errorsActually > logger.errorAllowed %} errors{% endif %}">{{ errorsActually }}</div>
                         </div>
                         <div class="results_data_row">
                             <div class="results_data_row_name">Пропущено вопросов:</div>

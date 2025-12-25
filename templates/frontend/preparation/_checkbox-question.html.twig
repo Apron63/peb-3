@@ -36,8 +36,22 @@
     {% endif %}
 
     <div class="control-questions_item_buttons_wrapper">
-        <button type="button" class="white-blue_button control-questions_item_button" data-form-id="question-{{ item.id }}" data-answer-type="{{ item.type }}">Ответить</button>
-        <div class="control-questions_item_result {% if item.hasRight %}right{% endif %}">{{ item.result }}</div>
+        <div class="control-questions_item_buttons_answer_wrapper">
+            <button type="button" class="white-blue_button control-questions_item_button" data-form-id="question-{{ item.id }}" data-answer-type="{{ item.type }}">Ответить</button>
+            <div class="control-questions_item_result {% if item.hasRight %}right{% endif %}">{{ item.result }}</div>
+        </div>
+        {# <a
+            class="control-questions_item_add-favorites"
+            data-url="{{ path('app_frontend_favorites_set', {id: data.permissionId, questionId: item.id}) }}"
+        >
+            {% if item.inFavorites %}
+                <img src="{{ asset('img/added-favorites.svg') }}" alt="">
+                <div>Удалить из избранного</div>
+            {% else %}
+                <img src="{{ asset('img/add-favorites.svg') }}" alt="">
+                <div>Добавить в избранное</div>
+            {% endif %}
+        </a> #}
     </div>
 
 </form>

@@ -54,18 +54,41 @@ class TestingController extends AbstractController
         } else {
             return $this->render('frontend/testing/index.html.twig', [
                 'permission' => $permission,
-                'data' =>  $this->testingService->getData($logger, $permission),
+                'data' => $this->testingService->getData($logger, $permission),
             ]);
         }
     }
 
-    #[Route('/frontend/testing-next-step/{id<\d+>}/', name: 'app_frontend_testing_next_step',  condition: 'request.isXmlHttpRequest()')]
+    #[Route('/frontend/testing/set-question/{id<\d+>}/{questionId<\d+>}/', name: 'app_frontend_set_question')]
+    public function setQuestion(Permission $permission, int $questionId): Response
+    {
+        $user = $this->getUser();
+
+        if (! $user instanceof User) {
+            throw new AccessDeniedException('No Auth User');
+        }
+
+        if (! $this->userPermissionService->checkPermissionForUser($permission, $user, true)) {
+            throw new AccessDeniedException('Permission: ' . $permission->getId() . ' not available for user: ' . $user->getId());
+        }
+
+        $logger = $this->testingService->getLogger($permission, $user);
+
+        $permission = $this->testingService->checkPermissionIfFirstTimeTesting($permission);
+
+        return $this->render('frontend/testing/index.html.twig', [
+            'permission' => $permission,
+            'data' => $this->testingService->getData($logger, $permission, $questionId),
+        ]);
+    }
+
+    #[Route('/frontend/testing-next-step/{id<\d+>}/', name: 'app_frontend_testing_next_step', condition: 'request.isXmlHttpRequest()')]
     public function nextStep(Permission $permission, Request $request): JsonResponse
     {
         return new JsonResponse([
             'redirectUrl' => $this->testingService->ticketProcessing(
                 $request->request->all(),
-                $permission->getCourse()->getType()
+                $permission->getCourse()->getType(),
             )
         ]);
     }
@@ -99,6 +122,7 @@ class TestingController extends AbstractController
 
         return $this->render('frontend/testing/protocol.html.twig', [
             'logger' => $logger,
+            'errorsActually' => $this->testingService->getErrorsQuestion($logger),
             'skipped' => $this->testingService->getSkippedQuestion($logger),
             'hasSuccess' => $firstSuccessfullyLogger instanceof Logger,
             'showGreetings' => $showGreeting,
@@ -158,5 +182,22 @@ class TestingController extends AbstractController
             ->deleteFileAfterSend(true);
 
         return $response;
+    }
+
+    #[Route(
+        '/frontend/testing/setFirstTime/{id<\d+>}/',
+        name: 'app_frontend_testing_set_first_time',
+        condition: 'request.isXmlHttpRequest()',
+        methods: 'POST',
+    )]
+    public function setPermissionFirsTime(Permission $permission): JsonResponse
+    {
+        if ($permission instanceof Permission) {
+            $permission->setFirstTimeEnabled(false);
+
+            $this->permissionRepository->save($permission, true);
+        }
+
+        return new JsonResponse([]);
     }
 }

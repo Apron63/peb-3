@@ -422,6 +422,11 @@
         align-items: stretch;
     }
 
+    .control-questions_item_buttons_answer_wrapper {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
     .control-questions_item_button {
         order: 2;
         width: 100%;
@@ -431,7 +436,12 @@
     .control-questions_item_result {
         order: 1;
         text-align: center;
-        margin-bottom: 20px;
+        margin-bottom: 15px;
+    }
+
+    .control-questions_item_add-favorites {
+        margin-top: 15px;
+        justify-content: center;
     }
 
     .support_description {

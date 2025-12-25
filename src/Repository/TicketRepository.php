@@ -1,5 +1,7 @@
 <?php
 
+declare (strict_types=1);
+
 namespace App\Repository;
 
 use App\Entity\Course;
@@ -47,7 +49,7 @@ class TicketRepository extends ServiceEntityRepository
         foreach ($courseThemes as $theme) {
             $query = $this->getEntityManager()
                 ->createQuery(
-                    "SELECT count(q.id) 
+                    "SELECT count(q.id)
                     FROM App\Entity\Questions q
                     WHERE q.course = :course
                     AND q.parentId = :parentId
@@ -58,6 +60,7 @@ class TicketRepository extends ServiceEntityRepository
             $result = $query->execute(null, AbstractQuery::HYDRATE_SINGLE_SCALAR);
             $array[$theme->getId()] = $result;
         }
+
         return $array;
     }
 
@@ -84,7 +87,7 @@ class TicketRepository extends ServiceEntityRepository
             $sql = "DELETE from logger WHERE ticket_id IN ({$ticketIdsArray}) AND end_at IS NULL";
             $this->getEntityManager()->getConnection()->executeQuery($sql);
         }
-        
+
         // Удаляем старые билеты.
         $sql = "DELETE from ticket WHERE course_id = {$course->getId()}";
         $this->getEntityManager()->getConnection()->executeQuery($sql);

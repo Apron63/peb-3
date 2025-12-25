@@ -208,6 +208,37 @@
                         <div class="express-test_description">
                             <strong>Тема:</strong> Эксплуатация опасных производственных объектов, на которых используются трубопроводы пара и горячей воды.
                         </div>
+                        <!--Вставка элемента с пагинацией-->
+                        <div class="express-test_pagination_wrapper">
+                            <!--К элементам с вопросами на который дан ответ необходимо добавлять класс "answered"-->
+                            <a href="" class="express-test_pagination_item answered">1</a>
+                            <a href="" class="express-test_pagination_item answered">2</a>
+                            <a href="" class="express-test_pagination_item answered">3</a>
+                            <!--К элементам с вопросами на который дан ответ необходимо добавлять класс "current"-->
+                            <a href="" class="express-test_pagination_item current">4</a>
+                            <a href="" class="express-test_pagination_item">5</a>
+                            <a href="" class="express-test_pagination_item">6</a>
+                            <a href="" class="express-test_pagination_item">7</a>
+                            <a href="" class="express-test_pagination_item">8</a>
+                            <a href="" class="express-test_pagination_item">9</a>
+                            <a href="" class="express-test_pagination_item">10</a>
+                            <a href="" class="express-test_pagination_item">11</a>
+                            <a href="" class="express-test_pagination_item">12</a>
+                            <a href="" class="express-test_pagination_item">13</a>
+                            <a href="" class="express-test_pagination_item">14</a>
+                            <a href="" class="express-test_pagination_item">15</a>
+                            <a href="" class="express-test_pagination_item">16</a>
+                            <a href="" class="express-test_pagination_item">17</a>
+                            <a href="" class="express-test_pagination_item">18</a>
+                            <a href="" class="express-test_pagination_item">19</a>
+                            <a href="" class="express-test_pagination_item">20</a>
+                            <a href="" class="express-test_pagination_item">21</a>
+                            <a href="" class="express-test_pagination_item">22</a>
+                            <a href="" class="express-test_pagination_item">23</a>
+                            <a href="" class="express-test_pagination_item">24</a>
+                            <a href="" class="express-test_pagination_item">25</a>
+                        </div>
+
                         <form class="test_form express-test_form" test-form-elem="form">
                             <div class="test_form_question_wrapper">
                                 <div class="test_form_question_number">
@@ -269,8 +300,26 @@
                 <div class="support">Служба поддержки: <a href="tel:+78462691526">+7 (846) 26-915-26 доб. 1103</a></div>
             </div>
         </footer>
+        <!--Что бы popup отобразился, необходимо добавить в элемент с классом "overlay" класс "show"-->
         <div class="overlay" popup-element="overlay">
+            <!--Что бы popup отобразился, необходимо добавить в элемент с классом "popup" класс "show"-->
+            <div class="popup" popup-element="popup">
+                <div class="express-test_popup_header">Переход к итоговому тестированию</div>
+                <div class="express-test_popup_description">
+                    1. Проходить итоговый тест можно неограниченное количество раз в течение срока действия курса<br/>
+                    2. Протоколы итогового тестирования будут хранится в разделе «История обучения»<br/>
+                    3. Можно свободно перемещаться по вопросам с помощью панели навигации:<br/>
+                    Оранжевый цвет – текущий вопрос<br/>
+                    Синий цвет – отвеченный вопрос<br/>
+                    Белый цвет – не отвеченный вопрос<br/><br/>
 
+                    Время на тестирование: … минут<br/>
+                    Допустимое количество ошибок для положительной сдачи: … 
+                </div>
+                <div class="popup_close_wrapper">
+                    <a class="popup_close" popup-element="popup-close">Начать тестирование</a>
+                </div>
+            </div>
         </div>
     </div>
     <script src="js/scripts.js"></script>

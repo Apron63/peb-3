@@ -103,3 +103,17 @@ function savePreparationData(data)
         console.log(data)
     })
 }
+
+$('.control-questions_item_add-favorites').on('click', function(e) {
+    let nearestAncestor = $(e.target).closest('.control-questions_item_add-favorites');
+    let permissionUrl = nearestAncestor.data('url')
+
+    $.ajax({
+        url: permissionUrl,
+        method: 'POST'
+    }).done(function(data) {
+        $(nearestAncestor).html(data.html)
+    }).fail(function(data) {
+        console.log(data)
+    })
+})

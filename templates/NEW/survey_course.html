@@ -225,7 +225,8 @@
                                 <div class="test_form_answer">Нет</div>
                             </label>
                             <label class="test_form_label test_form_radio_wrapper">
-                                <input class="test_form_radio" type="radio" name="question1" value="Затрудняюсь ответить">
+                                <!--Если выводить уже выбранный вариант ответа, то необходимо проставит аттрибут checked-->
+                                <input class="test_form_radio" type="radio" name="question1" value="Затрудняюсь ответить" checked>
                                 <div class="test_form_custom_radio"></div>
                                 <div class="test_form_answer">Затрудняюсь ответить</div>
                             </label>
@@ -240,10 +241,11 @@
                                     изменить/улучшить?
                                 </div>
                             </div>
+                            <!--Если необходимо вывести текст ответа в textarea, его следует выводить внутри тэга-->
                             <textarea id="usability"
                                       class="test_form_textarea"
                                       name="question2"
-                                      rows="5"></textarea>
+                                      rows="5">Тестовый ответ</textarea>
 
                             <!--3 вопрос-->
                             <div class="test_form_question_wrapper">
@@ -309,7 +311,7 @@
                                       rows="5"></textarea>
                             <button type="button" class="white-blue_button survey-test_button" survey-form-elem="submit">Отправить</button>
                             <div class="survey-test_form_error" survey-form-elem="error">
-                                <!--тут выводим ошибки-->
+                                <!--тут выводим ошибки, в том числе ошибку что форма уже была отправлена-->
                             </div>
                         </form>
                     </div>
@@ -330,9 +332,8 @@
                 <div class="survey-success_header">Ваш ответ получен. Спасибо ❤</div>
                 <div class="survey-success_description">Обучаться по курсу, проходить все задания и тесты повторно можно
                     неограниченное количество раз, пока не закончится срок действия курса. </div>
-                <div class="survey-success_change">Вы можете <a href="survey_course.html">изменить</a> свои ответы</div>
                 <div class="popup_close_wrapper">
-                    <a class="popup_close" popup-element="popup-close">закрыть</a>
+                    <a href="my_programs.html" class="popup_close">закрыть</a>
                 </div>
             </div>
         </div>

@@ -1,12 +1,15 @@
 <?php
 
+declare (strict_types=1);
+
 namespace App\Repository;
 
 use App\Entity\Course;
-use Doctrine\ORM\Query;
+use App\Entity\Permission;
 use App\Entity\Questions;
-use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\Query;
+use Doctrine\Persistence\ManagerRegistry;
 
 /**
  * @extends ServiceEntityRepository<Questions>
@@ -70,11 +73,24 @@ class QuestionsRepository extends ServiceEntityRepository
         $queryBuilder = $this->createQueryBuilder('q')
             ->where('q.course = :course')
             ->setParameter('course', $course);
-        
+
         if (null !== $parentId) {
             $queryBuilder->andWhere('q.parentId = :parentId')
                 ->setParameter('parentId', $parentId);
         }
+
+        return $queryBuilder
+            ->orderBy('q.nom')
+            ->getQuery();
+    }
+
+    public function getFavoritesQuestionQuery(Permission $permission): Query
+    {
+        $queryBuilder = $this->createQueryBuilder('q')
+            ->where('q.course = :course')
+            ->andWhere('q.id IN(:favoritesIds)')
+            ->setParameter('course', $permission->getCourse())
+            ->setParameter('favoritesIds', $permission->getFavorites());
 
         return $queryBuilder
             ->orderBy('q.nom')
@@ -102,13 +118,13 @@ class QuestionsRepository extends ServiceEntityRepository
         $qIds = array_map(function($e) {
                 return $e['id'];
             }, $qIds);
-        
+
         $query = $this->getEntityManager()
             ->createQuery('DELETE FROM App\Entity\Answer a WHERE a.question IN (:qIds)')
             ->setParameter('qIds', $qIds);
 
         $qIds = $query->execute();
-        
+
         $query = $this->getEntityManager()
             ->createQuery("DELETE FROM App\Entity\Questions q WHERE q.course = :courseId")
             ->setParameter('courseId', $course->getId());
@@ -122,11 +138,23 @@ class QuestionsRepository extends ServiceEntityRepository
             ->select('COUNT (q.id)')
             ->where('q.course = :course')
             ->setParameter('course', $course);
-        
+
         if (null !== $parentId) {
             $queryBuilder->andWhere('q.parentId = :parentId')
                 ->setParameter('parentId', $parentId);
         }
+
+        return $queryBuilder->getQuery()->getSingleScalarResult();
+    }
+
+    public function getFavoritesQuestionsCount(Permission $permission): int
+    {
+        $queryBuilder = $this->createQueryBuilder('q')
+            ->select('COUNT (q.id)')
+            ->where('q.course = :course')
+            ->andWhere('q.id IN(:favoritesIds)')
+            ->setParameter('course', $permission->getCourse())
+            ->setParameter('favoritesIds', $permission->getFavorites());
 
         return $queryBuilder->getQuery()->getSingleScalarResult();
     }

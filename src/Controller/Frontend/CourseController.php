@@ -12,7 +12,6 @@ use App\Repository\CourseInfoRepository;
 use App\Repository\ModuleSectionPageRepository;
 use App\Repository\ModuleSectionRepository;
 use App\Service\CourseService;
-use App\Service\ModuleSectionArrowsService;
 use App\Service\UserPermissionService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Cookie;
@@ -30,7 +29,6 @@ class CourseController extends AbstractController
         private readonly ModuleSectionPageRepository $moduleSectionPageRepository,
         private readonly UserPermissionService $userPermissionService,
         private readonly CourseService $courseService,
-        private readonly ModuleSectionArrowsService $moduleSectionArrowsService,
     ) {}
 
     #[Route('/course/{id<\d+>}/', name: 'app_frontend_course')]
@@ -55,9 +53,12 @@ class CourseController extends AbstractController
             if (null !== $themeId) {
                 $options['hasMultipleThemes'] = false;
                 $options['themeId'] = $themeId;
-            } else {
+            }
+            else {
                 $options['hasMultipleThemes'] = true;
             }
+
+            $options['hasFavorites'] = ! empty($permission->getFavorites());
         }
 
         return $this->render('frontend/course/index.html.twig', $options);
